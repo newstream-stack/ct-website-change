@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MOCK_NEWS, MOCK_ADS, dummyContentPart1, dummyContentPart2 } from '../data';
 import InlineArticleBanner from './InlineArticleBanner';
 import StickySidebarAd from './StickySidebarAd';
@@ -11,6 +12,21 @@ interface ArticleDetailProps {
 export default function ArticleDetail({ articleId, openArticle, goToCategory }: ArticleDetailProps) {
   const article = MOCK_NEWS.find(n => n.id === articleId) || MOCK_NEWS[0];
   const recommendedNews = MOCK_NEWS.filter(n => n.id !== articleId).slice(0, 4);
+
+  // 取得隨機廣告
+  const [randomAd] = useState(() => {
+    const adValues = Object.values(MOCK_ADS);
+    return adValues.length > 0 ? adValues[Math.floor(Math.random() * adValues.length)] : null;
+  });
+
+  // 嘗試在第二段後切割內容
+  let firstPart = dummyContentPart1;
+  let secondPart = '';
+  const match = dummyContentPart1.match(/(.*?<\/p>\s*.*?<\/p>)(.*)/s);
+  if (match) {
+    firstPart = match[1];
+    secondPart = match[2];
+  }
 
   return (
     <>
@@ -44,14 +60,16 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                     </div>
                 </div>
 
-                <div dangerouslySetInnerHTML={{ __html: dummyContentPart1 }} />
+                <div dangerouslySetInnerHTML={{ __html: firstPart }} />
+                
+                {randomAd && <InlineArticleBanner ad={randomAd} />}
+
+                {secondPart && <div dangerouslySetInnerHTML={{ __html: secondPart }} />}
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
                     <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
                     <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
                 </div>
-
-                { MOCK_ADS.inline && <InlineArticleBanner ad={MOCK_ADS.inline} /> }
 
                 <div dangerouslySetInnerHTML={{ __html: dummyContentPart2 }} />
 
