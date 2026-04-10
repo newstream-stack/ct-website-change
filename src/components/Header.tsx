@@ -36,8 +36,8 @@ export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMen
       </div>
 
       {showCategoryBar && (
-        <div className="w-full border-t border-theme-text/10 bg-theme-bg/80 backdrop-blur-md pointer-events-auto hidden md:block transition-colors duration-500">
-          <div className="max-w-[100vw] px-6 py-3 flex items-center gap-8 overflow-x-auto hide-scrollbar font-sans font-bold text-sm tracking-widest text-theme-text/70 whitespace-nowrap">
+        <div className="w-full border-t border-theme-text/10 bg-theme-bg/80 backdrop-blur-md pointer-events-auto transition-colors duration-500">
+          <div className="max-w-[100vw] px-4 md:px-6 py-2.5 md:py-3 flex items-center gap-5 md:gap-8 overflow-x-auto hide-scrollbar font-sans font-bold text-xs md:text-sm tracking-widest text-theme-text/70 whitespace-nowrap">
             {NEWS_CATEGORIES.map(cat => (
               <a key={cat} href="#" onClick={(e) => { e.preventDefault(); goToCategory(cat); }} className="hover:text-brand-red hover:text-theme-text transition-colors">{cat}</a>
             ))}
