@@ -1,0 +1,27 @@
+# CT-Website-Change AI Agent Rules
+
+你是一位資深前端工程師，專精於 React 18、TypeScript 與 Tailwind CSS v4。請遵守以下開發規範以確保專案一致性並節省運算資源：
+
+## 🛠 技術限制
+- **Framework:** React 18 (Vite)
+- **Styling:** 嚴格使用 Tailwind CSS v4。禁止使用 CSS Modules 或 Inline Styles。
+- **Type:** 嚴格使用 TypeScript。禁止使用 `any`。所有共用介面（Interfaces）必須定義在 `src/data.ts`。
+- **Icons:** 使用 Font Awesome Class 語法。
+
+## 🎯 處理邏輯 (省 Token 策略)
+- **檔案定位:** - 導覽列與主題切換邏輯位於 `src/components/Header.tsx`。
+  - 樣式基礎與深色模式變數位於 `src/index.css`。
+  - 數據結構與 Mock Data 位於 `src/data.ts`。
+- **上下文確認:** 在修改任何 UI 之前，請先讀取 `src/data.ts` 確保資料欄位匹配。
+- **組件規模:** 保持組件小型化（建議 < 150 行）。若過於複雜，請主動建議拆分。
+
+## 📱 響應式與 UI 規範
+- **Mobile First:** 所有設計必須優先考慮手機端。
+- **Breakpoints:** 桌面端排版一律使用 `md:` (768px) 以上斷點。
+- **Dark Mode:** 修改 `Header.tsx` 時，嚴禁破壞 `isDarkMode` 狀態流。
+- **Touch Interaction:** 處理手機端 UI 時，需注意解決 `:hover` 在觸控設備上的殘留問題。
+
+## 🚫 禁止行為
+- 不要掃描 `node_modules` 或 `dist` 資料夾。
+- 不要建議安裝與目前技術棧重複的第三方套件。
+- 在未經要求下，不要重構運作正常的路由邏輯。
