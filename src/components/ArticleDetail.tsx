@@ -22,7 +22,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
   // 嘗試在第二段後切割內容
   let firstPart = dummyContentPart1;
   let secondPart = '';
-  const match = dummyContentPart1.match(/(.*?<\/p>\s*.*?<\/p>)(.*)/s);
+  const match = dummyContentPart1.match(new RegExp("(.*?</p>\\s*.*?</p>)(.*)", "s"));
   if (match) {
     firstPart = match[1];
     secondPart = match[2];
