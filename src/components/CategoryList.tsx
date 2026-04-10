@@ -54,6 +54,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                 <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
                 <span>{news.date}, 2026</span>
               </div>
+              </div>
             </div>
           </React.Fragment>
         ))}
