@@ -1,4 +1,6 @@
-import { MOCK_NEWS, dummyContentPart1, dummyContentPart2 } from '../data';
+import { MOCK_NEWS, MOCK_ADS, dummyContentPart1, dummyContentPart2 } from '../data';
+import InlineArticleBanner from './InlineArticleBanner';
+import StickySidebarAd from './StickySidebarAd';
 
 interface ArticleDetailProps {
   articleId: number;
@@ -49,12 +51,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                     <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
                 </div>
 
-                <div className="w-full border border-theme-text/10 py-8 md:py-16 my-12 md:my-16 flex flex-col items-center justify-center bg-theme-text/5 backdrop-blur-sm relative group cursor-pointer hover:bg-brand-red/10 transition-colors duration-500 rounded-sm">
-                    <span className="absolute top-2 md:top-3 right-2 md:right-3 text-[8px] md:text-[9px] font-display tracking-widest uppercase border border-theme-text/20 text-theme-text/60 px-2 py-0.5 group-hover:text-theme-text/90 transition-colors">ADVERTISEMENT</span>
-                    <div className="w-10 h-10 md:w-12 md:h-12 mb-4 md:mb-6 border border-theme-text/20 rounded-full flex items-center justify-center text-brand-red group-hover:bg-brand-red group-hover:text-white transition-colors"><i className="fas fa-heart text-sm md:text-base"></i></div>
-                    <h4 className="font-display text-xl md:text-4xl font-black text-theme-text uppercase tracking-tighter group-hover:text-brand-red transition-colors text-center px-4 md:px-6">Support Our Vision</h4>
-                    <p className="font-serif text-xs md:text-lg mt-2 md:mt-3 text-theme-text/80 group-hover:text-theme-text italic text-center px-4 transition-colors">Join the subscription to access exclusive content.</p>
-                </div>
+                { MOCK_ADS.inline && <InlineArticleBanner ad={MOCK_ADS.inline} /> }
 
                 <div dangerouslySetInnerHTML={{ __html: dummyContentPart2 }} />
 
@@ -78,15 +75,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                     <button className="w-full py-3 border border-theme-text/20 font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/90 hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition rounded-sm">View All Articles</button>
                 </div>
 
-                <div className="sticky top-32 border border-theme-text/10 bg-theme-text/5 aspect-[3/4] sm:aspect-auto sm:h-[400px] lg:aspect-[3/4] flex flex-col items-center justify-center p-6 md:p-8 text-center relative group cursor-pointer overflow-hidden rounded-sm transition-colors">
-                    <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover opacity-40 grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-60 transition-all duration-700" alt="Ad" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-theme-bg/90 transition-colors"></div>
-                    <span className="absolute top-3 md:top-4 right-3 md:right-4 text-[9px] md:text-[10px] font-display tracking-widest uppercase border border-theme-text/20 px-1 md:px-2 py-0.5 z-10 bg-theme-bg/70 text-theme-text/70 transition-colors">ADVERTISEMENT</span>
-                    <div className="relative z-10 bg-theme-bg/50 backdrop-blur-md p-5 md:p-6 border border-theme-text/10 group-hover:border-brand-red/50 transition-colors w-full shadow-xl">
-                        <h4 className="font-serif font-black text-2xl md:text-3xl text-theme-text mb-4 leading-tight transition-colors">Christian<br/>Art<br/>Exhibition</h4>
-                        <button className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest bg-brand-red text-white px-4 py-2 group-hover:bg-theme-text group-hover:text-theme-bg transition w-full">Book Tickets</button>
-                    </div>
-                </div>
+                { MOCK_ADS.sidebar && <StickySidebarAd ad={MOCK_ADS.sidebar} /> }
             </div>
         </div>
 

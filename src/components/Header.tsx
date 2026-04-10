@@ -1,4 +1,4 @@
-import { NEWS_CATEGORIES } from '../data';
+import { NEWS_CATEGORIES, MOCK_ADS } from '../data';
 
 interface HeaderProps {
   goToCategory: (cat: string) => void;
@@ -11,6 +11,15 @@ interface HeaderProps {
 export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMenuOpen, showCategoryBar }: HeaderProps) {
   return (
     <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-none bg-gradient-to-b from-theme-bg/90 via-theme-bg/50 to-transparent pb-4 transition-colors duration-500">
+      {MOCK_ADS.header && (
+        <a href={MOCK_ADS.header.link} className="w-full bg-brand-red text-white py-1.5 md:py-2 px-4 text-center text-[10px] md:text-xs font-display tracking-widest uppercase hover:bg-theme-text transition-colors duration-300 pointer-events-auto flex items-center justify-center gap-2 md:gap-4 relative group">
+          <span className="font-bold opacity-80 border border-white/30 px-1.5 py-0.5 text-[8px] md:text-[9px] rounded-sm">{MOCK_ADS.header.sponsor}</span>
+          <span className="font-serif tracking-wider font-bold mb-0.5">{MOCK_ADS.header.title}</span>
+          <span className="opacity-90 hidden sm:inline-block font-sans normal-case tracking-normal text-[11px] md:text-sm"> - {MOCK_ADS.header.description}</span>
+          <i className="fas fa-arrow-right ml-1 md:ml-2 transform group-hover:translate-x-1 transition-transform text-[10px]"></i>
+        </a>
+      )}
+      
       <div className="p-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
         <div className="pointer-events-auto cursor-pointer flex items-center gap-4" onClick={() => goToCategory('首頁')}>
           <span className="font-display text-2xl md:text-4xl font-bold uppercase tracking-widest leading-none">IMPACT</span>

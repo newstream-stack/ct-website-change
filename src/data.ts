@@ -45,7 +45,60 @@ export const MOCK_NEWS: NewsItem[] = [
   { id: 24, title: '神學入門：理解恩典與真理的平衡', excerpt: '以淺顯易懂的方式，探討基督教信仰中兩個最核心卻也最常被誤解的概念，幫助信徒建立穩固的根基。', category: '信仰知識庫', author: '神學教育', date: 'MAR 31', imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600' },
   { id: 25, title: '早期教會的敬拜模式：從家庭聚會到大教堂', excerpt: '追溯基督教敬拜形式的演變，從初代教會的簡單樸素，到後來發展出的豐富儀式與傳統。', category: '信仰知識庫', author: '教會歷史', date: 'MAR 30', imageUrl: 'https://images.unsplash.com/photo-1548625361-f6dbcd00fa9e?auto=format&fit=crop&q=80&w=1600' },
   { id: 6, title: '影響力聯盟 2026 年度高峰會盛大展開', excerpt: '匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。', category: '影響力聯盟', author: '活動中心', date: 'MAR 28', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600' },
+  { id: 6, title: '影響力聯盟 2026 年度高峰會盛大展開', excerpt: '匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。', category: '影響力聯盟', author: '活動中心', date: 'MAR 28', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600' },
 ];
+
+export interface AdItem {
+  id: string;
+  sponsor: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  link: string;
+}
+
+export const MOCK_ADS: Record<string, AdItem> = {
+  infeed: {
+    id: 'ad-infeed-1',
+    sponsor: '全球論壇',
+    title: '重新定義信仰與工作：2026 職場特會開放報名',
+    description: '匯集國內外領袖，為新世代信徒量身打造的實戰工作坊。',
+    imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800',
+    link: '#',
+  },
+  inline: {
+    id: 'ad-inline-1',
+    sponsor: '質感好物選',
+    title: '安靜靈修的最佳伴侶',
+    description: '手工浸蠟與皮革書衣，讓專屬於你的靜謐時刻更有溫度。',
+    imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
+    link: '#',
+  },
+  sidebar: {
+    id: 'ad-sidebar-1',
+    sponsor: '影響力聯盟',
+    title: 'IMPACT 會員招募中',
+    description: '加入成為影響力領袖，獨家獲得最新雙週刊。',
+    imageUrl: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800',
+    link: '#',
+  },
+  accordion: {
+    id: 'ad-accordion-1',
+    sponsor: '特別呈獻',
+    title: '世界願景：看見孩童的需求',
+    description: '從基礎醫療到教育資源，你的關注能改變生命。',
+    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1600',
+    link: '#',
+  },
+  header: {
+    id: 'ad-header-1',
+    sponsor: '獨家贊助',
+    title: ' IMPACT 會員招募中',
+    description: '享受無廣告閱讀與專屬內容。',
+    imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
+    link: '#',
+  }
+};
 
 export const dummyContentPart1 = `
   <p class="drop-cap">在這個資訊爆炸的時代，我們每天被無數的訊息淹沒。然而，真正能觸動人心、改變生命的內容，往往隱藏在喧囂之外的安靜角落裡。這不是單純的資訊傳遞，而是一種靈魂的共振。</p>

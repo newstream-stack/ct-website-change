@@ -1,4 +1,6 @@
-import { MOCK_NEWS } from '../data';
+import React from 'react';
+import { MOCK_NEWS, MOCK_ADS } from '../data';
+import NativeAdCard from './NativeAdCard';
 
 interface CategoryListProps {
   category: string;
@@ -32,8 +34,14 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
       </div>
 
       <div className="flex flex-col border-t border-theme-text/10 transition-colors">
-        {filteredNews.map((news) => (
-          <div key={news.id} className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
+        {filteredNews.map((news, index) => (
+          <React.Fragment key={news.id}>
+            {index === 2 && MOCK_ADS.infeed && (
+              <div className="py-6 md:py-8 border-b border-theme-text/10">
+                <NativeAdCard ad={MOCK_ADS.infeed} />
+              </div>
+            )}
+            <div className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
             <div className="w-full md:w-[35%] lg:w-1/3 aspect-[4/3] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm">
               <img src={news.imageUrl} className="w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
               <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">{news.category}</div>
@@ -47,7 +55,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                 <span>{news.date}, 2026</span>
               </div>
             </div>
-          </div>
+          </React.Fragment>
         ))}
       </div>
     </div>
