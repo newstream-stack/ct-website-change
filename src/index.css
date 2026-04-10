@@ -96,7 +96,7 @@
   .accordion-bg { left: 50%; transform: translateX(-50%) scale(1.1); }
 }
 
-.accordion-panel.active { flex: 4; }
+.accordion-panel.active { flex: 7; }
 .accordion-panel.active .accordion-bg { opacity: 0.9; transform: scale(1); }
 @media (min-width: 768px) {
   .accordion-panel.active { flex: 7; }
