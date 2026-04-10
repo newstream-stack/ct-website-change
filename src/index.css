@@ -158,3 +158,9 @@
 }
 .gallery-track::-webkit-scrollbar { display: none; }
 .gallery-item { scroll-snap-align: center; }
+
+/* 修正手機版（無滑鼠 hover）的圖片顯示限制 */
+@media (max-width: 767px) {
+  .grayscale { filter: none !important; }
+  .opacity-30, .opacity-40, .opacity-60, .opacity-70, .opacity-80 { opacity: 1 !important; }
+}
