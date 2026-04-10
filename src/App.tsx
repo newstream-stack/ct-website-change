@@ -7,6 +7,7 @@ import CategoryList from './components/CategoryList';
 import ArticleDetail from './components/ArticleDetail';
 import ProductGallery from './components/ProductGallery';
 import ActionPage from './components/ActionPage';
+import GlobalBottomAd from './components/GlobalBottomAd';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState('首頁');
@@ -74,6 +75,10 @@ export default function App() {
           <ActionPage category={currentCategory} />
         )}
       </main>
+
+      {!['訂報', '奉獻', '信仰好物'].includes(currentCategory) && (
+        <GlobalBottomAd />
+      )}
     </div>
   );
 }
