@@ -155,24 +155,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
         );
       })}
       
-      {showAd && (
-        <div className="absolute bottom-4 md:bottom-10 right-4 md:right-10 z-30 w-[85vw] sm:w-[320px] border border-theme-text/20 bg-theme-bg/90 backdrop-blur-xl p-3 md:p-4 rounded-sm flex gap-3 md:gap-4 items-center group cursor-pointer hover:border-brand-red/50 transition-colors shadow-2xl">
-          <div className="w-14 h-14 md:w-16 md:h-16 bg-theme-text/10 flex-shrink-0 relative overflow-hidden border border-theme-text/10 transition-colors">
-            <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?auto=format&fit=crop&q=80&w=200" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" alt="Ad" />
-          </div>
-          <div className="flex-grow">
-            <span className="text-[8px] md:text-[9px] font-display uppercase tracking-widest text-theme-text/60 block mb-0.5 md:mb-1 transition-colors">Advertisement</span>
-            <h4 className="font-serif font-black text-theme-text text-xs md:text-sm leading-tight line-clamp-1 transition-colors">IMPACT 2026 SUMMIT</h4>
-            <span className="text-[9px] md:text-[10px] font-display text-brand-red uppercase tracking-widest mt-1 block group-hover:text-theme-text transition-colors">Book Now &rarr;</span>
-          </div>
-          <button 
-            className="absolute -top-2 -right-2 w-6 h-6 bg-theme-text border border-theme-text/20 text-theme-bg/70 hover:text-theme-bg hover:border-theme-bg rounded-full flex items-center justify-center text-[10px] transition-colors" 
-            onClick={(e) => { e.stopPropagation(); setShowAd(false); }}
-          >
-            <i className="fas fa-times"></i>
-          </button>
-        </div>
-      )}
+
     </div>
   );
 }
