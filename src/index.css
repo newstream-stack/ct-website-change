@@ -83,34 +83,32 @@
 
 .accordion-bg {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
   width: 100vw; 
   height: 100dvh;
   object-fit: cover;
   opacity: 0.5;
-  transform: scale(1.1);
+  transform: translate(-50%, -50%) scale(1.1);
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
   transform-origin: center center;
 }
-@media (min-width: 768px) {
-  .accordion-bg { left: 50%; transform: translateX(-50%) scale(1.1); }
-}
 
 .accordion-panel.active { flex: 10; }
-.accordion-panel.active .accordion-bg { opacity: 1; transform: scale(1); }
+.accordion-panel.active .accordion-bg { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
 @media (min-width: 768px) {
   .accordion-panel.active { flex: 7; }
-  .accordion-panel.active .accordion-bg { transform: translateX(-50%) scale(1); }
 }
 
 @media (min-width: 768px) {
   .accordion-container:hover .accordion-panel.active:not(:hover) { flex: 1; }
-  .accordion-container:hover .accordion-panel.active:not(:hover) .accordion-bg { opacity: 0.5; transform: translateX(-50%) scale(1.1); }
+  .accordion-container:hover .accordion-panel.active:not(:hover) .accordion-bg { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
   .accordion-container:hover .accordion-panel.active:not(:hover) .content-expanded { opacity: 0; pointer-events: none; transform: translateY(20px); }
   .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed { opacity: 1; }
   
   .accordion-panel:hover { flex: 7 !important; }
-  .accordion-panel:hover .accordion-bg { opacity: 1 !important; transform: translateX(-50%) scale(1) !important; }
+  .accordion-panel:hover .accordion-bg { opacity: 1 !important; transform: translate(-50%, -50%) scale(1) !important; }
   .accordion-panel:hover .content-expanded { opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto !important; }
   .accordion-panel:hover .content-collapsed { opacity: 0 !important; }
 }
