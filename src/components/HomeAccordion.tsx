@@ -53,8 +53,12 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 }
               }}
             >
-              <img src={ad.imageUrl} className="accordion-bg transition-opacity duration-1000 opacity-50 group-hover:opacity-100 grayscale md:grayscale-0" alt="Cover" style={{ zIndex: 1 }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-theme-bg/95 via-theme-bg/60 to-theme-bg/80 md:to-transparent transition-all duration-500 group-hover:opacity-60 group-[.active]:opacity-80 group-[.active]:via-theme-bg/30 group-[.active]:to-transparent z-10"></div>
+              <img src={ad.imageUrl} className={`accordion-bg transition-opacity duration-1000 ${index === activeIndex ? 'opacity-100' : 'opacity-50'} group-hover:opacity-100 grayscale md:grayscale-0`} alt="Cover" style={{ zIndex: 1 }} />
+              <div className={`absolute inset-0 transition-opacity duration-500 z-10 ${
+                index === activeIndex 
+                  ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100' 
+                  : 'bg-gradient-to-t md:bg-gradient-to-b from-theme-bg/95 via-theme-bg/60 to-theme-bg/90 group-hover:opacity-80'
+              }`}></div>
               
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-6 py-0 md:p-8 text-theme-text/70 gap-3 md:gap-4 transition-colors z-20">
                 <span className="font-display text-xl md:text-3xl font-bold text-theme-text transition-colors">AD</span>
@@ -105,12 +109,16 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <img 
                 key={item.id}
                 src={item.imageUrl} 
-                className={`accordion-bg transition-opacity duration-1000 ${i === carouselIndex ? 'opacity-50 group-hover:opacity-100' : 'opacity-0'}`} 
+                className={`accordion-bg transition-opacity duration-1000 ${i === carouselIndex ? (index === activeIndex ? 'opacity-100' : 'opacity-50') + ' group-hover:opacity-100' : 'opacity-0'}`} 
                 alt="Cover" 
                 style={{ zIndex: i === carouselIndex ? 1 : 0 }}
               />
             ))}
-            <div className="absolute inset-0 bg-gradient-to-t from-theme-bg/95 via-theme-bg/60 to-theme-bg/80 md:to-transparent transition-all duration-500 group-hover:opacity-60 group-[.active]:opacity-80 group-[.active]:via-theme-bg/30 group-[.active]:to-transparent z-10"></div>
+            <div className={`absolute inset-0 transition-opacity duration-500 z-10 ${
+              index === activeIndex 
+                ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100' 
+                : 'bg-gradient-to-t md:bg-gradient-to-b from-theme-bg/95 via-theme-bg/60 to-theme-bg/90 group-hover:opacity-80'
+            }`}></div>
             
             <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-6 py-0 md:p-8 text-theme-text/70 gap-3 md:gap-4 transition-colors z-20">
               <span className="font-display text-xl md:text-3xl font-bold text-theme-text transition-colors">0{panel.displayIndex + 1}</span>
