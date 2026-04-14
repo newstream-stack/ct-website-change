@@ -8,11 +8,57 @@ export interface NewsItem {
   author: string;
   date: string;
   imageUrl: string;
+  content?: string;
 }
 
 export const MOCK_NEWS: NewsItem[] = [
   // Panel 1: 最新文章 (5 items)
-  { id: 1, title: '歷史建築的新生：傳承與未來的交響曲', excerpt: '坐落於城市中心的這棟建築，不僅見證了數十年的歷史變遷，如今更將化身為新世代的文化與信仰樞紐。', category: '最新文章', author: '編輯部', date: 'APR 09', imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1600' },
+  { 
+    id: 1, 
+    title: '從呼召辨識到AI時代神學院裝備：張宰金牧師談事奉者的關鍵能力',
+    excerpt: '中台神學院副院長張宰金牧師指出，在 AI 快速崛起的背景下，未來事奉者除了扎實的神學裝備，更需具備屬靈深度與跨領域能力。',
+    category: '專題報導',
+    author: '陳秀雯',
+    date: 'APR 11',
+    imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=1600',
+    content: `
+      <p class="drop-cap">中台神學院副院長張宰金牧師指出，在 AI 快速崛起的背景下，未來事奉者除了扎實的神學裝備，更需具備屬靈深度與跨領域能力。他提出「三重印證」作為辨識呼召的原則，並建議將 AI 視為工具而非依賴。</p>
+
+      <h2>呼召是逐步清晰的過程</h2>
+      <p>張副院長提出「三重印證」原則：1. 內在負擔（長期對特定族群或議題的關注）；2. 恩賜能力（上帝的呼召伴隨相應能力）；3. 外在印證（教會牧者、屬靈長輩的觀察與肯定）。</p>
+
+      <h2>五大事奉類型</h2>
+      <p>歸納為：牧會型、宣教型、輔導關懷型、教導學術型、機構事奉型。事奉者可跨足不同領域，但應有一個主要方向。</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
+          <div class="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors">
+            <img src="https://ct.org.tw/uploads/news/article/1403512/張宰金牧師授課.jpg" onerror="this.src='https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800'" class="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="張宰金牧師授課" />
+          </div>
+          <div class="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors">
+            <img src="https://ct.org.tw/uploads/news/article/1403512/會心園諮商.jpg" onerror="this.src='https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800'" class="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="會心園諮商" />
+          </div>
+      </div>
+      <p class="text-xs md:text-sm opacity-60 text-center -mt-6 md:-mt-10 mb-10 font-bold tracking-widest text-theme-text">圖：張宰金牧師授課時情景 / 會心園諮商中心 (神學院提供)</p>
+
+      <div class="w-full my-12 md:my-24 py-12 md:py-24 border-y border-theme-text/10 bg-theme-text/5 relative flex justify-center overflow-hidden transition-colors">
+          <div class="absolute -top-10 md:-top-16 text-[120px] md:text-[200px] font-serif text-theme-text/5 leading-none pointer-events-none">“</div>
+          <h2 class="font-serif text-2xl sm:text-3xl md:text-4xl text-theme-text text-center max-w-4xl leading-[1.4] md:leading-[1.3] font-black px-4 md:px-6 z-10 mx-auto transition-colors" style="border: none; padding-left: 0; margin: 0;">
+              AI 不會取代真正的牧者，<span class="text-brand-red">但會淘汰缺乏屬靈深度與思考能力的人</span>。
+          </h2>
+      </div>
+
+      <h2>選擇神學院的評估標準</h2>
+      <p>包含：課程取向（實務或學術）、實習制度（如中台神學院的週末實習）、神學立場、地域語言以及與教會的連結。</p>
+
+      <h2>AI 浪潮下的轉型：淺層知識將被淘汰</h2>
+      <p>AI 不會取代真正的牧者，但會淘汰缺乏屬靈深度與思考能力的人。張牧師強調不可直接複製 AI 生成的講章，也不可用 AI 取代靈修與默想。</p>
+
+      <h2>未來事奉者的四大關鍵能力</h2>
+      <p>1. 屬靈深度（力量來源）；2. 神學判斷力（資訊辨別）；3. 人際關係與陪伴能力（AI 難以取代）；4. 跨領域能力（涵蓋心理學、社會學與媒體科技）。</p>
+
+      <p class="mt-8 text-sm text-theme-text/80 font-bold bg-theme-text/5 p-4 border-l-4 border-brand-red">聯絡資訊：中台神學院「會心園」諮商資源：04-23780510 #18 曾姊妹。</p>
+    \`
+  },
   { id: 7, title: '青年世代的信仰覺醒：從數位原住民到真理追尋者', excerpt: '在充滿雜訊的網路世界中，新一代年輕人如何透過社群媒體找到心靈的歸屬與信仰的真實。', category: '最新文章', author: '青年事工', date: 'APR 10', imageUrl: 'https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?auto=format&fit=crop&q=80&w=1600' },
   { id: 8, title: '跨越國界的愛：醫療宣教團的非洲紀實', excerpt: '深入偏鄉，這群醫療人員不僅帶來了醫學的療癒，更帶來了超越語言與文化的愛與盼望。', category: '最新文章', author: '國際新聞', date: 'APR 11', imageUrl: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&q=80&w=1600' },
   { id: 9, title: '城市綠洲：教會空間改造的社區影響力', excerpt: '打破高牆，現代教會如何透過空間設計與開放態度，成為社區居民日常交流與心靈休憩的中心。', category: '最新文章', author: '社區發展', date: 'APR 12', imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600' },

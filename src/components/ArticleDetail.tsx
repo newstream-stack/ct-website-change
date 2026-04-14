@@ -22,10 +22,12 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
   // 嘗試在第二段後切割內容
   let firstPart = dummyContentPart1;
   let secondPart = '';
-  const match = dummyContentPart1.match(new RegExp("(.*?</p>\\s*.*?</p>)(.*)", "s"));
-  if (match) {
-    firstPart = match[1];
-    secondPart = match[2];
+  if (!article.content) {
+    const match = dummyContentPart1.match(new RegExp("(.*?</p>\\s*.*?</p>)(.*)", "s"));
+    if (match) {
+      firstPart = match[1];
+      secondPart = match[2];
+    }
   }
 
   return (
@@ -60,18 +62,24 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                     </div>
                 </div>
 
-                <div dangerouslySetInnerHTML={{ __html: firstPart }} />
-                
-                {randomAd && <InlineArticleBanner ad={randomAd} />}
+                {article.content ? (
+                    <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                ) : (
+                    <>
+                        <div dangerouslySetInnerHTML={{ __html: firstPart }} />
+                        
+                        {randomAd && <InlineArticleBanner ad={randomAd} />}
 
-                {secondPart && <div dangerouslySetInnerHTML={{ __html: secondPart }} />}
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
-                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
-                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
-                </div>
+                        {secondPart && <div dangerouslySetInnerHTML={{ __html: secondPart }} />}
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
+                            <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
+                            <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
+                        </div>
 
-                <div dangerouslySetInnerHTML={{ __html: dummyContentPart2 }} />
+                        <div dangerouslySetInnerHTML={{ __html: dummyContentPart2 }} />
+                    </>
+                )}
 
                 <div className="mt-12 md:mt-16 pt-8 border-t border-theme-text/10 flex flex-col sm:flex-row justify-between items-center gap-6 transition-colors">
                     <div className="flex flex-wrap justify-center gap-2">
