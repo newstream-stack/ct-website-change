@@ -13,8 +13,8 @@ export interface NewsItem {
 
 export const MOCK_NEWS: NewsItem[] = [
   // Panel 1: 最新文章 (5 items)
-  { 
-    id: 1, 
+  {
+    id: 1,
     title: '從呼召辨識到AI時代神學院裝備：張宰金牧師談事奉者的關鍵能力',
     excerpt: '中台神學院副院長張宰金牧師指出，在 AI 快速崛起的背景下，未來事奉者除了扎實的神學裝備，更需具備屬靈深度與跨領域能力。',
     category: '專題報導',
@@ -32,10 +32,10 @@ export const MOCK_NEWS: NewsItem[] = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
           <div class="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors">
-            <img src="https://ct.org.tw/uploads/news/article/1403512/張宰金牧師授課.jpg" onerror="this.src='https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800'" class="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="張宰金牧師授課" />
+            <img src="https://ct.org.tw/upload/news_article_cms/2026/04/10/10368_4840_%E5%BC%B5%E5%AE%B0%E9%87%91%E7%89%A7%E5%B8%AB_2.jpg" onerror="this.src='https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800'" class="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="張宰金牧師授課" />
           </div>
           <div class="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors">
-            <img src="https://ct.org.tw/uploads/news/article/1403512/會心園諮商.jpg" onerror="this.src='https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800'" class="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="會心園諮商" />
+            <img src="https://ct.org.tw/upload/news_article_cms/2026/04/10/25585_4840_%E5%BC%B5%E5%AE%B0%E9%87%91%E7%89%A7%E5%B8%AB_3.jpg" onerror="this.src='https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800'" class="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="會心園諮商" />
           </div>
       </div>
       <p class="text-xs md:text-sm opacity-60 text-center -mt-6 md:-mt-10 mb-10 font-bold tracking-widest text-theme-text">圖：張宰金牧師授課時情景 / 會心園諮商中心 (神學院提供)</p>
