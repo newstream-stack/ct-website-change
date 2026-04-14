@@ -53,15 +53,15 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 }
               }}
             >
-              <img src={ad.imageUrl} className={`accordion-bg transition-opacity duration-1000 ${index === activeIndex ? 'opacity-100' : 'opacity-50'} group-hover:opacity-100 grayscale md:grayscale-0`} alt="Cover" style={{ zIndex: 1 }} />
+              <img src={ad.imageUrl} className={`accordion-bg transition-opacity duration-1000 ${index === activeIndex ? 'opacity-100' : 'opacity-50'} group-hover:opacity-100 grayscale md:grayscale-0`} alt="" style={{ zIndex: 1 }} />
               <div className={`absolute inset-0 transition-opacity duration-500 z-10 ${
                 index === activeIndex 
                   ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100' 
-                  : 'bg-gradient-to-t md:bg-gradient-to-b from-theme-bg/95 via-theme-bg/60 to-theme-bg/90 group-hover:opacity-80'
+                  : 'bg-theme-bg/80 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/60 md:to-theme-bg/90 group-hover:opacity-80'
               }`}></div>
               
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-6 py-0 md:p-8 text-theme-text/70 gap-3 md:gap-4 transition-colors z-20">
-                <span className="font-display text-xl md:text-3xl font-bold text-theme-text transition-colors">AD</span>
+                <span className="font-display text-lg md:text-3xl font-bold text-theme-text transition-colors">AD</span>
                 <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs md:rotate-180 md:writing-vertical-rl text-brand-red transition-colors font-bold">SPONSOR</span>
               </div>
 
@@ -114,18 +114,18 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 key={item.id}
                 src={item.imageUrl} 
                 className={`accordion-bg transition-opacity duration-1000 ${i === carouselIndex ? (index === activeIndex ? 'opacity-100' : 'opacity-50') + ' group-hover:opacity-100' : 'opacity-0'}`} 
-                alt="Cover" 
+                alt="" 
                 style={{ zIndex: i === carouselIndex ? 1 : 0 }}
               />
             ))}
             <div className={`absolute inset-0 transition-opacity duration-500 z-10 ${
               index === activeIndex 
                 ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100' 
-                : 'bg-gradient-to-t md:bg-gradient-to-b from-theme-bg/95 via-theme-bg/60 to-theme-bg/90 group-hover:opacity-80'
+                : 'bg-theme-bg/80 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/60 md:to-theme-bg/90 group-hover:opacity-80'
             }`}></div>
             
             <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-6 py-0 md:p-8 text-theme-text/70 gap-3 md:gap-4 transition-colors z-20">
-              <span className="font-display text-xl md:text-3xl font-bold text-theme-text transition-colors">0{panel.displayIndex + 1}</span>
+              <span className="font-display text-lg md:text-3xl font-bold text-theme-text transition-colors">0{panel.displayIndex + 1}</span>
               <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs md:rotate-180 md:writing-vertical-rl text-theme-text/90 md:text-theme-text/70 transition-colors">{news.category}</span>
             </div>
 
