@@ -66,20 +66,24 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               </div>
 
               <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-24 pt-20 transition-colors z-20">
-                <div className="max-w-2xl transition-all duration-500">
+                <div className="max-w-2xl transition-all duration-500 w-full">
                   <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6">
                     <span className="text-white bg-brand-red font-display font-bold text-[9px] md:text-sm tracking-[0.2em] uppercase px-2 md:px-3 py-0.5 md:py-1">SPONSORED</span>
                     <span className="font-display text-[9px] md:text-xs text-theme-text/80 tracking-widest uppercase transition-colors">{ad.sponsor}</span>
                   </div>
-                  <h2 className="text-[22px] sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.4] md:leading-[1.1] tracking-wide md:tracking-normal mb-3 md:mb-6 line-clamp-2 md:line-clamp-none transition-colors drop-shadow-sm">
-                    {ad.title}
-                  </h2>
-                  <p className="text-theme-text/90 font-light text-xs md:text-lg mb-4 md:mb-8 line-clamp-2 md:line-clamp-3 max-w-lg transition-colors drop-shadow-sm leading-relaxed">
-                    {ad.description}
-                  </p>
-                  <a href={ad.link} className="font-display font-bold uppercase tracking-widest text-[10px] md:text-sm text-theme-text hover:text-brand-red transition-colors flex items-center gap-2">
-                    Learn More <i className="fas fa-arrow-right"></i>
-                  </a>
+                  <div className="min-h-[200px] md:min-h-[320px] flex flex-col justify-start">
+                    <h2 className="text-[22px] sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.4] md:leading-[1.1] tracking-wide md:tracking-normal mb-3 md:mb-6 line-clamp-2 md:line-clamp-none transition-colors drop-shadow-sm">
+                      {ad.title}
+                    </h2>
+                    <p className="text-theme-text/90 font-light text-xs md:text-lg mb-4 md:mb-8 line-clamp-2 md:line-clamp-3 max-w-lg transition-colors drop-shadow-sm leading-relaxed">
+                      {ad.description}
+                    </p>
+                    <div className="mt-auto md:mt-0">
+                      <a href={ad.link} className="font-display font-bold uppercase tracking-widest text-[10px] md:text-sm text-theme-text hover:text-brand-red transition-colors flex items-center gap-2 w-fit">
+                        Learn More <i className="fas fa-arrow-right"></i>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -126,7 +130,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             </div>
 
             <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-24 pt-20 transition-colors z-20">
-              <div className="max-w-2xl transition-all duration-500">
+              <div className="max-w-2xl transition-all duration-500 w-full">
                 <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6">
                   <span className="text-brand-red font-display font-bold text-[9px] md:text-sm tracking-[0.2em] uppercase border border-brand-red px-2 md:px-3 py-0.5 md:py-1">{news.category}</span>
                   <span className="font-display text-[9px] md:text-xs text-theme-text/80 tracking-widest uppercase transition-colors">0{carouselIndex + 1} / 05</span>
@@ -148,15 +152,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     </button>
                   </div>
                 </div>
-                <h2 className="text-[22px] sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.4] md:leading-[1.1] tracking-wide md:tracking-normal mb-3 md:mb-6 line-clamp-2 md:line-clamp-none transition-colors drop-shadow-sm">
-                  {news.title}
-                </h2>
-                <p className="text-theme-text/90 font-light text-xs md:text-lg mb-4 md:mb-8 line-clamp-2 md:line-clamp-3 max-w-lg transition-colors drop-shadow-sm leading-relaxed">
-                  {news.excerpt}
-                </p>
-                <button className="font-display font-bold uppercase tracking-widest text-[10px] md:text-sm text-theme-text hover:text-brand-red transition-colors flex items-center gap-2">
-                  Read Story <i className="fas fa-arrow-right"></i>
-                </button>
+                <div className="min-h-[200px] md:min-h-[320px] flex flex-col justify-start">
+                  <h2 className="text-[22px] sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.4] md:leading-[1.1] tracking-wide md:tracking-normal mb-3 md:mb-6 line-clamp-2 md:line-clamp-none transition-colors drop-shadow-sm">
+                    {news.title}
+                  </h2>
+                  <p className="text-theme-text/90 font-light text-xs md:text-lg mb-4 md:mb-8 line-clamp-2 md:line-clamp-3 max-w-lg transition-colors drop-shadow-sm leading-relaxed">
+                    {news.excerpt}
+                  </p>
+                  <div className="mt-auto md:mt-0">
+                    <button className="font-display font-bold uppercase tracking-widest text-[10px] md:text-sm text-theme-text hover:text-brand-red transition-colors flex items-center gap-2 w-fit">
+                      Read Story <i className="fas fa-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
