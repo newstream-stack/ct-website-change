@@ -36,7 +36,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   });
 
   return (
-    <div className="accordion-container relative pb-[96px] lg:pb-0">
+    <div className="accordion-container relative pt-[120px] md:pt-0 pb-[96px] lg:pb-0">
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
           const ad = panel.ad;
@@ -65,13 +65,13 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs md:rotate-180 md:writing-vertical-rl text-brand-red transition-colors font-bold">SPONSOR</span>
               </div>
 
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-24 pt-20 transition-colors z-20">
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-20 transition-colors z-20">
                 <div className="max-w-2xl transition-all duration-500 w-full">
                   <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6">
                     <span className="text-white bg-brand-red font-display font-bold text-[9px] md:text-sm tracking-[0.2em] uppercase px-2 md:px-3 py-0.5 md:py-1">SPONSORED</span>
                     <span className="font-display text-[9px] md:text-xs text-theme-text/80 tracking-widest uppercase transition-colors">{ad.sponsor}</span>
                   </div>
-                  <div className="min-h-[200px] md:min-h-[320px] flex flex-col justify-start">
+                  <div className="min-h-[160px] md:min-h-[320px] flex flex-col justify-start">
                     <h2 className="text-[22px] sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.4] md:leading-[1.1] tracking-wide md:tracking-normal mb-3 md:mb-6 line-clamp-2 md:line-clamp-none transition-colors drop-shadow-sm">
                       {ad.title}
                     </h2>
@@ -129,7 +129,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs md:rotate-180 md:writing-vertical-rl text-theme-text/90 md:text-theme-text/70 transition-colors">{news.category}</span>
             </div>
 
-            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-24 pt-20 transition-colors z-20">
+            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-20 transition-colors z-20">
               <div className="max-w-2xl transition-all duration-500 w-full">
                 <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6">
                   <span className="text-brand-red font-display font-bold text-[9px] md:text-sm tracking-[0.2em] uppercase border border-brand-red px-2 md:px-3 py-0.5 md:py-1">{news.category}</span>
@@ -152,7 +152,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     </button>
                   </div>
                 </div>
-                <div className="min-h-[200px] md:min-h-[320px] flex flex-col justify-start">
+                <div className="min-h-[160px] md:min-h-[320px] flex flex-col justify-start">
                   <h2 className="text-[22px] sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.4] md:leading-[1.1] tracking-wide md:tracking-normal mb-3 md:mb-6 line-clamp-2 md:line-clamp-none transition-colors drop-shadow-sm">
                     {news.title}
                   </h2>
