@@ -36,7 +36,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   });
 
   return (
-    <div className="accordion-container relative pt-[120px] md:pt-0 pb-[96px] lg:pb-0">
+    <div className="accordion-container relative pt-[120px] md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0">
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
           const ad = panel.ad;
