@@ -47,13 +47,6 @@ export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMen
           <button className="flex items-center justify-center w-6 md:w-8 hover:text-brand-red transition-colors text-lg" onClick={toggleTheme} title="切換日夜模式">
             {isDarkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
           </button>
-          
-          <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
-
-          <button className="group flex flex-col gap-1.5 md:gap-2 w-8 md:w-10" onClick={() => setIsMenuOpen(true)}>
-            <span className="w-full h-[2px] md:h-[3px] bg-theme-text group-hover:bg-brand-red transition-colors duration-300 transform origin-right"></span>
-            <span className="w-2/3 h-[2px] md:h-[3px] bg-theme-text group-hover:bg-brand-red transition-all duration-300 ml-auto group-hover:w-full"></span>
-          </button>
         </div>
       </div>
 
