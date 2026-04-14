@@ -57,7 +57,7 @@ export const MOCK_NEWS: NewsItem[] = [
       <p>1. 屬靈深度（力量來源）；2. 神學判斷力（資訊辨別）；3. 人際關係與陪伴能力（AI 難以取代）；4. 跨領域能力（涵蓋心理學、社會學與媒體科技）。</p>
 
       <p class="mt-8 text-sm text-theme-text/80 font-bold bg-theme-text/5 p-4 border-l-4 border-brand-red">聯絡資訊：中台神學院「會心園」諮商資源：04-23780510 #18 曾姊妹。</p>
-    \`
+    `
   },
   { id: 7, title: '青年世代的信仰覺醒：從數位原住民到真理追尋者', excerpt: '在充滿雜訊的網路世界中，新一代年輕人如何透過社群媒體找到心靈的歸屬與信仰的真實。', category: '最新文章', author: '青年事工', date: 'APR 10', imageUrl: 'https://images.unsplash.com/photo-1529156069898-49953eb1b5ce?auto=format&fit=crop&q=80&w=1600' },
   { id: 8, title: '跨越國界的愛：醫療宣教團的非洲紀實', excerpt: '深入偏鄉，這群醫療人員不僅帶來了醫學的療癒，更帶來了超越語言與文化的愛與盼望。', category: '最新文章', author: '國際新聞', date: 'APR 11', imageUrl: 'https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&q=80&w=1600' },
