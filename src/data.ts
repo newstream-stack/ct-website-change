@@ -20,7 +20,7 @@ export const MOCK_NEWS: NewsItem[] = [
     category: '專題報導',
     author: '陳秀雯',
     date: 'APR 11',
-    imageUrl: 'hhttps://media.ct.org.tw/upload/news_article/2026/04/10/69d897e430ea7.jpg?wm=LB',
+    imageUrl: 'https://media.ct.org.tw/upload/news_article/2026/04/10/69d897e430ea7.jpg?wm=LB',
     content: `
       <p class="drop-cap">中台神學院副院長張宰金牧師指出，在 AI 快速崛起的背景下，未來事奉者除了扎實的神學裝備，更需具備屬靈深度與跨領域能力。他提出「三重印證」作為辨識呼召的原則，並建議將 AI 視為工具而非依賴。</p>
 
