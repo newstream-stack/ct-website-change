@@ -97,7 +97,7 @@
 }
 
 .accordion-panel.active { flex: 10; }
-.accordion-panel.active .accordion-bg { opacity: 0.9; transform: scale(1); }
+.accordion-panel.active .accordion-bg { opacity: 1; transform: scale(1); }
 @media (min-width: 768px) {
   .accordion-panel.active { flex: 7; }
   .accordion-panel.active .accordion-bg { transform: translateX(-50%) scale(1); }
@@ -110,7 +110,7 @@
   .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed { opacity: 1; }
   
   .accordion-panel:hover { flex: 7 !important; }
-  .accordion-panel:hover .accordion-bg { opacity: 0.9 !important; transform: translateX(-50%) scale(1) !important; }
+  .accordion-panel:hover .accordion-bg { opacity: 1 !important; transform: translateX(-50%) scale(1) !important; }
   .accordion-panel:hover .content-expanded { opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto !important; }
   .accordion-panel:hover .content-collapsed { opacity: 0 !important; }
 }
