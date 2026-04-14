@@ -51,12 +51,15 @@ export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMen
       </div>
 
       {/* Mobile Actions Bar */}
-      <div className="lg:hidden w-full flex items-center justify-center gap-5 sm:gap-6 font-sans font-bold text-[11px] tracking-wide text-theme-text/80 pb-2 transition-colors duration-500">
-         <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
-         <div className="w-px h-3 bg-theme-text/30"></div>
-         <button onClick={() => goToCategory('訂報')} className="hover:text-brand-red transition">訂閱</button>
-         <div className="w-px h-3 bg-theme-text/30"></div>
-         <button onClick={() => goToCategory('奉獻')} className="text-brand-red transition flex items-center gap-1 border border-brand-red/50 px-3 py-1 rounded-full">奉獻 <i className="fas fa-arrow-right text-[9px]"></i></button>
+      <div className="lg:hidden w-full flex items-center justify-between px-5 pb-3.5 font-sans font-bold tracking-widest text-theme-text/80 transition-colors duration-500">
+         <div className="flex items-center gap-5 text-[12px]">
+           <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
+           <div className="w-px h-3 bg-theme-text/20"></div>
+           <button onClick={() => goToCategory('訂報')} className="hover:text-brand-red transition">訂閱</button>
+         </div>
+         <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:bg-brand-red hover:text-white transition-all flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full text-[11px]">
+           奉獻 <i className="fas fa-arrow-right text-[10px]"></i>
+         </button>
       </div>
 
       {showCategoryBar && (
