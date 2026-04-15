@@ -56,12 +56,7 @@
   100% { opacity: 1; transform: scale(1); }
 }
 
-/* --- 手風琴佈局 (Accordion Layout) --- */
-.home-hero-wrapper {
-  display: block;
-  width: 100%;
-}
-
+/* ─── Accordion Layout ─── */
 .accordion-container {
   display: flex;
   flex-direction: column;
@@ -72,37 +67,29 @@
 @media (min-width: 768px) {
   .accordion-container { flex-direction: row; }
 }
-/* Desktop: panels take 60vh, below-content handles the rest */
-@media (min-width: 1024px) {
-  .accordion-container {
-    height: 60vh;
-    min-height: 420px;
-  }
-}
 
 .accordion-panel {
   flex: 1;
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: flex 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: flex 0.65s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: flex;
-  border-bottom: 1px solid rgb(var(--text-base) / 0.1);
+  border-bottom: 1px solid rgb(var(--text-base) / 0.12);
 }
 @media (min-width: 768px) {
   .accordion-panel {
     border-bottom: none;
-    border-right: 1px solid rgb(var(--text-base) / 0.1);
+    border-right: 1px solid rgb(var(--text-base) / 0.12);
   }
 }
-/* Desktop: red accent bar at bottom of active/hovered panel */
+
+/* Desktop: red accent bar on active/hover */
 @media (min-width: 1024px) {
   .accordion-panel::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 3px;
     background: transparent;
     transition: background 0.4s ease;
@@ -116,51 +103,68 @@
 
 .accordion-bg {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   width: 100vw;
   height: 100dvh;
   object-fit: cover;
   opacity: 0.5;
-  transform: translate(-50%, -50%) scale(1.1);
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease, filter 0.7s ease;
+  transform: translate(-50%, -50%) scale(1.08);
+  transition:
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.8s ease,
+    filter 0.8s ease;
   transform-origin: center center;
 }
 
+/* Active panel */
 .accordion-panel.active { flex: 10; }
-.accordion-panel.active .accordion-bg { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.accordion-panel.active .accordion-bg {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
 
 @media (min-width: 768px) {
   .accordion-panel.active { flex: 7; }
 }
 
-/* md (tablet): hover interaction with content overlay */
+/* ─── Desktop hover interactions ─── */
 @media (min-width: 768px) {
+  /* When hovering elsewhere, shrink the active panel */
   .accordion-container:hover .accordion-panel.active:not(:hover) { flex: 1; }
-  .accordion-container:hover .accordion-panel.active:not(:hover) .accordion-bg { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
-  .accordion-container:hover .accordion-panel.active:not(:hover) .content-expanded { opacity: 0; pointer-events: none; transform: translateY(20px); }
-  .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed { opacity: 1; }
+  .accordion-container:hover .accordion-panel.active:not(:hover) .accordion-bg {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  .accordion-container:hover .accordion-panel.active:not(:hover) .content-expanded {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(16px);
+  }
+  .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed {
+    opacity: 1;
+  }
 
+  /* Hovered panel expands */
   .accordion-panel:hover { flex: 7 !important; }
-  .accordion-panel:hover .accordion-bg { opacity: 1 !important; transform: translate(-50%, -50%) scale(1) !important; }
-  .accordion-panel:hover .content-expanded { opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto !important; }
-  .accordion-panel:hover .content-collapsed { opacity: 0 !important; }
+  .accordion-panel:hover .accordion-bg {
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+  .accordion-panel:hover .content-expanded {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+  }
+  .accordion-panel:hover .content-collapsed {
+    opacity: 0 !important;
+  }
 }
 
-/* lg (desktop): content-expanded is hidden entirely — shown in accordion-below instead */
-@media (min-width: 1024px) {
-  .accordion-panel .content-expanded { display: none !important; }
-  /* Always show the number/label on desktop */
-  .accordion-panel .content-collapsed,
-  .accordion-panel.active .content-collapsed,
-  .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed,
-  .accordion-panel:hover .content-collapsed { opacity: 1 !important; }
-}
-
+/* ─── Content states ─── */
 .content-expanded {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
+  transform: translateY(16px);
+  transition: opacity 0.35s ease 0.08s, transform 0.35s ease 0.08s;
   pointer-events: none;
   white-space: normal;
 }
@@ -178,115 +182,73 @@
   opacity: 0;
 }
 
-/* ─── Desktop: Below Accordion ─── */
-.accordion-below {
-  display: none;
-}
-@media (min-width: 1024px) {
-  .accordion-below {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    width: 100%;
-    background-color: rgb(var(--bg-base));
-    border-top: 1px solid rgb(var(--text-base) / 0.1);
-    min-height: 200px;
-    transition: background-color 0.5s ease;
-  }
-
-  .accordion-below-indicators {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.125rem;
-    padding: 1.75rem 1.25rem;
-    border-right: 1px solid rgb(var(--text-base) / 0.08);
-    flex-shrink: 0;
-    width: 88px;
-  }
-
-  .accordion-indicator-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.6rem 0.25rem;
-    color: rgb(var(--text-base) / 0.35);
-    transition: color 0.3s ease;
-    cursor: pointer;
-    background: none;
-    border: none;
-  }
-  .accordion-indicator-btn:hover {
-    color: rgb(var(--text-base) / 0.7);
-  }
-  .accordion-indicator-btn.is-active {
-    color: rgb(var(--text-base));
-  }
-
-  .accordion-indicator-bar {
-    width: 20px;
-    height: 2px;
-    background: rgb(var(--text-base) / 0.15);
-    transition: all 0.3s ease;
-    border-radius: 1px;
-  }
-  .accordion-indicator-btn.is-active .accordion-indicator-bar {
-    background: #C62828;
-    width: 28px;
-  }
-  .accordion-indicator-btn:hover .accordion-indicator-bar {
-    background: rgb(var(--text-base) / 0.4);
-  }
-
-  .accordion-below-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    padding: 2.25rem 3rem;
-    overflow: hidden;
-  }
-
-  .accordion-below-article {
-    width: 100%;
-    animation: slideUpFade 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+/* ─── Mobile: no hover, show full image ─── */
+@media (max-width: 767px) {
+  .accordion-bg {
+    filter: none !important;
+    opacity: 1 !important;
   }
 }
 
-@keyframes slideUpFade {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* 內文排版 */
+/* ─── 內文排版 ─── */
 .article-content p {
-  font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem; font-weight: 400; color: rgb(var(--text-base) / 0.9); text-align: justify; transition: color 0.5s;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  color: rgb(var(--text-base) / 0.9);
+  text-align: justify;
+  transition: color 0.5s;
 }
 @media (min-width: 768px) {
-  .article-content p { font-size: 1.15rem; line-height: 2.1; margin-bottom: 2rem; color: rgb(var(--text-base) / 0.9); }
+  .article-content p {
+    font-size: 1.15rem;
+    line-height: 2.1;
+    margin-bottom: 2rem;
+  }
 }
 
 .article-content p.drop-cap::first-letter {
-  float: left; font-size: 3.5rem; line-height: 1; padding-right: 0.15rem; padding-top: 0; margin-bottom: -0.2rem; font-family: 'Noto Serif TC', serif; color: #C62828;
+  float: left;
+  font-size: 3.5rem;
+  line-height: 1;
+  padding-right: 0.15rem;
+  margin-bottom: -0.2rem;
+  font-family: 'Noto Serif TC', serif;
+  color: #C62828;
 }
 @media (min-width: 768px) {
-  .article-content p.drop-cap::first-letter { font-size: 5rem; padding-right: 0.2rem; padding-top: 0.05em; }
+  .article-content p.drop-cap::first-letter {
+    font-size: 5rem;
+    padding-right: 0.2rem;
+    padding-top: 0.05em;
+  }
 }
 
 .article-content h2 {
-  font-size: 1.75rem; font-family: 'Noto Serif TC', serif; font-weight: 900; margin: 2.5rem 0 1rem 0; color: rgb(var(--text-base)); border-left: 4px solid #C62828; padding-left: 0.75rem; transition: color 0.5s;
+  font-size: 1.75rem;
+  font-family: 'Noto Serif TC', serif;
+  font-weight: 900;
+  margin: 2.5rem 0 1rem 0;
+  color: rgb(var(--text-base));
+  border-left: 4px solid #C62828;
+  padding-left: 0.75rem;
+  transition: color 0.5s;
 }
 @media (min-width: 768px) {
-  .article-content h2 { font-size: 2.2rem; margin: 3.5rem 0 1.5rem 0; border-left: 6px solid #C62828; padding-left: 1rem; }
+  .article-content h2 {
+    font-size: 2.2rem;
+    margin: 3.5rem 0 1.5rem 0;
+    border-left: 6px solid #C62828;
+    padding-left: 1rem;
+  }
 }
 
 .gallery-track {
-  overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
 .gallery-track::-webkit-scrollbar { display: none; }
 .gallery-item { scroll-snap-align: center; }
-
-/* 手機版：不套用 grayscale / opacity fade（無 hover 互動） */
-@media (max-width: 767px) {
-  .accordion-bg { filter: none !important; opacity: 1 !important; }
-}
