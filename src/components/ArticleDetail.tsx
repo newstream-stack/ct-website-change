@@ -30,6 +30,24 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
         }
     }
 
+    // 放在 return ( 之前
+    const handleShare = (type: 'fb' | 'ig' | 'lin') => {
+        const url = encodeURIComponent(window.location.href);
+        switch (type) {
+            case 'fb':
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+                break;
+            case 'lin':
+                window.open(`https://social-plugins.line.me/lineit/share?url=${url}`, '_blank', 'width=600,height=400');
+                break;
+            case 'ig':
+                // Instagram 不支援直接網頁分享，改為複製網址
+                navigator.clipboard.writeText(window.location.href);
+                alert('網址已複製，快去 IG 貼給朋友吧！');
+                break;
+        }
+    };
+
     return (
         <>
             <div className="relative w-full h-[65svh] md:h-[70svh] bg-theme-text/5 overflow-hidden border-b border-theme-text/10 transition-colors duration-500">
@@ -56,14 +74,30 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-theme-text/10 transition-colors">
                             <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 transition-colors">Share</span>
                             <div className="flex gap-3">
-                                <div className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition bg-theme-text/5 cursor-pointer text-theme-text/80">
-                                    <i className="fab fa-facebook-f text-xs"></i>
-                                </div>
-                                <div className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] transition bg-theme-text/5 cursor-pointer text-theme-text/80">
-                                    <i className="fab fa-instagram text-xs"></i>
-                                </div>
-                                <div className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#06C755] hover:text-white hover:border-[#06C755] transition bg-theme-text/5 cursor-pointer text-theme-text/80">
-                                    <i className="fab fa-line text-xs"></i>
+                                <div className="flex gap-3 mt-6">
+                                    {/* Facebook */}
+                                    <div
+                                        onClick={() => handleShare('fb')}
+                                        className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
+                                    >
+                                        <i className="fab fa-facebook-f text-xs"></i>
+                                    </div>
+
+                                    {/* Instagram */}
+                                    <div
+                                        onClick={() => handleShare('ig')}
+                                        className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
+                                    >
+                                        <i className="fab fa-instagram text-xs"></i>
+                                    </div>
+
+                                    {/* Line */}
+                                    <div
+                                        onClick={() => handleShare('lin')}
+                                        className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#06C755] hover:text-white hover:border-[#06C755] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
+                                    >
+                                        <i className="fab fa-line text-xs"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
