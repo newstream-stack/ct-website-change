@@ -36,7 +36,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   });
 
   return (
-    <div className="accordion-container relative pt-[160px] md:pt-0 pb-[136px] md:pb-[120px] lg:pb-[120px]">
+    <div className="accordion-container relative pt-[160px] md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0">
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
           const ad = panel.ad;
@@ -64,7 +64,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs md:rotate-180 md:writing-vertical-rl text-brand-red transition-colors font-bold">SPONSOR</span>
               </div>
 
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-28 lg:pb-32 pt-20 transition-colors z-20">
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-24 md:pt-28 lg:pt-32 transition-colors z-20">
                 <div className="max-w-2xl transition-all duration-500 w-full">
                   <div className="flex items-center flex-wrap gap-3 md:gap-4 mb-4 md:mb-6">
                     <span className="text-white bg-brand-red font-display font-bold text-[10px] md:text-xs tracking-[0.2em] uppercase px-2 md:px-3 py-1 whitespace-nowrap shrink-0">SPONSORED</span>
@@ -138,11 +138,11 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             </div>
 
             {/* --- 2. 展開狀態 (Expanded)：典型的雜誌排版風格 --- */}
-            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-28 lg:pb-32 pt-20 transition-colors z-20">
+            <div className="content-expanded absolute inset-0 flex flex-col px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-24 md:pt-28 lg:pt-32 transition-colors z-20">
               <div className="max-w-2xl transition-all duration-500 w-full">
                 {/* 頂部標籤列 */}
-                <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
-                  <div className="flex items-center flex-wrap gap-2 sm:gap-4 min-w-0">
+                <div className="flex items-center justify-between gap-3 min-h-10 md:min-h-12 mb-6 md:mb-8">
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0 shrink-0">
                   {/* 類別標籤：改為 text-xs 並增加內線框感 */}
                     <span className="text-brand-red font-display font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase border border-brand-red/30 px-2 py-1 transition-colors whitespace-nowrap shrink-0">
                       {news.category}
@@ -173,18 +173,20 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 </div>
 
                 {/* 主內容區 */}
-                <div className="min-h-[160px] md:min-h-[280px] flex flex-col justify-start">
+                <div className="min-h-[220px] md:min-h-[340px] lg:min-h-[380px] flex flex-col justify-between">
+                  <div>
                   {/* 大標題：應用思源宋體 (font-serif)，縮小行高營造張力 */}
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-black text-theme-text leading-[1.3] md:leading-[1.2] tracking-tight md:tracking-normal mb-3 md:mb-5 line-clamp-2 md:line-clamp-3 transition-colors drop-shadow-sm">
-                    {news.title}
-                  </h2>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-black text-theme-text leading-[1.3] md:leading-[1.2] tracking-tight md:tracking-normal mb-3 md:mb-5 line-clamp-2 md:line-clamp-3 transition-colors drop-shadow-sm">
+                      {news.title}
+                    </h2>
 
                   {/* 摘要：使用 font-sans 輕量化 (font-light)，增加行高營造空氣感 */}
-                  <p className="text-theme-text/80 font-sans font-light text-xs sm:text-sm md:text-base lg:text-lg mb-4 md:mb-6 line-clamp-2 md:line-clamp-2 lg:line-clamp-3 max-w-lg transition-colors leading-relaxed">
-                    {news.excerpt}
-                  </p>
+                    <p className="text-theme-text/80 font-sans font-light text-xs sm:text-sm md:text-base lg:text-lg max-w-lg transition-colors leading-relaxed line-clamp-2 md:line-clamp-2 lg:line-clamp-3">
+                      {news.excerpt}
+                    </p>
+                  </div>
 
-                  <div className="mt-auto pt-2 md:pt-4 flex items-center w-full">
+                  <div className="pt-6 md:pt-8 flex items-center w-full min-h-12">
                     {/* Read Story：典型的 Editorial 按鈕樣式 */}
                     <button className="group font-display font-bold uppercase tracking-[0.2em] text-[10px] sm:text-xs md:text-sm text-theme-text transition-colors flex items-center gap-2 sm:gap-3 w-fit">
                       <span className="border-b border-theme-text/40 group-hover:border-brand-red transition-colors pb-1">
