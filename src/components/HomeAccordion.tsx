@@ -141,15 +141,35 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-20 transition-colors z-20">
               <div className="max-w-2xl transition-all duration-500 w-full">
                 {/* 頂部標籤列 */}
-                <div className="flex items-center flex-wrap gap-2 sm:gap-4 mb-4 md:mb-6">
+                <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
+                  <div className="flex items-center flex-wrap gap-2 sm:gap-4 min-w-0">
                   {/* 類別標籤：改為 text-xs 並增加內線框感 */}
-                  <span className="text-brand-red font-display font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase border border-brand-red/30 px-2 py-1 transition-colors whitespace-nowrap shrink-0">
-                    {news.category}
-                  </span>
-                  {/* 頁碼：使用 font-display 輕量化 */}
-                  <span className="font-display text-[10px] sm:text-xs text-theme-text/60 tracking-[0.2em] uppercase transition-colors whitespace-nowrap shrink-0">
-                    0{carouselIndex + 1} / 05
-                  </span>
+                    <span className="text-brand-red font-display font-bold text-[10px] sm:text-xs tracking-[0.2em] uppercase border border-brand-red/30 px-2 py-1 transition-colors whitespace-nowrap shrink-0">
+                      {news.category}
+                    </span>
+                    {/* 頁碼與切換箭頭：桌機版放在同一組，避免底部按鈕區被擠壓 */}
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                      <span className="font-display text-[10px] sm:text-xs text-theme-text/60 tracking-[0.2em] uppercase transition-colors whitespace-nowrap shrink-0">
+                        0{carouselIndex + 1} / 05
+                      </span>
+                      <div className="flex items-center gap-2 pointer-events-auto shrink-0">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setCarouselIndex((prev) => (prev - 1 + 5) % 5); }}
+                          className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-theme-text/20 flex items-center justify-center text-theme-text/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
+                          aria-label="Previous story"
+                        >
+                          <i className="fas fa-angle-left text-[10px] md:text-xs"></i>
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setCarouselIndex((prev) => (prev + 1) % 5); }}
+                          className="w-8 h-8 md:w-9 md:h-9 rounded-full border border-theme-text/20 flex items-center justify-center text-theme-text/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
+                          aria-label="Next story"
+                        >
+                          <i className="fas fa-angle-right text-[10px] md:text-xs"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 {/* 主內容區 */}
@@ -164,7 +184,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     {news.excerpt}
                   </p>
 
-                  <div className="mt-auto pt-2 md:pt-4 flex items-center justify-between w-full">
+                  <div className="mt-auto pt-2 md:pt-4 flex items-center w-full">
                     {/* Read Story：典型的 Editorial 按鈕樣式 */}
                     <button className="group font-display font-bold uppercase tracking-[0.2em] text-[10px] sm:text-xs md:text-sm text-theme-text transition-colors flex items-center gap-2 sm:gap-3 w-fit">
                       <span className="border-b border-theme-text/40 group-hover:border-brand-red transition-colors pb-1">
@@ -172,22 +192,6 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       </span>
                       <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                     </button>
-
-                    {/* 切換按鈕：移到下方與 Read Story 平行 */}
-                    <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto shrink-0">
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setCarouselIndex((prev) => (prev - 1 + 5) % 5); }}
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-theme-text/20 flex items-center justify-center text-theme-text/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
-                      >
-                        <i className="fas fa-angle-left text-[10px] md:text-xs"></i>
-                      </button>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setCarouselIndex((prev) => (prev + 1) % 5); }}
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-theme-text/20 flex items-center justify-center text-theme-text/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
-                      >
-                        <i className="fas fa-angle-right text-[10px] md:text-xs"></i>
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
