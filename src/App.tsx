@@ -7,6 +7,7 @@ import CategoryList from './components/CategoryList';
 import ArticleDetail from './components/ArticleDetail';
 import ProductGallery from './components/ProductGallery';
 import ActionPage from './components/ActionPage';
+import DonationGallery from './components/DonationGallery';
 import GlobalBottomAd from './components/GlobalBottomAd';
 
 export default function App() {
@@ -117,8 +118,12 @@ export default function App() {
           <ProductGallery />
         )}
 
-        {(currentCategory === '訂報' || currentCategory === '奉獻') && (
+        {(currentCategory === '訂報') && (
           <ActionPage category={currentCategory} />
+        )}
+
+        {(currentCategory === '奉獻') && (
+          <DonationGallery />
         )}
       </main>
 
