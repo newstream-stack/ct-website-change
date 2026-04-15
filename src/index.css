@@ -57,15 +57,27 @@
 }
 
 /* --- 手風琴佈局 (Accordion Layout) --- */
+.home-hero-wrapper {
+  display: block;
+  width: 100%;
+}
+
 .accordion-container {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   height: 100dvh;
   width: 100vw;
   overflow: hidden;
 }
 @media (min-width: 768px) {
   .accordion-container { flex-direction: row; }
+}
+/* Desktop: panels take 60vh, below-content handles the rest */
+@media (min-width: 1024px) {
+  .accordion-container {
+    height: 60vh;
+    min-height: 420px;
+  }
 }
 
 .accordion-panel {
@@ -78,19 +90,40 @@
   border-bottom: 1px solid rgb(var(--text-base) / 0.1);
 }
 @media (min-width: 768px) {
-  .accordion-panel { border-bottom: none; border-right: 1px solid rgb(var(--text-base) / 0.1); }
+  .accordion-panel {
+    border-bottom: none;
+    border-right: 1px solid rgb(var(--text-base) / 0.1);
+  }
+}
+/* Desktop: red accent bar at bottom of active/hovered panel */
+@media (min-width: 1024px) {
+  .accordion-panel::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+    transition: background 0.4s ease;
+    z-index: 30;
+  }
+  .accordion-panel.active::after,
+  .accordion-panel:hover::after {
+    background: #C62828;
+  }
 }
 
 .accordion-bg {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100vw; 
+  width: 100vw;
   height: 100dvh;
   object-fit: cover;
   opacity: 0.5;
   transform: translate(-50%, -50%) scale(1.1);
-  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease, filter 0.7s ease;
   transform-origin: center center;
 }
 
@@ -101,32 +134,128 @@
   .accordion-panel.active { flex: 7; }
 }
 
+/* md (tablet): hover interaction with content overlay */
 @media (min-width: 768px) {
   .accordion-container:hover .accordion-panel.active:not(:hover) { flex: 1; }
   .accordion-container:hover .accordion-panel.active:not(:hover) .accordion-bg { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
   .accordion-container:hover .accordion-panel.active:not(:hover) .content-expanded { opacity: 0; pointer-events: none; transform: translateY(20px); }
   .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed { opacity: 1; }
-  
+
   .accordion-panel:hover { flex: 7 !important; }
   .accordion-panel:hover .accordion-bg { opacity: 1 !important; transform: translate(-50%, -50%) scale(1) !important; }
   .accordion-panel:hover .content-expanded { opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto !important; }
   .accordion-panel:hover .content-collapsed { opacity: 0 !important; }
 }
 
+/* lg (desktop): content-expanded is hidden entirely — shown in accordion-below instead */
+@media (min-width: 1024px) {
+  .accordion-panel .content-expanded { display: none !important; }
+  /* Always show the number/label on desktop */
+  .accordion-panel .content-collapsed,
+  .accordion-panel.active .content-collapsed,
+  .accordion-container:hover .accordion-panel.active:not(:hover) .content-collapsed,
+  .accordion-panel:hover .content-collapsed { opacity: 1 !important; }
+}
+
 .content-expanded {
-  opacity: 0; transform: translateY(20px);
+  opacity: 0;
+  transform: translateY(20px);
   transition: opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s;
-  pointer-events: none; white-space: normal;
+  pointer-events: none;
+  white-space: normal;
 }
 .accordion-panel.active .content-expanded {
-  opacity: 1; transform: translateY(0); pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .content-collapsed {
-  opacity: 1; transition: opacity 0.3s ease;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 .accordion-panel.active .content-collapsed {
   opacity: 0;
+}
+
+/* ─── Desktop: Below Accordion ─── */
+.accordion-below {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .accordion-below {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    background-color: rgb(var(--bg-base));
+    border-top: 1px solid rgb(var(--text-base) / 0.1);
+    min-height: 200px;
+    transition: background-color 0.5s ease;
+  }
+
+  .accordion-below-indicators {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.125rem;
+    padding: 1.75rem 1.25rem;
+    border-right: 1px solid rgb(var(--text-base) / 0.08);
+    flex-shrink: 0;
+    width: 88px;
+  }
+
+  .accordion-indicator-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.25rem;
+    color: rgb(var(--text-base) / 0.35);
+    transition: color 0.3s ease;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+  .accordion-indicator-btn:hover {
+    color: rgb(var(--text-base) / 0.7);
+  }
+  .accordion-indicator-btn.is-active {
+    color: rgb(var(--text-base));
+  }
+
+  .accordion-indicator-bar {
+    width: 20px;
+    height: 2px;
+    background: rgb(var(--text-base) / 0.15);
+    transition: all 0.3s ease;
+    border-radius: 1px;
+  }
+  .accordion-indicator-btn.is-active .accordion-indicator-bar {
+    background: #C62828;
+    width: 28px;
+  }
+  .accordion-indicator-btn:hover .accordion-indicator-bar {
+    background: rgb(var(--text-base) / 0.4);
+  }
+
+  .accordion-below-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 2.25rem 3rem;
+    overflow: hidden;
+  }
+
+  .accordion-below-article {
+    width: 100%;
+    animation: slideUpFade 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* 內文排版 */
@@ -157,8 +286,7 @@
 .gallery-track::-webkit-scrollbar { display: none; }
 .gallery-item { scroll-snap-align: center; }
 
-/* 修正手機版（無滑鼠 hover）的圖片顯示限制 */
+/* 手機版：不套用 grayscale / opacity fade（無 hover 互動） */
 @media (max-width: 767px) {
-  .grayscale { filter: none !important; }
-  .opacity-30, .opacity-40, .opacity-60, .opacity-70, .opacity-80 { opacity: 1 !important; }
+  .accordion-bg { filter: none !important; opacity: 1 !important; }
 }
