@@ -55,8 +55,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             >
               <img src={ad.imageUrl} className={`accordion-bg transition-opacity duration-1000 ${index === activeIndex ? 'opacity-100' : 'opacity-50'} group-hover:opacity-100 grayscale md:grayscale-0`} alt="" style={{ zIndex: 1 }} />
               <div className={`absolute inset-0 transition-opacity duration-500 z-10 ${index === activeIndex
-                  ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100'
-                  : 'bg-theme-bg/80 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/60 md:to-theme-bg/90 group-hover:opacity-80'
+                ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100'
+                : 'bg-theme-bg/80 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/60 md:to-theme-bg/90 group-hover:opacity-80'
                 }`}></div>
 
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-6 py-0 md:p-8 text-theme-text/70 gap-3 md:gap-4 transition-colors z-20">
@@ -118,57 +118,72 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               />
             ))}
             <div className={`absolute inset-0 transition-opacity duration-500 z-10 ${index === activeIndex
-                ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100'
-                : 'bg-theme-bg/80 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/60 md:to-theme-bg/90 group-hover:opacity-80'
+              ? 'bg-gradient-to-t from-theme-bg/90 via-theme-bg/30 to-transparent opacity-100'
+              : 'bg-theme-bg/80 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/60 md:to-theme-bg/90 group-hover:opacity-80'
               }`}></div>
 
-            {/* --- 1. 未展開狀態 (Collapsed) --- */}
+            {/* --- 1. 未展開狀態 (Collapsed)：強調數位序號與分類 --- */}
             <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-6 py-0 md:p-8 text-theme-text/70 gap-3 md:gap-4 transition-colors z-20">
-              <span className="font-display text-lg md:text-3xl font-bold text-theme-text transition-colors">0{panel.displayIndex + 1}</span>
-              {/* 手機版由 10px 提升至 12px (text-xs) */}
-              <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-xs md:text-xs md:rotate-180 md:writing-vertical-rl text-theme-text/90 md:text-theme-text/70 transition-colors">{news.category}</span>
+              {/* 序號：使用 font-display 增加現代感 */}
+              <span className="font-display text-xl md:text-3xl font-bold text-theme-text transition-colors">
+                0{panel.displayIndex + 1}
+              </span>
+              {/* 分類名稱：手機版提升至 text-xs (12px)，並拉大字距 */}
+              <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-xs md:text-xs md:rotate-180 md:writing-vertical-rl text-theme-text/90 md:text-theme-text/70 transition-colors">
+                {news.category}
+              </span>
             </div>
 
-            {/* --- 2. 展開狀態 (Expanded) --- */}
+            {/* --- 2. 展開狀態 (Expanded)：典型的雜誌排版風格 --- */}
             <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-20 transition-colors z-20">
               <div className="max-w-2xl transition-all duration-500 w-full">
-                <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-6">
-                  {/* 類別標籤：手機版由 9px 提升至 12px (text-xs) */}
-                  <span className="text-brand-red font-display font-bold text-xs md:text-sm tracking-[0.2em] uppercase border border-brand-red px-2.5 md:px-3 py-1 md:py-1">{news.category}</span>
-                  {/* 頁碼計數：手機版由 9px 提升至 12px (text-xs) */}
-                  <span className="font-display text-xs md:text-xs text-theme-text/80 tracking-widest uppercase transition-colors">0{carouselIndex + 1} / 05</span>
+                {/* 頂部標籤列 */}
+                <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-8">
+                  {/* 類別標籤：改為 text-xs 並增加內線框感 */}
+                  <span className="text-brand-red font-display font-bold text-xs md:text-sm tracking-[0.2em] uppercase border border-brand-red/30 px-2.5 py-1 transition-colors">
+                    {news.category}
+                  </span>
+                  {/* 頁碼：使用 font-display 輕量化 */}
+                  <span className="font-display text-xs md:text-xs text-theme-text/60 tracking-[0.2em] uppercase transition-colors">
+                    0{carouselIndex + 1} / 05
+                  </span>
 
-                  <div className="flex items-center gap-1 md:gap-2 ml-2 md:ml-4 pointer-events-auto">
-                    {/* 按鈕大小與圖示微調 */}
+                  {/* 切換按鈕：稍微加大以方便點擊 */}
+                  <div className="flex items-center gap-2 ml-auto md:ml-4 pointer-events-auto">
                     <button
                       onClick={(e) => { e.stopPropagation(); setCarouselIndex((prev) => (prev - 1 + 5) % 5); }}
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-theme-text/30 flex items-center justify-center text-theme-text/70 hover:text-theme-bg hover:bg-theme-text hover:border-theme-text transition-all"
-                      aria-label="上一篇"
+                      className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-theme-text/20 flex items-center justify-center text-theme-text/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                     >
-                      <i className="fas fa-angle-left text-xs md:text-xs"></i>
+                      <i className="fas fa-angle-left text-xs"></i>
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); setCarouselIndex((prev) => (prev + 1) % 5); }}
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-theme-text/30 flex items-center justify-center text-theme-text/70 hover:text-theme-bg hover:bg-theme-text hover:border-theme-text transition-all"
-                      aria-label="下一篇"
+                      className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-theme-text/20 flex items-center justify-center text-theme-text/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                     >
-                      <i className="fas fa-angle-right text-xs md:text-xs"></i>
+                      <i className="fas fa-angle-right text-xs"></i>
                     </button>
                   </div>
                 </div>
 
-                <div className="min-h-[160px] md:min-h-[320px] flex flex-col justify-start">
-                  <h2 className="text-2xl sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.3] md:leading-[1.1] tracking-wide md:tracking-normal mb-4 md:mb-6 line-clamp-3 md:line-clamp-none transition-colors drop-shadow-sm">
+                {/* 主內容區 */}
+                <div className="min-h-[180px] md:min-h-[320px] flex flex-col justify-start">
+                  {/* 大標題：應用思源宋體 (font-serif)，縮小行高營造張力 */}
+                  <h2 className="text-2xl sm:text-4xl md:text-6xl font-serif font-black text-theme-text leading-[1.3] md:leading-[1.1] tracking-tight md:tracking-normal mb-4 md:mb-8 line-clamp-3 md:line-clamp-none transition-colors drop-shadow-sm">
                     {news.title}
                   </h2>
-                  {/* 描述文字：手機版由 text-xs (12px) 提升至 text-sm (14px)，大幅增加閱讀舒適度 */}
-                  <p className="text-theme-text/90 font-light text-sm md:text-lg mb-6 md:mb-8 line-clamp-3 md:line-clamp-3 max-w-lg transition-colors drop-shadow-sm leading-relaxed">
+
+                  {/* 摘要：使用 font-sans 輕量化 (font-light)，增加行高營造空氣感 */}
+                  <p className="text-theme-text/80 font-sans font-light text-sm md:text-lg mb-6 md:mb-10 line-clamp-3 md:line-clamp-3 max-w-lg transition-colors leading-relaxed md:leading-loose">
                     {news.excerpt}
                   </p>
+
                   <div className="mt-auto md:mt-0">
-                    {/* Read Story 按鈕：手機版由 10px 提升至 13px (text-sm) */}
-                    <button className="font-display font-bold uppercase tracking-[0.15em] text-xs md:text-sm text-theme-text hover:text-brand-red transition-colors flex items-center gap-2 w-fit border-b border-theme-text/20 pb-1">
-                      Read Story <i className="fas fa-arrow-right text-[10px]"></i>
+                    {/* Read Story：典型的 Editorial 按鈕樣式 */}
+                    <button className="group font-display font-bold uppercase tracking-[0.2em] text-xs md:text-sm text-theme-text transition-colors flex items-center gap-3 w-fit">
+                      <span className="border-b border-theme-text/40 group-hover:border-brand-red transition-colors pb-1">
+                        Read Story
+                      </span>
+                      <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
                     </button>
                   </div>
                 </div>
