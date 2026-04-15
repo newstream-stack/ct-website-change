@@ -1,8 +1,13 @@
+import { useState } from 'react';
+
 interface ActionPageProps {
   category: string;
 }
 
 export default function ActionPage({ category }: ActionPageProps) {
+  const [selectedPlan, setSelectedPlan] = useState('one-time');
+  const [amount, setAmount] = useState('1000');
+
   return (
     <div className="w-full min-h-[100dvh] flex flex-col md:flex-row pt-16 md:pt-0 bg-theme-bg transition-colors duration-500">
       <div className="w-full md:w-[45%] h-[35vh] md:h-[100dvh] bg-brand-red flex flex-col justify-end p-8 md:p-16 relative overflow-hidden border-b border-theme-text/10 md:border-b-0 md:border-r transition-colors">
@@ -36,13 +41,69 @@ export default function ActionPage({ category }: ActionPageProps) {
                   </div>
               </div>
           ) : (
-              <form className="space-y-10 md:space-y-12">
+              <form className="space-y-8 md:space-y-10">
+                  <div className="space-y-4">
+                      <div 
+                          onClick={() => setSelectedPlan('one-time')}
+                          className={`group border p-6 md:p-8 cursor-pointer rounded-sm transition-colors duration-500 relative ${selectedPlan === 'one-time' ? 'border-brand-red bg-brand-red/10' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                      >
+                          {selectedPlan === 'one-time' && <div className="absolute top-4 right-4 text-[10px] font-display uppercase tracking-widest text-brand-red border border-current px-2 py-1">Selected</div>}
+                          <div className="flex flex-col mb-2">
+                              <h3 className="text-2xl md:text-3xl font-serif font-black text-theme-text transition-colors">單次奉獻</h3>
+                              <span className="font-display text-[10px] md:text-xs tracking-[0.2em] uppercase text-theme-text/60 mt-2">One-time Gift</span>
+                          </div>
+                          <p className="font-light text-sm md:text-base opacity-80 text-theme-text mt-4 transition-colors">給予靈活的支持，讓媒體事工持續發聲，傳遞真理。</p>
+                      </div>
+                      
+                      <div 
+                          onClick={() => setSelectedPlan('monthly')}
+                          className={`group border p-6 md:p-8 cursor-pointer rounded-sm transition-colors duration-500 relative ${selectedPlan === 'monthly' ? 'border-brand-red bg-brand-red/10' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                      >
+                          {selectedPlan === 'monthly' && <div className="absolute top-4 right-4 text-[10px] font-display uppercase tracking-widest text-brand-red border border-current px-2 py-1">Selected</div>}
+                          <div className="flex flex-col mb-2">
+                              <h3 className="text-2xl md:text-3xl font-serif font-black text-theme-text transition-colors">定期定額</h3>
+                              <span className="font-display text-[10px] md:text-xs tracking-[0.2em] uppercase text-theme-text/60 mt-2">Monthly Supporter</span>
+                          </div>
+                          <p className="font-light text-sm md:text-base opacity-80 text-theme-text mt-4 transition-colors">每月固定的支持，成為我們最堅實的後盾，穩定推動各項計畫。</p>
+                      </div>
+
+                      <div 
+                          onClick={() => setSelectedPlan('angel')}
+                          className={`group border p-6 md:p-8 cursor-pointer rounded-sm transition-colors duration-500 relative ${selectedPlan === 'angel' ? 'border-brand-red bg-brand-red/10' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                      >
+                          {selectedPlan === 'angel' && <div className="absolute top-4 right-4 text-[10px] font-display uppercase tracking-widest text-brand-red border border-current px-2 py-1">Selected</div>}
+                          <div className="flex flex-col mb-2">
+                              <h3 className="text-2xl md:text-3xl font-serif font-black text-theme-text transition-colors">天使贊助</h3>
+                              <span className="font-display text-[10px] md:text-xs tracking-[0.2em] uppercase text-theme-text/60 mt-2">Angel Sponsor</span>
+                          </div>
+                          <p className="font-light text-sm md:text-base opacity-80 text-theme-text mt-4 transition-colors">年度大額奉獻，深度參與我們的事工發展與未來願景。</p>
+                      </div>
+                  </div>
+
                   <div>
                       <label className="block font-display text-sm md:text-lg font-bold uppercase tracking-[0.2em] mb-6 text-theme-text/60 transition-colors">Select Amount</label>
                       <div className="flex flex-col sm:flex-row gap-4">
-                          <button type="button" className="flex-1 py-4 md:py-5 border border-theme-text/20 bg-theme-text/5 text-theme-text font-display font-bold text-xl hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition rounded-sm">500</button>
-                          <button type="button" className="flex-1 py-4 md:py-5 border border-brand-red bg-brand-red text-white font-display font-bold text-xl hover:bg-theme-text hover:border-theme-text hover:text-theme-bg transition rounded-sm">1000</button>
-                          <button type="button" className="flex-1 py-4 md:py-5 border border-theme-text/20 bg-theme-text/5 text-theme-text font-display font-bold text-xl hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition rounded-sm">3000</button>
+                          <button 
+                            type="button" 
+                            onClick={() => setAmount('500')}
+                            className={`flex-1 py-4 md:py-5 border font-display font-bold text-xl transition rounded-sm ${amount === '500' ? 'border-brand-red bg-brand-red text-white' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                          >
+                            500
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => setAmount('1000')}
+                            className={`flex-1 py-4 md:py-5 border font-display font-bold text-xl transition rounded-sm ${amount === '1000' ? 'border-brand-red bg-brand-red text-white' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                          >
+                            1000
+                          </button>
+                          <button 
+                            type="button" 
+                            onClick={() => setAmount('3000')}
+                            className={`flex-1 py-4 md:py-5 border font-display font-bold text-xl transition rounded-sm ${amount === '3000' ? 'border-brand-red bg-brand-red text-white' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                          >
+                            3000
+                          </button>
                       </div>
                   </div>
                   <div>
