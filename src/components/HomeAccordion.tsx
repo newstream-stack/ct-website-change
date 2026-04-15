@@ -36,7 +36,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   });
 
   return (
-    <div className="accordion-container relative pt-[160px] md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0">
+    <div className="accordion-container relative pt-[160px] md:pt-0 pb-[136px] md:pb-[120px] lg:pb-[120px]">
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
           const ad = panel.ad;
@@ -64,7 +64,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 <span className="font-display tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] md:text-xs md:rotate-180 md:writing-vertical-rl text-brand-red transition-colors font-bold">SPONSOR</span>
               </div>
 
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-20 transition-colors z-20">
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-28 lg:pb-32 pt-20 transition-colors z-20">
                 <div className="max-w-2xl transition-all duration-500 w-full">
                   <div className="flex items-center flex-wrap gap-3 md:gap-4 mb-4 md:mb-6">
                     <span className="text-white bg-brand-red font-display font-bold text-[10px] md:text-xs tracking-[0.2em] uppercase px-2 md:px-3 py-1 whitespace-nowrap shrink-0">SPONSORED</span>
@@ -138,7 +138,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             </div>
 
             {/* --- 2. 展開狀態 (Expanded)：典型的雜誌排版風格 --- */}
-            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-4 md:pb-24 pt-20 transition-colors z-20">
+            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-6 py-8 md:p-12 lg:p-16 pb-8 md:pb-28 lg:pb-32 pt-20 transition-colors z-20">
               <div className="max-w-2xl transition-all duration-500 w-full">
                 {/* 頂部標籤列 */}
                 <div className="flex items-center justify-between gap-3 mb-4 md:mb-6">
