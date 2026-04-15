@@ -182,8 +182,8 @@
   opacity: 0;
 }
 
-/* ─── Mobile: no hover, show full image ─── */
-@media (max-width: 767px) {
+/* ─── Mobile phone: no hover, force full colour image ─── */
+@media (max-width: 639px) {
   .accordion-bg {
     filter: none !important;
     opacity: 1 !important;

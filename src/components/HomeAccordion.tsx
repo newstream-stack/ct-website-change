@@ -55,7 +55,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <img
                 src={ad.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${
-                  index === activeIndex ? 'opacity-100' : 'opacity-40 grayscale'
+                  index === activeIndex ? 'opacity-100' : 'opacity-100 grayscale'
                 } group-hover:opacity-100 group-hover:grayscale-0`}
                 alt=""
                 style={{ zIndex: 1 }}
@@ -66,23 +66,23 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 className={`absolute inset-0 transition-all duration-500 z-10 ${
                   index === activeIndex
                     ? 'bg-gradient-to-t from-black/80 via-black/20 to-transparent'
-                    : 'bg-theme-bg/85 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/70 md:to-theme-bg/95'
+                    : 'bg-black/30 md:bg-black/20'
                 } group-hover:from-black/75 group-hover:via-black/15`}
               ></div>
 
               {/* Collapsed state */}
-              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 text-theme-text/60 gap-3 md:gap-5 z-20">
-                <span className="font-display text-xl md:text-[2rem] font-bold text-theme-text tracking-tight">
+              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
+                <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow">
                   AD
                 </span>
-                <div className="hidden md:block w-5 h-px bg-brand-red/60 mx-auto"></div>
-                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:text-[10px] md:rotate-180 md:writing-vertical-rl text-brand-red font-bold">
+                <div className="hidden md:block w-5 h-px bg-brand-red/80 mx-auto"></div>
+                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-brand-red font-bold drop-shadow">
                   SPONSOR
                 </span>
               </div>
 
               {/* Expanded state */}
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 py-6 md:px-10 md:py-10 lg:px-14 lg:py-12 z-20">
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
                 <div className="max-w-xl">
                   {/* Tags */}
                   <div className="flex items-center gap-3 mb-5">
@@ -146,8 +146,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 src={item.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${
                   i === carouselIndex
-                    ? (index === activeIndex ? 'opacity-100' : 'opacity-40 grayscale') +
-                      ' group-hover:opacity-100 group-hover:grayscale-0'
+                    ? (index === activeIndex
+                        ? 'opacity-100'
+                        : 'opacity-100 grayscale group-hover:grayscale-0')
                     : 'opacity-0'
                 }`}
                 alt=""
@@ -160,34 +161,34 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               className={`absolute inset-0 transition-all duration-500 z-10 ${
                 index === activeIndex
                   ? 'bg-gradient-to-t from-black/80 via-black/15 to-transparent'
-                  : 'bg-theme-bg/85 md:bg-gradient-to-b md:from-theme-bg/95 md:via-theme-bg/70 md:to-theme-bg/95'
+                  : 'bg-black/30 md:bg-black/20'
               } group-hover:from-black/75`}
             ></div>
 
             {/* ── Collapsed (number + divider + category) ── */}
             <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
-              <span className="font-display text-xl md:text-[2rem] font-bold text-theme-text tracking-tight transition-colors">
+              <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow">
                 0{panel.displayIndex + 1}
               </span>
-              <div className="hidden md:block w-5 h-px bg-theme-text/25 mx-auto"></div>
-              <span className="font-display tracking-[0.25em] uppercase text-[10px] md:text-[10px] md:rotate-180 md:writing-vertical-rl text-theme-text/60 transition-colors">
+              <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
+              <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
                 {news.category}
               </span>
             </div>
 
             {/* ── Expanded (full article preview) ── */}
-            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 py-6 md:px-10 md:py-10 lg:px-14 lg:py-12 z-20">
-              <div className="max-w-xl">
-                {/* Meta row */}
-                <div className="flex items-center gap-3 mb-5 md:mb-6">
-                  <span className="text-brand-red font-display font-bold text-[10px] tracking-[0.2em] uppercase border border-brand-red/50 px-2.5 py-1 whitespace-nowrap">
+            <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
+              <div className="max-w-xl w-full">
+
+                {/* Meta row — fixed height, never shifts */}
+                <div className="flex items-center gap-3 h-9 mb-3 md:mb-4">
+                  <span className="text-brand-red font-display font-bold text-[10px] tracking-[0.2em] uppercase border border-brand-red/50 px-2.5 py-1 whitespace-nowrap shrink-0">
                     {news.category}
                   </span>
-                  <span className="font-display text-[10px] text-white/50 tracking-[0.2em] uppercase">
+                  <span className="font-display text-[10px] text-white/50 tracking-[0.2em] uppercase shrink-0">
                     0{carouselIndex + 1} / 05
                   </span>
-                  {/* Carousel nav */}
-                  <div className="flex items-center gap-1.5 ml-1">
+                  <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -211,8 +212,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </div>
                 </div>
 
-                {/* Carousel dots */}
-                <div className="flex items-center gap-1.5 mb-4 md:mb-5">
+                {/* Carousel dots — fixed height */}
+                <div className="flex items-center gap-1.5 h-5 mb-4 md:mb-5">
                   {[0, 1, 2, 3, 4].map((i) => (
                     <button
                       key={i}
@@ -227,15 +228,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   ))}
                 </div>
 
-                {/* Title */}
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-3 md:mb-4 line-clamp-3 drop-shadow-lg">
-                  {news.title}
-                </h2>
+                {/* Title — fixed 3-line height so layout never shifts */}
+                <div className="min-h-[5.5rem] md:min-h-[8.5rem] lg:min-h-[10rem] mb-3 md:mb-4 overflow-hidden">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight line-clamp-3 drop-shadow-lg">
+                    {news.title}
+                  </h2>
+                </div>
 
-                {/* Excerpt */}
-                <p className="text-white/70 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 max-w-md mb-6 md:mb-8">
-                  {news.excerpt}
-                </p>
+                {/* Excerpt — fixed 2-line height */}
+                <div className="h-10 md:h-12 mb-6 md:mb-8 overflow-hidden">
+                  <p className="text-white/70 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md">
+                    {news.excerpt}
+                  </p>
+                </div>
 
                 {/* CTA */}
                 <button
