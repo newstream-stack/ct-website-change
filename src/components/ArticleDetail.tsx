@@ -55,7 +55,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                 <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 md:p-12 lg:p-20 pb-10 md:pb-16 bg-gradient-to-t from-theme-bg via-theme-bg/90 to-theme-bg/30 transition-colors duration-500">
                     <div className="max-w-[90rem] mx-auto w-full z-10 translate-y-2 md:translate-y-10">
                         <span className="inline-block bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm">{article.category}</span>
-                        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-[80px] font-serif font-black text-theme-text leading-[1.35] md:leading-[1.1] tracking-wide md:tracking-tight mb-5 md:mb-6 max-w-5xl transition-colors duration-500 drop-shadow-md">
+                        <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-[80px] font-serif font-black text-theme-text leading-[1.3] md:leading-[1.1] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-5xl transition-colors duration-500 drop-shadow-md">
                             {article.title}
                         </h1>
                         <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 font-display uppercase tracking-widest text-[9px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
@@ -67,7 +67,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                 </div>
             </div>
 
-            <div className="bg-theme-bg py-8 md:py-24 text-theme-text transition-colors duration-500">
+            <div className="bg-theme-bg py-8 md:py-24 pb-20 md:pb-24 text-theme-text transition-colors duration-500">
                 <div className="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 relative">
 
                     <div className="lg:col-span-8 article-content">

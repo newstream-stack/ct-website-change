@@ -1,10 +1,10 @@
 export default function ProductGallery() {
   return (
-    <div className="pt-24 md:pt-32 min-h-screen flex flex-col bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[190px] md:pt-32 pb-24 min-h-screen flex flex-col bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20 mb-8 md:mb-12 flex justify-between items-end border-b border-theme-text/20 pb-6 md:pb-10 transition-colors">
           <div>
-              <h1 className="text-6xl md:text-[120px] font-serif font-black leading-none text-theme-text tracking-tighter transition-colors">PRODUCT.</h1>
-              <p className="text-lg md:text-2xl font-light text-theme-text/60 mt-2 font-serif italic transition-colors">Faith integrated into aesthetic objects.</p>
+              <h1 className="text-4xl md:text-[120px] font-serif font-black leading-none text-theme-text tracking-tighter transition-colors">PRODUCT.</h1>
+              <p className="text-base md:text-2xl font-light text-theme-text/60 mt-2 font-serif italic transition-colors">Faith integrated into aesthetic objects.</p>
           </div>
           <div className="hidden md:flex gap-4">
               <button className="w-12 h-12 rounded-full border border-theme-text/30 flex items-center justify-center text-theme-text/60 hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition"><i className="fas fa-arrow-left"></i></button>

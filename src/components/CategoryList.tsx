@@ -12,7 +12,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
   if (filteredNews.length === 0) filteredNews = MOCK_NEWS;
 
   return (
-    <div className="pt-32 md:pt-48 pb-20 px-6 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="mb-12 md:mb-16 border-b border-theme-text/20 pb-6 md:pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 transition-colors">
         <div>
           <span className="font-display text-brand-red tracking-[0.2em] uppercase text-xs md:text-sm mb-3 md:mb-4 block">Category</span>

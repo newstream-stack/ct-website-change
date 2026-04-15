@@ -9,7 +9,7 @@ export default function ActionPage({ category }: ActionPageProps) {
   const [amount, setAmount] = useState('1000');
 
   return (
-    <div className="w-full min-h-[100dvh] flex flex-col md:flex-row pt-16 md:pt-0 bg-theme-bg transition-colors duration-500">
+    <div className="w-full min-h-[100dvh] flex flex-col md:flex-row pt-[190px] md:pt-0 bg-theme-bg transition-colors duration-500">
       <div className="w-full md:w-[45%] h-[35vh] md:h-[100dvh] bg-brand-red flex flex-col justify-end p-8 md:p-16 relative overflow-hidden border-b border-theme-text/10 md:border-b-0 md:border-r transition-colors">
           <div className="absolute -right-20 md:-right-40 top-1/2 transform -translate-y-1/2 font-display text-[20vh] md:text-[30vh] font-black text-black/10 uppercase leading-none pointer-events-none" style={{ writingMode: 'vertical-rl' }}>
               {category === '訂報' ? 'SUB' : 'GIVE'}
@@ -20,7 +20,7 @@ export default function ActionPage({ category }: ActionPageProps) {
           </div>
       </div>
       
-      <div className="w-full md:w-[55%] h-auto md:h-[100dvh] flex flex-col justify-center p-6 md:p-16 lg:p-24 overflow-y-auto">
+      <div className="w-full md:w-[55%] h-auto md:h-[100dvh] flex flex-col justify-center p-6 pb-24 md:p-16 lg:p-24 md:pb-16 overflow-y-auto">
           {category === '訂報' ? (
               <div className="space-y-6 md:space-y-8">
                   <div className="group border border-theme-text/20 bg-theme-text/5 p-6 md:p-8 hover:bg-theme-text hover:text-theme-bg transition-colors duration-500 cursor-pointer rounded-sm">

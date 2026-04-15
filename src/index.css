@@ -190,6 +190,19 @@
   }
 }
 
+/* Dual vignette: dark top + dark bottom, transparent in the middle */
+.accordion-vignette {
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.15) 28%,
+    transparent 45%,
+    transparent 52%,
+    rgba(0, 0, 0, 0.65) 72%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+}
+
 /* ─── 內文排版 ─── */
 .article-content p {
   font-size: 1.05rem;

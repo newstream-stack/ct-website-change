@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { MOCK_NEWS, MOCK_ADS } from '../data';
 
 interface HomeAccordionProps {
@@ -8,6 +8,26 @@ interface HomeAccordionProps {
 export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Dynamically measure header height for mobile top padding
+  useLayoutEffect(() => {
+    const header = document.querySelector('header') as HTMLElement | null;
+    const applyPt = () => {
+      const c = containerRef.current;
+      if (!c) return;
+      if (window.innerWidth < 768) {
+        c.style.paddingTop = `${header?.offsetHeight ?? 170}px`;
+      } else {
+        c.style.paddingTop = '';
+      }
+    };
+    applyPt();
+    const ro = header ? new ResizeObserver(applyPt) : null;
+    if (ro && header) ro.observe(header);
+    window.addEventListener('resize', applyPt, { passive: true });
+    return () => { ro?.disconnect(); window.removeEventListener('resize', applyPt); };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -35,7 +55,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   });
 
   return (
-    <div className="accordion-container relative pt-[200px] md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0">
+    <div
+      ref={containerRef}
+      className="accordion-container relative md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0"
+    >
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
           const ad = panel.ad;
@@ -63,14 +86,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 style={{ zIndex: 1 }}
               />
 
-              {/* Gradient overlay */}
+              {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
               <div
-                className={`absolute inset-0 transition-all duration-500 z-10 ${
+                className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
                   index === activeIndex
-                    ? 'bg-gradient-to-t from-black/90 via-black/45 to-transparent'
-                    : 'bg-black/45 sm:bg-black/30 md:bg-black/20'
+                    ? 'accordion-vignette'
+                    : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
                 }`}
-              ></div>
+              />
 
               {/* Collapsed state */}
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
@@ -158,14 +181,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               />
             ))}
 
-            {/* Gradient overlay */}
+            {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
             <div
-              className={`absolute inset-0 transition-all duration-500 z-10 ${
+              className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
                 index === activeIndex
-                  ? 'bg-gradient-to-t from-black/90 via-black/45 to-transparent'
-                  : 'bg-black/45 sm:bg-black/30 md:bg-black/20'
+                  ? 'accordion-vignette'
+                  : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
               }`}
-            ></div>
+            />
 
             {/* ── Collapsed (number + divider + category) ── */}
             <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
