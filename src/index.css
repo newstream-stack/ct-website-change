@@ -182,11 +182,11 @@
   opacity: 0;
 }
 
-/* ─── Mobile phone: no hover, force full colour image ─── */
+/* ─── Mobile phone (≤639px): no hover, no grayscale — opacity handled by JS ─── */
 @media (max-width: 639px) {
   .accordion-bg {
     filter: none !important;
-    opacity: 1 !important;
+    /* opacity is intentionally NOT overridden — let JS classes (opacity-50 / opacity-100) work */
   }
 }
 

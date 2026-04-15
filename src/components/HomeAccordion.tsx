@@ -35,7 +35,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   });
 
   return (
-    <div className="accordion-container relative pt-[160px] md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0">
+    <div className="accordion-container relative pt-[200px] md:pt-0 pb-[136px] md:pb-[96px] lg:pb-0">
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
           const ad = panel.ad;
@@ -55,8 +55,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <img
                 src={ad.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${
-                  index === activeIndex ? 'opacity-100' : 'opacity-100 grayscale'
-                } group-hover:opacity-100 group-hover:grayscale-0`}
+                  index === activeIndex
+                    ? 'opacity-100'
+                    : 'opacity-50 md:opacity-80 md:grayscale group-hover:opacity-100 group-hover:grayscale-0'
+                }`}
                 alt=""
                 style={{ zIndex: 1 }}
               />
@@ -65,9 +67,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 ${
                   index === activeIndex
-                    ? 'bg-gradient-to-t from-black/80 via-black/20 to-transparent'
-                    : 'bg-black/30 md:bg-black/20'
-                } group-hover:from-black/75 group-hover:via-black/15`}
+                    ? 'bg-gradient-to-t from-black/90 via-black/45 to-transparent'
+                    : 'bg-black/45 sm:bg-black/30 md:bg-black/20'
+                }`}
               ></div>
 
               {/* Collapsed state */}
@@ -148,7 +150,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   i === carouselIndex
                     ? (index === activeIndex
                         ? 'opacity-100'
-                        : 'opacity-100 grayscale group-hover:grayscale-0')
+                        : 'opacity-50 md:opacity-80 md:grayscale group-hover:opacity-100 group-hover:grayscale-0')
                     : 'opacity-0'
                 }`}
                 alt=""
@@ -160,9 +162,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             <div
               className={`absolute inset-0 transition-all duration-500 z-10 ${
                 index === activeIndex
-                  ? 'bg-gradient-to-t from-black/80 via-black/15 to-transparent'
-                  : 'bg-black/30 md:bg-black/20'
-              } group-hover:from-black/75`}
+                  ? 'bg-gradient-to-t from-black/90 via-black/45 to-transparent'
+                  : 'bg-black/45 sm:bg-black/30 md:bg-black/20'
+              }`}
             ></div>
 
             {/* ── Collapsed (number + divider + category) ── */}
