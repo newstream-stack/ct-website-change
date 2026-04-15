@@ -72,32 +72,35 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
 
                     <div className="lg:col-span-8 article-content">
                         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-theme-text/10 transition-colors">
-                            <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 transition-colors">Share</span>
+                            {/* 1. Share 文字 */}
+                            <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 transition-colors">
+                                Share
+                            </span>
+
+                            {/* 2. 圖示容器：刪除了多餘的層級與 mt-6 */}
                             <div className="flex gap-3">
-                                <div className="flex gap-3 mt-6">
-                                    {/* Facebook */}
-                                    <div
-                                        onClick={() => handleShare('fb')}
-                                        className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
-                                    >
-                                        <i className="fab fa-facebook-f text-xs"></i>
-                                    </div>
+                                {/* Facebook */}
+                                <div
+                                    onClick={() => handleShare('fb')}
+                                    className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
+                                >
+                                    <i className="fab fa-facebook-f text-xs"></i>
+                                </div>
 
-                                    {/* Instagram */}
-                                    <div
-                                        onClick={() => handleShare('ig')}
-                                        className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
-                                    >
-                                        <i className="fab fa-instagram text-xs"></i>
-                                    </div>
+                                {/* Instagram */}
+                                <div
+                                    onClick={() => handleShare('ig')}
+                                    className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#E4405F] hover:text-white hover:border-[#E4405F] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
+                                >
+                                    <i className="fab fa-instagram text-xs"></i>
+                                </div>
 
-                                    {/* Line */}
-                                    <div
-                                        onClick={() => handleShare('lin')}
-                                        className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#06C755] hover:text-white hover:border-[#06C755] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
-                                    >
-                                        <i className="fab fa-line text-xs"></i>
-                                    </div>
+                                {/* Line */}
+                                <div
+                                    onClick={() => handleShare('lin')}
+                                    className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center hover:bg-[#06C755] hover:text-white hover:border-[#06C755] transition bg-theme-text/5 cursor-pointer text-theme-text/80"
+                                >
+                                    <i className="fab fa-line text-xs"></i>
                                 </div>
                             </div>
                         </div>
