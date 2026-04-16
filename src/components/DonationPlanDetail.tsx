@@ -37,9 +37,9 @@ const PLAN_DATA = [
   },
   { 
     id: 6, 
-    title: '亞洲新核心', 
-    imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
-    description: '我們看見亞洲在神國度藍圖中的關鍵角色。透過成立媒體中心、培訓基地與資源網絡，我們將立足亞洲，展望世界。邀請您參與這項深具戰略意義的建設計畫，共同打造亞洲新核心。'
+    title: 'Impact Asia Alliance（IAA）—— 從亞洲開始，影響世界', 
+    imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/04/14/69ddb83f810ff.jpg',
+    description: `身在「台灣」的你是非常關鍵的！\n\n神使用我們牽動全世界，神對福音、宣教的計畫亦然。\n\n掀起亞洲宣教旋風，不是我們單獨可以完成的，這是一個互相成全，互相扶持一起完成大使命的時代，教會也不再是關起門來做事工，所有人、所有教會都被邀請參與這場復興的運動中，讓我們一起回應神「去！使萬民作我的門徒」\n\n亞洲正站在全球轉變的中心。科技、文化、信仰與下一代的浪潮，都正在向亞洲匯聚。在這關鍵時刻，IAA 被呼召興起——成為亞洲教會的屬靈引擎與影響力平台。\n\nIAA 是什麼？\nIAA 不只是年會，而是一場以基督為中心的影響力運動。我們致力於打造一個新的「使命晶片」——啟動全球教會在媒體、領導力、跨國連結與文化影響力上的新模式。從馬來西亞、印尼、台灣，到震動日本的 2025 東京年會，亞洲正在被喚醒，而這只是開始。\n\n為什麼需要你的奉獻？\n因為影響力需要投入，需要願意看見未來的人。\n\n你的奉獻將支持：\n1. 亞洲領袖復興 — 裝備關鍵領袖，帶動城市改變。\n2. 新媒體宣教平台 — 建置多語影音中心，將福音傳向列國。\n3. 下一代興起 — 培育青年領袖、創意與AI媒體人才。\n4. 跨國年會與宣教行動 — 推動亞洲各地的連結與復興。\n\n每一分奉獻都會成為：\n一段改變生命的內容、一位被啟動的領袖、一個被點燃的城市。\n\n你的奉獻，是參與神在亞洲的故事\n這不是贊助活動，而是加入一場神國運動。當你奉獻，你就是與神一起建造亞洲、影響世界。亞洲興起，影響世界。\n\n讓我們一起，用奉獻啟動亞洲的未來。\n\n🎁 感恩回饋：\n奉獻 1,000 元(含)以上 致贈 紀念帆布袋 1 個+濃醇濾掛咖啡1組/ 5 包\n奉獻 3,000元(含)以上，即贈來自巴基斯坦的感恩禮「珍鹽Luminous禮盒(內含玫瑰鹽+黑鹽+小木匙一只)」\n奉獻 5,000元 成為IAA 亞洲論壇影響力 代禱勇士\n奉獻 50,000元 致贈 專屬黑卡 + IMPACT報紙五年\n奉獻 150,000元 致贈 專屬黑卡 + IMPACT報紙終身\n奉獻 50萬元 成為終身「亞洲影響力 親善大使」致贈 專屬黑卡 + IMPACT報紙終身 及 亞洲影響力國際年會貴賓席與免報名費 適用夫妻`
   }
 ];
 
@@ -49,6 +49,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const [paymentType, setPaymentType] = useState<'one-time' | 'installment'>('one-time');
   const [selectedPreset, setSelectedPreset] = useState<string>('1000');
   const [customAmount, setCustomAmount] = useState<string>('');
+  const [installmentPeriod, setInstallmentPeriod] = useState<string>('6');
   const [paymentMethod, setPaymentMethod] = useState<'credit-card' | 'line-pay'>('credit-card');
 
   const presetAmounts = ['1000', '3000', '5000', '10000', '50000'];
@@ -66,17 +67,19 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
         />
         <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:p-16 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
           <span className="font-display text-white/80 text-xs md:text-sm tracking-[0.3em] uppercase mb-4 block drop-shadow-md">Support Plan</span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-serif font-black leading-[1.1] text-white drop-shadow-lg mb-6">
-            {plan.title}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[40px] font-serif font-black leading-[1.2] text-white drop-shadow-lg mb-6">
+            {plan.title.split('——').map((part, i) => <React.Fragment key={i}>{part}{i === 0 && '——'}<br className="hidden md:block"/></React.Fragment>)}
           </h1>
-          <p className="text-white/90 font-light text-sm md:text-base leading-relaxed md:leading-loose">
-            {plan.description}
-          </p>
+          <div className="text-white/90 font-light text-sm md:text-base leading-relaxed md:leading-loose space-y-4 max-h-[30vh] md:max-h-[40vh] overflow-y-auto pr-4 scrollbar-thin overflow-x-hidden">
+            {plan.description.split('\n').map((line, idx) => (
+              <p key={idx}>{line}</p>
+            ))}
+          </div>
         </div>
       </div>
       
       {/* Right Area - Form Form  */}
-      <div className="w-full md:w-[55%] h-auto md:h-full flex flex-col p-6 pb-24 md:p-16 lg:p-24 overflow-y-auto overflow-x-hidden relative scrollbar-hide">
+      <div className="w-full md:w-[55%] h-auto md:h-full flex flex-col p-6 pb-24 md:px-16 md:pb-16 md:pt-[130px] lg:px-24 lg:pb-24 lg:pt-[130px] overflow-y-auto overflow-x-hidden relative scrollbar-hide">
         <div className="w-full max-w-xl mx-auto md:mx-0 xl:mr-auto space-y-10 md:space-y-12 pb-10">
           
           {/* Header */}
@@ -132,23 +135,43 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 ))}
               </div>
 
-              {/* Custom Amount for Single Time */}
-              {paymentType === 'one-time' && (
-                <div className={`mt-4 pt-4 border-t border-theme-text/10 transition-all duration-500 overflow-hidden`}>
-                  <p className="text-theme-text/60 text-sm mb-3">或自行輸入金額 (至少 NT$ 100)</p>
-                  <div className="relative group">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-display font-bold text-theme-text/40 group-focus-within:text-brand-red transition-colors">NT$</span>
-                    <input 
-                      type="number" 
-                      placeholder="自訂金額" 
-                      value={customAmount}
-                      onChange={(e) => {
-                        setCustomAmount(e.target.value);
-                        setSelectedPreset('');
-                      }}
-                      className="w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-4 pl-14 pr-4 text-lg font-display text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors disabled:opacity-50" 
-                      min="100"
-                    />
+              {/* Custom Amount for Both Types */}
+              <div className={`mt-4 pt-4 border-t border-theme-text/10 transition-all duration-500 overflow-hidden`}>
+                <p className="text-theme-text/60 text-sm mb-3">或自行輸入金額 (至少 NT$ 100)</p>
+                <div className="relative group">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-display font-bold text-theme-text/40 group-focus-within:text-brand-red transition-colors">NT$</span>
+                  <input 
+                    type="number" 
+                    placeholder="自訂金額" 
+                    value={customAmount}
+                    onChange={(e) => {
+                      setCustomAmount(e.target.value);
+                      setSelectedPreset('');
+                    }}
+                    className="w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-4 pl-14 pr-4 text-lg font-display text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors disabled:opacity-50" 
+                    min="100"
+                  />
+                </div>
+              </div>
+
+              {/* Installment Period Selector */}
+              {paymentType === 'installment' && (
+                <div className="mt-8 pt-4 border-t border-theme-text/10">
+                  <p className="flex items-center gap-2 font-display text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-4 text-theme-text/60 transition-colors">
+                    <span className="w-6 h-6 rounded-full bg-brand-red text-white flex items-center justify-center text-[10px]">2.1</span>
+                    選擇分期期數
+                  </p>
+                  <div className="grid grid-cols-3 gap-3 md:gap-4">
+                    {['6', '12', '18'].map((period) => (
+                      <button 
+                        key={period}
+                        type="button" 
+                        onClick={() => setInstallmentPeriod(period)}
+                        className={`py-3 md:py-4 border font-display font-bold text-lg transition-all duration-300 rounded-sm ${installmentPeriod === period ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                      >
+                        {period} 期
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
