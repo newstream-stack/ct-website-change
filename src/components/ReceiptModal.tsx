@@ -30,18 +30,18 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
       <div className="relative w-full max-w-2xl bg-white text-black rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Receipt Action Bar (Not printed) */}
-        <div className="bg-gray-100 px-6 py-4 flex justify-between items-center border-b border-gray-200 print:hidden">
-          <h3 className="font-bold text-gray-700 font-sans">電子收據預覽</h3>
-          <div className="flex gap-4">
+        <div className="bg-gray-100 px-4 md:px-6 py-4 flex justify-between items-center border-b border-gray-200 print:hidden flex-shrink-0 z-10 relative">
+          <h3 className="font-bold text-gray-700 font-sans text-sm md:text-base">電子收據預覽</h3>
+          <div className="flex gap-2 md:gap-4">
             <button 
               onClick={handlePrint}
-              className="bg-brand-red text-white px-5 py-2 rounded-lg text-sm font-bold tracking-widest hover:bg-brand-red/90 transition-colors flex items-center gap-2"
+              className="bg-brand-red text-white px-4 md:px-5 py-2 rounded-lg text-xs md:text-sm font-bold tracking-widest hover:bg-brand-red/90 transition-colors flex items-center gap-2 shadow-sm"
             >
-              <i className="fas fa-download"></i> 下載 / 列印 (.pdf)
+              <i className="fas fa-download"></i> <span className="hidden sm:inline">下載 / 列印 </span>(.pdf)
             </button>
             <button 
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-800 transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-200"
+              className="text-gray-500 hover:text-red-500 transition-colors w-9 h-9 flex items-center justify-center rounded-full hover:bg-red-50"
             >
               <i className="fas fa-times text-lg"></i>
             </button>
@@ -49,7 +49,7 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
         </div>
 
         {/* Printable Receipt Content */}
-        <div className="p-5 sm:p-8 md:p-12 overflow-x-hidden overflow-y-auto bg-white print:p-0" id="printable-receipt">
+        <div className="flex-1 min-h-0 p-5 sm:p-8 md:p-12 overflow-x-hidden overflow-y-auto bg-white print:overflow-visible print:p-0" id="printable-receipt">
           
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-brand-red pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-2">
