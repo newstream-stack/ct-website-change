@@ -59,19 +59,19 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
       
       {/* Left Area - Main Image & Copywriting */}
       <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
-        <div className="w-full aspect-[4/3] md:aspect-auto md:min-h-[40vh] md:max-h-[50vh] relative flex-shrink-0">
+        <div className="w-full md:min-h-[40vh] md:max-h-[50vh] relative flex-shrink-0">
           <img 
             src={plan.imageUrl} 
             alt={plan.title} 
-            className="w-full h-full object-cover" 
+            className="w-full h-auto md:h-full object-cover" 
           />
         </div>
         <div className="p-8 md:p-12 lg:p-16 flex flex-col bg-theme-bg text-theme-text flex-grow">
-          <span className="font-display text-theme-text/60 text-xs md:text-sm tracking-[0.3em] uppercase mb-4 block">Support Plan</span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[40px] font-serif font-black leading-[1.2] text-theme-text mb-8">
+          <span className="font-display text-theme-text/60 text-sm md:text-base tracking-[0.3em] uppercase mb-4 block">Support Plan</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-[48px] font-serif font-black leading-[1.2] text-theme-text mb-8">
             {plan.title.split('——').map((part, i) => <React.Fragment key={i}>{part}{i === 0 && '——'}<br className="hidden md:block"/></React.Fragment>)}
           </h1>
-          <div className="text-theme-text/80 font-light text-sm md:text-base leading-relaxed md:leading-loose space-y-6">
+          <div className="text-theme-text/80 font-light text-base md:text-lg leading-relaxed md:leading-loose space-y-6">
             {plan.description.split('\n').map((line, idx) => (
               line.trim() !== '' ? <p key={idx}>{line}</p> : null
             ))}
