@@ -43,7 +43,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
             )}
             <div className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
             <div className="w-full md:w-[35%] lg:w-1/3 aspect-[4/3] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm">
-              <img src={news.imageUrl} className="w-full h-full object-cover opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
+              <img src={news.imageUrl} className="w-full h-full object-cover opacity-100 md:opacity-80 md:grayscale group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
               <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">{news.category}</div>
             </div>
             <div className="w-full md:w-[65%] lg:w-2/3 flex flex-col justify-center mt-2 md:mt-0">
