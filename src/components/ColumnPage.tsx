@@ -31,7 +31,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
             >
               <img 
                 src={article.imageUrl} 
-                className="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" 
+                className="w-full h-full object-cover md:grayscale md:opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000" 
                 alt={article.title} 
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
@@ -112,7 +112,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
           <div key={author.id} className="flex gap-4 group">
             {/* Avatar */}
             <div className="w-16 h-16 md:w-20 md:h-20 shrink-0 overflow-hidden rounded-full bg-theme-text/10 border-2 border-transparent group-hover:border-brand-red transition-all duration-500 shadow-lg">
-               <img src={author.avatarUrl} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={author.name} />
+               <img src={author.avatarUrl} className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-500" alt={author.name} />
             </div>
             
             {/* Info */}
