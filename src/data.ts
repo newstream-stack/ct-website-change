@@ -154,8 +154,9 @@ export const dummyContentPart1 = `
 `;
 
 export const dummyContentPart2 = `
+export const dummyContentPart2 = `
   <div class="w-full my-12 md:my-24 py-12 md:py-24 border-y border-theme-text/10 bg-theme-text/5 relative flex justify-center overflow-hidden transition-colors">
-      <div class="absolute -top-10 md:-top-16 text-[120px] md:text-[200px] font-serif text-theme-text/5 leading-none pointer-events-none">“</div>
+      <div className="absolute -top-10 md:-top-16 text-[120px] md:text-[200px] font-serif text-theme-text/5 leading-none pointer-events-none">“</div>
       <h2 class="font-serif text-2xl sm:text-3xl md:text-5xl text-theme-text text-center max-w-4xl leading-[1.4] md:leading-[1.3] font-black px-4 md:px-6 z-10 mx-auto transition-colors" style="border: none; padding-left: 0; margin: 0;">
           當世界越黑暗，<span class="text-brand-red">真理的光就越發明亮</span>。這不僅是一個時代的挑戰，更是我們覺醒的契機。
       </h2>
@@ -163,3 +164,71 @@ export const dummyContentPart2 = `
   <p>未來的道路或許仍有波折，但憑藉著同心合一的行動與對價值的堅持，我們深信這股改變的火苗將持續燃燒，照亮每一個陰暗的角落。</p>
   <p>這是一場心靈的革命，從我們每一個人開始。拒絕被演算法綁架，重新奪回我們對生活與真理的詮釋權。當我們願意停下腳步，傾聽內在的聲音，生命將會展現出前所未有的深度與廣度。</p>
 `;
+
+export interface Columnist {
+  id: string;
+  name: string;
+  avatarUrl: string;
+  subCategory: string; // '好牧人', '天路客', '國度之聲'
+  latestArticleTitle: string;
+  latestArticleDate: string;
+  latestArticleId: number;
+}
+
+export const COLUMNISTS: Columnist[] = [
+  {
+    id: 'c1',
+    name: '文亮',
+    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80',
+    subCategory: '好牧人',
+    latestArticleTitle: '《真理教室》敬虔三要素',
+    latestArticleDate: '2026-04-16',
+    latestArticleId: 11
+  },
+  {
+    id: 'c2',
+    name: '吳道宗',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80',
+    subCategory: '好牧人',
+    latestArticleTitle: '重審耶穌的佈道策略',
+    latestArticleDate: '2026-04-15',
+    latestArticleId: 12
+  },
+  {
+    id: 'c3',
+    name: '吳獻章',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80',
+    subCategory: '好牧人',
+    latestArticleTitle: '【創世紀靈修】過客的眼光',
+    latestArticleDate: '2026-04-11',
+    latestArticleId: 13
+  },
+  {
+    id: 'c4',
+    name: '劉幸枝',
+    avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80',
+    subCategory: '天路客',
+    latestArticleTitle: '【禱嶼專欄8】給「馬大們」的歸心祈禱',
+    latestArticleDate: '2026-04-11',
+    latestArticleId: 14
+  },
+  {
+    id: 'c5',
+    name: '林鴻信',
+    avatarUrl: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80',
+    subCategory: '國度之聲',
+    latestArticleTitle: '【睿智雞精特別號】我們相信人格神或三一神呢？',
+    latestArticleDate: '2026-04-08',
+    latestArticleId: 15
+  },
+  {
+    id: 'c6',
+    name: '張慧康',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&facepad=2&w=300&h=300&q=80',
+    subCategory: '國度之聲',
+    latestArticleTitle: '神為何不讓大衛建造聖殿？',
+    latestArticleDate: '2026-04-07',
+    latestArticleId: 16
+  }
+];
+

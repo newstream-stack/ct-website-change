@@ -14,6 +14,7 @@ import LoginPage from './components/LoginPage';
 import MembershipPage from './components/MembershipPage';
 import MemberDashboard from './components/MemberDashboard';
 import EventRegistrationPage from './components/EventRegistrationPage';
+import ColumnPage from './components/ColumnPage';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -131,7 +132,11 @@ export default function App() {
           <HomeAccordion openArticle={openArticle} />
         )}
 
-        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && (
+        {currentCategory === '專欄' && !currentArticleId && (
+          <ColumnPage openArticle={openArticle} />
+        )}
+
+        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && currentCategory !== '專欄' && (
           <CategoryList category={currentCategory} openArticle={openArticle} />
         )}
 
