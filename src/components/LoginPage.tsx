@@ -62,6 +62,13 @@ export default function LoginPage({ goToCategory }: LoginPageProps) {
               </div>
             </div>
 
+            <div className="flex items-center px-1">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox" className="w-4 h-4 accent-brand-red cursor-pointer rounded border-theme-text/20 transition-colors" defaultChecked />
+                <span className="text-xs text-theme-text/70 group-hover:text-theme-text transition-colors select-none font-bold tracking-widest mt-[1px]">保持登入 Remember me</span>
+              </label>
+            </div>
+
             <button type="submit" className="mt-4 w-full bg-brand-red text-white font-bold tracking-widest py-3.5 rounded-xl hover:bg-[#b31b1b] transform hover:-translate-y-0.5 active:translate-y-0 transition-all shadow-lg shadow-brand-red/20 group">
               登入 <i className="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
             </button>
