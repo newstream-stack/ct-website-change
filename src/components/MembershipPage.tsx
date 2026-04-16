@@ -69,7 +69,7 @@ export default function MembershipPage() {
           {plans.map((plan, index) => (
             <div 
               key={plan.id}
-              className={\`relative bg-theme-bg/60 backdrop-blur-xl border border-theme-text/10 rounded-2xl flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-theme-text/5 \${plan.isPopular ? 'md:-translate-y-4 md:shadow-2xl md:border-brand-red/50' : ''}\`}
+              className={`relative bg-theme-bg/60 backdrop-blur-xl border border-theme-text/10 rounded-2xl flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-theme-text/5 ${plan.isPopular ? 'md:-translate-y-4 md:shadow-2xl md:border-brand-red/50' : ''}`}
             >
               {plan.isPopular && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-red text-white px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-widest uppercase z-10 shadow-md">
@@ -94,9 +94,7 @@ export default function MembershipPage() {
                       <span className="leading-snug">{feature}</span>
                     </li>
                   ))}
-                </ul>
-
-                <button className={\`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 \${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}\`}>
+                <button className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}>
                   立即訂閱
                 </button>
               </div>
