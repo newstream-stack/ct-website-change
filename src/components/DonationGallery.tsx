@@ -6,12 +6,12 @@ interface DonationGalleryProps {
 
 export default function DonationGallery({ openPlan }: DonationGalleryProps) {
   const items = [
-    { id: 1, title: '【新生的甘霖】復活草生命禮盒', imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800' },
-    { id: 2, title: '在沙漠中匯聚活水，將影響力推向地極', imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800' },
-    { id: 3, title: 'The Greatest Gift from God｜神的愛最美的禮物', imageUrl: 'https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800' },
-    { id: 4, title: '乘著愛的風出發吧！', imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800' },
-    { id: 5, title: '在你所在之處綻放', imageUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800' },
-    { id: 6, title: '亞洲新核心', imageUrl: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800' }
+    { id: 1, title: '【新生的甘霖】復活草生命禮盒', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/23/69c0dc0e9dc17.jpg' },
+    { id: 2, title: '在沙漠中匯聚活水，將影響力推向地極', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/13/69b3d20573950.jpg' },
+    { id: 3, title: 'The Greatest Gift from God｜神的愛最美的禮物', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/11/69b10d270667f.png' },
+    { id: 4, title: '乘著愛的風出發吧！', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/02/10/698ae5872cae3.png' },
+    { id: 5, title: '在你所在之處綻放', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2025/12/08/69366c6361bfd.png' },
+    { id: 6, title: '亞洲新核心', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/04/14/69ddb83f810ff.jpg' }
   ];
 
   return (

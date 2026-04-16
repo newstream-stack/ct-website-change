@@ -8,31 +8,31 @@ const PLAN_DATA = [
   { 
     id: 1, 
     title: '【新生的甘霖】復活草生命禮盒', 
-    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/23/69c0dc0e9dc17.jpg',
     description: '在這瞬息萬變的世界中，我們常感到枯竭與疲憊。復活草展現了生命的奇蹟，即使在最嚴苛的環境中，只需一滴甘霖便能重獲新生。這份禮盒象徵著信仰中的希望與復甦，邀請您透過奉獻，將這份生命的禮物傳遞給更多需要的靈魂。'
   },
   { 
     id: 2, 
     title: '在沙漠中匯聚活水，將影響力推向地極', 
-    imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/13/69b3d20573950.jpg',
     description: '荒漠中若有活泉，便能孕育出綠洲。我們的每一筆奉獻，就如同一滴滴水滴，匯聚成川，流入那些心靈乾渴的地帶。加入我們，將這份具有無遠弗屆影響力的活水，推向世界的每一個角落。'
   },
   { 
     id: 3, 
     title: 'The Greatest Gift from God｜神的愛最美的禮物', 
-    imageUrl: 'https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/11/69b10d270667f.png',
     description: '神賜給我們最美的禮物，便是那無條件的愛與救恩。透過您的支持與奉獻，我們得以將這份至高的禮物分享給尚未聽聞福音的人們。讓我們攜手，成為傳遞好消息的使者。'
   },
   { 
     id: 4, 
     title: '乘著愛的風出發吧！', 
-    imageUrl: 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/02/10/698ae5872cae3.png',
     description: '愛是一股驅動力，帶領我們突破疆界，迎向挑戰。這項方案旨在支持青年培力與跨文化宣教。讓我們一同乘上這股屬靈的風，帶著愛與使命，前往神所指引的目的地。'
   },
   { 
     id: 5, 
     title: '在你所在之處綻放', 
-    imageUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=800',
+    imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2025/12/08/69366c6361bfd.png',
     description: '每個人都被呼召成為所在之處的光與鹽。我們致力於推動職場與社區轉化，您的奉獻將幫助我們提供更多資源，裝備弟兄姊妹在家庭、職場及社會中為主發光，綻放獨特的生命影響力。'
   },
   { 
