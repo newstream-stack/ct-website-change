@@ -54,7 +54,7 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-brand-red pb-6 mb-8 gap-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-brand-red text-white font-black font-serif flex items-center justify-center text-xl rounded-lg">
+              <div className="h-12 px-3 bg-brand-red text-white font-black font-serif flex items-center justify-center text-xl rounded-lg tracking-widest">
                 IMPACT
               </div>
               <div>
