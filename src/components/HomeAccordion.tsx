@@ -219,20 +219,20 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                         e.stopPropagation();
                         setCarouselIndex((p) => (p - 1 + 5) % 5);
                       }}
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
+                      className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                       aria-label="Previous"
                     >
-                      <i className="fas fa-angle-left text-[9px]"></i>
+                      <i className="fas fa-angle-left text-[8px]"></i>
                     </button>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         setCarouselIndex((p) => (p + 1) % 5);
                       }}
-                      className="w-7 h-7 md:w-8 md:h-8 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
+                      className="w-6 h-6 md:w-7 md:h-7 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                       aria-label="Next"
                     >
-                      <i className="fas fa-angle-right text-[9px]"></i>
+                      <i className="fas fa-angle-right text-[8px]"></i>
                     </button>
                   </div>
                 </div>

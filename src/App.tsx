@@ -109,7 +109,7 @@ export default function App() {
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
 
-  const showCategoryBar = (currentCategory === '首頁' || NEWS_CATEGORIES.includes(currentCategory)) && !currentArticleId;
+  const showCategoryBar = (currentCategory === '首頁' || NEWS_CATEGORIES.includes(currentCategory) || !!currentArticleId);
 
   return (
     <div className="font-sans relative">

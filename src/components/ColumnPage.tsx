@@ -66,17 +66,17 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
           <div className="absolute bottom-4 right-4 flex gap-1 z-30 md:group-hover:opacity-100 transition-opacity">
             <button 
               onClick={prevSlide}
-              className="w-10 h-10 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
+              className="w-7 h-7 md:w-8 md:h-8 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
               title="Previous Slide"
             >
-              <i className="fas fa-chevron-left text-xs"></i>
+              <i className="fas fa-chevron-left text-[8px]"></i>
             </button>
             <button 
               onClick={nextSlide}
-              className="w-10 h-10 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
+              className="w-7 h-7 md:w-8 md:h-8 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
               title="Next Slide"
             >
-              <i className="fas fa-chevron-right text-xs"></i>
+              <i className="fas fa-chevron-right text-[8px]"></i>
             </button>
           </div>
           
