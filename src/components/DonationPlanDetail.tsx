@@ -51,6 +51,12 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const [customAmount, setCustomAmount] = useState<string>('');
   const [installmentPeriod, setInstallmentPeriod] = useState<string>('6');
   const [paymentMethod, setPaymentMethod] = useState<'credit-card' | 'line-pay'>('credit-card');
+  const [address, setAddress] = useState('');
+  const [receiptAddress, setReceiptAddress] = useState('');
+  const [giftAddress, setGiftAddress] = useState('');
+  const [receiptOption, setReceiptOption] = useState('年度匯開');
+
+  const inputClassName = "w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-3 px-4 text-base text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors placeholder-theme-text/30";
 
   const presetAmounts = ['1000', '3000', '5000', '10000', '50000'];
 
@@ -215,9 +221,79 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               </div>
             </div>
 
-            {/* Email / Donor Info stub */}
-            <div className="pt-6 border-t border-theme-text/10">
-                <input type="text" placeholder="YOUR EMAIL" className="w-full bg-transparent border-b border-theme-text/40 py-4 text-xl md:text-2xl font-display uppercase placeholder-theme-text/40 text-theme-text focus:outline-none focus:border-brand-red transition-colors" />
+            {/* Step 4: Donor Info  */}
+            <div className="space-y-6 pt-8 border-t border-theme-text/10">
+              <label className="flex items-center gap-2 font-display text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-4 text-theme-text/60 transition-colors">
+                <span className="w-6 h-6 rounded-full bg-brand-red text-white flex items-center justify-center text-[10px]">4</span>
+                填寫資料
+              </label>
+
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-theme-text/80">姓名 <span className="text-brand-red">*</span></label>
+                    <input type="text" placeholder="真實姓名" className={inputClassName} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-theme-text/80">電話 <span className="text-brand-red">*</span></label>
+                    <input type="tel" placeholder="聯絡電話" className={inputClassName} />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-theme-text/80">Email <span className="text-brand-red">*</span></label>
+                  <input type="email" placeholder="電子信箱" className={inputClassName} />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-theme-text/80">聯絡地址 <span className="text-brand-red">*</span></label>
+                  <input type="text" placeholder="聯絡地址" value={address} onChange={(e) => setAddress(e.target.value)} className={inputClassName} />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-end">
+                    <label className="text-sm font-bold text-theme-text/80">奉獻收據地址 <span className="text-brand-red">*</span></label>
+                    <button type="button" onClick={() => setReceiptAddress(address)} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white transition-colors border border-brand-red/30 px-3 py-1 rounded-sm">同聯絡地址</button>
+                  </div>
+                  <input type="text" placeholder="收據寄送地址" value={receiptAddress} onChange={(e) => setReceiptAddress(e.target.value)} className={inputClassName} />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-end">
+                    <label className="text-sm font-bold text-theme-text/80">奉獻贈禮寄送地址 <span className="text-brand-red">*</span></label>
+                    <button type="button" onClick={() => setGiftAddress(address)} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white transition-colors border border-brand-red/30 px-3 py-1 rounded-sm">同聯絡地址</button>
+                  </div>
+                  <input type="text" placeholder="贈禮寄送地址" value={giftAddress} onChange={(e) => setGiftAddress(e.target.value)} className={inputClassName} />
+                </div>
+
+                <div className="space-y-3 pt-4 border-t border-theme-text/10">
+                  <label className="text-sm font-bold text-theme-text/80">收據寄送選項 <span className="text-brand-red">*</span></label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {['年度匯開', '按月寄送', '不需收據'].map(opt => (
+                      <button 
+                        key={opt}
+                        type="button"
+                        onClick={() => setReceiptOption(opt)}
+                        className={`py-3 border text-sm md:text-base font-bold transition-all duration-300 rounded-sm ${receiptOption === opt ? 'border-brand-red bg-brand-red text-white' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text/10'}`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-theme-text/80">收據抬頭 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
+                    <input type="text" placeholder="收據抬頭" className={inputClassName} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-theme-text/80">統一編號 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
+                    <input type="text" placeholder="統一編號" className={inputClassName} />
+                  </div>
+                </div>
+
+              </div>
             </div>
 
             {/* Submit */}
