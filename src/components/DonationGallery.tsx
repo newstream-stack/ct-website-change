@@ -26,7 +26,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
               className="cursor-pointer group flex flex-col"
               onClick={() => openPlan && openPlan(item.id)}
             >
-              <div className="w-full aspect-video md:aspect-[4/3] bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-4 rounded-sm">
+              <div className="w-full aspect-video md:aspect-video bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-4 rounded-sm">
                 <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.title} />
               </div>
               <h3 className="font-serif font-black text-xl md:text-[22px] text-theme-text leading-snug group-hover:text-brand-red transition-colors flex-grow">
