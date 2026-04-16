@@ -124,14 +124,190 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               </div>
             )}
 
-            {activeTab !== 'overview' && (
-              <div className="flex flex-col items-center justify-center h-full min-h-[400px] border border-theme-text/10 border-dashed rounded-2xl text-center p-8 bg-theme-text/5 animate-fade-in-up">
-                 <i className="fas fa-tools text-4xl text-theme-text/20 mb-4"></i>
-                 <h3 className="text-xl font-serif font-bold mb-2">此專區建置中</h3>
-                 <p className="text-sm text-theme-text/50 max-w-md">我們正在為您準備專屬的 {activeTab} 功能，即將開放，敬請期待！</p>
-                 <button onClick={() => setActiveTab('overview')} className="mt-6 text-sm font-bold text-brand-red tracking-widest border border-brand-red px-6 py-2 rounded-full hover:bg-brand-red hover:text-white transition-colors">
-                   返回總覽
-                 </button>
+            {activeTab === 'subscription' && (
+              <div className="flex flex-col gap-8 animate-fade-in-up">
+                <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-8">
+                  <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
+                    <div>
+                      <h3 className="text-xl font-serif font-bold mb-1">我的訂閱方案</h3>
+                      <p className="text-sm text-theme-text/60">管理您的 IMPACT 會員資格與付款方式</p>
+                    </div>
+                    <button onClick={() => goToCategory('會員招募')} className="bg-brand-red text-white px-6 py-2 rounded-lg font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
+                      升級方案
+                    </button>
+                  </div>
+                  
+                  <div className="bg-theme-bg border border-theme-text/10 rounded-xl p-6 mb-8">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-4">
+                       <div>
+                         <span className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest rounded-full mb-2">使用中</span>
+                         <h4 className="text-2xl font-black font-display text-theme-text">數位輕享版</h4>
+                       </div>
+                       <span className="text-2xl font-display font-black text-brand-red">NT$ 150 <span className="text-sm text-theme-text/60 font-sans">/ 月</span></span>
+                    </div>
+                    <div className="h-px bg-theme-text/10 w-full my-4"></div>
+                    <p className="text-sm text-theme-text/80 mb-2 font-bold">方案權益包含：</p>
+                    <ul className="text-sm text-theme-text/60 flex flex-col gap-2 mb-6">
+                      <li><i className="fas fa-check text-brand-red mr-2 mt-1"></i>數位內容免費閱讀</li>
+                      <li><i className="fas fa-check text-brand-red mr-2"></i>每週電子報寄送</li>
+                      <li><i className="fas fa-check text-brand-red mr-2"></i>60年資料庫查詢</li>
+                    </ul>
+                    <div className="bg-theme-text/5 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center text-sm gap-2">
+                      <span className="text-theme-text/70">下次扣款日期：<span className="font-bold text-theme-text">2026/05/15</span></span>
+                      <button className="font-bold text-brand-red hover:underline underline-offset-4 self-start sm:self-auto">更新付款資訊</button>
+                    </div>
+                  </div>
+                  
+                  <h4 className="text-lg font-bold mb-4 font-serif">扣款紀錄</h4>
+                  <div className="overflow-x-auto -mx-8 px-8 md:mx-0 md:px-0">
+                    <table className="w-full text-sm text-left whitespace-nowrap">
+                      <thead className="text-xs text-theme-text/60 uppercase bg-theme-bg border-y border-theme-text/10">
+                        <tr>
+                          <th className="px-4 py-3 font-bold">日期</th>
+                          <th className="px-4 py-3 font-bold">項目</th>
+                          <th className="px-4 py-3 font-bold">金額</th>
+                          <th className="px-4 py-3 font-bold">狀態</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-theme-text/5 bg-theme-bg/30">
+                        <tr>
+                          <td className="px-4 py-3">2026/04/15</td>
+                          <td className="px-4 py-3">會員訂閱：數位輕享版 (1個月)</td>
+                          <td className="px-4 py-3 font-bold">NT$ 150</td>
+                          <td className="px-4 py-3 text-[#00C300] font-bold">扣款成功</td>
+                        </tr>
+                        <tr>
+                          <td className="px-4 py-3 text-theme-text/60">2026/03/15</td>
+                          <td className="px-4 py-3 text-theme-text/60">會員訂閱：數位輕享版 (1個月)</td>
+                          <td className="px-4 py-3 font-bold text-theme-text/60">NT$ 150</td>
+                          <td className="px-4 py-3 text-theme-text/60 font-bold">扣款成功</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'saved' && (
+              <div className="flex flex-col gap-6 animate-fade-in-up">
+                <div className="flex justify-between items-end border-b border-theme-text/10 pb-4 mb-2">
+                  <h3 className="text-xl font-serif font-bold">收藏文章 (12)</h3>
+                  <div className="flex gap-4 text-sm">
+                    <button className="font-bold text-theme-text/80 hover:text-brand-red transition-colors flex items-center gap-1">最新加入 <i className="fas fa-chevron-down text-[10px]"></i></button>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
+                  {MOCK_NEWS.slice(0, 6).map((article, i) => (
+                    <div key={i} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
+                      <div className="h-40 overflow-hidden relative">
+                        <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0" />
+                        <button className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 backdrop-blur rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10" title="取消收藏" onClick={(e) => e.stopPropagation()}>
+                           <i className="fas fa-bookmark text-sm"></i>
+                        </button>
+                      </div>
+                      <div className="p-5 flex flex-col flex-1">
+                        <span className="text-[10px] font-bold tracking-widest text-brand-red uppercase mb-1">{article.category}</span>
+                        <h4 className="font-bold text-sm leading-snug mb-3 line-clamp-2 md:line-clamp-3">{article.title}</h4>
+                        <div className="mt-auto flex justify-between items-end text-xs text-theme-text/50 pt-2 border-t border-theme-text/5">
+                          <span>{article.date}</span>
+                          <span className="hover:text-brand-red font-bold text-brand-red group-hover:translate-x-1 transition-transform">閱讀 <i className="fas fa-arrow-right text-[10px] ml-1"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'donations' && (
+              <div className="flex flex-col gap-6 animate-fade-in-up">
+                <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
+                  <div className="flex flex-col md:flex-row justify-between mb-8 gap-6 md:gap-4">
+                    <div>
+                       <h3 className="text-xl font-serif font-bold mb-1">我的奉獻紀錄</h3>
+                       <p className="text-sm text-theme-text/60">感謝您用行動支持我們的看見與影響力。</p>
+                    </div>
+                    <div className="bg-brand-red/10 p-5 rounded-xl border border-brand-red/20 flex flex-col items-start md:items-end justify-center min-w-[200px]">
+                       <span className="text-xs text-brand-red/70 font-bold tracking-widest uppercase mb-1">2026 年度累積奉獻</span>
+                       <span className="text-3xl font-display font-black text-brand-red">NT$ 9,000</span>
+                    </div>
+                  </div>
+
+                  <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
+                    <table className="w-full text-sm text-left whitespace-nowrap font-sans">
+                      <thead className="text-xs text-theme-text/60 uppercase bg-theme-bg border-y border-theme-text/10">
+                        <tr>
+                          <th className="px-4 py-3.5 font-bold">奉獻日期</th>
+                          <th className="px-4 py-3.5 font-bold">奉獻專案</th>
+                          <th className="px-4 py-3.5 font-bold">奉獻方式</th>
+                          <th className="px-4 py-3.5 font-bold">金額</th>
+                          <th className="px-4 py-3.5 font-bold">收據</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-theme-text/5 bg-theme-bg/30">
+                        <tr className="hover:bg-theme-text/5 transition-colors">
+                          <td className="px-4 py-4">2026/04/10</td>
+                          <td className="px-4 py-4 font-bold text-brand-red">乘著愛的風出發吧！</td>
+                          <td className="px-4 py-4 text-theme-text/60">單筆奉獻 (LinePay)</td>
+                          <td className="px-4 py-4 font-bold">NT$ 8,000</td>
+                          <td className="px-4 py-4"><button className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
+                        </tr>
+                        <tr className="hover:bg-theme-text/5 transition-colors">
+                          <td className="px-4 py-4">2026/02/15</td>
+                          <td className="px-4 py-4 font-bold text-brand-red">亞洲論壇影響力中心</td>
+                          <td className="px-4 py-4 text-theme-text/60">單筆奉獻 (信用卡)</td>
+                          <td className="px-4 py-4 font-bold">NT$ 1,000</td>
+                          <td className="px-4 py-4"><button className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <div className="mt-8 pt-6 border-t border-theme-text/10 flex justify-center">
+                    <button onClick={() => goToCategory('奉獻')} className="border border-brand-red text-brand-red px-8 py-3 rounded-xl font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group">
+                      探索更多奉獻專案 <i className="fas fa-heart ml-2 group-hover:scale-110 transition-transform"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
+              <div className="flex flex-col gap-6 animate-fade-in-up">
+                <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
+                  <h3 className="text-xl font-serif font-bold mb-6">帳號設定</h3>
+                  
+                  <form className="flex flex-col gap-5 max-w-lg" onSubmit={e => e.preventDefault()}>
+                    <div className="flex flex-col gap-2">
+                       <label className="text-xs font-bold tracking-widest text-theme-text/70">姓名 Name</label>
+                       <input type="text" defaultValue="王大明" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                       <label className="text-xs font-bold tracking-widest text-theme-text/70">電子信箱 Email Address</label>
+                       <input type="email" defaultValue="david.wang@example.com" className="bg-theme-bg border border-theme-text/10 rounded-xl px-4 py-3.5 text-sm opacity-60 cursor-not-allowed font-sans text-theme-text" readOnly />
+                       <span className="text-[10px] text-theme-text/40 mt-1"><i className="fas fa-info-circle mr-1"></i>信箱作為登入帳號，如需修改請聯繫客服。</span>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                       <label className="text-xs font-bold tracking-widest text-theme-text/70">聯絡地址 Address</label>
+                       <input type="text" defaultValue="台北市大安區新生南路三段" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                    </div>
+                    
+                    <div className="h-px w-full bg-theme-text/10 my-4"></div>
+                    
+                    <div className="flex flex-col gap-3">
+                       <label className="text-xs font-bold tracking-widest text-theme-text/70">變更密碼 Change Password</label>
+                       <input type="password" placeholder="輸入舊密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                       <input type="password" placeholder="設定新密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                    </div>
+                    
+                    <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                       <button className="bg-brand-red text-white font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-[#b31b1b] transform hover:-translate-y-0.5 transition-all shadow-lg shadow-brand-red/20 text-center">儲存變更 Save</button>
+                       <button className="border border-theme-text/20 text-theme-text/70 font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-theme-text/10 transition-colors text-center">取消 Cancel</button>
+                    </div>
+                  </form>
+                </div>
               </div>
             )}
           </div>
