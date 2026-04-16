@@ -94,6 +94,7 @@ export default function MembershipPage() {
                       <span className="leading-snug">{feature}</span>
                     </li>
                   ))}
+                </ul>
                 <button className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}>
                   立即訂閱
                 </button>
