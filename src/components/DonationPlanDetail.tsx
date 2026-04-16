@@ -58,21 +58,22 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
     <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[90px] md:pt-0 bg-theme-bg transition-colors duration-500">
       
       {/* Left Area - Main Image & Copywriting */}
-      <div className="w-full md:w-[45%] h-[50vh] md:h-full relative overflow-hidden group">
-        <div className="absolute inset-0 bg-black/40 z-10"></div>
-        <img 
-          src={plan.imageUrl} 
-          alt={plan.title} 
-          className="w-full h-full object-cover" 
-        />
-        <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:p-16 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-          <span className="font-display text-white/80 text-xs md:text-sm tracking-[0.3em] uppercase mb-4 block drop-shadow-md">Support Plan</span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[40px] font-serif font-black leading-[1.2] text-white drop-shadow-lg mb-6">
+      <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
+        <div className="w-full aspect-[4/3] md:aspect-auto md:min-h-[40vh] md:max-h-[50vh] relative flex-shrink-0">
+          <img 
+            src={plan.imageUrl} 
+            alt={plan.title} 
+            className="w-full h-full object-cover" 
+          />
+        </div>
+        <div className="p-8 md:p-12 lg:p-16 flex flex-col bg-theme-bg text-theme-text flex-grow">
+          <span className="font-display text-theme-text/60 text-xs md:text-sm tracking-[0.3em] uppercase mb-4 block">Support Plan</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[40px] font-serif font-black leading-[1.2] text-theme-text mb-8">
             {plan.title.split('——').map((part, i) => <React.Fragment key={i}>{part}{i === 0 && '——'}<br className="hidden md:block"/></React.Fragment>)}
           </h1>
-          <div className="text-white/90 font-light text-sm md:text-base leading-relaxed md:leading-loose space-y-4 max-h-[30vh] md:max-h-[40vh] overflow-y-auto pr-4 scrollbar-thin overflow-x-hidden">
+          <div className="text-theme-text/80 font-light text-sm md:text-base leading-relaxed md:leading-loose space-y-6">
             {plan.description.split('\n').map((line, idx) => (
-              <p key={idx}>{line}</p>
+              line.trim() !== '' ? <p key={idx}>{line}</p> : null
             ))}
           </div>
         </div>
