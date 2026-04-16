@@ -101,18 +101,16 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 <button 
                   type="button"
                   onClick={() => { setPaymentType('one-time'); setCustomAmount(''); }}
-                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${paymentType === 'one-time' ? 'border-brand-red bg-brand-red/5 text-brand-red shadow-[0_0_0_1px_rgba(200,20,20,1)]' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text/10'}`}
+                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${paymentType === 'one-time' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
                 >
                   單次奉獻
-                  {paymentType === 'one-time' && <div className="absolute top-2 right-2 text-[10px] font-display uppercase tracking-widest text-brand-red border border-brand-red/30 bg-white dark:bg-black px-1.5 py-0.5 rounded-sm">Selected</div>}
                 </button>
                 <button 
                   type="button"
                   onClick={() => { setPaymentType('installment'); setCustomAmount(''); }}
-                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${paymentType === 'installment' ? 'border-brand-red bg-brand-red/5 text-brand-red shadow-[0_0_0_1px_rgba(200,20,20,1)]' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text/10'}`}
+                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${paymentType === 'installment' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
                 >
                    定期定額
-                  {paymentType === 'installment' && <div className="absolute top-2 right-2 text-[10px] font-display uppercase tracking-widest text-brand-red border border-brand-red/30 bg-white dark:bg-black px-1.5 py-0.5 rounded-sm">Selected</div>}
                 </button>
               </div>
             </div>
@@ -187,30 +185,29 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div 
                   onClick={() => setPaymentMethod('credit-card')}
-                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${paymentMethod === 'credit-card' ? 'border-brand-red bg-brand-red/5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${paymentMethod === 'credit-card' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${paymentMethod === 'credit-card' ? 'border-brand-red' : 'border-theme-text/40'}`}>
-                    <div className={`w-2.5 h-2.5 rounded-full bg-brand-red transition-transform duration-300 ${paymentMethod === 'credit-card' ? 'scale-100' : 'scale-0'}`}></div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${paymentMethod === 'credit-card' ? 'border-white' : 'border-theme-text/40'}`}>
+                    <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform duration-300 ${paymentMethod === 'credit-card' ? 'scale-100' : 'scale-0'}`}></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-bold text-theme-text">信用卡付款</span>
-                    <span className="text-xs text-theme-text/50">Credit Card</span>
+                    <span className={`font-bold transition-colors ${paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text'}`}>信用卡付款</span>
+                    <span className={`text-xs transition-colors ${paymentMethod === 'credit-card' ? 'text-white/70' : 'text-theme-text/50'}`}>Credit Card</span>
                   </div>
-                  <i className="fas fa-credit-card ml-auto text-theme-text/30 text-xl"></i>
+                  <i className={`fas fa-credit-card ml-auto text-xl transition-colors ${paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text/30'}`}></i>
                 </div>
                 
                 <div 
                   onClick={() => setPaymentMethod('line-pay')}
-                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${paymentMethod === 'line-pay' ? 'border-[#00B900] bg-[#00B900]/5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${paymentMethod === 'line-pay' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${paymentMethod === 'line-pay' ? 'border-[#00B900]' : 'border-theme-text/40'}`}>
-                    <div className={`w-2.5 h-2.5 rounded-full bg-[#00B900] transition-transform duration-300 ${paymentMethod === 'line-pay' ? 'scale-100' : 'scale-0'}`}></div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${paymentMethod === 'line-pay' ? 'border-white' : 'border-theme-text/40'}`}>
+                    <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform duration-300 ${paymentMethod === 'line-pay' ? 'scale-100' : 'scale-0'}`}></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-bold text-theme-text">Line Pay</span>
-                    <span className="text-xs text-theme-text/50">Mobile Payment</span>
+                    <span className={`font-bold transition-colors ${paymentMethod === 'line-pay' ? 'text-white' : 'text-theme-text'}`}>Line Pay</span>
+                    <span className={`text-xs transition-colors ${paymentMethod === 'line-pay' ? 'text-white/70' : 'text-theme-text/50'}`}>Mobile Payment</span>
                   </div>
-                  {/* Since line-pay logo might not be in fas, using a stylized icon or fallback */}
                   <div className="ml-auto flex items-center justify-center w-8 h-8 rounded-full bg-[#00B900] text-white">
                     <i className="fab fa-line text-lg"></i>
                   </div>
