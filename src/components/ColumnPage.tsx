@@ -16,7 +16,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
 
   return (
-    <div className="pt-[160px] md:pt-[190px] pb-24 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[210px] md:pt-[190px] pb-40 md:pb-24 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Featured Slider */}
       <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
@@ -62,26 +62,30 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
             </div>
           ))}
 
-          {/* Navigation Arrows */}
-          <button 
-            onClick={prevSlide}
-            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-14 md:h-14 bg-black/50 hover:bg-brand-red text-white flex items-center justify-center transition-colors z-20 group"
-          >
-            <i className="fas fa-chevron-left text-xs md:text-xl transform group-hover:-translate-x-1 transition-transform"></i>
-          </button>
-          <button 
-            onClick={nextSlide}
-            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-14 md:h-14 bg-black/50 hover:bg-brand-red text-white flex items-center justify-center transition-colors z-20 group"
-          >
-            <i className="fas fa-chevron-right text-xs md:text-xl transform group-hover:translate-x-1 transition-transform"></i>
-          </button>
+          {/* Navigation Arrows - Repositioned to bottom right to avoid overlapping text */}
+          <div className="absolute bottom-4 right-4 flex gap-1 z-30 md:group-hover:opacity-100 transition-opacity">
+            <button 
+              onClick={prevSlide}
+              className="w-10 h-10 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
+              title="Previous Slide"
+            >
+              <i className="fas fa-chevron-left text-xs"></i>
+            </button>
+            <button 
+              onClick={nextSlide}
+              className="w-10 h-10 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
+              title="Next Slide"
+            >
+              <i className="fas fa-chevron-right text-xs"></i>
+            </button>
+          </div>
           
-          {/* Indicators */}
-          <div className="absolute top-6 right-6 flex flex-col gap-2 z-20">
+          {/* Indicators - Repositioned to clear space */}
+          <div className="absolute top-4 right-4 flex flex-col gap-1.5 z-20">
             {featuredArticles.map((_, i) => (
               <div 
                 key={i} 
-                className={`w-1 h-8 transition-all duration-500 ${i === currentSlide ? 'bg-brand-red' : 'bg-white/20'}`}
+                className={`w-0.5 h-6 transition-all duration-500 ${i === currentSlide ? 'bg-brand-red' : 'bg-white/20'}`}
               ></div>
             ))}
           </div>
