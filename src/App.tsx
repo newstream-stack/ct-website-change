@@ -12,6 +12,7 @@ import DonationPlanDetail from './components/DonationPlanDetail';
 import GlobalBottomAd from './components/GlobalBottomAd';
 import LoginPage from './components/LoginPage';
 import MembershipPage from './components/MembershipPage';
+import MemberDashboard from './components/MemberDashboard';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -154,15 +155,19 @@ export default function App() {
         )}
 
         {currentCategory === '會員中心' && (
-          <LoginPage />
+          <LoginPage goToCategory={goToCategory} />
         )}
 
         {currentCategory === '會員招募' && (
           <MembershipPage />
         )}
+
+        {currentCategory === '會員專區' && (
+          <MemberDashboard goToCategory={goToCategory} />
+        )}
       </main>
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募'].includes(currentCategory) && (
+      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區'].includes(currentCategory) && (
         <GlobalBottomAd />
       )}
     </div>

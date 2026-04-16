@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 
-export default function LoginPage() {
+interface LoginPageProps {
+  goToCategory: (cat: string) => void;
+}
+
+export default function LoginPage({ goToCategory }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const handleLogin = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    goToCategory('會員專區');
+  };
 
   return (
     <div className="pt-[140px] md:pt-[190px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500 flex items-center justify-center relative overflow-hidden">
@@ -21,7 +30,7 @@ export default function LoginPage() {
             <p className="text-xs md:text-sm font-display tracking-widest text-brand-red/80 uppercase mt-2">Log In to Impact</p>
           </div>
 
-          <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col gap-5" onSubmit={handleLogin}>
             <div className="flex flex-col gap-2 relative group">
               <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1 transition-colors">帳號 Email</label>
               <div className="relative">
@@ -65,11 +74,11 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-6 flex flex-col gap-3">
-             <button className="w-full bg-[#00C300]/10 border border-[#00C300]/20 hover:bg-[#00C300]/20 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
+             <button onClick={handleLogin} className="w-full bg-[#00C300]/10 border border-[#00C300]/20 hover:bg-[#00C300]/20 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
                <i className="fab fa-line text-[#00C300] text-lg lg:text-xl group-hover:scale-110 transition-transform"></i>
                Line 快速登入
              </button>
-             <button className="w-full bg-theme-text/5 border border-theme-text/10 hover:bg-theme-text/10 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
+             <button onClick={handleLogin} className="w-full bg-theme-text/5 border border-theme-text/10 hover:bg-theme-text/10 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
                <i className="fab fa-google text-lg lg:text-xl text-[#DB4437] group-hover:scale-110 transition-transform"></i>
                Google 登入
              </button>
