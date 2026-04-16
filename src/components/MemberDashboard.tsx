@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MOCK_NEWS } from '../data';
+import ReceiptModal from './ReceiptModal';
 
 interface MemberDashboardProps {
   goToCategory: (cat: string) => void;
@@ -7,6 +8,7 @@ interface MemberDashboardProps {
 
 export default function MemberDashboard({ goToCategory }: MemberDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview');
+  const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
 
   const savedArticles = MOCK_NEWS.slice(0, 3); // Get some dummy articles for "saved"
 
@@ -252,14 +254,14 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                           <td className="px-4 py-4 font-bold text-brand-red">乘著愛的風出發吧！</td>
                           <td className="px-4 py-4 text-theme-text/60">單筆奉獻 (LinePay)</td>
                           <td className="px-4 py-4 font-bold">NT$ 8,000</td>
-                          <td className="px-4 py-4"><button className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
+                          <td className="px-4 py-4"><button onClick={() => setSelectedReceipt({ id: '2026041001', date: '2026/04/10', project: '乘著愛的風出發吧！', method: '單筆奉獻 (LinePay)', amount: 'NT$ 8,000', name: '王大明' })} className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
                         </tr>
                         <tr className="hover:bg-theme-text/5 transition-colors">
                           <td className="px-4 py-4">2026/02/15</td>
                           <td className="px-4 py-4 font-bold text-brand-red">亞洲論壇影響力中心</td>
                           <td className="px-4 py-4 text-theme-text/60">單筆奉獻 (信用卡)</td>
                           <td className="px-4 py-4 font-bold">NT$ 1,000</td>
-                          <td className="px-4 py-4"><button className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
+                          <td className="px-4 py-4"><button onClick={() => setSelectedReceipt({ id: '2026021509', date: '2026/02/15', project: '亞洲論壇影響力中心', method: '單筆奉獻 (信用卡)', amount: 'NT$ 1,000', name: '王大明' })} className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -313,6 +315,13 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
           </div>
         </div>
       </div>
+      
+      {selectedReceipt && (
+        <ReceiptModal 
+          receipt={selectedReceipt} 
+          onClose={() => setSelectedReceipt(null)} 
+        />
+      )}
     </div>
   );
 }
