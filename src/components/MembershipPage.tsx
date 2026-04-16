@@ -77,13 +77,13 @@ export default function MembershipPage() {
                 </div>
               )}
               
-              <div className="p-8 md:p-10 flex-1 flex flex-col">
+              <div className="p-8 md:p-10 flex flex-col h-full">
                 <h3 className="text-xl md:text-2xl font-serif font-bold text-theme-text mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 mb-4">
                   <span className="text-3xl lg:text-4xl font-display font-black text-brand-red">NT$ {plan.price}</span>
                   <span className="text-sm font-sans text-theme-text/60">/ {plan.period}</span>
                 </div>
-                <p className="text-xs sm:text-sm text-theme-text/60 mb-8 flex-1 min-h-[40px]">{plan.description}</p>
+                <p className="text-xs sm:text-sm text-theme-text/60 mb-8 md:flex-1">{plan.description}</p>
                 
                 <div className="w-full h-px bg-theme-text/10 mb-8"></div>
                 
