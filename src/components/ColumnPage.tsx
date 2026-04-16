@@ -16,11 +16,11 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
 
   return (
-    <div className="pt-[140px] md:pt-[190px] pb-24 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[160px] md:pt-[190px] pb-24 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Featured Slider */}
-      <div className="px-5 md:px-12 lg:px-20 mb-16">
-        <h2 className="text-3xl md:text-5xl font-serif font-black tracking-widest mb-10 text-theme-text border-b border-theme-text/10 pb-6 transition-colors">專欄</h2>
+      <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
+        <h2 className="text-2xl md:text-5xl font-serif font-black tracking-widest mb-6 md:mb-10 text-theme-text border-b border-theme-text/10 pb-4 md:pb-6 transition-colors">專欄</h2>
         
         <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-sm group shadow-2xl">
           {/* Slides */}
@@ -39,15 +39,15 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
               {/* Content Overlay */}
               <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:p-16">
                  <div className="max-w-4xl animate-fade-in-up">
-                    <div className="flex items-center gap-3 text-[10px] md:text-xs font-display font-bold tracking-widest text-white/70 mb-4 uppercase">
+                    <div className="flex flex-wrap items-center gap-2 md:gap-3 text-[9px] md:text-xs font-display font-bold tracking-widest text-white/70 mb-3 md:mb-4 uppercase">
                       <span>2026-03-16</span>
                       <span className="w-1 h-1 bg-brand-red rounded-full"></span>
                       <span>專欄</span>
-                      <span className="w-1 h-1 bg-brand-red rounded-full"></span>
-                      <span className="text-brand-red">致福感恩文教基金會</span>
+                      <span className="w-1 h-1 bg-brand-red rounded-full hidden sm:inline"></span>
+                      <span className="text-brand-red break-all sm:break-normal">致福感恩文教基金會</span>
                     </div>
                     <h3 
-                      className="text-2xl md:text-4xl lg:text-5xl font-serif font-black text-white leading-[1.3] mb-6 cursor-pointer hover:text-brand-red transition-colors"
+                      className="text-lg md:text-4xl lg:text-5xl font-serif font-black text-white leading-[1.4] mb-4 md:mb-6 cursor-pointer hover:text-brand-red transition-colors line-clamp-2 md:line-clamp-none"
                       onClick={() => openArticle(article.id)}
                     >
                       {article.title}
@@ -65,15 +65,15 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
           {/* Navigation Arrows */}
           <button 
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 bg-black/50 hover:bg-brand-red text-white flex items-center justify-center transition-colors z-20 group"
+            className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-14 md:h-14 bg-black/50 hover:bg-brand-red text-white flex items-center justify-center transition-colors z-20 group"
           >
-            <i className="fas fa-chevron-left text-sm md:text-xl transform group-hover:-translate-x-1 transition-transform"></i>
+            <i className="fas fa-chevron-left text-xs md:text-xl transform group-hover:-translate-x-1 transition-transform"></i>
           </button>
           <button 
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14 bg-black/50 hover:bg-brand-red text-white flex items-center justify-center transition-colors z-20 group"
+            className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-14 md:h-14 bg-black/50 hover:bg-brand-red text-white flex items-center justify-center transition-colors z-20 group"
           >
-            <i className="fas fa-chevron-right text-sm md:text-xl transform group-hover:translate-x-1 transition-transform"></i>
+            <i className="fas fa-chevron-right text-xs md:text-xl transform group-hover:translate-x-1 transition-transform"></i>
           </button>
           
           {/* Indicators */}
