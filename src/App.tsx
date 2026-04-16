@@ -8,6 +8,7 @@ import ArticleDetail from './components/ArticleDetail';
 import ProductGallery from './components/ProductGallery';
 import ActionPage from './components/ActionPage';
 import DonationGallery from './components/DonationGallery';
+import DonationPlanDetail from './components/DonationPlanDetail';
 import GlobalBottomAd from './components/GlobalBottomAd';
 
 export default function App() {
@@ -27,6 +28,15 @@ export default function App() {
     }
     return null;
   });
+
+  const [currentPlanId, setCurrentPlanId] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get('plan');
+      return plan ? parseInt(plan, 10) : null;
+    }
+    return null;
+  });
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -40,6 +50,9 @@ export default function App() {
     if (currentArticleId !== null) {
       params.set('article', currentArticleId.toString());
     }
+    if (currentPlanId !== null) {
+      params.set('plan', currentPlanId.toString());
+    }
     
     const queryString = params.toString();
     const newUrl = `${window.location.pathname}${queryString ? '?' + queryString : ''}`;
@@ -48,7 +61,7 @@ export default function App() {
     if (newUrl !== window.location.pathname + window.location.search) {
       window.history.pushState({}, '', newUrl);
     }
-  }, [currentCategory, currentArticleId]);
+  }, [currentCategory, currentArticleId, currentPlanId]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -57,6 +70,8 @@ export default function App() {
       setCurrentCategory(params.get('category') || '首頁');
       const article = params.get('article');
       setCurrentArticleId(article ? parseInt(article, 10) : null);
+      const plan = params.get('plan');
+      setCurrentPlanId(plan ? parseInt(plan, 10) : null);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -72,12 +87,18 @@ export default function App() {
 
   const goToCategory = (cat: string) => {
     setCurrentArticleId(null);
+    setCurrentPlanId(null);
     setCurrentCategory(cat);
     window.scrollTo(0, 0);
   };
 
   const openArticle = (id: number) => {
     setCurrentArticleId(id);
+    window.scrollTo(0, 0);
+  };
+
+  const openPlan = (id: number) => {
+    setCurrentPlanId(id);
     window.scrollTo(0, 0);
   };
 
@@ -122,8 +143,12 @@ export default function App() {
           <ActionPage category={currentCategory} />
         )}
 
-        {(currentCategory === '奉獻') && (
-          <DonationGallery />
+        {(currentCategory === '奉獻' && !currentPlanId) && (
+          <DonationGallery openPlan={openPlan} />
+        )}
+
+        {(currentCategory === '奉獻' && currentPlanId) && (
+          <DonationPlanDetail planId={currentPlanId} />
         )}
       </main>
 

@@ -1,6 +1,10 @@
 import React from 'react';
 
-export default function DonationGallery() {
+interface DonationGalleryProps {
+  openPlan?: (id: number) => void;
+}
+
+export default function DonationGallery({ openPlan }: DonationGalleryProps) {
   const items = [
     { id: 1, title: '【新生的甘霖】復活草生命禮盒', imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800' },
     { id: 2, title: '在沙漠中匯聚活水，將影響力推向地極', imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800' },
@@ -17,7 +21,11 @@ export default function DonationGallery() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 md:gap-x-12 w-full mb-20">
           {items.map(item => (
-            <div key={item.id} className="cursor-pointer group flex flex-col">
+            <div 
+              key={item.id} 
+              className="cursor-pointer group flex flex-col"
+              onClick={() => openPlan && openPlan(item.id)}
+            >
               <div className="w-full aspect-video md:aspect-[4/3] bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-4 rounded-sm">
                 <img src={item.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt={item.title} />
               </div>
