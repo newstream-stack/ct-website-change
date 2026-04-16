@@ -36,7 +36,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
         <div className="flex flex-col md:flex-row gap-10">
           
           {/* Sidebar Nav */}
-          <div className="w-full md:w-64 flex-shrink-0 flex flex-row md:flex-col gap-2 overflow-x-auto hide-scrollbar pb-2 md:pb-0">
+          <div className="w-full md:w-64 flex-shrink-0 grid grid-cols-2 md:flex md:flex-col gap-2 md:gap-2 pb-2 md:pb-0">
             {[
               { id: 'overview', name: '總覽 Overview', icon: 'fas fa-home' },
               { id: 'subscription', name: '我的訂閱 My Plan', icon: 'fas fa-crown' },
@@ -47,18 +47,18 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               <button 
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-5 py-4 rounded-xl font-bold tracking-widest text-sm whitespace-nowrap transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-red text-white shadow-md shadow-brand-red/20' : 'text-theme-text/70 hover:bg-theme-text/5 hover:text-theme-text'}`}
+                className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm transition-all duration-300 ${activeTab === tab.id ? 'bg-brand-red text-white shadow-md shadow-brand-red/20' : 'text-theme-text/70 bg-theme-text/5 md:bg-transparent hover:bg-theme-text/10 hover:text-theme-text'}`}
               >
-                <i className={`${tab.icon} w-5 text-center ${activeTab === tab.id ? 'text-white/90' : 'text-theme-text/50'}`}></i>
-                {tab.name}
+                <i className={`${tab.icon} text-sm md:text-base w-5 text-center mb-1 md:mb-0 ${activeTab === tab.id ? 'text-white/90' : 'text-theme-text/50'}`}></i>
+                <span className="text-center">{tab.name}</span>
               </button>
             ))}
             <button 
               onClick={() => goToCategory('首頁')}
-              className="md:mt-10 flex items-center gap-3 px-5 py-4 rounded-xl font-bold tracking-widest text-sm whitespace-nowrap text-brand-red hover:bg-brand-red/10 transition-colors"
+              className="md:mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm text-brand-red bg-brand-red/5 md:bg-transparent hover:bg-brand-red/10 transition-colors"
             >
-              <i className="fas fa-sign-out-alt w-5 text-center"></i>
-              登出 Logout
+              <i className="fas fa-sign-out-alt text-sm md:text-base w-5 text-center mb-1 md:mb-0"></i>
+              <span className="text-center">登出 Logout</span>
             </button>
           </div>
 
