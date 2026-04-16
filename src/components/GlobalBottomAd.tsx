@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
-export default function GlobalBottomAd() {
+interface GlobalBottomAdProps {
+  goToCategory: (cat: string) => void;
+}
+
+export default function GlobalBottomAd({ goToCategory }: GlobalBottomAdProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   if (!isVisible) return null;
@@ -26,9 +30,11 @@ export default function GlobalBottomAd() {
           <p className="text-xs md:text-sm text-theme-bg/80 font-light hidden lg:block max-w-[320px] line-clamp-1">
             結合理性與靈性的視野，邀請重量級講員獨家探討未來的企業倫理。
           </p>
-          
           <div className="flex items-center gap-3 md:gap-6 ml-auto">
-            <button className="relative overflow-hidden bg-brand-red text-white font-display text-[10px] md:text-xs tracking-widest uppercase font-bold py-2 md:py-3 px-6 md:px-8 hover:bg-white hover:text-brand-red transition-colors duration-300 ring-1 ring-brand-red hover:ring-white">
+            <button 
+              onClick={() => goToCategory('活動報名')} 
+              className="relative overflow-hidden bg-brand-red text-white font-display text-[10px] md:text-xs tracking-widest uppercase font-bold py-2 md:py-3 px-6 md:px-8 hover:bg-white hover:text-brand-red transition-colors duration-300 ring-1 ring-brand-red hover:ring-white group/btn"
+            >
               <span className="relative flex items-center gap-2">
                 即刻報名 <i className="fas fa-arrow-right text-[10px] transform group-hover/btn:translate-x-1 transition-transform"></i>
               </span>

@@ -52,19 +52,19 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
         <div className="p-8 sm:p-12 overflow-y-auto bg-white print:p-0" id="printable-receipt">
           
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-brand-red pb-6 mb-8 gap-4">
-            <div className="flex items-center gap-4">
-              <div className="h-12 px-3 bg-brand-red text-white font-black font-serif flex items-center justify-center text-xl rounded-lg tracking-widest">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-brand-red pb-6 mb-8 gap-4 md:gap-2">
+            <div className="flex items-center gap-3">
+              <div className="h-10 md:h-12 px-3 md:px-4 bg-brand-red text-white font-black font-serif flex items-center justify-center text-lg md:text-xl rounded-lg tracking-widest flex-shrink-0">
                 IMPACT
               </div>
-              <div>
-                <h2 className="text-2xl font-serif font-black tracking-widest text-brand-red mb-1">財團法人基督教論壇基金會</h2>
-                <p className="text-xs text-gray-500 tracking-widest uppercase">Donation Receipt 奉獻收據</p>
+              <div className="flex-shrink-0">
+                <h2 className="text-lg md:text-xl font-serif font-black tracking-wider text-brand-red mb-1 whitespace-nowrap">財團法人基督教論壇基金會</h2>
+                <p className="text-[10px] md:text-xs text-gray-500 tracking-widest uppercase">Donation Receipt 奉獻收據</p>
               </div>
             </div>
-            <div className="text-left sm:text-right text-sm font-sans text-gray-600 space-y-1">
-              <p><span className="font-bold text-gray-400 mr-2 uppercase text-[10px] tracking-widest">Receipt No.</span> R-{receipt.id}</p>
-              <p><span className="font-bold text-gray-400 mr-2 uppercase text-[10px] tracking-widest">Date</span> {receipt.date}</p>
+            <div className="text-left md:text-right text-xs md:text-sm font-sans text-gray-600 space-y-1 flex-shrink-0 whitespace-nowrap">
+              <p><span className="font-bold text-gray-400 mr-2 uppercase text-[9px] md:text-[10px] tracking-widest">Receipt No.</span> R-{receipt.id}</p>
+              <p><span className="font-bold text-gray-400 mr-2 uppercase text-[9px] md:text-[10px] tracking-widest">Date</span> {receipt.date}</p>
             </div>
           </div>
 

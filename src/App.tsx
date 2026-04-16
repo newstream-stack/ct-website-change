@@ -13,6 +13,7 @@ import GlobalBottomAd from './components/GlobalBottomAd';
 import LoginPage from './components/LoginPage';
 import MembershipPage from './components/MembershipPage';
 import MemberDashboard from './components/MemberDashboard';
+import EventRegistrationPage from './components/EventRegistrationPage';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -165,10 +166,14 @@ export default function App() {
         {currentCategory === '會員專區' && (
           <MemberDashboard goToCategory={goToCategory} />
         )}
+
+        {currentCategory === '活動報名' && (
+          <EventRegistrationPage />
+        )}
       </main>
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區'].includes(currentCategory) && (
-        <GlobalBottomAd />
+      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名'].includes(currentCategory) && (
+        <GlobalBottomAd goToCategory={goToCategory} />
       )}
     </div>
   );
