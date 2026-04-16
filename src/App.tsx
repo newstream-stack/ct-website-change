@@ -10,6 +10,7 @@ import ActionPage from './components/ActionPage';
 import DonationGallery from './components/DonationGallery';
 import DonationPlanDetail from './components/DonationPlanDetail';
 import GlobalBottomAd from './components/GlobalBottomAd';
+import LoginPage from './components/LoginPage';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -150,9 +151,13 @@ export default function App() {
         {(currentCategory === '奉獻' && currentPlanId) && (
           <DonationPlanDetail planId={currentPlanId} />
         )}
+
+        {currentCategory === '會員中心' && (
+          <LoginPage />
+        )}
       </main>
 
-      {!['訂報', '奉獻', '信仰好物'].includes(currentCategory) && (
+      {!['訂報', '奉獻', '信仰好物', '會員中心'].includes(currentCategory) && (
         <GlobalBottomAd />
       )}
     </div>
