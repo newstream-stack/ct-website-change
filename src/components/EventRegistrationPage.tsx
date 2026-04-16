@@ -79,10 +79,10 @@ export default function EventRegistrationPage() {
         </div>
       </div>
 
-      <div className="max-w-[1200px] mx-auto px-5 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="max-w-[1200px] mx-auto px-5 md:px-12 lg:px-20 flex flex-col lg:grid lg:grid-cols-12 gap-12">
         
         {/* Left Column: Event Details & Form */}
-        <div className="lg:col-span-7 flex flex-col gap-10">
+        <div className="lg:col-span-7 flex flex-col gap-10 order-2 lg:order-1">
           
           {/* Info Cards */}
           <div className="grid grid-cols-2 gap-4">
@@ -156,16 +156,42 @@ export default function EventRegistrationPage() {
               </div>
             </div>
             
-            <div className="flex flex-col gap-2 relative group">
+            <div className="flex flex-col gap-2 relative group mt-2">
               <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1">給大會的留言或特殊需求 (如有) Remarks</label>
               <textarea rows={3} className="w-full bg-theme-text/5 border border-theme-text/20 focus:border-brand-red/50 text-theme-text text-sm rounded-xl block p-3.5 outline-none transition-all focus:ring-1 focus:ring-brand-red/50 resize-none" placeholder="例如：飲食禁忌 (素食) 等..."></textarea>
             </div>
           </form>
 
+          {/* Mobile Checkout Section (Visible only on mobile) */}
+          <div className="lg:hidden border-t border-theme-text/10 pt-8 mt-2">
+             <div className="flex justify-between items-center mb-6">
+               <span className="font-bold tracking-widest uppercase text-sm">總計 Total</span>
+               <span className="font-display font-black text-3xl text-brand-red">{tickets.find(t => t.id === selectedTicket)?.price}</span>
+             </div>
+             
+             <button 
+              type="submit" 
+              form="registration-form"
+              disabled={isSubmitting}
+              className={`w-full bg-brand-red text-white py-4 rounded-xl font-bold tracking-widest uppercase transition-all shadow-lg hover:shadow-brand-red/40 relative overflow-hidden ${isSubmitting ? 'opacity-80 cursor-wait' : 'hover:-translate-y-0.5 focus:-translate-y-0.5'}`}
+             >
+               {isSubmitting ? (
+                 <span className="flex items-center justify-center gap-2">
+                   <i className="fas fa-circle-notch fa-spin"></i> 處理中 Processing...
+                 </span>
+               ) : (
+                 <span className="flex items-center justify-center gap-2">
+                   確認報名 Checkout <i className="fas fa-arrow-right"></i>
+                 </span>
+               )}
+             </button>
+             <p className="text-[10px] text-theme-text/50 text-center mt-4">點擊報名即表示您同意本會之隱私權政策與活動條款。</p>
+          </div>
+
         </div>
 
         {/* Right Column: Ticket Selection & Checkout */}
-        <div className="lg:col-span-5 relative">
+        <div className="lg:col-span-5 relative order-1 lg:order-2">
           <div className="sticky top-[100px] flex flex-col gap-6">
             <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8 flex flex-col gap-6 backdrop-blur-md">
               <h3 className="text-xl font-serif font-bold text-brand-red mb-2">請選擇您的票種</h3>
@@ -190,7 +216,7 @@ export default function EventRegistrationPage() {
                 ))}
               </div>
 
-              <div className="border-t border-theme-text/10 pt-6 mt-2">
+              <div className="hidden lg:block border-t border-theme-text/10 pt-6 mt-2">
                  <div className="flex justify-between items-center mb-6">
                    <span className="font-bold tracking-widest uppercase text-sm">總計 Total</span>
                    <span className="font-display font-black text-3xl text-brand-red">{tickets.find(t => t.id === selectedTicket)?.price}</span>
