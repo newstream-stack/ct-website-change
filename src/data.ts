@@ -90,8 +90,10 @@ export const MOCK_NEWS: NewsItem[] = [
   { id: 23, title: '聖經考古新發現：重塑我們對歷史的理解', excerpt: '最新的考古挖掘成果，為聖經記載的歷史事件提供了更豐富的背景與佐證，令人振奮。', category: '信仰知識庫', author: '歷史研究', date: 'APR 01', imageUrl: 'https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&q=80&w=1600' },
   { id: 24, title: '神學入門：理解恩典與真理的平衡', excerpt: '以淺顯易懂的方式，探討基督教信仰中兩個最核心卻也最常被誤解的概念，幫助信徒建立穩固的根基。', category: '信仰知識庫', author: '神學教育', date: 'MAR 31', imageUrl: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600' },
   { id: 25, title: '早期教會的敬拜模式：從家庭聚會到大教堂', excerpt: '追溯基督教敬拜形式的演變，從初代教會的簡單樸素，到後來發展出的豐富儀式與傳統。', category: '信仰知識庫', author: '教會歷史', date: 'MAR 30', imageUrl: 'https://images.unsplash.com/photo-1548625361-f6dbcd00fa9e?auto=format&fit=crop&q=80&w=1600' },
-  { id: 6, title: '影響力聯盟 2026 年度高峰會盛大展開', excerpt: '匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。', category: '影響力聯盟', author: '活動中心', date: 'MAR 28', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600' },
-  { id: 6, title: '影響力聯盟 2026 年度高峰會盛大展開', excerpt: '匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。', category: '影響力聯盟', author: '活動中心', date: 'MAR 28', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600' },
+  { id: 93, title: '影響力聯盟 2026 年度高峰會盛大展開', excerpt: '匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。', category: '影響力聯盟', author: '活動中心', date: 'MAR 28', imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600' },
+  { id: 94, title: '《好撒馬利亞人行動》 為焦慮恐懼的青少年舉辦的希望營會 - 波爾塔瓦最新消息', excerpt: '在動盪局勢中，為烏克蘭波爾塔瓦地區的流離失所青年提供心靈關懷與支持。', category: '影響力聯盟', author: '影響力聯盟', date: '2026-04-15', imageUrl: 'https://media.ct.org.tw/upload/news_article/2026/04/10/69d897e430ea7.jpg?wm=LB' },
+  { id: 95, title: '導彈與奇蹟：連番遭炸後但人民卻心懷感激', excerpt: '見證在烽火連天的戰區中，如何因著堅定的信仰與救援物資的即時抵達而重現生機。', category: '影響力聯盟', author: '聖域資訊報', date: '2026-04-13', imageUrl: 'https://images.unsplash.com/photo-1469488836641-77dfd0af2821?auto=format&fit=crop&q=80&w=1600' },
+  { id: 96, title: '【未來教會篇】 當AI無不在，門訓還能給什麼？ 黃偉仁牧師：知識可被取代，實踐不會', excerpt: '探討在人工智慧大舉入侵的時代，教會如何調整門徒訓練的核心，強調真理實踐而非單純知識灌輸。', category: '影響力聯盟', author: 'IMPACT x Malaysia', date: '2026-03-18', imageUrl: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1600' },
 ];
 
 export interface AdItem {
@@ -173,6 +175,98 @@ export interface Columnist {
   latestArticleDate: string;
   latestArticleId: number;
 }
+
+export interface AllianceMember {
+  id: string;
+  name: string;
+  logoUrl: string;
+  latestArticleTitle: string;
+  latestArticleDate: string;
+  latestArticleId: number;
+}
+
+export const ALLIANCE_MEMBERS: AllianceMember[] = [
+  {
+    id: 'a1',
+    name: '好撒馬利亞人行動',
+    logoUrl: 'https://images.unsplash.com/photo-1594751543129-6701ad444259?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '《好撒馬利亞人行動》 為焦慮恐懼的青少年舉辦的希望營會',
+    latestArticleDate: '2026-04-15',
+    latestArticleId: 94
+  },
+  {
+    id: 'a2',
+    name: '聖域資訊報',
+    logoUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '導彈與奇蹟：連番遭炸後但人民卻心懷感激',
+    latestArticleDate: '2026-04-13',
+    latestArticleId: 95
+  },
+  {
+    id: 'a3',
+    name: 'IMPACT x Malaysia',
+    logoUrl: 'https://images.unsplash.com/photo-1496200186974-4293800e2c20?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '【未來教會篇】 當AI無不在，門訓還能給什麼？',
+    latestArticleDate: '2026-03-18',
+    latestArticleId: 96
+  },
+  {
+    id: 'a4',
+    name: '以賽亞19大道',
+    logoUrl: 'https://images.unsplash.com/photo-1481349579423-6bd35b91dc29?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '士每拿教會 Smyrna | 至死忠心的恩膏',
+    latestArticleDate: '2026-03-16',
+    latestArticleId: 1
+  },
+  {
+    id: 'a5',
+    name: 'FaithToDate',
+    logoUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '越懂彼此越少吵架！6個男女必學「戀愛腦訓練」',
+    latestArticleDate: '2026-02-27',
+    latestArticleId: 2
+  },
+  {
+    id: 'a6',
+    name: '基督教芥菜種會',
+    logoUrl: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '呼應長照3.0培力社區「類家人」',
+    latestArticleDate: '2026-02-10',
+    latestArticleId: 3
+  },
+  {
+    id: 'a7',
+    name: '看見以色列',
+    logoUrl: 'https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '2026：精彩的阿利亞回歸之年',
+    latestArticleDate: '2026-02-09',
+    latestArticleId: 5
+  },
+  {
+    id: 'a8',
+    name: '救世傳播協會',
+    logoUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '打下台灣福音藝術根基 洪善群長老傳記「這一條路」',
+    latestArticleDate: '2024-12-03',
+    latestArticleId: 7
+  },
+  {
+    id: 'a9',
+    name: '後懷疑到相信',
+    logoUrl: 'https://images.unsplash.com/photo-1454165833758-d717208b067d?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '企業家走出流淚谷，如何主動出擊落兄姊信主',
+    latestArticleDate: '2024-08-22',
+    latestArticleId: 8
+  },
+  {
+    id: 'a10',
+    name: 'Carey Theological College',
+    logoUrl: 'https://images.unsplash.com/photo-1523050335392-93851179ae2c?auto=format&fit=crop&q=80&w=200',
+    latestArticleTitle: '向鄰舍死去',
+    latestArticleDate: '2024-08-19',
+    latestArticleId: 9
+  }
+];
 
 export const COLUMNISTS: Columnist[] = [
   {

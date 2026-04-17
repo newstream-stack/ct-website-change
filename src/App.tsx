@@ -15,6 +15,7 @@ import MembershipPage from './components/MembershipPage';
 import MemberDashboard from './components/MemberDashboard';
 import EventRegistrationPage from './components/EventRegistrationPage';
 import ColumnPage from './components/ColumnPage';
+import ImpactAlliancePage from './components/ImpactAlliancePage';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -136,7 +137,11 @@ export default function App() {
           <ColumnPage openArticle={openArticle} />
         )}
 
-        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && currentCategory !== '專欄' && (
+        {currentCategory === '影響力聯盟' && !currentArticleId && (
+          <ImpactAlliancePage openArticle={openArticle} />
+        )}
+
+        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && currentCategory !== '專欄' && currentCategory !== '影響力聯盟' && (
           <CategoryList category={currentCategory} openArticle={openArticle} />
         )}
 

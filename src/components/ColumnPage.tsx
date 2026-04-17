@@ -62,23 +62,21 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
             </div>
           ))}
 
-          {/* Navigation Arrows - Repositioned to bottom right to avoid overlapping text */}
-          <div className="absolute bottom-4 right-4 flex gap-1 z-30 md:group-hover:opacity-100 transition-opacity">
-            <button 
-              onClick={prevSlide}
-              className="w-7 h-7 md:w-8 md:h-8 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
-              title="Previous Slide"
-            >
-              <i className="fas fa-chevron-left text-[8px]"></i>
-            </button>
-            <button 
-              onClick={nextSlide}
-              className="w-7 h-7 md:w-8 md:h-8 bg-black/40 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-sm"
-              title="Next Slide"
-            >
-              <i className="fas fa-chevron-right text-[8px]"></i>
-            </button>
-          </div>
+          {/* Navigation Arrows - Moved to sides for better visibility and to avoid overlapping text */}
+          <button 
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-black/30 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-full z-30 group/btn"
+            title="Previous Slide"
+          >
+            <i className="fas fa-chevron-left text-[10px] group-hover/btn:-translate-x-0.5 transition-transform"></i>
+          </button>
+          <button 
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 md:w-10 md:h-10 bg-black/30 backdrop-blur-md hover:bg-brand-red text-white flex items-center justify-center transition-all rounded-full z-30 group/btn"
+            title="Next Slide"
+          >
+            <i className="fas fa-chevron-right text-[10px] group-hover/btn:translate-x-0.5 transition-transform"></i>
+          </button>
           
           {/* Indicators - Repositioned to clear space */}
           <div className="absolute top-4 right-4 flex flex-col gap-1.5 z-20">
