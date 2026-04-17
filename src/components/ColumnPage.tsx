@@ -42,14 +42,14 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
 
       {/* 2. Featured Columnist spotlight (Hero Style) */}
       <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[500px]">
+        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[720px] sm:min-h-[650px] md:min-h-[500px]">
            {featuredArticles.map((article, idx) => (
              <div 
                key={article.id}
-               className={`w-full flex flex-col lg:flex-row transition-all duration-700 ease-in-out ${
+               className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-700 ease-in-out ${
                  idx === activeIndex 
-                   ? 'relative opacity-100 translate-x-0 z-10' 
-                   : 'absolute inset-0 opacity-0 translate-x-8 -z-10 pointer-events-none'
+                   ? 'opacity-100 translate-x-0 z-10' 
+                   : 'opacity-0 translate-x-12 -z-10'
                }`}
              >
                 {/* Image Side */}
