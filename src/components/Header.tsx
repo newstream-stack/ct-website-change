@@ -21,22 +21,16 @@ export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMen
       )}
       
       <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
-        <div className="pointer-events-auto cursor-pointer flex items-center gap-4 lg:gap-8" onClick={() => goToCategory('首頁')}>
-          <div className="flex items-center gap-4">
-            <span className="font-display text-2xl md:text-4xl font-bold uppercase tracking-widest leading-none">IMPACT</span>
-            <div className="w-px h-6 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
-            <span className="font-serif text-[10px] md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] text-brand-red hidden md:block mt-1">論壇報</span>
-          </div>
-          
-          {/* Desktop Left Nav */}
-          <div className="hidden md:flex items-center gap-6 font-sans font-bold text-sm tracking-widest text-theme-text/90 mt-1">
-            <button onClick={(e) => { e.stopPropagation(); goToCategory('信仰好物'); }} className="hover:text-brand-red transition">信仰好物</button>
-          </div>
+        <div className="pointer-events-auto cursor-pointer flex items-center gap-4" onClick={() => goToCategory('首頁')}>
+          <span className="font-display text-2xl md:text-4xl font-bold uppercase tracking-widest leading-none">IMPACT</span>
+          <div className="w-px h-6 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
+          <span className="font-serif text-[10px] md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] text-brand-red hidden md:block mt-1">論壇報</span>
         </div>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
           {/* Desktop Right CTAs */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6 font-sans font-bold text-sm tracking-widest text-theme-text/90">
+            <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
             <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:text-theme-text transition flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full">奉獻 <i className="fas fa-arrow-right text-[10px]"></i></button>
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
@@ -56,10 +50,8 @@ export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMen
       </div>
 
       {/* Mobile Actions Bar - Hidden on md+ as they move to the main row */}
-      <div className="md:hidden w-full flex items-center justify-between px-5 pb-3.5 font-sans font-bold tracking-widest text-theme-text/80 transition-colors duration-500">
-         <div className="flex items-center gap-5 text-[12px]">
-           <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
-         </div>
+      <div className="md:hidden w-full flex items-center justify-end px-5 pb-3.5 font-sans font-bold tracking-widest text-theme-text/80 transition-colors duration-500 gap-6">
+         <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition text-[12px]">信仰好物</button>
          <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:bg-brand-red hover:text-white transition-all flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full text-[11px]">
            奉獻 <i className="fas fa-arrow-right text-[10px]"></i>
          </button>
