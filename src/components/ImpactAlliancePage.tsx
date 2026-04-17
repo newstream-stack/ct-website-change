@@ -20,6 +20,9 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
     return () => clearInterval(timer);
   }, [sliderArticles.length]);
 
+  const nextSlide = () => setActiveIndex((prev) => (prev + 1) % sliderArticles.length);
+  const prevSlide = () => setActiveIndex((prev) => (prev - 1 + sliderArticles.length) % sliderArticles.length);
+
   return (
     <div className="pt-[160px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
@@ -43,13 +46,29 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
                }`}
              >
                 {/* Image Side */}
-                <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
+                <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center group/img">
                    <img 
                       src={article.imageUrl} 
                       className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
                       alt={article.title} 
                    />
-                   <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-auto"></div>
+                   <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-auto"></div>
+
+                   {/* Arrow Buttons */}
+                   <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+                        className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
+                      >
+                         <i className="fas fa-chevron-left text-sm md:text-base"></i>
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+                        className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
+                      >
+                         <i className="fas fa-chevron-right text-sm md:text-base"></i>
+                      </button>
+                   </div>
                 </div>
                 
                 {/* Content Side */}
