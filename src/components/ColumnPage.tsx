@@ -16,13 +16,13 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
 
   return (
-    <div className="pt-[210px] md:pt-[190px] pb-40 md:pb-24 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[210px] md:pt-[160px] pb-40 md:pb-24 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Featured Slider */}
-      <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
-        <h2 className="text-2xl md:text-5xl font-serif font-black tracking-widest mb-6 md:mb-10 text-theme-text border-b border-theme-text/10 pb-4 md:pb-6 transition-colors">專欄</h2>
+      <div className="px-5 md:px-12 lg:px-20 mb-8 md:mb-10">
+        <h2 className="text-2xl md:text-4xl font-serif font-black tracking-widest mb-4 md:mb-6 text-theme-text border-b border-theme-text/10 pb-4 transition-colors">專欄</h2>
         
-        <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden rounded-sm group shadow-2xl">
+        <div className="relative aspect-[16/9] md:aspect-[25/9] w-full overflow-hidden rounded-sm group shadow-2xl">
           {/* Slides */}
           {featuredArticles.map((article, index) => (
             <div 
@@ -37,7 +37,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
               
               {/* Content Overlay */}
-              <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 lg:p-16">
+              <div className="absolute bottom-0 left-0 w-full p-6 md:p-10 lg:p-12">
                  <div className="max-w-4xl animate-fade-in-up">
                     <div className="flex flex-wrap items-center gap-2 md:gap-3 text-[9px] md:text-xs font-display font-bold tracking-widest text-white/70 mb-3 md:mb-4 uppercase">
                       <span>2026-03-16</span>
@@ -47,7 +47,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
                       <span className="text-brand-red break-all sm:break-normal">致福感恩文教基金會</span>
                     </div>
                     <h3 
-                      className="text-lg md:text-4xl lg:text-5xl font-serif font-black text-white leading-[1.4] mb-4 md:mb-6 cursor-pointer hover:text-brand-red transition-colors line-clamp-2 md:line-clamp-none"
+                      className="text-lg md:text-2xl lg:text-4xl font-serif font-black text-white leading-[1.4] mb-4 md:mb-6 cursor-pointer hover:text-brand-red transition-colors line-clamp-2 md:line-clamp-none"
                       onClick={() => openArticle(article.id)}
                     >
                       {article.title}
