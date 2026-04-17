@@ -24,18 +24,21 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
   const prevSlide = () => setActiveIndex((prev) => (prev - 1 + sliderArticles.length) % sliderArticles.length);
 
   return (
-    <div className="pt-[160px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[140px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Page Header */}
-      <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-16">
+      <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
         <div className="max-w-[1400px] mx-auto">
-           <h1 className="text-4xl md:text-5xl font-serif font-black tracking-widest text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors">影響力聯盟 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Alliance Network</span></h1>
+           <h1 className="text-3xl md:text-5xl font-serif font-black tracking-widest text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors flex flex-col md:flex-row md:items-baseline">
+             影響力聯盟 
+             <span className="text-lg md:text-2xl font-display font-light text-theme-text/40 md:ml-4 tracking-widest uppercase mt-1 md:mt-0">Alliance Network</span>
+           </h1>
         </div>
       </div>
 
       {/* 2. Featured Spotlight */}
-      <div className="px-5 md:px-12 lg:px-20 mb-24 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm min-h-[500px]">
+      <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
+        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm min-h-[650px] sm:min-h-[600px] md:min-h-[500px]">
            {sliderArticles.map((article, idx) => (
              <div 
                key={article.id}
@@ -97,14 +100,14 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
            ))}
 
            {/* Carousel Controls */}
-           <div className="absolute bottom-6 right-8 flex items-center gap-6 z-20">
+           <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 flex items-center gap-6 z-30">
               <div className="flex gap-2">
                  {sliderArticles.map((_, idx) => (
                    <button
                      key={idx}
                      onClick={() => setActiveIndex(idx)}
                      className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                       idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20'
+                       idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20 hover:bg-theme-text/40'
                      }`}
                      aria-label={`Go to slide ${idx + 1}`}
                    />
