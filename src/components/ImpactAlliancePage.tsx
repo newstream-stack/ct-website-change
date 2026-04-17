@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MOCK_NEWS, ALLIANCE_MEMBERS } from '../data';
 
 interface ImpactAlliancePageProps {
@@ -6,10 +6,19 @@ interface ImpactAlliancePageProps {
 }
 
 export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePageProps) {
-  const featuredArticles = MOCK_NEWS.filter(n => n.category === '影響力聯盟').slice(0, 3);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const featuredArticles = MOCK_NEWS.filter(n => n.category === '影響力聯盟').slice(0, 5);
   
   const sliderArticles = featuredArticles.length > 0 ? featuredArticles : MOCK_NEWS.slice(0, 3);
-  const featuredArticle = sliderArticles[0];
+
+  // Auto-slide effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % sliderArticles.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [sliderArticles.length]);
 
   return (
     <div className="pt-[160px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
@@ -23,39 +32,64 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
 
       {/* 2. Featured Spotlight */}
       <div className="px-5 md:px-12 lg:px-20 mb-24 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative group overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm">
-           <div className="flex flex-col lg:flex-row min-h-[500px]">
-              {/* Image Side */}
-              <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
-                 <img 
-                    src={featuredArticle.imageUrl} 
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" 
-                    alt={featuredArticle.title} 
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-auto"></div>
-              </div>
-              
-              {/* Content Side */}
-              <div className="w-full lg:w-[40%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10">
-                 <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
-                    <span>{featuredArticle.date}</span>
-                    <span className="w-1.5 h-px bg-brand-red"></span>
-                    <span>Spotlight</span>
-                 </div>
-                 <h2 
-                   className="text-2xl md:text-4xl lg:text-5xl font-serif font-black mb-6 leading-tight cursor-pointer hover:text-brand-red transition-colors"
-                   onClick={() => openArticle(featuredArticle.id)}
-                 >
-                   {featuredArticle.title}
-                 </h2>
-                 <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base line-clamp-3">
-                   {featuredArticle.excerpt}
-                 </p>
-                 <div className="flex items-center gap-4 text-theme-text/40 text-[10px] md:text-xs">
-                    <span className="font-display tracking-widest uppercase font-bold">{featuredArticle.author}</span>
-                    <span className="w-px h-3 bg-theme-text/20"></span>
-                    <span className="font-serif">IMPACT ALLIANCE DEEP DIVE</span>
-                 </div>
+        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm min-h-[500px]">
+           {sliderArticles.map((article, idx) => (
+             <div 
+               key={article.id}
+               className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-1000 ease-in-out ${
+                 idx === activeIndex 
+                   ? 'opacity-100 translate-x-0 z-10' 
+                   : 'opacity-0 translate-x-8 -z-10'
+               }`}
+             >
+                {/* Image Side */}
+                <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
+                   <img 
+                      src={article.imageUrl} 
+                      className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
+                      alt={article.title} 
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-auto"></div>
+                </div>
+                
+                {/* Content Side */}
+                <div className="w-full lg:w-[40%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10">
+                   <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
+                      <span>{article.date}</span>
+                      <span className="w-1.5 h-px bg-brand-red"></span>
+                      <span>Spotlight</span>
+                   </div>
+                   <h2 
+                     className="text-2xl md:text-3xl lg:text-4xl font-serif font-black mb-6 leading-tight cursor-pointer hover:text-brand-red transition-colors"
+                     onClick={() => openArticle(article.id)}
+                   >
+                     {article.title}
+                   </h2>
+                   <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base line-clamp-3">
+                     {article.excerpt}
+                   </p>
+                   <div className="flex items-center gap-4 text-theme-text/40 text-[10px] md:text-xs mt-auto">
+                      <span className="font-display tracking-widest uppercase font-bold">{article.author}</span>
+                      <span className="w-px h-3 bg-theme-text/20"></span>
+                      <span className="font-serif">IMPACT ALLIANCE DEEP DIVE</span>
+                   </div>
+                </div>
+             </div>
+           ))}
+
+           {/* Carousel Controls */}
+           <div className="absolute bottom-6 right-8 flex items-center gap-6 z-20">
+              <div className="flex gap-2">
+                 {sliderArticles.map((_, idx) => (
+                   <button
+                     key={idx}
+                     onClick={() => setActiveIndex(idx)}
+                     className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                       idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20'
+                     }`}
+                     aria-label={`Go to slide ${idx + 1}`}
+                   />
+                 ))}
               </div>
            </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MOCK_NEWS, COLUMNISTS } from '../data';
 
 interface ColumnPageProps {
@@ -7,10 +7,22 @@ interface ColumnPageProps {
 
 export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const [activeTab, setActiveTab] = useState('好牧人');
-  const featuredArticles = MOCK_NEWS.filter(n => n.category === '專欄').slice(0, 3);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Get featured articles
+  const featuredArticles = MOCK_NEWS
+    .filter(n => n.category === '專欄')
+    .slice(0, 5);
+
   const filteredColumnists = COLUMNISTS.filter(c => c.subCategory === activeTab);
   
-  const featuredArticle = featuredArticles[0];
+  // Auto-slide effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [featuredArticles.length]);
 
   return (
     <div className="pt-[160px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
@@ -24,57 +36,80 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
 
       {/* 2. Featured Columnist spotlight (Hero Style) */}
       <div className="px-5 md:px-12 lg:px-20 mb-24 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative group overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl">
-           <div className="flex flex-col lg:flex-row min-h-[500px]">
-              {/* Image Side */}
-              <div className="w-full lg:w-[55%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
-                 <img 
-                    src={featuredArticle.imageUrl} 
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" 
-                    alt={featuredArticle.title} 
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/30 pointer-events-none"></div>
-                 
-                 {/* Author Badge */}
-                 <div className="absolute top-8 left-8 p-4 bg-theme-bg/90 backdrop-blur-md border border-theme-text/10 flex items-center gap-4 animate-fade-in">
-                    <div className="w-10 h-10 rounded-full bg-brand-red flex items-center justify-center text-white font-serif italic text-lg shadow-lg">P</div>
-                    <div>
-                       <span className="block text-[9px] font-display font-bold tracking-[0.2em] text-theme-text/40 uppercase">Featured Author</span>
-                       <span className="block text-sm font-bold text-theme-text">{featuredArticle.author}</span>
-                    </div>
-                 </div>
-              </div>
-              
-              {/* Content Side */}
-              <div className="w-full lg:w-[45%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10 transition-colors">
-                 <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
-                    <span>Editor's Choice</span>
-                    <span className="w-1.5 h-px bg-brand-red"></span>
-                    <span>Column</span>
-                 </div>
-                 <h2 
-                   className="text-2xl md:text-3xl lg:text-4xl font-serif font-black mb-8 leading-tight cursor-pointer hover:text-brand-red transition-all"
-                   onClick={() => openArticle(featuredArticle.id)}
-                 >
-                   {featuredArticle.title}
-                 </h2>
-                 <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base">
-                   {featuredArticle.excerpt}
-                 </p>
-                 <button 
-                  onClick={() => openArticle(featuredArticle.id)}
-                  className="self-start text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase border-b-2 border-brand-red pb-1 hover:text-brand-red transition-all"
-                 >
-                    Read Full Column <i className="fas fa-arrow-right ml-4"></i>
-                 </button>
-              </div>
-           </div>
+        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[500px]">
+           {featuredArticles.map((article, idx) => (
+             <div 
+               key={article.id}
+               className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-1000 ease-in-out ${
+                 idx === activeIndex 
+                   ? 'opacity-100 translate-x-0 z-10' 
+                   : 'opacity-0 translate-x-8 -z-10'
+               }`}
+             >
+                {/* Image Side */}
+                <div className="w-full lg:w-[55%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
+                   <img 
+                      src={article.imageUrl} 
+                      className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
+                      alt={article.title} 
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/30 pointer-events-none"></div>
+                   
+                   {/* Author Badge */}
+                   <div className="absolute top-8 left-8 p-4 bg-theme-bg/90 backdrop-blur-md border border-theme-text/10 flex items-center gap-4 animate-fade-in">
+                      <div className="w-10 h-10 rounded-full bg-brand-red flex items-center justify-center text-white font-serif italic text-lg shadow-lg">P</div>
+                      <div>
+                         <span className="block text-[9px] font-display font-bold tracking-[0.2em] text-theme-text/40 uppercase">Featured Author</span>
+                         <span className="block text-sm font-bold text-theme-text">{article.author}</span>
+                      </div>
+                   </div>
+                </div>
+                
+                {/* Content Side */}
+                <div className="w-full lg:w-[45%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10 transition-colors">
+                   <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
+                      <span>Editor's Choice</span>
+                      <span className="w-1.5 h-px bg-brand-red"></span>
+                      <span>Column</span>
+                   </div>
+                   <h2 
+                     className="text-2xl md:text-3xl lg:text-4xl font-serif font-black mb-8 leading-tight cursor-pointer hover:text-brand-red transition-all"
+                     onClick={() => openArticle(article.id)}
+                   >
+                     {article.title}
+                   </h2>
+                   <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base">
+                     {article.excerpt}
+                   </p>
+                   <button 
+                    onClick={() => openArticle(article.id)}
+                    className="self-start text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase border-b-2 border-brand-red pb-1 hover:text-brand-red transition-all"
+                   >
+                      Read Full Column <i className="fas fa-arrow-right ml-4"></i>
+                   </button>
+                </div>
+             </div>
+           ))}
            
-           {/* Decorative dots */}
-           <div className="absolute bottom-8 right-8 grid grid-cols-4 gap-1.5 opacity-20 pointer-events-none">
-              {[...Array(12)].map((_, i) => (
-                 <div key={i} className="w-1 h-1 rounded-full bg-theme-text"></div>
-              ))}
+           {/* Carousel Controls */}
+           <div className="absolute bottom-8 right-8 flex items-center gap-6 z-20">
+              <div className="flex gap-2">
+                 {featuredArticles.map((_, idx) => (
+                   <button
+                     key={idx}
+                     onClick={() => setActiveIndex(idx)}
+                     className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                       idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20'
+                     }`}
+                     aria-label={`Go to slide ${idx + 1}`}
+                   />
+                 ))}
+              </div>
+              <div className="hidden md:grid grid-cols-4 gap-1.5 opacity-20 pointer-events-none">
+                 {[...Array(12)].map((_, i) => (
+                    <div key={i} className="w-1 h-1 rounded-full bg-theme-text"></div>
+                 ))}
+              </div>
            </div>
         </div>
       </div>
