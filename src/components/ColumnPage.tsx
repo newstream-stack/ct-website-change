@@ -77,14 +77,6 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
                       </button>
                    </div>
                    
-                   {/* Author Badge */}
-                   <div className="absolute top-8 left-8 p-4 bg-theme-bg/90 backdrop-blur-md border border-theme-text/10 flex items-center gap-4 animate-fade-in">
-                      <div className="w-10 h-10 rounded-full bg-brand-red flex items-center justify-center text-white font-serif italic text-lg shadow-lg">P</div>
-                      <div>
-                         <span className="block text-[9px] font-display font-bold tracking-[0.2em] text-theme-text/40 uppercase">Featured Author</span>
-                         <span className="block text-sm font-bold text-theme-text">{article.author}</span>
-                      </div>
-                   </div>
                 </div>
                 
                 {/* Content Side */}
