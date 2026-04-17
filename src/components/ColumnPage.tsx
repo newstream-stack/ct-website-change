@@ -28,7 +28,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const prevSlide = () => setActiveIndex((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
 
   return (
-    <div className="pt-[140px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[180px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Page Header */}
       <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
@@ -42,14 +42,14 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
 
       {/* 2. Featured Columnist spotlight (Hero Style) */}
       <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[650px] sm:min-h-[600px] md:min-h-[500px]">
+        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[500px]">
            {featuredArticles.map((article, idx) => (
              <div 
                key={article.id}
-               className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-1000 ease-in-out ${
+               className={`w-full flex flex-col lg:flex-row transition-all duration-700 ease-in-out ${
                  idx === activeIndex 
-                   ? 'opacity-100 translate-x-0 z-10' 
-                   : 'opacity-0 translate-x-8 -z-10'
+                   ? 'relative opacity-100 translate-x-0 z-10' 
+                   : 'absolute inset-0 opacity-0 translate-x-8 -z-10 pointer-events-none'
                }`}
              >
                 {/* Image Side */}
@@ -114,7 +114,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
            ))}
            
            {/* Carousel Controls */}
-           <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 flex items-center gap-6 z-30">
+           <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 flex items-center gap-6 z-30 bg-theme-bg/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none px-4 py-2 rounded-full border border-theme-text/10 md:border-none">
               <div className="flex gap-2">
                  {featuredArticles.map((_, idx) => (
                    <button
