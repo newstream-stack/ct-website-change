@@ -65,11 +65,11 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
       
       {/* Left Area - Main Image & Copywriting */}
       <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
-        <div className="w-full md:min-h-[40vh] md:max-h-[50vh] relative flex-shrink-0">
+        <div className="w-full md:min-h-[40vh] md:max-h-[55vh] relative flex-shrink-0 bg-black flex items-center justify-center">
           <img 
             src={plan.imageUrl} 
             alt={plan.title} 
-            className="w-full h-auto md:h-full object-cover" 
+            className="w-full h-auto md:h-full object-contain" 
           />
         </div>
         <div className="p-8 md:p-12 lg:p-16 flex flex-col bg-theme-bg text-theme-text flex-grow">

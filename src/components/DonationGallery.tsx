@@ -33,13 +33,13 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
         <div className="max-w-[1400px] mx-auto relative group overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm">
            <div className="flex flex-col lg:flex-row min-h-[500px]">
               {/* Image Side */}
-              <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto">
+              <div className="w-full lg:w-[60%] relative overflow-hidden h-[350px] lg:h-auto bg-black flex items-center justify-center">
                  <img 
                     src={featuredPlan.imageUrl} 
-                    className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" 
+                    className="w-full h-full object-contain md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" 
                     alt={featuredPlan.title} 
                  />
-                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20"></div>
+                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-none"></div>
               </div>
               
               {/* Content Side */}
@@ -83,10 +83,10 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
                 className="group cursor-pointer"
                 onClick={() => openPlan && openPlan(plan.id)}
               >
-                <div className="relative aspect-[4/5] bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-6 group-hover:border-brand-red/30 transition-all duration-500 shadow-sm">
+                <div className="relative aspect-video bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-6 group-hover:border-brand-red/30 transition-all duration-500 shadow-sm flex items-center justify-center">
                    <img 
                       src={plan.imageUrl} 
-                      className="w-full h-full object-cover md:grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" 
+                      className="w-full h-full object-contain md:grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" 
                       alt={plan.title} 
                    />
                    <div className="absolute inset-0 bg-gradient-to-t from-theme-bg via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity"></div>
