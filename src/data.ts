@@ -189,15 +189,15 @@ export const ALLIANCE_MEMBERS: AllianceMember[] = [
   {
     id: 'a1',
     name: '好撒馬利亞人行動',
-    logoUrl: 'https://images.unsplash.com/photo-1594751543129-6701ad444259?auto=format&fit=crop&q=80&w=200',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2022/03/22/62397e8d524a4.jpeg',
     latestArticleTitle: '《好撒馬利亞人行動》 為焦慮恐懼的青少年舉辦的希望營會',
     latestArticleDate: '2026-04-15',
     latestArticleId: 94
   },
   {
     id: 'a2',
-    name: '聖域資訊報',
-    logoUrl: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=200',
+    name: '聖城資訊報',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2022/07/01/62be7171f03ed.jpg',
     latestArticleTitle: '導彈與奇蹟：連番遭炸後但人民卻心懷感激',
     latestArticleDate: '2026-04-13',
     latestArticleId: 95
@@ -205,7 +205,7 @@ export const ALLIANCE_MEMBERS: AllianceMember[] = [
   {
     id: 'a3',
     name: 'IMPACT x Malaysia',
-    logoUrl: 'https://images.unsplash.com/photo-1496200186974-4293800e2c20?auto=format&fit=crop&q=80&w=200',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2021/10/13/61669ee824473.png',
     latestArticleTitle: '【未來教會篇】 當AI無不在，門訓還能給什麼？',
     latestArticleDate: '2026-03-18',
     latestArticleId: 96
@@ -213,15 +213,15 @@ export const ALLIANCE_MEMBERS: AllianceMember[] = [
   {
     id: 'a4',
     name: '以賽亞19大道',
-    logoUrl: 'https://images.unsplash.com/photo-1481349579423-6bd35b91dc29?auto=format&fit=crop&q=80&w=200',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2024/12/03/674e621bce4bd.jpg',
     latestArticleTitle: '士每拿教會 Smyrna | 至死忠心的恩膏',
     latestArticleDate: '2026-03-16',
     latestArticleId: 1
   },
   {
     id: 'a5',
-    name: 'FaithToDate',
-    logoUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=200',
+    name: 'FaithToDate給單身的你',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2023/12/06/656fddb2ec0b6.jpg',
     latestArticleTitle: '越懂彼此越少吵架！6個男女必學「戀愛腦訓練」',
     latestArticleDate: '2026-02-27',
     latestArticleId: 2
@@ -229,7 +229,7 @@ export const ALLIANCE_MEMBERS: AllianceMember[] = [
   {
     id: 'a6',
     name: '基督教芥菜種會',
-    logoUrl: 'https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&q=80&w=200',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2025/10/09/68e75b8e5c9db.jpg',
     latestArticleTitle: '呼應長照3.0培力社區「類家人」',
     latestArticleDate: '2026-02-10',
     latestArticleId: 3
@@ -237,7 +237,7 @@ export const ALLIANCE_MEMBERS: AllianceMember[] = [
   {
     id: 'a7',
     name: '看見以色列',
-    logoUrl: 'https://images.unsplash.com/photo-1518173946687-a4c8892bbd9f?auto=format&fit=crop&q=80&w=200',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2021/09/29/6153b5ed73b7e.png',
     latestArticleTitle: '2026：精彩的阿利亞回歸之年',
     latestArticleDate: '2026-02-09',
     latestArticleId: 5
@@ -245,23 +245,23 @@ export const ALLIANCE_MEMBERS: AllianceMember[] = [
   {
     id: 'a8',
     name: '救世傳播協會',
-    logoUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&q=80&w=200',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2024/12/03/674e85329b775.png',
     latestArticleTitle: '打下台灣福音藝術根基 洪善群長老傳記「這一條路」',
     latestArticleDate: '2024-12-03',
     latestArticleId: 7
   },
   {
     id: 'a9',
-    name: '後懷疑到相信',
-    logoUrl: 'https://images.unsplash.com/photo-1454165833758-d717208b067d?auto=format&fit=crop&q=80&w=200',
+    name: '從懷疑到相信',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2022/04/04/624a63b4eeb51.jpeg',
     latestArticleTitle: '企業家走出流淚谷，如何主動出擊落兄姊信主',
     latestArticleDate: '2024-08-22',
     latestArticleId: 8
   },
   {
     id: 'a10',
-    name: 'Carey Theological College',
-    logoUrl: 'https://images.unsplash.com/photo-1523050335392-93851179ae2c?auto=format&fit=crop&q=80&w=200',
+    name: 'Carey Theological College / 克理威廉神學院',
+    logoUrl: 'https://media.ct.org.tw/upload/news_channel/2023/01/26/63d20443c16ba.jpeg',
     latestArticleTitle: '向鄰舍死去',
     latestArticleDate: '2024-08-19',
     latestArticleId: 9
