@@ -36,7 +36,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
               <div className="w-full lg:w-[60%] relative overflow-hidden h-auto bg-theme-bg flex items-center justify-center">
                  <img 
                     src={featuredPlan.imageUrl} 
-                    className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" 
+                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" 
                     alt={featuredPlan.title} 
                  />
                  <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-none"></div>
@@ -86,7 +86,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
                 <div className="relative aspect-video bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-6 group-hover:border-brand-red/30 transition-all duration-500 shadow-sm flex items-center justify-center">
                    <img 
                       src={plan.imageUrl} 
-                      className="w-full h-full object-cover md:grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000" 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" 
                       alt={plan.title} 
                    />
                    <div className="absolute inset-0 bg-gradient-to-t from-theme-bg via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity"></div>

@@ -15,7 +15,7 @@ export default function ProductGallery() {
       <div className="gallery-track flex gap-6 md:gap-12 px-6 md:px-12 lg:px-20 pb-20 flex-grow items-center">
           <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer">
               <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
-                  <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover opacity-70 grayscale group-hover:scale-105 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" alt="Product 1" />
+                  <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt="Product 1" />
                   <div className="absolute top-6 left-6 font-display text-4xl font-black text-theme-text/30 transition-colors">01</div>
                   <div className="absolute inset-0 bg-theme-text/0 group-hover:bg-theme-text/20 transition-colors flex items-center justify-center">
                       <span className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all font-display font-bold uppercase tracking-widest bg-theme-bg px-6 py-3 text-theme-text text-sm rounded-sm">View Item</span>
@@ -28,7 +28,7 @@ export default function ProductGallery() {
           </div>
 
           <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer border border-theme-text/20 bg-theme-text/5 relative overflow-hidden flex flex-col items-center justify-center p-8 text-center hover:border-brand-red/50 transition-colors aspect-[3/4] mb-12 mt-6">
-              <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover opacity-30 grayscale group-hover:opacity-50 group-hover:scale-105 transition-all duration-700" alt="Ad" />
+              <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-all duration-700" alt="Ad" />
               <div className="absolute inset-0 bg-gradient-to-b from-theme-bg/80 to-theme-bg/95 transition-colors"></div>
               <span className="absolute top-4 right-4 text-[9px] font-display uppercase tracking-widest text-theme-text/50 border border-theme-text/20 px-2 py-0.5 z-10 bg-theme-bg transition-colors">ADVERTISEMENT</span>
               <div className="relative z-10 w-20 h-20 rounded-full bg-brand-red/20 flex items-center justify-center mb-6 border border-brand-red/30 text-brand-red group-hover:scale-110 transition-transform duration-500">
@@ -41,7 +41,7 @@ export default function ProductGallery() {
 
           <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer">
               <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
-                  <img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover opacity-70 grayscale group-hover:scale-105 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" alt="Product 2" />
+                  <img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt="Product 2" />
                   <div className="absolute top-6 left-6 font-display text-4xl font-black text-theme-text/30 transition-colors">02</div>
                   <div className="absolute inset-0 bg-theme-text/0 group-hover:bg-theme-text/20 transition-colors flex items-center justify-center">
                       <span className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all font-display font-bold uppercase tracking-widest bg-theme-bg px-6 py-3 text-theme-text text-sm rounded-sm">View Item</span>
@@ -55,7 +55,7 @@ export default function ProductGallery() {
           
           <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer">
               <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
-                  <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover opacity-70 grayscale group-hover:scale-105 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" alt="Product 3" />
+                  <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt="Product 3" />
                   <div className="absolute top-6 left-6 font-display text-4xl font-black text-theme-text/30 transition-colors">03</div>
                   <div className="absolute inset-0 bg-theme-text/0 group-hover:bg-theme-text/20 transition-colors flex items-center justify-center">
                       <span className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all font-display font-bold uppercase tracking-widest bg-theme-bg px-6 py-3 text-theme-text text-sm rounded-sm">View Item</span>

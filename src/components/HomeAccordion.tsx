@@ -80,7 +80,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 className={`accordion-bg transition-all duration-1000 ${
                   index === activeIndex
                     ? 'opacity-100'
-                    : 'opacity-50 md:opacity-80 md:grayscale group-hover:opacity-100 group-hover:grayscale-0'
+                    : 'opacity-50 md:opacity-80 group-hover:opacity-100'
                 }`}
                 alt=""
                 style={{ zIndex: 1 }}
@@ -173,7 +173,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   i === carouselIndex
                     ? (index === activeIndex
                         ? 'opacity-100'
-                        : 'opacity-50 md:opacity-80 md:grayscale group-hover:opacity-100 group-hover:grayscale-0')
+                        : 'opacity-50 md:opacity-80 group-hover:opacity-100')
                     : 'opacity-0'
                 }`}
                 alt=""

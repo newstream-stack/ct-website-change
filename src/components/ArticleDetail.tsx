@@ -51,7 +51,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
     return (
         <>
             <div className="relative w-full h-[65svh] md:h-[70svh] bg-theme-text/5 overflow-hidden border-b border-theme-text/10 transition-colors duration-500">
-                <img src={article.imageUrl} className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale transition-opacity duration-700" alt="Cover" />
+                <img src={article.imageUrl} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt="Cover" />
                 <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 md:p-12 lg:p-20 pb-10 md:pb-16 bg-gradient-to-t from-theme-bg via-theme-bg/90 to-theme-bg/30 transition-colors duration-500">
                     <div className="max-w-[90rem] mx-auto w-full z-10 translate-y-2 md:translate-y-10">
                         <span className="inline-block bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm">{article.category}</span>
@@ -116,8 +116,8 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                                 {secondPart && <div dangerouslySetInnerHTML={{ __html: secondPart }} />}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
-                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
-                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
+                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
+                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
                                 </div>
 
                                 <div dangerouslySetInnerHTML={{ __html: dummyContentPart2 }} />
@@ -158,7 +158,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                         {recommendedNews.map(n => (
                             <div key={n.id} className="group cursor-pointer flex flex-col h-full" onClick={() => openArticle(n.id)}>
                                 <div className="w-full aspect-[4/3] bg-theme-text/10 overflow-hidden mb-4 border border-theme-text/5 transition-colors rounded-sm">
-                                    <img src={n.imageUrl} className="w-full h-full object-cover grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" alt={n.title} />
+                                    <img src={n.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt={n.title} />
                                 </div>
                                 <span className="text-brand-red font-display font-bold text-[10px] uppercase tracking-widest mb-2">{n.category}</span>
                                 <h4 className="text-lg md:text-xl font-serif font-black text-theme-text leading-[1.4] md:leading-snug group-hover:text-brand-red transition-colors line-clamp-2 mb-3 tracking-wide md:tracking-normal">{n.title}</h4>

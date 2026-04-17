@@ -111,7 +111,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                      {savedArticles.map(article => (
                        <div key={article.id} className="flex gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
                          <div className="w-24 h-24 sm:w-32 sm:h-24 flex-shrink-0 overflow-hidden rounded-lg bg-theme-text/10">
-                           <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                           <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transition-all duration-500" />
                          </div>
                          <div className="flex flex-col justify-center">
                            <span className="text-[10px] font-bold text-brand-red tracking-widest uppercase mb-1">{article.category}</span>
@@ -204,7 +204,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   {MOCK_NEWS.slice(0, 6).map((article, i) => (
                     <div key={i} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
                       <div className="h-40 overflow-hidden relative">
-                        <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 grayscale group-hover:grayscale-0" />
+                        <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
                         <button className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 backdrop-blur rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10" title="取消收藏" onClick={(e) => e.stopPropagation()}>
                            <i className="fas fa-bookmark text-sm"></i>
                         </button>

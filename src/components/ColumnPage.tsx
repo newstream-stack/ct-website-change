@@ -30,7 +30,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
               <div className="w-full lg:w-[55%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
                  <img 
                     src={featuredArticle.imageUrl} 
-                    className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" 
+                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" 
                     alt={featuredArticle.title} 
                  />
                  <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/30 pointer-events-none"></div>
@@ -102,7 +102,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
               {/* Profile Frame */}
               <div className="relative mb-8 flex justify-center">
                  <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden">
-                    <img src={author.avatarUrl} className="w-full h-full object-cover rounded-full md:grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110" alt={author.name} />
+                    <img src={author.avatarUrl} className="w-full h-full object-cover rounded-full transition-all duration-700 group-hover:scale-110" alt={author.name} />
                  </div>
                  <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">Verified Author</div>
               </div>

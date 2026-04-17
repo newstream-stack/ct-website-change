@@ -8,10 +8,8 @@ interface ImpactAlliancePageProps {
 export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePageProps) {
   const featuredArticles = MOCK_NEWS.filter(n => n.category === '影響力聯盟').slice(0, 3);
   
-  // Use first 3 articles for slider if available, otherwise fallback
   const sliderArticles = featuredArticles.length > 0 ? featuredArticles : MOCK_NEWS.slice(0, 3);
   const featuredArticle = sliderArticles[0];
-  const sideArticles = sliderArticles.slice(1);
 
   return (
     <div className="pt-[160px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
@@ -23,7 +21,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
         </div>
       </div>
 
-      {/* 2. Featured Spotlight (Hero Section Style) */}
+      {/* 2. Featured Spotlight */}
       <div className="px-5 md:px-12 lg:px-20 mb-24 md:mb-32">
         <div className="max-w-[1400px] mx-auto relative group overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm">
            <div className="flex flex-col lg:flex-row min-h-[500px]">
@@ -31,7 +29,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
               <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center">
                  <img 
                     src={featuredArticle.imageUrl} 
-                    className="w-full h-full object-cover md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-105" 
+                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" 
                     alt={featuredArticle.title} 
                  />
                  <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-auto"></div>
@@ -77,42 +75,47 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
          </div>
       </div>
 
-      {/* 4. Partner Cards - Premium Grid */}
+      {/* 4. Partner Cards - Round Layout (matching ColumnPage) */}
       <div className="px-5 md:px-12 lg:px-20 mb-32">
         <div className="max-w-[1400px] mx-auto">
-          <div className="flex items-center gap-4 mb-12 md:mb-16 border-b border-theme-text/10 pb-6">
+          <div className="flex items-center gap-4 mb-16 md:mb-24 border-b border-theme-text/10 pb-6">
              <h3 className="text-xl md:text-2xl font-bold tracking-widest uppercase">合作夥伴與聯盟成員</h3>
              <span className="w-12 h-px bg-brand-red"></span>
              <span className="text-[10px] md:text-xs text-theme-text/40 font-display tracking-widest uppercase">Members Directory</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 lg:gap-x-16">
             {ALLIANCE_MEMBERS.map((member) => (
               <div 
                 key={member.id} 
                 className="group flex flex-col"
               >
-                {/* Logo Frame */}
-                <div className="relative aspect-video bg-white overflow-hidden border border-theme-text/10 mb-6 p-8 flex items-center justify-center group-hover:border-brand-red/30 transition-all duration-700 shadow-sm rounded-sm">
-                   <img src={member.logoUrl} className="max-w-[80%] max-h-[80%] object-contain md:grayscale group-hover:grayscale-0 transition-all duration-1000 group-hover:scale-110" alt={member.name} />
-                   <div className="absolute inset-x-0 bottom-0 h-1 bg-brand-red transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-700"></div>
+                {/* Round Logo Frame */}
+                <div className="relative mb-8 flex justify-center">
+                   <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden flex items-center justify-center bg-white">
+                      <img src={member.logoUrl} className="w-[70%] h-[70%] object-contain transition-all duration-700 group-hover:scale-110" alt={member.name} />
+                   </div>
+                   <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">Verified Member</div>
                 </div>
                 
-                {/* Info */}
-                <div className="flex flex-col">
-                   <div className="flex justify-between items-center mb-3">
+                {/* Info Center Aligned */}
+                <div className="text-center group">
+                   <div className="flex items-center justify-center gap-2 mb-3">
                       <span className="text-brand-red font-display text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase">{member.latestArticleDate}</span>
-                      <button className="text-[9px] font-bold border border-theme-text/20 px-3 py-1 rounded-sm hover:bg-theme-text hover:text-theme-bg transition-all uppercase tracking-widest whitespace-nowrap">Follow</button>
                    </div>
-                   <h4 className="text-lg md:text-xl lg:text-2xl font-serif font-black text-theme-text group-hover:text-brand-red transition-colors leading-snug mb-3">
+                   <h4 className="font-serif text-xl md:text-2xl font-black text-theme-text mb-4 group-hover:text-brand-red transition-colors leading-snug">
                      {member.name}
                    </h4>
                    <p 
-                    className="text-theme-text/60 text-xs md:text-sm line-clamp-2 leading-relaxed cursor-pointer hover:underline underline-offset-4 decoration-1 decoration-brand-red/40"
+                    className="text-theme-text/60 text-xs md:text-sm line-clamp-2 leading-relaxed px-4 cursor-pointer hover:text-brand-red transition-all"
                     onClick={() => openArticle(member.latestArticleId)}
                    >
                      {member.latestArticleTitle}
                    </p>
+                   
+                   <div className="mt-8 pt-6 border-t border-theme-text/5 flex justify-center gap-4">
+                      <button className="px-6 py-2 bg-theme-text/5 hover:bg-brand-red hover:text-white text-[10px] font-bold tracking-widest uppercase transition-all rounded-sm">Follow Member</button>
+                   </div>
                 </div>
               </div>
             ))}
@@ -120,7 +123,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
         </div>
       </div>
 
-      {/* 5. Load More - Minimalist */}
+      {/* 5. Load More */}
       <div className="mt-24 flex justify-center px-5">
          <button className="w-full max-w-sm border border-theme-text/10 py-5 text-xs md:text-sm font-bold tracking-[0.4em] font-display hover:bg-theme-text hover:text-theme-bg transition-all uppercase flex items-center justify-center gap-4 group">
            Explore More Network Members <i className="fas fa-plus text-[10px] group-hover:rotate-90 transition-transform"></i>

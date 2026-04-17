@@ -65,7 +65,7 @@ export default function EventRegistrationPage() {
         <img 
           src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=2000" 
           alt="Event Background" 
-          className="w-full h-full object-cover grayscale-[0.5] object-center scale-105 transform origin-center"
+          className="w-full h-full object-cover object-center scale-105 transform origin-center"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-theme-bg via-theme-bg/80 to-transparent"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center px-4 md:px-12 pt-20 animate-fade-in-up">
