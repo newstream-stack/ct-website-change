@@ -9,7 +9,6 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
-  const [videoStarted, setVideoStarted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Dynamically measure header height for mobile top padding
@@ -37,10 +36,6 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }, 5000);
     return () => clearTimeout(timer);
   }, [carouselIndex]);
-
-  useEffect(() => {
-    setVideoStarted(false);
-  }, [videoCarouselIndex, activeIndex]);
 
   const accordionGroups = [
     MOCK_NEWS.slice(0, 5),
@@ -190,34 +185,24 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             >
               {/* Media Container */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
-                {!videoStarted ? (
-                  <>
-                    {/* Thumbnail Background */}
-                    <img
-                      src={video.thumbnail}
-                      className="accordion-bg object-cover opacity-100"
-                      alt={video.title}
-                    />
-                    {/* Click cover to start playback */}
-                    <div
-                      onClick={(e) => { e.stopPropagation(); setVideoStarted(true); }}
-                      className="absolute inset-0 z-30 flex items-center justify-center bg-black/10 cursor-pointer group/play"
-                    >
-                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover/play:scale-110 group-hover/play:bg-brand-red group-hover/play:border-brand-red transition-all shadow-2xl">
-                        <i className="fas fa-play text-xl md:text-2xl ml-1"></i>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  /* Iframe — rendered only after user clicks to ensure autoplay works */
+                {index === activeIndex ? (
+                  /* Active Panel: Show Auto-playing Video */
                   <iframe
+                    key={`${video.videoId}-${videoCarouselIndex}`}
                     className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110"
-                    src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=1&controls=1&rel=0`}
+                    src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=1&controls=1&rel=0&playsinline=1`}
                     title={video.title}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   ></iframe>
+                ) : (
+                  /* Collapsed Panel: Show Thumbnail Image */
+                  <img
+                    src={video.thumbnail}
+                    className="accordion-bg object-cover opacity-100"
+                    alt={video.title}
+                  />
                 )}
               </div>
 
