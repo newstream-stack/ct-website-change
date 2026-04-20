@@ -49,6 +49,15 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   accordionGroups.forEach((group) => {
     panels.push({ type: 'news', group, displayIndex: newsCount });
     newsCount++;
+    if (newsCount === 3) {
+      panels.push({ 
+        type: 'video', 
+        id: 'video-feature',
+        title: '福音短片：看見希望的起點',
+        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=0&loop=1&playlist=dQw4w9WgXcQ',
+        category: '影音專區'
+      });
+    }
     if (newsCount % 4 === 0 && MOCK_ADS.accordion) {
       panels.push({ type: 'ad', ad: MOCK_ADS.accordion });
     }
@@ -139,6 +148,83 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     </span>
                     <i className="fas fa-arrow-right text-[10px] group-hover/cta:translate-x-1.5 transition-transform"></i>
                   </a>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
+        if (panel.type === 'video') {
+          return (
+            <div
+              key={panel.id}
+              className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
+              onClick={() => {
+                if (activeIndex !== index) setActiveIndex(index);
+              }}
+            >
+              {/* Video Background / Iframe */}
+              <div className="absolute inset-0 w-full h-full overflow-hidden">
+                {index === activeIndex ? (
+                  <iframe
+                    className="w-full h-[120%] -translate-y-[10%] object-cover opacity-100 transition-opacity duration-1000 scale-110"
+                    src={panel.videoUrl}
+                    title={panel.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <div className="w-full h-full bg-theme-text/10 flex items-center justify-center">
+                    <i className="fas fa-play text-white/40 text-4xl group-hover:scale-110 transition-transform"></i>
+                  </div>
+                )}
+              </div>
+
+              {/* Gradient overlay */}
+              <div
+                className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
+                  index === activeIndex
+                    ? 'bg-black/40'
+                    : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                }`}
+              />
+
+              {/* Collapsed state */}
+              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
+                <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow"></i>
+                <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
+                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
+                  {panel.category}
+                </span>
+              </div>
+
+              {/* Expanded state */}
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
+                <div className="max-w-xl">
+                  <div className="flex items-center gap-3 mb-3 md:mb-5">
+                    <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[10px] tracking-[0.2em] uppercase px-2.5 py-1">
+                      FEATURED VIDEO
+                    </span>
+                    <span className="font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">
+                      {panel.category}
+                    </span>
+                  </div>
+
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-lg">
+                    {panel.title}
+                  </h2>
+
+                  <p className="text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
+                    點擊播放獲取更多精彩內容，體驗沉浸式的影音新聞。
+                  </p>
+
+                  <div className="flex items-center gap-4">
+                     <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                        <div className="h-full bg-brand-red w-1/3 animate-pulse"></div>
+                     </div>
+                     <span className="text-[10px] font-display text-white/50 tracking-widest uppercase">Watching Live</span>
+                  </div>
                 </div>
               </div>
             </div>
