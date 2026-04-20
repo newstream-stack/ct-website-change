@@ -9,7 +9,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLIFrameElement>(null);
 
   // Dynamically measure header height for mobile top padding
   useLayoutEffect(() => {
@@ -36,6 +38,23 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }, 5000);
     return () => clearTimeout(timer);
   }, [carouselIndex]);
+
+  useEffect(() => {
+    setIsPlaying(true);
+  }, [videoCarouselIndex, activeIndex]);
+
+  const toggleVideoPlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    
+    const newState = !isPlaying;
+    const command = newState ? 'playVideo' : 'pauseVideo';
+    videoRef.current.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func: command, args: '' }),
+      '*'
+    );
+    setIsPlaying(newState);
+  };
 
   const accordionGroups = [
     MOCK_NEWS.slice(0, 5),
@@ -186,16 +205,31 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               {/* Media Container */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
                 {index === activeIndex ? (
-                  /* Active Panel: Show Auto-playing Video */
-                  <iframe
-                    key={`${video.videoId}-${videoCarouselIndex}`}
-                    className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110"
-                    src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=0&controls=1&rel=0&playsinline=1`}
-                    title={video.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                  ></iframe>
+                  /* Active Panel: Show Auto-playing Video with Click-to-Pause */
+                  <div className="relative w-full h-full">
+                    <iframe
+                      key={`${video.videoId}-${videoCarouselIndex}`}
+                      ref={videoRef}
+                      className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 pointer-events-none"
+                      src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=0&controls=0&rel=0&playsinline=1`}
+                      title={video.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    ></iframe>
+                    {/* Transparent Click Overlay */}
+                    <div 
+                      onClick={toggleVideoPlay}
+                      className="absolute inset-0 z-20 cursor-pointer flex items-center justify-center"
+                    >
+                      {/* Optional: Subtle play icon when paused */}
+                      {!isPlaying && (
+                        <div className="w-16 h-16 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white transition-opacity">
+                          <i className="fas fa-play text-2xl"></i>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ) : (
                   /* Collapsed Panel: Show Thumbnail Image */
                   <img
