@@ -225,16 +225,16 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       key={`${video.videoId}-${videoCarouselIndex}`}
                       ref={videoRef}
                       className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 pointer-events-none"
-                      src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&rel=0&playsinline=1`}
+                      src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=1&controls=0&rel=0&playsinline=1`}
                       title={video.title}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
                     ></iframe>
-                    {/* Transparent Click Overlay */}
+                    {/* Transparent Click Overlay — Increased Z-Index */}
                     <div 
                       onClick={toggleVideoPlay}
-                      className="absolute inset-0 z-20 cursor-pointer flex items-center justify-center"
+                      className="absolute inset-0 z-[30] cursor-pointer flex items-center justify-center bg-transparent touch-manipulation"
                     >
                       {/* Subtle play icon when paused */}
                       {!isPlaying && (
@@ -243,10 +243,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                         </div>
                       )}
                     </div>
-                    {/* Mute toggle button */}
+                    {/* Mute toggle button — High Z-Index */}
                     <button
                       onClick={toggleMute}
-                      className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-all sm:top-auto sm:bottom-24 lg:bottom-32"
+                      className="absolute top-4 right-4 z-[40] w-10 h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-all sm:top-auto sm:bottom-24 lg:bottom-32 pointer-events-auto"
                     >
                       <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-sm`}></i>
                     </button>
