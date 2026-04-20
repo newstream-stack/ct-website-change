@@ -130,14 +130,14 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
           </div>
         </div>
 
-        {/* 3. Sub-category Navigation */}
-        <div className="px-5 md:px-12 lg:px-20 mb-16 md:mb-20">
-          <div className="max-w-[1400px] mx-auto flex flex-wrap gap-4 md:gap-8 border-b border-theme-text/10 pb-6 transition-colors">
+        {/* 3. Sub-category Navigation - Optimized for Mobile Scrolling */}
+        <div className="px-0 md:px-12 lg:px-20 mb-10 md:mb-20">
+          <div className="max-w-[1400px] mx-auto overflow-x-auto flex flex-nowrap gap-4 md:gap-8 border-b border-theme-text/10 pb-6 transition-colors scrollbar-hide px-5 md:px-0 snap-x">
             {LIFE_SUB_CATEGORIES.map(tab => (
               <button
                 key={tab}
                 onClick={() => setSelectedSubCategory(tab)}
-                className={`relative py-3 px-6 text-sm md:text-base font-bold tracking-widest transition-all rounded-sm ${
+                className={`relative py-3 px-6 text-sm md:text-base font-bold tracking-widest transition-all rounded-sm whitespace-nowrap snap-center ${
                   selectedSubCategory === tab 
                     ? 'bg-theme-text text-theme-bg shadow-lg scale-105' 
                     : 'text-theme-text/40 hover:text-theme-text hover:bg-theme-text/5'
@@ -147,6 +147,15 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
               </button>
             ))}
           </div>
+          <style dangerouslySetInnerHTML={{ __html: `
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+            .scrollbar-hide {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            }
+          `}} />
         </div>
 
         {/* 4. Article Grid */}
