@@ -231,18 +231,6 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
                     ></iframe>
-                    {/* Transparent Click Overlay — Level 30 */}
-                    <div 
-                      onClick={toggleVideoPlay}
-                      className="absolute inset-0 z-[30] cursor-pointer flex items-center justify-center bg-transparent touch-manipulation"
-                    >
-                      {/* Subtle play icon when paused */}
-                      {!isPlaying && (
-                        <div className="w-16 h-16 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white transition-opacity">
-                          <i className="fas fa-play text-2xl"></i>
-                        </div>
-                      )}
-                    </div>
                     {/* Mute toggle button — Level 50 */}
                     <button
                       onClick={toggleMute}
@@ -270,7 +258,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               />
 
               {/* Collapsed state — Level 40 */}
-              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40]">
+              <div 
+                onClick={toggleVideoPlay}
+                className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] cursor-pointer"
+              >
                 <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow"></i>
                 <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
                 <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
@@ -279,8 +270,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               </div>
 
               {/* Expanded state — Level 40 */}
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-[40] pointer-events-none">
-                <div className="max-w-xl pointer-events-auto">
+              <div 
+                onClick={toggleVideoPlay}
+                className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-[40] cursor-pointer"
+              >
+                {!isPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-16 h-16 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white">
+                      <i className="fas fa-play text-2xl"></i>
+                    </div>
+                  </div>
+                )}
+                
+                <div className="max-w-xl pointer-events-auto cursor-default" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-3 mb-2 md:mb-5">
                     <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[9px] md:text-[10px] tracking-[0.2em] uppercase px-2 py-0.5 md:px-2.5 md:py-1">
                       FEATURED VIDEO
