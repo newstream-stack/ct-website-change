@@ -9,6 +9,7 @@ interface MemberDashboardProps {
 export default function MemberDashboard({ goToCategory }: MemberDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedReceipt, setSelectedReceipt] = useState<any>(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const savedArticles = MOCK_NEWS.slice(0, 3); // Get some dummy articles for "saved"
 
@@ -134,9 +135,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       <h3 className="text-xl font-serif font-bold mb-1">我的訂閱方案</h3>
                       <p className="text-sm text-theme-text/60">管理您的 IMPACT 會員資格與付款方式</p>
                     </div>
-                    <button onClick={() => goToCategory('會員招募')} className="bg-brand-red text-white px-6 py-2 rounded-lg font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
+                    <a href="https://ct-website-change.vercel.app/?category=%E6%9C%83%E5%93%A1%E6%8B%9B%E5%8B%9F" className="bg-brand-red text-white px-6 py-2 rounded-lg font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
                       升級方案
-                    </button>
+                    </a>
                   </div>
                   
                   <div className="bg-theme-bg border border-theme-text/10 rounded-xl p-6 mb-8">
@@ -156,7 +157,12 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     </ul>
                     <div className="bg-theme-text/5 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center text-sm gap-2">
                       <span className="text-theme-text/70">下次扣款日期：<span className="font-bold text-theme-text">2026/05/15</span></span>
-                      <button className="font-bold text-brand-red hover:underline underline-offset-4 self-start sm:self-auto">更新付款資訊</button>
+                      <button 
+                        onClick={() => setIsPaymentModalOpen(true)}
+                        className="font-bold text-brand-red hover:underline underline-offset-4 self-start sm:self-auto"
+                      >
+                        更新付款資訊
+                      </button>
                     </div>
                   </div>
                   
@@ -321,6 +327,50 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
           receipt={selectedReceipt} 
           onClose={() => setSelectedReceipt(null)} 
         />
+      )}
+
+      {isPaymentModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-theme-bg/80 backdrop-blur-md" onClick={() => setIsPaymentModalOpen(false)}></div>
+          <div className="bg-theme-bg border border-theme-text/10 rounded-2xl w-full max-w-md p-8 relative z-10 shadow-2xl animate-fade-in-up">
+            <button onClick={() => setIsPaymentModalOpen(false)} className="absolute top-4 right-4 text-theme-text/40 hover:text-theme-text transition-colors">
+              <i className="fas fa-times text-xl"></i>
+            </button>
+            
+            <h3 className="text-2xl font-serif font-black mb-6">更新付款資訊</h3>
+            
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-theme-text/60">卡號 Card Number</label>
+                <div className="relative">
+                  <i className="far fa-credit-card absolute left-4 top-1/2 -translate-y-1/2 text-theme-text/40"></i>
+                  <input type="text" placeholder="**** **** **** 4242" className="w-full bg-theme-text/5 border border-theme-text/10 rounded-xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-red/50 transition-all font-sans text-theme-text" />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-theme-text/60">有效期 Expiry</label>
+                  <input type="text" placeholder="MM/YY" className="w-full bg-theme-text/5 border border-theme-text/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-red/50 transition-all font-sans text-theme-text" />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-theme-text/60">驗證碼 CVC</label>
+                  <input type="text" placeholder="***" className="w-full bg-theme-text/5 border border-theme-text/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-red/50 transition-all font-sans text-theme-text" />
+                </div>
+              </div>
+              
+              <button 
+                onClick={() => {
+                  alert('付款資訊預覽更新成功！');
+                  setIsPaymentModalOpen(false);
+                }}
+                className="mt-4 w-full bg-brand-red text-white font-bold tracking-widest py-3.5 rounded-xl hover:opacity-90 transform active:scale-[0.98] transition-all shadow-lg shadow-brand-red/20"
+              >
+                確 認 更 新
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
