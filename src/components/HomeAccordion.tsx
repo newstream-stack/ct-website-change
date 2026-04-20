@@ -67,21 +67,21 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
         videos: [
           {
             id: 'v1',
-            title: '曠野中的重生 - 人生故事',
+            title: '曠野中的重生',
             url: 'https://www.youtube.com/embed/2IvNbOhBPwA?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=2IvNbOhBPwA',
-            category: '生命故事'
+            category: '影片'
           },
           {
             id: 'v2',
-            title: '福音短片：看見希望的起點',
-            url: 'https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=dQw4w9WgXcQ',
-            category: '福音專欄'
+            title: '日出東方',
+            url: 'https://www.youtube.com/watch?v=ggy7Mu8tpXg',
+            category: '影片'
           },
           {
             id: 'v3',
-            title: '城市宣教：光在黑暗中發亮',
-            url: 'https://www.youtube.com/embed/4p15uWjE_Xo?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=4p15uWjE_Xo',
-            category: '影音專區'
+            title: '往水深之處',
+            url: 'https://www.youtube.com/watch?v=bph9clxfy3k',
+            category: '影片'
           }
         ]
       });
@@ -115,8 +115,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <img
                 src={ad.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${index === activeIndex
-                    ? 'opacity-100'
-                    : 'opacity-50 md:opacity-80 group-hover:opacity-100'
+                  ? 'opacity-100'
+                  : 'opacity-50 md:opacity-80 group-hover:opacity-100'
                   }`}
                 alt=""
                 style={{ zIndex: 1 }}
@@ -125,8 +125,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
-                    ? 'accordion-vignette'
-                    : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                  ? 'accordion-vignette'
+                  : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
                   }`}
               />
 
@@ -203,7 +203,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     ></iframe>
                     {/* Play/Pause Button Overlay */}
-                    <button 
+                    <button
                       onClick={(e) => { e.stopPropagation(); toggleVideoPlay(); }}
                       className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors group/play"
                     >
@@ -222,8 +222,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               {/* Gradient overlay */}
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
-                    ? 'bg-black/40'
-                    : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                  ? 'bg-black/40'
+                  : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
                   }`}
               />
 
@@ -309,10 +309,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 key={item.id}
                 src={item.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${i === carouselIndex
-                    ? (index === activeIndex
-                      ? 'opacity-100'
-                      : 'opacity-50 md:opacity-80 group-hover:opacity-100')
-                    : 'opacity-0'
+                  ? (index === activeIndex
+                    ? 'opacity-100'
+                    : 'opacity-50 md:opacity-80 group-hover:opacity-100')
+                  : 'opacity-0'
                   }`}
                 alt=""
                 style={{ zIndex: i === carouselIndex ? 1 : 0 }}
@@ -322,8 +322,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
             <div
               className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
-                  ? 'accordion-vignette'
-                  : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                ? 'accordion-vignette'
+                : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
                 }`}
             />
 
@@ -381,8 +381,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       key={i}
                       onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
                       className={`transition-all duration-300 rounded-full ${i === carouselIndex
-                          ? 'w-5 h-1.5 bg-brand-red'
-                          : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
+                        ? 'w-5 h-1.5 bg-brand-red'
+                        : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
                         }`}
                       aria-label={`Go to story ${i + 1}`}
                     />
