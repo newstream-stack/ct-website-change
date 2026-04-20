@@ -193,7 +193,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
           type: 'ad', 
           ad: {
             ...MOCK_ADS.accordion,
-            imageUrl: 'https://media.ct.org.tw//upload/news_article_cms/2026/04/20/22823_%E7%B6%B2%E9%A0%81.jpg',
+            imageUrl: 'https://media.ct.org.tw/upload/news_article_cms/2026/04/20/90064_未命名-1.jpg',
             title: '曠野中的重生',
             description: '亞洲論壇影響力國際年會2026',
             sponsor: 'IMPACT'
