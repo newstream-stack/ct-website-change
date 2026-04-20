@@ -127,7 +127,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }
   };
 
-  const toggleMute = (e: React.MouseEvent) => {
+  const toggleMute = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     if (!playerRef.current) return;
     
@@ -304,6 +304,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     {/* Mute toggle button — Level 50 */}
                     <button
                       onClick={toggleMute}
+                      onTouchEnd={toggleMute}
                       className="absolute top-4 right-4 z-[50] w-10 h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-all sm:top-auto sm:bottom-24 lg:bottom-32 pointer-events-auto"
                     >
                       <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-sm`}></i>
@@ -351,7 +352,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </div>
                 )}
                 
-                <div className="max-w-xl pointer-events-auto cursor-default" onClick={(e) => e.stopPropagation()}>
+                <div className="max-w-xl pointer-events-auto cursor-default" onClick={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-3 mb-2 md:mb-5">
                     <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[9px] md:text-[10px] tracking-[0.2em] uppercase px-2 py-0.5 md:px-2.5 md:py-1">
                       FEATURED VIDEO
@@ -362,12 +363,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <div className="flex items-center gap-1.5 ml-auto md:ml-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + 3) % 3); }}
+                        onTouchEnd={(e) => e.stopPropagation()}
                         className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-left text-[8px]"></i>
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % 3); }}
+                        onTouchEnd={(e) => e.stopPropagation()}
                         className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-right text-[8px]"></i>
