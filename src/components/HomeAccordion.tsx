@@ -243,11 +243,11 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
               {/* Collapsed state */}
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
-                <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow">
+                <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
                   AD
                 </span>
                 <div className="hidden md:block w-5 h-px bg-brand-red/80 mx-auto"></div>
-                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-brand-red font-bold drop-shadow">
+                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:writing-vertical-rl text-brand-red font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                   SPONSOR
                 </span>
               </div>
@@ -266,12 +266,12 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-3 drop-shadow-lg">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     {ad.title}
                   </h2>
 
                   {/* Excerpt */}
-                  <p className="text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 max-w-md mb-4 md:mb-8">
+                  <p className="text-white/90 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 max-w-md mb-4 md:mb-8 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                     {ad.description}
                   </p>
 
@@ -339,16 +339,16 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               {/* Gradient overlay */}
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
-                  ? 'bg-black/40'
-                  : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                  ? 'bg-black/60'
+                  : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
                   }`}
               />
 
               {/* Collapsed state — Level 40 */}
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] pointer-events-none">
-                <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow"></i>
+                <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"></i>
                 <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
-                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
+                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:writing-vertical-rl text-white/80 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                   {video.category}
                 </span>
               </div>
@@ -394,11 +394,11 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     </div>
                   </div>
 
-                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-lg">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     {video.title}
                   </h2>
 
-                  <p className="hidden md:block text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
+                  <p className="hidden md:block text-white/90 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                     {videoCarouselIndex === 0 ? '見證如何從曠野困境中找回重生的力量。' : 
                      videoCarouselIndex === 1 ? '感受黎明升起的盼望與城市的光。' :
                      '前往水深之處，探索更多未知的福音契機。'}
@@ -452,18 +452,18 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
             <div
               className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
-                ? 'accordion-vignette'
-                : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                ? 'bg-black/70'
+                : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
                 }`}
             />
 
             {/* ── Collapsed (number + divider + category) ── */}
             <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
-              <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow">
+              <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                 0{panel.displayIndex + 1}
               </span>
               <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
-              <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
+              <span className="font-display tracking-[0.25em] uppercase text-[10px] md:writing-vertical-rl text-white/80 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
                 {news.category}
               </span>
             </div>
