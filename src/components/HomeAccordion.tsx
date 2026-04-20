@@ -9,9 +9,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [videoStarted, setVideoStarted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLIFrameElement>(null);
 
   // Dynamically measure header height for mobile top padding
   useLayoutEffect(() => {
@@ -40,22 +39,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   }, [carouselIndex]);
 
   useEffect(() => {
-    setIsVideoPlaying(false);
+    setVideoStarted(false);
   }, [videoCarouselIndex, activeIndex]);
-
-  const toggleVideoPlay = () => {
-    setIsVideoPlaying((prev) => {
-      const newState = !prev;
-      if (videoRef.current) {
-        const command = newState ? 'playVideo' : 'pauseVideo';
-        videoRef.current.contentWindow?.postMessage(
-          JSON.stringify({ event: 'command', func: command, args: '' }),
-          '*'
-        );
-      }
-      return newState;
-    });
-  };
 
   const accordionGroups = [
     MOCK_NEWS.slice(0, 5),
@@ -203,34 +188,36 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 if (activeIndex !== index) setActiveIndex(index);
               }}
             >
-              {/* Video Background / Iframe */}
-              <div className="absolute inset-0 w-full h-full overflow-hidden">
-                <img 
-                  src={video.thumbnail} 
-                  className={`accordion-bg transition-opacity duration-700 object-cover ${index === activeIndex && isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
-                  alt=""
-                />
-                
-                {index === activeIndex && (
-                  <div className={`relative w-full h-full transition-opacity duration-700 ${isVideoPlaying ? 'opacity-100' : 'opacity-0'}`}>
-                    <iframe
-                      ref={videoRef}
-                      className="w-full h-[120%] -translate-y-[10%] object-cover scale-110 pointer-events-none"
-                      src={isVideoPlaying ? video.url.replace('autoplay=0', 'autoplay=1') : video.url}
-                      title={video.title}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    ></iframe>
+              {/* Thumbnail cover — removed when user clicks to play */}
+              <img
+                src={video.thumbnail}
+                className={`accordion-bg object-cover transition-opacity duration-500 ${videoStarted ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                alt={video.title}
+              />
+
+              {/* Iframe — always mounted when active so it loads; autoplay kicks in when cover is removed */}
+              {index === activeIndex && (
+                <iframe
+                  className={`absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 transition-opacity duration-500 ${videoStarted ? 'opacity-100' : 'opacity-0'}`}
+                  src={`${video.url.split('?')[0]}?enablejsapi=1&autoplay=1&mute=0&controls=1&loop=1&playlist=${video.url.split('?')[0].split('/').pop()}`}
+                  title={video.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              )}
+
+              {/* Click cover to start playback — only shows when video not yet started */}
+              {!videoStarted && (
+                <div
+                  onClick={(e) => { e.stopPropagation(); setVideoStarted(true); }}
+                  className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 cursor-pointer group/play"
+                >
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/25 backdrop-blur-md border border-white/40 flex items-center justify-center text-white group-hover/play:scale-110 group-hover/play:bg-white/35 transition-all shadow-2xl">
+                    <i className="fas fa-play text-xl md:text-2xl ml-1"></i>
                   </div>
-                )}
-                
-                {index === activeIndex && (
-                  <div 
-                    onClick={(e) => { e.stopPropagation(); toggleVideoPlay(); }}
-                    className="absolute inset-0 z-20 flex items-center justify-center bg-transparent cursor-pointer"
-                  />
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Gradient overlay */}
               <div
