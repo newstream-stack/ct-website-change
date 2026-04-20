@@ -37,21 +37,28 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
   // Re-initialize player when video changes
   useEffect(() => {
-    if (videoRef.current && (window as any).YT) {
+    if (videoRef.current && (window as any).YT && activeIndex === 3) {
       const initPlayer = () => {
-        if (playerRef.current) {
-          try { playerRef.current.destroy(); } catch (e) {}
-        }
-        playerRef.current = new (window as any).YT.Player(videoRef.current, {
-          events: {
-            onReady: (event: any) => {
-              event.target.playVideo();
-              if (isMuted) event.target.mute();
-              else event.target.unMute();
-            },
-            onStateChange: onPlayerStateChange
+        try {
+          if (playerRef.current) {
+            playerRef.current.destroy();
+            playerRef.current = null;
           }
-        });
+          playerRef.current = new (window as any).YT.Player(videoRef.current, {
+            events: {
+              onReady: (event: any) => {
+                try {
+                  event.target.playVideo();
+                  if (isMuted) event.target.mute();
+                  else event.target.unMute();
+                } catch (e) {}
+              },
+              onStateChange: onPlayerStateChange
+            }
+          });
+        } catch (err) {
+          console.error("YT Init Error:", err);
+        }
       };
 
       if (!(window as any).YT.Player) {
@@ -60,19 +67,28 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
         initPlayer();
       }
     }
+    
+    return () => {
+      if (playerRef.current) {
+        try { playerRef.current.destroy(); } catch (e) {}
+        playerRef.current = null;
+      }
+    };
   }, [videoCarouselIndex, activeIndex]);
 
-  const toggleVideoPlay = (e: React.MouseEvent, index: number) => {
-    // CRITICAL: If Clicking a collapsed panel, let the parent handle the expand click
-    if (activeIndex !== index) return;
-    
-    e.stopPropagation();
-    if (!playerRef.current) return;
-    
-    if (isPlaying) {
-      playerRef.current.pauseVideo();
-    } else {
-      playerRef.current.playVideo();
+  const handlePanelClick = (e: React.MouseEvent, index: number, type: string) => {
+    if (activeIndex !== index) {
+      setActiveIndex(index);
+      return;
+    }
+
+    // If it's already active and it's a video panel, toggle play
+    if (type === 'video') {
+      if (!playerRef.current) return;
+      try {
+        if (isPlaying) playerRef.current.pauseVideo();
+        else playerRef.current.playVideo();
+      } catch (err) {}
     }
   };
 
@@ -231,9 +247,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             <div
               key={panel.id}
               className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
-              onClick={() => {
-                if (activeIndex !== index) setActiveIndex(index);
-              }}
+              onClick={(e) => handlePanelClick(e, index, 'video')}
             >
               {/* Media Container */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -278,10 +292,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               />
 
               {/* Collapsed state — Level 40 */}
-              <div 
-                onClick={(e) => toggleVideoPlay(e, index)}
-                className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] cursor-pointer"
-              >
+              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] pointer-events-none">
                 <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow"></i>
                 <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
                 <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
@@ -290,10 +301,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               </div>
 
               {/* Expanded state — Level 40 */}
-              <div 
-                onClick={(e) => toggleVideoPlay(e, index)}
-                className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-[40] cursor-pointer"
-              >
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-[40] pointer-events-none">
                 {!isPlaying && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="w-16 h-16 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white">
