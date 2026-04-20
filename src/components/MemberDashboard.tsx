@@ -257,14 +257,18 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       <tbody className="divide-y divide-theme-text/5 bg-theme-bg/30">
                         <tr className="hover:bg-theme-text/5 transition-colors">
                           <td className="px-4 py-4">2026/04/10</td>
-                          <td className="px-4 py-4 font-bold text-brand-red">乘著愛的風出發吧！</td>
+                          <td className="px-4 py-4 font-bold text-brand-red">
+                             <a href="https://ct-website-change.vercel.app/?category=%E5%A5%89%E7%8D%BB" className="hover:underline underline-offset-4">乘著愛的風出發吧！</a>
+                           </td>
                           <td className="px-4 py-4 text-theme-text/60">單筆奉獻 (LinePay)</td>
                           <td className="px-4 py-4 font-bold">NT$ 8,000</td>
                           <td className="px-4 py-4"><button onClick={() => setSelectedReceipt({ id: '2026041001', date: '2026/04/10', project: '乘著愛的風出發吧！', method: '單筆奉獻 (LinePay)', amount: 'NT$ 8,000', name: '王大明' })} className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
                         </tr>
                         <tr className="hover:bg-theme-text/5 transition-colors">
                           <td className="px-4 py-4">2026/02/15</td>
-                          <td className="px-4 py-4 font-bold text-brand-red">亞洲論壇影響力中心</td>
+                          <td className="px-4 py-4 font-bold text-brand-red">
+                             <a href="https://ct-website-change.vercel.app/?category=%E5%A5%89%E7%8D%BB" className="hover:underline underline-offset-4">亞洲論壇影響力中心</a>
+                           </td>
                           <td className="px-4 py-4 text-theme-text/60">單筆奉獻 (信用卡)</td>
                           <td className="px-4 py-4 font-bold">NT$ 1,000</td>
                           <td className="px-4 py-4"><button onClick={() => setSelectedReceipt({ id: '2026021509', date: '2026/02/15', project: '亞洲論壇影響力中心', method: '單筆奉獻 (信用卡)', amount: 'NT$ 1,000', name: '王大明' })} className="text-brand-red hover:underline text-xs font-bold underline-offset-4">下載收據</button></td>
@@ -274,9 +278,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   </div>
                   
                   <div className="mt-8 pt-6 border-t border-theme-text/10 flex justify-center">
-                    <button onClick={() => goToCategory('奉獻')} className="border border-brand-red text-brand-red px-8 py-3 rounded-xl font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group">
+                    <a href="https://ct-website-change.vercel.app/?category=%E5%A5%89%E7%8D%BB" className="border border-brand-red text-brand-red px-8 py-3 rounded-xl font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group inline-block">
                       探索更多奉獻專案 <i className="fas fa-heart ml-2 group-hover:scale-110 transition-transform"></i>
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
