@@ -105,12 +105,11 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     };
   }, [videoCarouselIndex, activeIndex]);
 
-  const handlePanelClick = (e: React.MouseEvent, index: number, type: 'video' | 'news' | 'ad', id?: number) => {
-    const isMobile = window.innerWidth < 1024;
-    
-    // If not active, expand it (on mobile and desktop)
+  const handlePanelClick = (e: React.MouseEvent | React.TouchEvent, index: number, type: 'video' | 'news' | 'ad', id?: number) => {
+    // If not active, expand it
     if (activeIndex !== index) {
-      e.preventDefault();
+      if (e.cancelable) e.preventDefault();
+      e.stopPropagation();
       setActiveIndex(index);
       return;
     }
@@ -124,8 +123,6 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
         else playerRef.current.playVideo();
       } catch (err) {}
     } else if (type === 'news' && id) {
-      // News expansion on mobile stays active, second click opens article
-      // On desktop, clicks usually open article immediately if active
       openArticle(id);
     }
   };
@@ -207,6 +204,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               key={`ad-${index}`}
               className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
               onClick={(e) => handlePanelClick(e, index, 'ad')}
+              onTouchEnd={(e) => handlePanelClick(e, index, 'ad')}
+              style={{ touchAction: 'manipulation' }}
             >
               <img
                 src={ad.imageUrl}
@@ -283,6 +282,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               key={panel.id}
               className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
               onClick={(e) => handlePanelClick(e, index, 'video')}
+              onTouchEnd={(e) => handlePanelClick(e, index, 'video')}
+              style={{ touchAction: 'manipulation' }}
             >
               {/* Media Container */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -334,6 +335,11 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   {video.category}
                 </span>
               </div>
+
+              {/* Expansion Touch Overlay — Level 60 (Only when collapsed) */}
+              {index !== activeIndex && (
+                <div className="absolute inset-0 z-[60] cursor-pointer pointer-events-auto bg-transparent" />
+              )}
 
               {/* Expanded state — Level 40 */}
               <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-[40] pointer-events-none">
@@ -405,6 +411,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             key={`news-${index}`}
             className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
             onClick={(e) => handlePanelClick(e, index, 'news', news.id)}
+            onTouchEnd={(e) => handlePanelClick(e, index, 'news', news.id)}
+            style={{ touchAction: 'manipulation' }}
           >
             {/* Images (carousel) */}
             {group.map((item: any, i: number) => (
