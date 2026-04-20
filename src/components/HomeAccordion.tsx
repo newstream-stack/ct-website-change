@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useMemo, MouseEvent, TouchEvent } from 'react';
 import { MOCK_NEWS, MOCK_ADS } from '../data';
 
 interface HomeAccordionProps {
@@ -105,7 +105,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     };
   }, [videoCarouselIndex, activeIndex]);
 
-  const handlePanelClick = (e: React.MouseEvent | React.TouchEvent, index: number, type: 'video' | 'news' | 'ad', id?: number) => {
+  const handlePanelClick = (e: MouseEvent | TouchEvent, index: number, type: 'video' | 'news' | 'ad', id?: number) => {
     // If not active, expand it
     if (activeIndex !== index) {
       if (e.cancelable) e.preventDefault();
@@ -132,7 +132,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }
   };
 
-  const toggleMute = (e: React.MouseEvent | React.TouchEvent) => {
+  const toggleMute = (e: MouseEvent | TouchEvent) => {
     if (e.cancelable) e.preventDefault();
     e.stopPropagation();
     
