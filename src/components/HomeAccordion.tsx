@@ -10,6 +10,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
@@ -54,6 +55,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       '*'
     );
     setIsPlaying(newState);
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    
+    const newState = !isMuted;
+    const command = newState ? 'mute' : 'unMute';
+    videoRef.current.contentWindow?.postMessage(
+      JSON.stringify({ event: 'command', func: command, args: '' }),
+      '*'
+    );
+    setIsMuted(newState);
   };
 
   const accordionGroups = [
@@ -211,7 +225,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       key={`${video.videoId}-${videoCarouselIndex}`}
                       ref={videoRef}
                       className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 pointer-events-none"
-                      src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=0&controls=0&rel=0&playsinline=1`}
+                      src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&rel=0&playsinline=1`}
                       title={video.title}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -222,13 +236,20 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       onClick={toggleVideoPlay}
                       className="absolute inset-0 z-20 cursor-pointer flex items-center justify-center"
                     >
-                      {/* Optional: Subtle play icon when paused */}
+                      {/* Subtle play icon when paused */}
                       {!isPlaying && (
                         <div className="w-16 h-16 rounded-full bg-black/20 backdrop-blur-sm flex items-center justify-center text-white transition-opacity">
                           <i className="fas fa-play text-2xl"></i>
                         </div>
                       )}
                     </div>
+                    {/* Mute toggle button */}
+                    <button
+                      onClick={toggleMute}
+                      className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-all sm:top-auto sm:bottom-24 lg:bottom-32"
+                    >
+                      <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-sm`}></i>
+                    </button>
                   </div>
                 ) : (
                   /* Collapsed Panel: Show Thumbnail Image */
@@ -258,52 +279,52 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               </div>
 
               {/* Expanded state */}
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20 pointer-events-none">
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20 pointer-events-none">
                 <div className="max-w-xl pointer-events-auto">
-                  <div className="flex items-center gap-3 mb-3 md:mb-5">
-                    <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[10px] tracking-[0.2em] uppercase px-2.5 py-1">
+                  <div className="flex items-center gap-3 mb-2 md:mb-5">
+                    <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[9px] md:text-[10px] tracking-[0.2em] uppercase px-2 py-0.5 md:px-2.5 md:py-1">
                       FEATURED VIDEO
                     </span>
-                    <span className="font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">
+                    <span className="hidden md:inline font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">
                       {video.category}
                     </span>
-                    <div className="flex items-center gap-1.5 ml-2">
+                    <div className="flex items-center gap-1.5 ml-auto md:ml-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + 3) % 3); }}
-                        className="w-6 h-6 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
+                        className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-left text-[8px]"></i>
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % 3); }}
-                        className="w-6 h-6 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
+                        className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-right text-[8px]"></i>
                       </button>
                     </div>
                   </div>
 
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-lg">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-lg">
                     {video.title}
                   </h2>
 
-                  <p className="text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
+                  <p className="hidden md:block text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
                     {videoCarouselIndex === 0 ? '見證如何從曠野困境中找回重生的力量。' : 
                      videoCarouselIndex === 1 ? '感受黎明升起的盼望與城市的光。' :
                      '前往水深之處，探索更多未知的福音契機。'}
                   </p>
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex gap-1.5 flex-1">
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <div className="flex gap-1 flex-1 max-w-[120px] md:max-w-none md:gap-1.5">
                       {[0, 1, 2].map((i) => (
                         <div 
                           key={i} 
-                          className={`h-1 flex-1 rounded-full bg-white/20 overflow-hidden transition-all duration-500 ${i === videoCarouselIndex ? 'bg-brand-red opacity-100' : 'opacity-30'}`}
+                          className={`h-0.5 md:h-1 flex-1 rounded-full bg-white/20 overflow-hidden transition-all duration-500 ${i === videoCarouselIndex ? 'bg-brand-red opacity-100' : 'opacity-30'}`}
                         ></div>
                       ))}
                     </div>
-                    <span className="text-[10px] font-display text-white/50 tracking-widest uppercase shrink-0">
-                      Video 0{videoCarouselIndex + 1} / 03
+                    <span className="text-[9px] md:text-[10px] font-display text-white/50 tracking-widest uppercase shrink-0">
+                      V. 0{videoCarouselIndex + 1}
                     </span>
                   </div>
                 </div>
