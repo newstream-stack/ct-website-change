@@ -105,19 +105,28 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     };
   }, [videoCarouselIndex, activeIndex]);
 
-  const handlePanelClick = (e: React.MouseEvent, index: number, type?: string) => {
+  const handlePanelClick = (e: React.MouseEvent, index: number, type: 'video' | 'news' | 'ad', id?: number) => {
+    const isMobile = window.innerWidth < 1024;
+    
+    // If not active, expand it (on mobile and desktop)
     if (activeIndex !== index) {
+      e.preventDefault();
       setActiveIndex(index);
       return;
     }
 
-    // Toggle logic for active video panel
-    if (type === 'video' && playerRef.current) {
+    // If already active, perform type-specific actions
+    if (type === 'video') {
       e.stopPropagation();
+      if (!playerRef.current) return;
       try {
         if (isPlaying) playerRef.current.pauseVideo();
         else playerRef.current.playVideo();
       } catch (err) {}
+    } else if (type === 'news' && id) {
+      // News expansion on mobile stays active, second click opens article
+      // On desktop, clicks usually open article immediately if active
+      openArticle(id);
     }
   };
 
@@ -197,14 +206,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             <div
               key={`ad-${index}`}
               className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
-              onClick={(e) => {
-                if (window.innerWidth < 1024) {
-                  if (activeIndex !== index) {
-                    e.preventDefault();
-                    setActiveIndex(index);
-                  }
-                }
-              }}
+              onClick={(e) => handlePanelClick(e, index, 'ad')}
             >
               <img
                 src={ad.imageUrl}
@@ -402,18 +404,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
           <div
             key={`news-${index}`}
             className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
-            onClick={(e) => {
-              if (window.innerWidth < 1024) {
-                if (activeIndex !== index) {
-                  e.preventDefault();
-                  setActiveIndex(index);
-                } else {
-                  openArticle(news.id);
-                }
-              } else {
-                openArticle(news.id);
-              }
-            }}
+            onClick={(e) => handlePanelClick(e, index, 'news', news.id)}
           >
             {/* Images (carousel) */}
             {group.map((item: any, i: number) => (
