@@ -77,9 +77,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       <h4 className="text-2xl font-black font-display text-theme-text">數位輕享版</h4>
                       <p className="text-sm text-theme-text/60 mt-2">下一次扣款日：2026/05/15 (NT$ 150)</p>
                     </div>
-                    <button className="bg-theme-text text-theme-bg px-6 py-2.5 rounded-lg font-bold text-sm tracking-widest hover:opacity-80 transition-opacity">
+                    <a href="https://ct-website-change.vercel.app/?category=%E6%9C%83%E5%93%A1%E6%8B%9B%E5%8B%9F" className="bg-theme-text text-theme-bg px-6 py-2.5 rounded-lg font-bold text-sm tracking-widest hover:opacity-80 transition-opacity inline-block">
                       管理訂閱
-                    </button>
+                    </a>
                   </div>
                 </div>
 
