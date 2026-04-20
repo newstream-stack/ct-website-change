@@ -115,8 +115,13 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }
 
     // If already active, perform type-specific actions
-    if (type === 'video') {
+    // Prevent double-firing on mobile by blocking the 'click' after 'touchend'
+    if (e.type === 'touchend') {
+      if (e.cancelable) e.preventDefault();
       e.stopPropagation();
+    }
+
+    if (type === 'video') {
       if (!playerRef.current) return;
       try {
         if (isPlaying) playerRef.current.pauseVideo();
@@ -128,7 +133,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   };
 
   const toggleMute = (e: React.MouseEvent | React.TouchEvent) => {
+    if (e.cancelable) e.preventDefault();
     e.stopPropagation();
+    
     if (!playerRef.current) return;
     
     const newState = !isMuted;
@@ -363,14 +370,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <div className="flex items-center gap-1.5 ml-auto md:ml-2">
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + 3) % 3); }}
-                        onTouchEnd={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => { if (e.cancelable) e.preventDefault(); e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + 3) % 3); }}
                         className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-left text-[8px]"></i>
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % 3); }}
-                        onTouchEnd={(e) => e.stopPropagation()}
+                        onTouchEnd={(e) => { if (e.cancelable) e.preventDefault(); e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % 3); }}
                         className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-right text-[8px]"></i>
