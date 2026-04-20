@@ -184,7 +184,11 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     <div
       ref={containerRef}
       className="accordion-container relative md:pt-0"
-      style={{ paddingTop: window.innerWidth < 768 ? `${headerHeight}px` : 0 }}
+      style={{ 
+        paddingTop: window.innerWidth < 768 ? `${headerHeight}px` : 0,
+        height: '100dvh',
+        overflowY: window.innerWidth < 768 ? 'auto' : 'hidden'
+      }}
     >
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
