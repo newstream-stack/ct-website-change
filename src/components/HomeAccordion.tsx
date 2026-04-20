@@ -189,7 +189,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       });
     }
       if (newsCount % 4 === 0) {
-        p.push({ 
+        panels.push({ 
           type: 'ad', 
           ad: {
             ...MOCK_ADS.accordion,
