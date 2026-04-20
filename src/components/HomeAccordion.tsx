@@ -13,60 +13,79 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [isMuted, setIsMuted] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<any>(null);
 
-  // Dynamically measure header height for mobile top padding
-  useLayoutEffect(() => {
-    const header = document.querySelector('header') as HTMLElement | null;
-    const applyPt = () => {
-      const c = containerRef.current;
-      if (!c) return;
-      if (window.innerWidth < 768) {
-        c.style.paddingTop = `${header?.offsetHeight ?? 170}px`;
-      } else {
-        c.style.paddingTop = '';
-      }
-    };
-    applyPt();
-    const ro = header ? new ResizeObserver(applyPt) : null;
-    if (ro && header) ro.observe(header);
-    window.addEventListener('resize', applyPt, { passive: true });
-    return () => { ro?.disconnect(); window.removeEventListener('resize', applyPt); };
+  // Initialize YouTube Iframe API
+  useEffect(() => {
+    // Only load the script once
+    if (!(window as any).YT) {
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCarouselIndex((prev) => (prev + 1) % 5);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [carouselIndex]);
+  // Handle Player State Changes
+  const onPlayerStateChange = (event: any) => {
+    if (event.data === (window as any).YT?.PlayerState?.PLAYING) {
+      setIsPlaying(true);
+    } else if (event.data === (window as any).YT?.PlayerState?.PAUSED) {
+      setIsPlaying(false);
+    }
+  };
 
+  // Re-initialize player when video changes
   useEffect(() => {
-    setIsPlaying(true);
+    if (videoRef.current && (window as any).YT) {
+      const initPlayer = () => {
+        if (playerRef.current) {
+          try { playerRef.current.destroy(); } catch (e) {}
+        }
+        playerRef.current = new (window as any).YT.Player(videoRef.current, {
+          events: {
+            onReady: (event: any) => {
+              event.target.playVideo();
+              if (isMuted) event.target.mute();
+              else event.target.unMute();
+            },
+            onStateChange: onPlayerStateChange
+          }
+        });
+      };
+
+      if (!(window as any).YT.Player) {
+        (window as any).onYouTubeIframeAPIReady = initPlayer;
+      } else {
+        initPlayer();
+      }
+    }
   }, [videoCarouselIndex, activeIndex]);
 
-  const toggleVideoPlay = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
+  const toggleVideoPlay = (e: React.MouseEvent, index: number) => {
+    // CRITICAL: If Clicking a collapsed panel, let the parent handle the expand click
+    if (activeIndex !== index) return;
     
-    const newState = !isPlaying;
-    const command = newState ? 'playVideo' : 'pauseVideo';
-    videoRef.current.contentWindow?.postMessage(
-      JSON.stringify({ event: 'command', func: command, args: '' }),
-      '*'
-    );
-    setIsPlaying(newState);
+    e.stopPropagation();
+    if (!playerRef.current) return;
+    
+    if (isPlaying) {
+      playerRef.current.pauseVideo();
+    } else {
+      playerRef.current.playVideo();
+    }
   };
 
   const toggleMute = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!videoRef.current) return;
+    if (!playerRef.current) return;
     
     const newState = !isMuted;
-    const command = newState ? 'mute' : 'unMute';
-    videoRef.current.contentWindow?.postMessage(
-      JSON.stringify({ event: 'command', func: command, args: '' }),
-      '*'
-    );
+    if (newState) {
+      playerRef.current.mute();
+    } else {
+      playerRef.current.unMute();
+    }
     setIsMuted(newState);
   };
 
@@ -222,6 +241,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   /* Active Panel: Show Auto-playing Video with Click-to-Pause */
                   <div className="relative w-full h-full">
                     <iframe
+                      id={`youtube-player-${index}`}
                       key={`${video.videoId}-${videoCarouselIndex}`}
                       ref={videoRef}
                       className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 pointer-events-none"
@@ -259,7 +279,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
               {/* Collapsed state — Level 40 */}
               <div 
-                onClick={toggleVideoPlay}
+                onClick={(e) => toggleVideoPlay(e, index)}
                 className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] cursor-pointer"
               >
                 <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow"></i>
@@ -271,7 +291,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
               {/* Expanded state — Level 40 */}
               <div 
-                onClick={toggleVideoPlay}
+                onClick={(e) => toggleVideoPlay(e, index)}
                 className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-6 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-[40] cursor-pointer"
               >
                 {!isPlaying && (
