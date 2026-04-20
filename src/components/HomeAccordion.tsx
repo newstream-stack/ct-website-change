@@ -35,10 +35,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCarouselIndex((prev) => (prev + 1) % 5);
-      setVideoCarouselIndex((prev) => (prev + 1) % 3);
     }, 5000);
     return () => clearTimeout(timer);
-  }, [carouselIndex, videoCarouselIndex]);
+  }, [carouselIndex]);
 
   const toggleVideoPlay = () => {
     if (!videoRef.current) return;
@@ -74,13 +73,13 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
           {
             id: 'v2',
             title: '日出東方',
-            url: 'https://www.youtube.com/watch?v=ggy7Mu8tpXg',
+            url: 'https://www.youtube.com/embed/ggy7Mu8tpXg?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=ggy7Mu8tpXg',
             category: '影片'
           },
           {
             id: 'v3',
             title: '往水深之處',
-            url: 'https://www.youtube.com/watch?v=bph9clxfy3k',
+            url: 'https://www.youtube.com/embed/bph9clxfy3k?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=bph9clxfy3k',
             category: '影片'
           }
         ]
@@ -267,14 +266,21 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </h2>
 
                   <p className="text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
-                    {videoCarouselIndex === 0 ? '見證如何從曠野困境中找回重生的力量。' : '福音短片精華，帶您從影音中感受生命的溫度。'}
+                    {videoCarouselIndex === 0 ? '見證如何從曠野困境中找回重生的力量。' : 
+                     videoCarouselIndex === 1 ? '感受黎明升起的盼望與城市的光。' :
+                     '前往水深之處，探索更多未知的福音契機。'}
                   </p>
 
                   <div className="flex items-center gap-4">
-                    <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
-                      <div className="h-full bg-brand-red w-full transition-all duration-[5000ms] linear" style={{ width: `${(videoCarouselIndex + 1) * 33.3}%` }}></div>
+                    <div className="flex gap-1.5 flex-1">
+                      {[0, 1, 2].map((i) => (
+                        <div 
+                          key={i} 
+                          className={`h-1 flex-1 rounded-full bg-white/20 overflow-hidden transition-all duration-500 ${i === videoCarouselIndex ? 'bg-brand-red opacity-100' : 'opacity-30'}`}
+                        ></div>
+                      ))}
                     </div>
-                    <span className="text-[10px] font-display text-white/50 tracking-widest uppercase">
+                    <span className="text-[10px] font-display text-white/50 tracking-widest uppercase shrink-0">
                       Video 0{videoCarouselIndex + 1} / 03
                     </span>
                   </div>
