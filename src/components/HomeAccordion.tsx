@@ -188,36 +188,38 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 if (activeIndex !== index) setActiveIndex(index);
               }}
             >
-              {/* Thumbnail cover — removed when user clicks to play */}
-              <img
-                src={video.thumbnail}
-                className={`accordion-bg object-cover transition-opacity duration-500 ${videoStarted ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-                alt={video.title}
-              />
-
-              {/* Iframe — always mounted when active so it loads; autoplay kicks in when cover is removed */}
-              {index === activeIndex && (
-                <iframe
-                  className={`absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 transition-opacity duration-500 ${videoStarted ? 'opacity-100' : 'opacity-0'}`}
-                  src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=${videoStarted ? 1 : 0}&mute=0&controls=1&loop=1&playlist=${video.videoId}`}
-                  title={video.title}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              )}
-
-              {/* Click cover to start playback — only shows when video not yet started */}
-              {!videoStarted && (
-                <div
-                  onClick={(e) => { e.stopPropagation(); setVideoStarted(true); }}
-                  className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 cursor-pointer group/play"
-                >
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/25 backdrop-blur-md border border-white/40 flex items-center justify-center text-white group-hover/play:scale-110 group-hover/play:bg-white/35 transition-all shadow-2xl">
-                    <i className="fas fa-play text-xl md:text-2xl ml-1"></i>
-                  </div>
-                </div>
-              )}
+              {/* Media Container */}
+              <div className="absolute inset-0 w-full h-full overflow-hidden">
+                {!videoStarted ? (
+                  <>
+                    {/* Thumbnail Background */}
+                    <img
+                      src={video.thumbnail}
+                      className="accordion-bg object-cover opacity-100"
+                      alt={video.title}
+                    />
+                    {/* Click cover to start playback */}
+                    <div
+                      onClick={(e) => { e.stopPropagation(); setVideoStarted(true); }}
+                      className="absolute inset-0 z-30 flex items-center justify-center bg-black/10 cursor-pointer group/play"
+                    >
+                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white group-hover/play:scale-110 group-hover/play:bg-brand-red group-hover/play:border-brand-red transition-all shadow-2xl">
+                        <i className="fas fa-play text-xl md:text-2xl ml-1"></i>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  /* Iframe — rendered only after user clicks to ensure autoplay works */
+                  <iframe
+                    className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110"
+                    src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=1&controls=1&rel=0`}
+                    title={video.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  ></iframe>
+                )}
+              </div>
 
               {/* Gradient overlay */}
               <div
