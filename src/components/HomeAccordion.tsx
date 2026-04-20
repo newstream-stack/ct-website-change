@@ -39,6 +39,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     return () => clearTimeout(timer);
   }, [carouselIndex]);
 
+  useEffect(() => {
+    setIsVideoPlaying(false);
+  }, [videoCarouselIndex, activeIndex]);
+
   const toggleVideoPlay = () => {
     if (!videoRef.current) return;
     const command = isVideoPlaying ? 'pauseVideo' : 'playVideo';
@@ -68,19 +72,22 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             id: 'v1',
             title: '曠野中的重生',
             url: 'https://www.youtube.com/embed/2IvNbOhBPwA?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=2IvNbOhBPwA',
-            category: '影片'
+            thumbnail: 'https://img.youtube.com/vi/2IvNbOhBPwA/maxresdefault.jpg',
+            category: '影片專區'
           },
           {
             id: 'v2',
             title: '日出東方',
             url: 'https://www.youtube.com/embed/ggy7Mu8tpXg?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=ggy7Mu8tpXg',
-            category: '影片'
+            thumbnail: 'https://img.youtube.com/vi/ggy7Mu8tpXg/maxresdefault.jpg',
+            category: '影片專區'
           },
           {
             id: 'v3',
             title: '往水深之處',
             url: 'https://www.youtube.com/embed/bph9clxfy3k?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=bph9clxfy3k',
-            category: '影片'
+            thumbnail: 'https://img.youtube.com/vi/bph9clxfy3k/maxresdefault.jpg',
+            category: '影片專區'
           }
         ]
       });
@@ -191,30 +198,34 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             >
               {/* Video Background / Iframe */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
-                {index === activeIndex ? (
-                  <div className="relative w-full h-full">
+                <img 
+                  src={video.thumbnail} 
+                  className={`accordion-bg transition-opacity duration-700 object-cover ${index === activeIndex && isVideoPlaying ? 'opacity-0' : 'opacity-100'}`}
+                  alt=""
+                />
+                
+                {index === activeIndex && (
+                  <div className={`relative w-full h-full transition-opacity duration-700 ${isVideoPlaying ? 'opacity-100' : 'opacity-0'}`}>
                     <iframe
                       ref={videoRef}
-                      className="w-full h-[120%] -translate-y-[10%] object-cover opacity-100 transition-opacity duration-1000 scale-110 pointer-events-none"
+                      className="w-full h-[120%] -translate-y-[10%] object-cover scale-110 pointer-events-none"
                       src={video.url}
                       title={video.title}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     ></iframe>
-                    {/* Play/Pause Button Overlay */}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); toggleVideoPlay(); }}
-                      className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors group/play"
-                    >
-                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white scale-90 group-hover/play:scale-100 transition-transform shadow-2xl">
-                        <i className={`fas ${isVideoPlaying ? 'fa-pause' : 'fa-play'} text-2xl md:text-3xl`}></i>
-                      </div>
-                    </button>
                   </div>
-                ) : (
-                  <div className="w-full h-full bg-theme-text/10 flex items-center justify-center">
-                    <i className="fas fa-play text-white/40 text-4xl group-hover:scale-110 transition-transform"></i>
-                  </div>
+                )}
+                
+                {index === activeIndex && (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); toggleVideoPlay(); }}
+                    className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors group/play"
+                  >
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white scale-90 group-hover/play:scale-100 transition-transform shadow-2xl">
+                      <i className={`fas ${isVideoPlaying ? 'fa-pause' : 'fa-play'} text-2xl md:text-3xl`}></i>
+                    </div>
+                  </button>
                 )}
               </div>
 
