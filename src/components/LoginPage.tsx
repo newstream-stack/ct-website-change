@@ -81,9 +81,9 @@ export default function LoginPage({ goToCategory }: LoginPageProps) {
           </div>
 
           <div className="mt-6 flex flex-col gap-3">
-             <button onClick={handleLogin} className="w-full bg-[#00C300]/10 border border-[#00C300]/20 hover:bg-[#00C300]/20 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
-               <i className="fab fa-line text-[#00C300] text-lg lg:text-xl group-hover:scale-110 transition-transform"></i>
-               Line 快速登入
+             <button onClick={handleLogin} className="w-full bg-[#1877F2]/10 border border-[#1877F2]/20 hover:bg-[#1877F2]/20 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
+               <i className="fab fa-facebook-f text-[#1877F2] text-lg lg:text-xl group-hover:scale-110 transition-transform"></i>
+               Facebook 登入
              </button>
              <button onClick={handleLogin} className="w-full bg-theme-text/5 border border-theme-text/10 hover:bg-theme-text/10 text-theme-text py-3.5 rounded-xl flex items-center justify-center gap-3 transition-colors font-bold text-sm tracking-widest group">
                <i className="fab fa-google text-lg lg:text-xl text-[#DB4437] group-hover:scale-110 transition-transform"></i>
