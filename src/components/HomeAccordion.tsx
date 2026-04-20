@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useMemo } from 'react';
 import { MOCK_NEWS, MOCK_ADS } from '../data';
 
 interface HomeAccordionProps {
