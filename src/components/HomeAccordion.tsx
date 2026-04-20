@@ -11,9 +11,38 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(170);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<any>(null);
+
+  // Dynamically measure header height for mobile top padding
+  useLayoutEffect(() => {
+    const updateHeaderHeight = () => {
+      const header = document.querySelector('header');
+      if (header) {
+        setHeaderHeight(header.offsetHeight);
+      }
+    };
+    
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+    const observer = new ResizeObserver(updateHeaderHeight);
+    const header = document.querySelector('header');
+    if (header) observer.observe(header);
+    
+    return () => {
+      window.removeEventListener('resize', updateHeaderHeight);
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCarouselIndex((prev) => (prev + 1) % 5);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [carouselIndex]);
 
   // Initialize YouTube Iframe API
   useEffect(() => {
