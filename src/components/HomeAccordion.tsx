@@ -104,60 +104,58 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     } catch (err) {}
   };
 
-  const panels = useMemo(() => {
-    const accordionGroups = [
-      MOCK_NEWS.slice(0, 5),
-      MOCK_NEWS.slice(5, 10),
-      MOCK_NEWS.slice(10, 15),
-      MOCK_NEWS.slice(15, 20),
-      MOCK_NEWS.slice(20, 25),
-    ];
-    
-    const p: any[] = [];
-    let newsCount = 0;
-    accordionGroups.forEach((group) => {
-      p.push({ type: 'news', group, displayIndex: newsCount });
-      newsCount++;
-      if (newsCount === 3) {
-        p.push({
-          type: 'video',
-          id: 'video-feature',
-          videos: [
-            {
-              id: 'v1',
-              title: '曠野中的重生',
-              videoId: '2IvNbOhBPwA',
-              thumbnail: 'https://img.youtube.com/vi/2IvNbOhBPwA/maxresdefault.jpg',
-              category: '影片專區'
-            },
-            {
-              id: 'v2',
-              title: '日出東方',
-              videoId: 'ggy7Mu8tpXg',
-              thumbnail: 'https://img.youtube.com/vi/ggy7Mu8tpXg/maxresdefault.jpg',
-              category: '影片專區'
-            },
-            {
-              id: 'v3',
-              title: '往水深之處',
-              videoId: 'bph9clxfy3k',
-              thumbnail: 'https://img.youtube.com/vi/bph9clxfy3k/maxresdefault.jpg',
-              category: '影片專區'
-            }
-          ]
-        });
-      }
-      if (newsCount % 4 === 0 && MOCK_ADS.accordion) {
-        p.push({ type: 'ad', ad: MOCK_ADS.accordion });
-      }
-    });
-    return p;
-  }, []);
+  const accordionGroups = [
+    MOCK_NEWS.slice(0, 5),
+    MOCK_NEWS.slice(5, 10),
+    MOCK_NEWS.slice(10, 15),
+    MOCK_NEWS.slice(15, 20),
+    MOCK_NEWS.slice(20, 25),
+  ];
+
+  const panels: any[] = [];
+  let newsCount = 0;
+  accordionGroups.forEach((group) => {
+    panels.push({ type: 'news', group, displayIndex: newsCount });
+    newsCount++;
+    if (newsCount === 3) {
+      panels.push({
+        type: 'video',
+        id: 'video-feature',
+        videos: [
+          {
+            id: 'v1',
+            title: '曠野中的重生',
+            videoId: '2IvNbOhBPwA',
+            thumbnail: 'https://img.youtube.com/vi/2IvNbOhBPwA/maxresdefault.jpg',
+            category: '影片專區'
+          },
+          {
+            id: 'v2',
+            title: '日出東方',
+            videoId: 'ggy7Mu8tpXg',
+            thumbnail: 'https://img.youtube.com/vi/ggy7Mu8tpXg/maxresdefault.jpg',
+            category: '影片專區'
+          },
+          {
+            id: 'v3',
+            title: '往水深之處',
+            videoId: 'bph9clxfy3k',
+            thumbnail: 'https://img.youtube.com/vi/bph9clxfy3k/maxresdefault.jpg',
+            category: '影片專區'
+          }
+        ]
+      });
+    }
+    if (newsCount % 4 === 0 && MOCK_ADS.accordion) {
+      panels.push({ type: 'ad', ad: MOCK_ADS.accordion });
+    }
+  });
 
   return (
     <div
       ref={containerRef}
-      className="accordion-container relative md:pt-0 pb-[130px] md:pb-[96px] lg:pb-0"
+      className="accordion-container relative md:pt-0"
+      style={{ paddingTop: window.innerWidth < 768 ? `${headerHeight}px` : 0 }}
     >
       {panels.map((panel, index) => {
         if (panel.type === 'ad') {
