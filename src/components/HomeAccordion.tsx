@@ -63,21 +63,21 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
           {
             id: 'v1',
             title: '曠野中的重生',
-            url: 'https://www.youtube.com/embed/2IvNbOhBPwA?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=2IvNbOhBPwA',
+            videoId: '2IvNbOhBPwA',
             thumbnail: 'https://img.youtube.com/vi/2IvNbOhBPwA/maxresdefault.jpg',
             category: '影片專區'
           },
           {
             id: 'v2',
             title: '日出東方',
-            url: 'https://www.youtube.com/embed/ggy7Mu8tpXg?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=ggy7Mu8tpXg',
+            videoId: 'ggy7Mu8tpXg',
             thumbnail: 'https://img.youtube.com/vi/ggy7Mu8tpXg/maxresdefault.jpg',
             category: '影片專區'
           },
           {
             id: 'v3',
             title: '往水深之處',
-            url: 'https://www.youtube.com/embed/bph9clxfy3k?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=bph9clxfy3k',
+            videoId: 'bph9clxfy3k',
             thumbnail: 'https://img.youtube.com/vi/bph9clxfy3k/maxresdefault.jpg',
             category: '影片專區'
           }
@@ -199,7 +199,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               {index === activeIndex && (
                 <iframe
                   className={`absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110 transition-opacity duration-500 ${videoStarted ? 'opacity-100' : 'opacity-0'}`}
-                  src={`${video.url.split('?')[0]}?enablejsapi=1&autoplay=1&mute=0&controls=1&loop=1&playlist=${video.url.split('?')[0].split('/').pop()}`}
+                  src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=${videoStarted ? 1 : 0}&mute=0&controls=1&loop=1&playlist=${video.videoId}`}
                   title={video.title}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
