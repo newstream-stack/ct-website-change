@@ -190,7 +190,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   <iframe
                     key={`${video.videoId}-${videoCarouselIndex}`}
                     className="absolute inset-0 w-full h-[120%] -translate-y-[10%] scale-110"
-                    src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=1&controls=1&rel=0&playsinline=1`}
+                    src={`https://www.youtube.com/embed/${video.videoId}?enablejsapi=1&autoplay=1&mute=0&controls=1&rel=0&playsinline=1`}
                     title={video.title}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
