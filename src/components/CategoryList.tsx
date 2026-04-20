@@ -34,6 +34,9 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
     return () => clearInterval(timer);
   }, [category, featuredArticles.length]);
 
+  const nextSlide = () => setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
+  const prevSlide = () => setActiveIndex((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
+
   // Premium Layout for "生活情報"
   if (category === '生活情報') {
     return (
@@ -67,7 +70,23 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                     className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
                     alt={article.title} 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30 pointer-events-none"></div>
+                  
+                  {/* Arrow Buttons */}
+                  <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+                      className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
+                    >
+                      <i className="fas fa-chevron-left text-sm md:text-base"></i>
+                    </button>
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+                      className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
+                    >
+                      <i className="fas fa-chevron-right text-sm md:text-base"></i>
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="w-full lg:w-[45%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10 transition-colors">
