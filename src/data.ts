@@ -9,6 +9,7 @@ export interface NewsItem {
   date: string;
   imageUrl: string;
   content?: string;
+  subCategory?: string;
 }
 
 export const MOCK_NEWS: NewsItem[] = [
@@ -79,11 +80,11 @@ export const MOCK_NEWS: NewsItem[] = [
   { id: 18, title: '走過死蔭幽谷：抗癌鬥士的盼望之歌', excerpt: '面對疾病的無情打擊，她沒有選擇放棄，而是用堅定的信仰譜寫出生命的奇蹟。', category: '人物見證', author: '醫療見證', date: 'APR 03', imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600' },
 
   // Panel 4: 生活情報 (5 items)
-  { id: 4, title: '快節奏都市裡的「慢靈修」生活美學', excerpt: '在喧囂的城市中，我們如何為自己的心靈保留一片安靜的綠洲？這是一種需要刻意練習的生活方式。', category: '生活情報', author: '副刊編輯', date: 'APR 04', imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600' },
-  { id: 19, title: '週末提案：走訪五間隱身巷弄的特色書房', excerpt: '放下手機，走進這些充滿書香與咖啡香的空間，享受一個與文字和心靈對話的悠閒午後。', category: '生活情報', author: '藝文生活', date: 'APR 03', imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=1600' },
-  { id: 20, title: '餐桌上的信仰：用料理傳遞愛與溫暖', excerpt: '分享幾道簡單卻充滿故事的家常菜食譜，讓每一次的共餐都成為凝聚家人情感的美好時刻。', category: '生活情報', author: '家庭生活', date: 'APR 02', imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1600' },
-  { id: 21, title: '親子共讀指南：挑選優質的兒童信仰繪本', excerpt: '透過生動的故事與精美的插畫，將信仰的種子悄悄種在孩子的心田，陪伴他們健康成長。', category: '生活情報', author: '親子教育', date: 'APR 01', imageUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1600' },
-  { id: 22, title: '極簡生活實踐：從斷捨離到心靈的自由', excerpt: '減少物質的羈絆，不僅能讓生活空間更清爽，更能讓我們將焦點轉向真正重要的人事物。', category: '生活情報', author: '生活風格', date: 'MAR 31', imageUrl: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1600' },
+  { id: 4, title: '快節奏都市裡的「慢靈修」生活美學', excerpt: '在喧囂的城市中，我們如何為自己的心靈保留一片安靜的綠洲？這是一種需要刻意練習的生活方式。', category: '生活情報', subCategory: '找學習', author: '副刊編輯', date: 'APR 04', imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600' },
+  { id: 19, title: '週末提案：走訪五間隱身巷弄的特色書房', excerpt: '放下手機，走進這些充滿書香與咖啡香的空間，享受一個與文字和心靈對話的悠閒午後。', category: '生活情報', subCategory: '找活動', author: '藝文生活', date: 'APR 03', imageUrl: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=1600' },
+  { id: 20, title: '餐桌上的信仰：用料理傳遞愛與溫暖', excerpt: '分享幾道簡單卻充滿故事的家常菜食譜，讓每一次的共餐都成為凝聚家人情感的美好時刻。', category: '生活情報', subCategory: '找服務', author: '家庭生活', date: 'APR 02', imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1600' },
+  { id: 21, title: '親子共讀指南：挑選優質的兒童信仰繪本', excerpt: '透過生動的故事與精美的插畫，將信仰的種子悄悄種在孩子的心田，陪伴他們健康成長。', category: '生活情報', subCategory: '找學習', author: '親子教育', date: 'APR 01', imageUrl: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1600' },
+  { id: 22, title: '極簡生活實踐：從斷捨離到心靈的自由', excerpt: '減少物質的羈絆，不僅能讓生活空間更清爽，更能讓我們將焦點轉向真正重要的人事物。', category: '生活情報', subCategory: '找工作', author: '生活風格', date: 'MAR 31', imageUrl: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1600' },
 
   // Panel 5: 信仰知識庫 (5 items)
   { id: 5, title: '當代藝術與古老信仰符號的跨界對話', excerpt: '專訪知名策展人，深入了解他們如何透過極簡的現代藝術手法，重新詮釋千年的信仰圖騰。', category: '信仰知識庫', author: '視覺藝術', date: 'APR 02', imageUrl: 'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&q=80&w=1600' },

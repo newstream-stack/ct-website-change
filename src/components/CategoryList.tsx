@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MOCK_NEWS, MOCK_ADS } from '../data';
 import NativeAdCard from './NativeAdCard';
 
@@ -7,9 +7,20 @@ interface CategoryListProps {
   openArticle: (id: number) => void;
 }
 
+const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '找活動'];
+
 export default function CategoryList({ category, openArticle }: CategoryListProps) {
+  const [selectedSubCategory, setSelectedSubCategory] = useState('全部');
+  
   let filteredNews = MOCK_NEWS.filter(n => n.category === category);
-  if (filteredNews.length === 0) filteredNews = MOCK_NEWS;
+  
+  // Apply sub-category filtering if applicable
+  if (category === '生活情報' && selectedSubCategory !== '全部') {
+    filteredNews = filteredNews.filter(n => n.subCategory === selectedSubCategory);
+  }
+
+  // Fallback if no specific news found (though MOCK_NEWS should be sufficient)
+  if (filteredNews.length === 0 && selectedSubCategory === '全部') filteredNews = MOCK_NEWS;
 
   return (
     <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
@@ -22,6 +33,25 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
           {filteredNews.length} Articles
         </div>
       </div>
+
+      {/* Sub-category Navigation for 生活情報 */}
+      {category === '生活情報' && (
+        <div className="flex flex-wrap items-center gap-3 md:gap-6 mb-12 md:mb-20">
+          {LIFE_SUB_CATEGORIES.map((sub) => (
+            <button
+              key={sub}
+              onClick={() => setSelectedSubCategory(sub)}
+              className={`px-6 py-2.5 rounded-full font-display text-xs md:text-sm font-bold tracking-widest uppercase transition-all duration-300 border ${
+                selectedSubCategory === sub
+                  ? 'bg-brand-red border-brand-red text-white shadow-lg shadow-brand-red/20 scale-105'
+                  : 'bg-theme-text/5 border-theme-text/10 text-theme-text/60 hover:bg-theme-text/10 hover:border-theme-text/20 hover:text-theme-text'
+              }`}
+            >
+              {sub}
+            </button>
+          ))}
+        </div>
+      )}
       
       <div className="w-full h-32 md:h-48 border border-theme-text/10 bg-theme-text/5 backdrop-blur-sm mb-12 md:mb-20 flex items-center justify-center relative cursor-pointer group overflow-hidden transition-colors">
         <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700 group-hover:scale-105" alt="Ad" />
@@ -34,30 +64,38 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
       </div>
 
       <div className="flex flex-col border-t border-theme-text/10 transition-colors">
-        {filteredNews.map((news, index) => (
-          <React.Fragment key={news.id}>
-            {index === 2 && MOCK_ADS.infeed && (
-              <div className="py-6 md:py-8 border-b border-theme-text/10">
-                <NativeAdCard ad={MOCK_ADS.infeed} />
+        {filteredNews.length > 0 ? (
+          filteredNews.map((news, index) => (
+            <React.Fragment key={news.id}>
+              {index === 2 && MOCK_ADS.infeed && (
+                <div className="py-6 md:py-8 border-b border-theme-text/10">
+                  <NativeAdCard ad={MOCK_ADS.infeed} />
+                </div>
+              )}
+              <div className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
+                <div className="w-full md:w-[35%] lg:w-1/3 aspect-[4/3] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm">
+                  <img src={news.imageUrl} className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
+                  <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
+                    {news.subCategory || news.category}
+                  </div>
+                </div>
+                <div className="w-full md:w-[65%] lg:w-2/3 flex flex-col justify-center mt-2 md:mt-0">
+                  <h2 className="text-[22px] sm:text-3xl md:text-4xl lg:text-5xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
+                  <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
+                  <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
+                    <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
+                    <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
+                    <span>{news.date}, 2026</span>
+                  </div>
+                </div>
               </div>
-            )}
-            <div className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
-            <div className="w-full md:w-[35%] lg:w-1/3 aspect-[4/3] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm">
-              <img src={news.imageUrl} className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
-              <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">{news.category}</div>
-            </div>
-            <div className="w-full md:w-[65%] lg:w-2/3 flex flex-col justify-center mt-2 md:mt-0">
-              <h2 className="text-[22px] sm:text-3xl md:text-4xl lg:text-5xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
-              <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
-              <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
-                <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
-                <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
-                <span>{news.date}, 2026</span>
-              </div>
-              </div>
-            </div>
-          </React.Fragment>
-        ))}
+            </React.Fragment>
+          ))
+        ) : (
+          <div className="py-20 text-center">
+            <p className="text-theme-text/40 font-display uppercase tracking-widest">No articles found in this category.</p>
+          </div>
+        )}
       </div>
     </div>
   );
