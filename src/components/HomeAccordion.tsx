@@ -8,7 +8,10 @@ interface HomeAccordionProps {
 export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLIFrameElement>(null);
 
   // Dynamically measure header height for mobile top padding
   useLayoutEffect(() => {
@@ -32,9 +35,17 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setCarouselIndex((prev) => (prev + 1) % 5);
+      setVideoCarouselIndex((prev) => (prev + 1) % 3);
     }, 5000);
     return () => clearTimeout(timer);
-  }, [carouselIndex]);
+  }, [carouselIndex, videoCarouselIndex]);
+
+  const toggleVideoPlay = () => {
+    if (!videoRef.current) return;
+    const command = isVideoPlaying ? 'pauseVideo' : 'playVideo';
+    videoRef.current.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: command, args: '' }), '*');
+    setIsVideoPlaying(!isVideoPlaying);
+  };
 
   const accordionGroups = [
     MOCK_NEWS.slice(0, 5),
@@ -50,12 +61,29 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     panels.push({ type: 'news', group, displayIndex: newsCount });
     newsCount++;
     if (newsCount === 3) {
-      panels.push({ 
-        type: 'video', 
+      panels.push({
+        type: 'video',
         id: 'video-feature',
-        title: '福音短片：看見希望的起點',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=0&loop=1&playlist=dQw4w9WgXcQ',
-        category: '影音專區'
+        videos: [
+          {
+            id: 'v1',
+            title: '曠野中的重生 - 人生故事',
+            url: 'https://www.youtube.com/embed/2IvNbOhBPwA?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=2IvNbOhBPwA',
+            category: '生命故事'
+          },
+          {
+            id: 'v2',
+            title: '福音短片：看見希望的起點',
+            url: 'https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=dQw4w9WgXcQ',
+            category: '福音專欄'
+          },
+          {
+            id: 'v3',
+            title: '城市宣教：光在黑暗中發亮',
+            url: 'https://www.youtube.com/embed/4p15uWjE_Xo?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=4p15uWjE_Xo',
+            category: '影音專區'
+          }
+        ]
       });
     }
     if (newsCount % 4 === 0 && MOCK_ADS.accordion) {
@@ -86,22 +114,20 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             >
               <img
                 src={ad.imageUrl}
-                className={`accordion-bg transition-all duration-1000 ${
-                  index === activeIndex
+                className={`accordion-bg transition-all duration-1000 ${index === activeIndex
                     ? 'opacity-100'
                     : 'opacity-50 md:opacity-80 group-hover:opacity-100'
-                }`}
+                  }`}
                 alt=""
                 style={{ zIndex: 1 }}
               />
 
               {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
               <div
-                className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                  index === activeIndex
+                className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
                     ? 'accordion-vignette'
                     : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
-                }`}
+                  }`}
               />
 
               {/* Collapsed state */}
@@ -155,6 +181,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
         }
 
         if (panel.type === 'video') {
+          const video = panel.videos[videoCarouselIndex];
           return (
             <div
               key={panel.id}
@@ -166,14 +193,25 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               {/* Video Background / Iframe */}
               <div className="absolute inset-0 w-full h-full overflow-hidden">
                 {index === activeIndex ? (
-                  <iframe
-                    className="w-full h-[120%] -translate-y-[10%] object-cover opacity-100 transition-opacity duration-1000 scale-110"
-                    src={panel.videoUrl}
-                    title={panel.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                  <div className="relative w-full h-full">
+                    <iframe
+                      ref={videoRef}
+                      className="w-full h-[120%] -translate-y-[10%] object-cover opacity-100 transition-opacity duration-1000 scale-110 pointer-events-none"
+                      src={video.url}
+                      title={video.title}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    ></iframe>
+                    {/* Play/Pause Button Overlay */}
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); toggleVideoPlay(); }}
+                      className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors group/play"
+                    >
+                      <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white scale-90 group-hover/play:scale-100 transition-transform shadow-2xl">
+                        <i className={`fas ${isVideoPlaying ? 'fa-pause' : 'fa-play'} text-2xl md:text-3xl`}></i>
+                      </div>
+                    </button>
+                  </div>
                 ) : (
                   <div className="w-full h-full bg-theme-text/10 flex items-center justify-center">
                     <i className="fas fa-play text-white/40 text-4xl group-hover:scale-110 transition-transform"></i>
@@ -183,11 +221,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
               {/* Gradient overlay */}
               <div
-                className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                  index === activeIndex
+                className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
                     ? 'bg-black/40'
                     : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
-                }`}
+                  }`}
               />
 
               {/* Collapsed state */}
@@ -195,35 +232,51 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow"></i>
                 <div className="hidden md:block w-5 h-px bg-white/30 mx-auto"></div>
                 <span className="font-display tracking-[0.25em] uppercase text-[10px] md:rotate-180 md:writing-vertical-rl text-white/60 drop-shadow">
-                  {panel.category}
+                  {video.category}
                 </span>
               </div>
 
               {/* Expanded state */}
-              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
-                <div className="max-w-xl">
+              <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20 pointer-events-none">
+                <div className="max-w-xl pointer-events-auto">
                   <div className="flex items-center gap-3 mb-3 md:mb-5">
                     <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[10px] tracking-[0.2em] uppercase px-2.5 py-1">
                       FEATURED VIDEO
                     </span>
                     <span className="font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">
-                      {panel.category}
+                      {video.category}
                     </span>
+                    <div className="flex items-center gap-1.5 ml-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + 3) % 3); }}
+                        className="w-6 h-6 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
+                      >
+                        <i className="fas fa-angle-left text-[8px]"></i>
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % 3); }}
+                        className="w-6 h-6 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
+                      >
+                        <i className="fas fa-angle-right text-[8px]"></i>
+                      </button>
+                    </div>
                   </div>
 
                   <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-lg">
-                    {panel.title}
+                    {video.title}
                   </h2>
 
                   <p className="text-white/75 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
-                    點擊播放獲取更多精彩內容，體驗沉浸式的影音新聞。
+                    {videoCarouselIndex === 0 ? '見證如何從曠野困境中找回重生的力量。' : '福音短片精華，帶您從影音中感受生命的溫度。'}
                   </p>
 
                   <div className="flex items-center gap-4">
-                     <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
-                        <div className="h-full bg-brand-red w-1/3 animate-pulse"></div>
-                     </div>
-                     <span className="text-[10px] font-display text-white/50 tracking-widest uppercase">Watching Live</span>
+                    <div className="h-1 flex-1 bg-white/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-brand-red w-full transition-all duration-[5000ms] linear" style={{ width: `${(videoCarouselIndex + 1) * 33.3}%` }}></div>
+                    </div>
+                    <span className="text-[10px] font-display text-white/50 tracking-widest uppercase">
+                      Video 0{videoCarouselIndex + 1} / 03
+                    </span>
                   </div>
                 </div>
               </div>
@@ -255,13 +308,12 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <img
                 key={item.id}
                 src={item.imageUrl}
-                className={`accordion-bg transition-all duration-1000 ${
-                  i === carouselIndex
+                className={`accordion-bg transition-all duration-1000 ${i === carouselIndex
                     ? (index === activeIndex
-                        ? 'opacity-100'
-                        : 'opacity-50 md:opacity-80 group-hover:opacity-100')
+                      ? 'opacity-100'
+                      : 'opacity-50 md:opacity-80 group-hover:opacity-100')
                     : 'opacity-0'
-                }`}
+                  }`}
                 alt=""
                 style={{ zIndex: i === carouselIndex ? 1 : 0 }}
               />
@@ -269,11 +321,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
             {/* Gradient overlay — dual vignette for active, flat dark for inactive */}
             <div
-              className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                index === activeIndex
+              className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex
                   ? 'accordion-vignette'
                   : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
-              }`}
+                }`}
             />
 
             {/* ── Collapsed (number + divider + category) ── */}
@@ -329,11 +380,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <button
                       key={i}
                       onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
-                      className={`transition-all duration-300 rounded-full ${
-                        i === carouselIndex
+                      className={`transition-all duration-300 rounded-full ${i === carouselIndex
                           ? 'w-5 h-1.5 bg-brand-red'
                           : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
-                      }`}
+                        }`}
                       aria-label={`Go to story ${i + 1}`}
                     />
                   ))}
