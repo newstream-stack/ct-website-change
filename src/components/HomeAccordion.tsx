@@ -216,7 +216,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <iframe
                       ref={videoRef}
                       className="w-full h-[120%] -translate-y-[10%] object-cover scale-110 pointer-events-none"
-                      src={video.url}
+                      src={isVideoPlaying ? video.url.replace('autoplay=0', 'autoplay=1') : video.url}
                       title={video.title}
                       frameBorder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
