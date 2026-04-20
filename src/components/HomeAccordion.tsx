@@ -44,10 +44,17 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   }, [videoCarouselIndex, activeIndex]);
 
   const toggleVideoPlay = () => {
-    if (!videoRef.current) return;
-    const command = isVideoPlaying ? 'pauseVideo' : 'playVideo';
-    videoRef.current.contentWindow?.postMessage(JSON.stringify({ event: 'command', func: command, args: '' }), '*');
-    setIsVideoPlaying(!isVideoPlaying);
+    setIsVideoPlaying((prev) => {
+      const newState = !prev;
+      if (videoRef.current) {
+        const command = newState ? 'playVideo' : 'pauseVideo';
+        videoRef.current.contentWindow?.postMessage(
+          JSON.stringify({ event: 'command', func: command, args: '' }),
+          '*'
+        );
+      }
+      return newState;
+    });
   };
 
   const accordionGroups = [
@@ -71,7 +78,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
           {
             id: 'v1',
             title: '曠野中的重生',
-            url: 'https://www.youtube.com/embed/2IvNbOhBPwA?enablejsapi=1&autoplay=1&mute=1&controls=0&loop=1&playlist=2IvNbOhBPwA',
+            url: 'https://www.youtube.com/embed/2IvNbOhBPwA?enablejsapi=1&autoplay=0&mute=0&controls=0&loop=1&playlist=2IvNbOhBPwA',
             thumbnail: 'https://img.youtube.com/vi/2IvNbOhBPwA/maxresdefault.jpg',
             category: '影片專區'
           },
@@ -218,14 +225,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 )}
                 
                 {index === activeIndex && (
-                  <button 
+                  <div 
                     onClick={(e) => { e.stopPropagation(); toggleVideoPlay(); }}
-                    className="absolute inset-0 z-20 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors group/play"
-                  >
-                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white scale-90 group-hover/play:scale-100 transition-transform shadow-2xl">
-                      <i className={`fas ${isVideoPlaying ? 'fa-pause' : 'fa-play'} text-2xl md:text-3xl`}></i>
-                    </div>
-                  </button>
+                    className="absolute inset-0 z-20 flex items-center justify-center bg-transparent cursor-pointer"
+                  />
                 )}
               </div>
 
