@@ -37,3 +37,13 @@ export interface AllianceMember {
   latestArticleDate: string;
   latestArticleId: number;
 }
+
+export interface ActionPlan {
+  id: string;
+  title: string;
+  subtitle?: string;
+  price?: string;
+  description: string;
+  isPremium?: boolean;
+  variant: 'subscription' | 'donation';
+}
