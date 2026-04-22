@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MOCK_NEWS } from '../data';
-import ReceiptModal from './ReceiptModal';
+import ReceiptModal from '../components/ReceiptModal';
 
 interface MemberDashboardProps {
   goToCategory: (cat: string) => void;

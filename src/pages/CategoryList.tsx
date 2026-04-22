@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MOCK_NEWS, MOCK_ADS } from '../data';
-import NativeAdCard from './NativeAdCard';
+import NativeAdCard from '../components/NativeAdCard';
 
 interface CategoryListProps {
   category: string;

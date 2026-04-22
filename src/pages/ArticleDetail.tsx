@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { MOCK_NEWS, MOCK_ADS, dummyContentPart1, dummyContentPart2 } from '../data';
-import InlineArticleBanner from './InlineArticleBanner';
-import StickySidebarAd from './StickySidebarAd';
+import InlineArticleBanner from '../components/InlineArticleBanner';
+import StickySidebarAd from '../components/StickySidebarAd';
 
 interface ArticleDetailProps {
     articleId: number;
