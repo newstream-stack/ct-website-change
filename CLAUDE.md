@@ -46,18 +46,25 @@ src/
 ├── main.tsx
 ├── index.css            # 全域 CSS：@theme、Accordion 動畫、RWD
 ├── data.ts              # MockData：NewsItem[]、AdItem、分類設定
-└── components/
-    ├── Header.tsx           # Fixed 頂部導覽，含 mobile actions bar + category bar
+├── components/
+│   ├── Header.tsx           # Fixed 頂部導覽，含 mobile actions bar + category bar
+│   ├── GlobalBottomAd.tsx   # Fixed 底部廣告條
+│   ├── FullscreenMenu.tsx   # 手機全螢幕選單
+│   ├── InlineArticleBanner.tsx
+│   ├── NativeAdCard.tsx
+│   └── StickySidebarAd.tsx
+└── pages/
     ├── HomeAccordion.tsx    # 首頁核心：全螢幕手風琴 + carousel
     ├── CategoryList.tsx     # 分類文章列表
     ├── ArticleDetail.tsx    # 文章閱讀頁
     ├── ActionPage.tsx       # 訂報 / 奉獻頁
     ├── ProductGallery.tsx   # 信仰好物頁（橫向 scroll gallery）
-    ├── GlobalBottomAd.tsx   # Fixed 底部廣告條
-    ├── FullscreenMenu.tsx   # 手機全螢幕選單
-    ├── InlineArticleBanner.tsx
-    ├── NativeAdCard.tsx
-    └── StickySidebarAd.tsx
+    ├── LoginPage.tsx
+    ├── MemberDashboard.tsx
+    ├── EventRegistrationPage.tsx
+    ├── ImpactAlliancePage.tsx
+    ├── MembershipPage.tsx
+    └── DonationGallery.tsx
 ```
 
 ---

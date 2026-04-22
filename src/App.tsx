@@ -2,20 +2,20 @@ import { useState, useEffect } from 'react';
 import { NEWS_CATEGORIES } from './data';
 import Header from './components/Header';
 import FullscreenMenu from './components/FullscreenMenu';
-import HomeAccordion from './components/HomeAccordion';
-import CategoryList from './components/CategoryList';
-import ArticleDetail from './components/ArticleDetail';
-import ProductGallery from './components/ProductGallery';
-import ActionPage from './components/ActionPage';
-import DonationGallery from './components/DonationGallery';
+import HomeAccordion from './pages/HomeAccordion';
+import CategoryList from './pages/CategoryList';
+import ArticleDetail from './pages/ArticleDetail';
+import ProductGallery from './pages/ProductGallery';
+import ActionPage from './pages/ActionPage';
+import DonationGallery from './pages/DonationGallery';
 import DonationPlanDetail from './components/DonationPlanDetail';
 import GlobalBottomAd from './components/GlobalBottomAd';
-import LoginPage from './components/LoginPage';
-import MembershipPage from './components/MembershipPage';
-import MemberDashboard from './components/MemberDashboard';
-import EventRegistrationPage from './components/EventRegistrationPage';
+import LoginPage from './pages/LoginPage';
+import MembershipPage from './pages/MembershipPage';
+import MemberDashboard from './pages/MemberDashboard';
+import EventRegistrationPage from './pages/EventRegistrationPage';
 import ColumnPage from './components/ColumnPage';
-import ImpactAlliancePage from './components/ImpactAlliancePage';
+import ImpactAlliancePage from './pages/ImpactAlliancePage';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
