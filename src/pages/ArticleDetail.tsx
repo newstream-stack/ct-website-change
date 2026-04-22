@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MOCK_NEWS, MOCK_ADS, dummyContentPart1, dummyContentPart2 } from '../data';
+import { MOCK_NEWS, MOCK_ADS, dummyContentPart1, dummyContentPart2 } from '../data/index';
+import { NewsItem, AdItem } from '../types';
 import InlineArticleBanner from '../components/InlineArticleBanner';
 import StickySidebarAd from '../components/StickySidebarAd';
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MOCK_NEWS, MOCK_ADS } from '../data';
+import { MOCK_NEWS, MOCK_ADS } from '../data/index';
+import { NewsItem, AdItem } from '../types';
 import NativeAdCard from '../components/NativeAdCard';
 
 interface CategoryListProps {

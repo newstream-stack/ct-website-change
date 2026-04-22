@@ -1,4 +1,4 @@
-import { AdItem } from '../data';
+import { AdItem } from '../types';
 
 interface Props { ad: AdItem; }
 

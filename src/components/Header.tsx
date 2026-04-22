@@ -1,4 +1,4 @@
-import { NEWS_CATEGORIES, MOCK_ADS } from '../data';
+import { NEWS_CATEGORIES, MOCK_ADS } from '../data/index';
 
 interface HeaderProps {
   goToCategory: (cat: string) => void;

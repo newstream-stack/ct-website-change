@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NEWS_CATEGORIES } from './data';
+import { NEWS_CATEGORIES } from './data/index';
 import Header from './components/Header';
 import FullscreenMenu from './components/FullscreenMenu';
 import HomeAccordion from './pages/HomeAccordion';

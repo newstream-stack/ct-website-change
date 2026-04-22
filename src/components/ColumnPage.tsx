@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { MOCK_NEWS, COLUMNISTS } from '../data';
+import { MOCK_NEWS, COLUMNISTS } from '../data/index';
+import { NewsItem, Columnist } from '../types';
 
 interface ColumnPageProps {
   openArticle: (id: number) => void;

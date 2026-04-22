@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { MOCK_NEWS, ALLIANCE_MEMBERS } from '../data';
+import { MOCK_NEWS, ALLIANCE_MEMBERS } from '../data/index';
+import { NewsItem, AllianceMember } from '../types';
 
 interface ImpactAlliancePageProps {
   openArticle: (id: number) => void;

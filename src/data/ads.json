@@ -1,0 +1,42 @@
+{
+  "infeed": {
+    "id": "ad-infeed-1",
+    "sponsor": "全球論壇",
+    "title": "重新定義信仰與工作：2026 職場特會開放報名",
+    "description": "匯集國內外領袖，為新世代信徒量身打造的實戰工作坊。",
+    "imageUrl": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800",
+    "link": "#"
+  },
+  "inline": {
+    "id": "ad-inline-1",
+    "sponsor": "質感好物選",
+    "title": "安靜靈修的最佳伴侶",
+    "description": "手工浸蠟與皮革書衣，讓專屬於你的靜謐時刻更有溫度。",
+    "imageUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
+    "link": "#"
+  },
+  "sidebar": {
+    "id": "ad-sidebar-1",
+    "sponsor": "影響力聯盟",
+    "title": "IMPACT 會員招募中",
+    "description": "加入成為影響力領袖，獨家獲得最新雙週刊。",
+    "imageUrl": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800",
+    "link": "#"
+  },
+  "accordion": {
+    "id": "ad-accordion-1",
+    "sponsor": "特別呈獻",
+    "title": "世界願景：看見孩童的需求",
+    "description": "從基礎醫療到教育資源，你的關注能改變生命。",
+    "imageUrl": "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&q=80&w=1600",
+    "link": "#"
+  },
+  "header": {
+    "id": "ad-header-1",
+    "sponsor": "獨家贊助",
+    "title": " IMPACT 會員招募中",
+    "description": "享受無廣告閱讀與專屬內容。",
+    "imageUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
+    "link": "#"
+  }
+}

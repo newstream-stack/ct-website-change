@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MOCK_NEWS } from '../data';
+import { MOCK_NEWS } from '../data/index';
+import { NewsItem } from '../types';
 import ReceiptModal from '../components/ReceiptModal';
 
 interface MemberDashboardProps {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect, useRef, useMemo, MouseEvent, TouchEvent } from 'react';
-import { MOCK_NEWS, MOCK_ADS } from '../data';
+import { MOCK_NEWS, MOCK_ADS } from '../data/index';
+import { NewsItem, AdItem } from '../types';
 
 interface HomeAccordionProps {
   openArticle: (id: number) => void;
