@@ -147,3 +147,24 @@ openspec/main/
 *.swp
 *.swo
 *~
+
+# --- 專案特定補強 ---
+# 排除舊版備份 (之前截圖看到的資料夾，這是 AI 最容易翻錯地方)
+_legacy/
+archive/
+
+# 排除大型鎖定檔 (這兩個檔案很大，AI 讀取它們會消耗極多 Token 且容易卡死)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 排除 Git 內部資料 (確保 AI 不會去掃描 git history)
+.git/
+
+# 排除 Antigravity 可能產生的隱藏暫存 (加強版)
+**/.agent/**
+**/.antigravity/**
+**/openspec/**
+
+# 排除大型 Mock 資料檔 (如果你 data.ts 裡面有幾千行假資料，建議另外處理)
+# src/data/very-large-mock.json
