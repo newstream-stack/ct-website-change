@@ -1,0 +1,54 @@
+{
+  "actionPage": {
+    "subscription": {
+      "bgText": "SUB",
+      "subtitle": "Join Us",
+      "title": "READ<br>THE<br>TRUTH.",
+      "plans": [
+        {
+          "id": "digital",
+          "title": "Digital Access",
+          "price": "NT$ 99",
+          "description": "Full digital platform access, ad-free experience."
+        },
+        {
+          "id": "premium",
+          "title": "Print + Digital",
+          "price": "NT$ 200",
+          "description": "Bi-weekly physical print delivered + Digital Access.",
+          "isPremium": true
+        }
+      ]
+    },
+    "donation": {
+      "bgText": "GIVE",
+      "subtitle": "Support Us",
+      "title": "EMPOWER<br>THE<br>VOICE.",
+      "plans": [
+        {
+          "id": "one-time",
+          "title": "單次奉獻",
+          "subtitle": "One-time Gift",
+          "description": "給予靈活的支持，讓媒體事工持續發聲，傳遞真理。"
+        },
+        {
+          "id": "monthly",
+          "title": "定期定額",
+          "subtitle": "Monthly Supporter",
+          "description": "每月固定的支持，成為我們最堅實的後盾，穩定推動各項計畫。"
+        },
+        {
+          "id": "angel",
+          "title": "天使贊助",
+          "subtitle": "Angel Sponsor",
+          "description": "年度大額奉獻，深度參與我們的事工發展與未來願景。"
+        }
+      ],
+      "form": {
+        "selectAmount": "Select Amount",
+        "emailPlaceholder": "YOUR EMAIL",
+        "proceed": "Proceed"
+      }
+    }
+  }
+}
