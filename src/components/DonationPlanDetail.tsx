@@ -305,6 +305,83 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
             <p className="text-center text-xs text-theme-text/40 mt-4">
               點擊結帳即表示您同意我們的服務條款與隱私權政策。
             </p>
+
+            {/* Other Payment Methods Section */}
+            <div className="mt-16 pt-12 border-t border-theme-text/10 space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-1000 fill-mode-both">
+              <h3 className="text-2xl md:text-3xl font-serif font-black text-theme-text/90 transition-colors">
+                其他付款方式
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                {/* Postal Transfer */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1 h-6 bg-brand-red/30 rounded-full"></div>
+                    <h4 className="text-lg font-bold text-theme-text">郵政劃撥</h4>
+                  </div>
+                  <div className="text-theme-text/70 space-y-2 text-base md:text-lg pl-4">
+                    <p className="flex items-center gap-2">
+                      <span className="text-theme-text/40 text-sm font-display font-bold">帳號</span> 
+                      00064331
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <span className="text-theme-text/40 text-sm font-display font-bold whitespace-nowrap mt-1">戶名</span> 
+                      財團法人基督教論壇基金會
+                    </p>
+                  </div>
+                </div>
+
+                {/* ATM Transfer */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1 h-6 bg-brand-red/30 rounded-full"></div>
+                    <h4 className="text-lg font-bold text-theme-text">ATM轉帳</h4>
+                  </div>
+                  <div className="text-theme-text/70 space-y-2 text-base md:text-lg pl-4">
+                    <p className="flex items-start gap-2">
+                      <span className="text-theme-text/40 text-sm font-display font-bold whitespace-nowrap mt-1">銀行代碼</span> 
+                      008 華南商業銀行新生分行
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="text-theme-text/40 text-sm font-display font-bold">帳號</span> 
+                      113-20-0391766
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <span className="text-theme-text/40 text-sm font-display font-bold whitespace-nowrap mt-1">戶名</span> 
+                      財團法人基督教論壇基金會
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Red Notice Section */}
+              <div className="bg-brand-red/[0.03] border border-brand-red/10 p-8 rounded-sm space-y-4 transition-all hover:bg-brand-red/[0.05]">
+                <p className="text-brand-red font-black text-lg flex items-center gap-2">
+                  <i className="fas fa-exclamation-circle text-base"></i>
+                  匯款後請來電告知帳號末五碼
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-brand-red/80 text-base md:text-lg font-medium">
+                  <div className="flex items-center gap-3">
+                    <i className="fas fa-phone-alt text-sm opacity-60"></i>
+                    <p>Tel: (02) 2396-1010</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <i className="fas fa-fax text-sm opacity-60"></i>
+                    <p>Fax: (02) 2396-1309</p>
+                  </div>
+                </div>
+                <p className="text-brand-red/80 text-base md:text-lg font-medium flex items-center gap-3">
+                  <i className="fas fa-envelope text-sm opacity-60"></i>
+                  <span>或來信告知後五碼：<a href="mailto:service@ct.org.tw" className="underline hover:text-brand-red transition-colors font-bold">service@ct.org.tw</a></span>
+                </p>
+                <div className="pt-4 mt-4 border-t border-brand-red/10">
+                  <p className="text-brand-red font-black text-xl flex items-center gap-2">
+                    <i className="fas fa-check-circle text-base"></i>
+                    並請註明奉獻方案
+                  </p>
+                </div>
+              </div>
+            </div>
           </form>
 
         </div>
