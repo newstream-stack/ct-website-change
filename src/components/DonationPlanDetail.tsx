@@ -43,22 +43,116 @@ const PLAN_DATA = [
   }
 ];
 
-export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) {
-  const plan = PLAN_DATA.find(p => p.id === planId) || PLAN_DATA[0];
+export interface Plan {
+  id: number;
+  title: string;
+  imageUrl: string;
+  description: string;
+}
 
-  const [paymentType, setPaymentType] = useState<'one-time' | 'installment'>('one-time');
-  const [selectedPreset, setSelectedPreset] = useState<string>('1000');
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [installmentPeriod, setInstallmentPeriod] = useState<string>('6');
-  const [paymentMethod, setPaymentMethod] = useState<'credit-card' | 'line-pay'>('credit-card');
-  const [address, setAddress] = useState('');
-  const [receiptAddress, setReceiptAddress] = useState('');
-  const [giftAddress, setGiftAddress] = useState('');
-  const [receiptOption, setReceiptOption] = useState('年度匯開');
+export interface DonationFormData {
+  planId: number;
+  paymentType: 'one-time' | 'installment';
+  amount: number;
+  installmentPeriod: number;
+  paymentMethod: 'credit-card' | 'line-pay';
+  donor: {
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+  };
+  receipt: {
+    address: string;
+    option: string;
+    title: string;
+    taxId: string;
+  };
+  gift: {
+    address: string;
+  };
+}
+
+export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) {
+  // 準備給未來 API 串接的狀態：存放方案資料與載入狀態
+  const [plan, setPlan] = useState<Plan | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 模擬未來從後端 API 取得方案資料的行為
+  React.useEffect(() => {
+    const fetchPlanData = async () => {
+      setIsLoading(true);
+      try {
+        // TODO: 未來後端 API 準備好後，只需將下面這段替換成真實的 API 呼叫
+        // const response = await fetch(`/api/plans/${planId}`);
+        // const data = await response.json();
+        // setPlan(data);
+
+        // --- 以下為模擬 API 延遲與回傳的假資料邏輯 ---
+        await new Promise(resolve => setTimeout(resolve, 300)); // 模擬網路延遲
+        const mockData = PLAN_DATA.find(p => p.id === planId) || PLAN_DATA[0];
+        setPlan(mockData);
+        // --- 模擬邏輯結束 ---
+      } catch (error) {
+        console.error('取得方案資料失敗:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlanData();
+  }, [planId]);
+
+  // 將表單所有欄位統一管理，方便未來與後端 API 串接
+  const [formData, setFormData] = useState<DonationFormData>({
+    planId: planId, // 直接使用傳入的 planId
+    paymentType: 'one-time',
+    amount: 1000,
+    installmentPeriod: 6,
+    paymentMethod: 'credit-card',
+    donor: { name: '', phone: '', email: '', address: '' },
+    receipt: { address: '', option: '年度匯開', title: '', taxId: '' },
+    gift: { address: '' }
+  });
+
+  // 當方案資料載入完成時，更新 formData 中的 planId (防禦性設計)
+  React.useEffect(() => {
+    if (plan) {
+      setFormData(prev => ({ ...prev, planId: plan.id }));
+    }
+  }, [plan]);
+
+  // 保留供 UI 互動使用的狀態
+  const [customAmountStr, setCustomAmountStr] = useState<string>('');
+
+  const handleDonorChange = (field: keyof DonationFormData['donor'], value: string) => {
+    setFormData(prev => ({ ...prev, donor: { ...prev.donor, [field]: value } }));
+  };
+
+  const handleReceiptChange = (field: keyof DonationFormData['receipt'], value: string) => {
+    setFormData(prev => ({ ...prev, receipt: { ...prev.receipt, [field]: value } }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('【API 串接準備】準備送出的表單資料:', JSON.stringify(formData, null, 2));
+    // TODO: await fetch('/api/donations', { method: 'POST', body: JSON.stringify(formData) })
+    alert('表單資料已整合至 formData 物件，請開啟開發者工具 Console 查看準備送出的 API 資料格式。');
+  };
 
   const inputClassName = "w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-3 px-4 text-base text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors placeholder-theme-text/30";
 
-  const presetAmounts = ['1000', '3000', '5000', '10000', '50000'];
+  const presetAmounts = [1000, 3000, 5000, 10000, 50000];
+
+  // 資料載入中的 UI
+  if (isLoading || !plan) {
+    return (
+      <div className="w-full h-[100dvh] flex flex-col items-center justify-center bg-theme-bg text-theme-text">
+        <div className="w-12 h-12 border-4 border-theme-text/20 border-t-brand-red rounded-full animate-spin mb-4"></div>
+        <p className="font-display tracking-widest text-sm text-theme-text/60">載入方案資料中...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[90px] md:pt-0 bg-theme-bg transition-colors duration-500">
@@ -95,7 +189,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
             <p className="text-theme-text/60 font-light transition-colors">請選擇您的奉獻方式與金額，支持我們的事工發展。</p>
           </div>
 
-          <form className="space-y-10" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-10" onSubmit={handleSubmit}>
             
             {/* Step 1: Payment Type (單次/分期) */}
             <div className="space-y-4">
@@ -106,15 +200,15 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               <div className="grid grid-cols-2 gap-4">
                 <button 
                   type="button"
-                  onClick={() => { setPaymentType('one-time'); setCustomAmount(''); }}
-                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${paymentType === 'one-time' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                  onClick={() => setFormData(prev => ({ ...prev, paymentType: 'one-time' }))}
+                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${formData.paymentType === 'one-time' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
                 >
                   單次奉獻
                 </button>
                 <button 
                   type="button"
-                  onClick={() => { setPaymentType('installment'); setCustomAmount(''); }}
-                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${paymentType === 'installment' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                  onClick={() => setFormData(prev => ({ ...prev, paymentType: 'installment' }))}
+                  className={`py-4 md:py-6 border rounded-sm font-serif font-black text-xl transition-all duration-300 relative overflow-hidden ${formData.paymentType === 'installment' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
                 >
                    定期定額
                 </button>
@@ -132,8 +226,11 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                   <button 
                     key={amt}
                     type="button" 
-                    onClick={() => { setSelectedPreset(amt); setCustomAmount(''); }}
-                    className={`py-3 md:py-4 border font-display font-bold text-lg md:text-xl transition-all duration-300 rounded-sm ${selectedPreset === amt && customAmount === '' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                    onClick={() => { 
+                      setFormData(prev => ({ ...prev, amount: amt })); 
+                      setCustomAmountStr(''); 
+                    }}
+                    className={`py-3 md:py-4 border font-display font-bold text-lg md:text-xl transition-all duration-300 rounded-sm ${formData.amount === amt && customAmountStr === '' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
                   >
                     {amt}
                   </button>
@@ -148,10 +245,10 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                   <input 
                     type="number" 
                     placeholder="自訂金額" 
-                    value={customAmount}
+                    value={customAmountStr}
                     onChange={(e) => {
-                      setCustomAmount(e.target.value);
-                      setSelectedPreset('');
+                      setCustomAmountStr(e.target.value);
+                      setFormData(prev => ({ ...prev, amount: Number(e.target.value) || 0 }));
                     }}
                     className="w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-4 pl-14 pr-4 text-lg font-display text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors disabled:opacity-50" 
                     min="100"
@@ -160,19 +257,19 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               </div>
 
               {/* Installment Period Selector */}
-              {paymentType === 'installment' && (
+              {formData.paymentType === 'installment' && (
                 <div className="mt-8 pt-4 border-t border-theme-text/10">
                   <p className="flex items-center gap-2 font-display text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-4 text-theme-text/60 transition-colors">
                     <span className="w-6 h-6 rounded-full bg-brand-red text-white flex items-center justify-center text-[10px]">2.1</span>
                     選擇分期期數
                   </p>
                   <div className="grid grid-cols-3 gap-3 md:gap-4">
-                    {['6', '12', '18'].map((period) => (
+                    {[6, 12, 18].map((period) => (
                       <button 
                         key={period}
                         type="button" 
-                        onClick={() => setInstallmentPeriod(period)}
-                        className={`py-3 md:py-4 border font-display font-bold text-lg transition-all duration-300 rounded-sm ${installmentPeriod === period ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
+                        onClick={() => setFormData(prev => ({ ...prev, installmentPeriod: period }))}
+                        className={`py-3 md:py-4 border font-display font-bold text-lg transition-all duration-300 rounded-sm ${formData.installmentPeriod === period ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'}`}
                       >
                         {period} 期
                       </button>
@@ -190,29 +287,29 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div 
-                  onClick={() => setPaymentMethod('credit-card')}
-                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${paymentMethod === 'credit-card' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                  onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'credit-card' }))}
+                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${formData.paymentMethod === 'credit-card' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${paymentMethod === 'credit-card' ? 'border-white' : 'border-theme-text/40'}`}>
-                    <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform duration-300 ${paymentMethod === 'credit-card' ? 'scale-100' : 'scale-0'}`}></div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${formData.paymentMethod === 'credit-card' ? 'border-white' : 'border-theme-text/40'}`}>
+                    <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform duration-300 ${formData.paymentMethod === 'credit-card' ? 'scale-100' : 'scale-0'}`}></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className={`font-bold transition-colors ${paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text'}`}>信用卡付款</span>
-                    <span className={`text-xs transition-colors ${paymentMethod === 'credit-card' ? 'text-white/70' : 'text-theme-text/50'}`}>Credit Card</span>
+                    <span className={`font-bold transition-colors ${formData.paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text'}`}>信用卡付款</span>
+                    <span className={`text-xs transition-colors ${formData.paymentMethod === 'credit-card' ? 'text-white/70' : 'text-theme-text/50'}`}>Credit Card</span>
                   </div>
-                  <i className={`fas fa-credit-card ml-auto text-xl transition-colors ${paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text/30'}`}></i>
+                  <i className={`fas fa-credit-card ml-auto text-xl transition-colors ${formData.paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text/30'}`}></i>
                 </div>
                 
                 <div 
-                  onClick={() => setPaymentMethod('line-pay')}
-                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${paymentMethod === 'line-pay' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
+                  onClick={() => setFormData(prev => ({ ...prev, paymentMethod: 'line-pay' }))}
+                  className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${formData.paymentMethod === 'line-pay' ? 'border-brand-red bg-brand-red text-white shadow-md transform -translate-y-0.5' : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'}`}
                 >
-                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${paymentMethod === 'line-pay' ? 'border-white' : 'border-theme-text/40'}`}>
-                    <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform duration-300 ${paymentMethod === 'line-pay' ? 'scale-100' : 'scale-0'}`}></div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex flex-shrink-0 items-center justify-center transition-colors ${formData.paymentMethod === 'line-pay' ? 'border-white' : 'border-theme-text/40'}`}>
+                    <div className={`w-2.5 h-2.5 rounded-full bg-white transition-transform duration-300 ${formData.paymentMethod === 'line-pay' ? 'scale-100' : 'scale-0'}`}></div>
                   </div>
                   <div className="flex flex-col">
-                    <span className={`font-bold transition-colors ${paymentMethod === 'line-pay' ? 'text-white' : 'text-theme-text'}`}>Line Pay</span>
-                    <span className={`text-xs transition-colors ${paymentMethod === 'line-pay' ? 'text-white/70' : 'text-theme-text/50'}`}>Mobile Payment</span>
+                    <span className={`font-bold transition-colors ${formData.paymentMethod === 'line-pay' ? 'text-white' : 'text-theme-text'}`}>Line Pay</span>
+                    <span className={`text-xs transition-colors ${formData.paymentMethod === 'line-pay' ? 'text-white/70' : 'text-theme-text/50'}`}>Mobile Payment</span>
                   </div>
                   <div className="ml-auto flex items-center justify-center w-8 h-8 rounded-full bg-[#00B900] text-white">
                     <i className="fab fa-line text-lg"></i>
@@ -232,38 +329,38 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">姓名 <span className="text-brand-red">*</span></label>
-                    <input type="text" placeholder="真實姓名" className={inputClassName} />
+                    <input type="text" placeholder="真實姓名" value={formData.donor.name} onChange={e => handleDonorChange('name', e.target.value)} className={inputClassName} />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">電話 <span className="text-brand-red">*</span></label>
-                    <input type="tel" placeholder="聯絡電話" className={inputClassName} />
+                    <input type="tel" placeholder="聯絡電話" value={formData.donor.phone} onChange={e => handleDonorChange('phone', e.target.value)} className={inputClassName} />
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-theme-text/80">Email <span className="text-brand-red">*</span></label>
-                  <input type="email" placeholder="電子信箱" className={inputClassName} />
+                  <input type="email" placeholder="電子信箱" value={formData.donor.email} onChange={e => handleDonorChange('email', e.target.value)} className={inputClassName} />
                 </div>
 
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-theme-text/80">聯絡地址 <span className="text-brand-red">*</span></label>
-                  <input type="text" placeholder="聯絡地址" value={address} onChange={(e) => setAddress(e.target.value)} className={inputClassName} />
+                  <input type="text" placeholder="聯絡地址" value={formData.donor.address} onChange={e => handleDonorChange('address', e.target.value)} className={inputClassName} />
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
                     <label className="text-sm font-bold text-theme-text/80">奉獻收據地址 <span className="text-brand-red">*</span></label>
-                    <button type="button" onClick={() => setReceiptAddress(address)} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white transition-colors border border-brand-red/30 px-3 py-1 rounded-sm">同聯絡地址</button>
+                    <button type="button" onClick={() => handleReceiptChange('address', formData.donor.address)} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white transition-colors border border-brand-red/30 px-3 py-1 rounded-sm">同聯絡地址</button>
                   </div>
-                  <input type="text" placeholder="收據寄送地址" value={receiptAddress} onChange={(e) => setReceiptAddress(e.target.value)} className={inputClassName} />
+                  <input type="text" placeholder="收據寄送地址" value={formData.receipt.address} onChange={e => handleReceiptChange('address', e.target.value)} className={inputClassName} />
                 </div>
 
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
                     <label className="text-sm font-bold text-theme-text/80">奉獻贈禮寄送地址 <span className="text-brand-red">*</span></label>
-                    <button type="button" onClick={() => setGiftAddress(address)} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white transition-colors border border-brand-red/30 px-3 py-1 rounded-sm">同聯絡地址</button>
+                    <button type="button" onClick={() => setFormData(prev => ({ ...prev, gift: { ...prev.gift, address: prev.donor.address } }))} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white transition-colors border border-brand-red/30 px-3 py-1 rounded-sm">同聯絡地址</button>
                   </div>
-                  <input type="text" placeholder="贈禮寄送地址" value={giftAddress} onChange={(e) => setGiftAddress(e.target.value)} className={inputClassName} />
+                  <input type="text" placeholder="贈禮寄送地址" value={formData.gift.address} onChange={e => setFormData(prev => ({ ...prev, gift: { ...prev.gift, address: e.target.value } }))} className={inputClassName} />
                 </div>
 
                 <div className="space-y-3 pt-4 border-t border-theme-text/10">
@@ -273,8 +370,8 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                       <button 
                         key={opt}
                         type="button"
-                        onClick={() => setReceiptOption(opt)}
-                        className={`py-3 border text-sm md:text-base font-bold transition-all duration-300 rounded-sm ${receiptOption === opt ? 'border-brand-red bg-brand-red text-white' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text/10'}`}
+                        onClick={() => handleReceiptChange('option', opt)}
+                        className={`py-3 border text-sm md:text-base font-bold transition-all duration-300 rounded-sm ${formData.receipt.option === opt ? 'border-brand-red bg-brand-red text-white' : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text/10'}`}
                       >
                         {opt}
                       </button>
@@ -285,11 +382,11 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">收據抬頭 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
-                    <input type="text" placeholder="收據抬頭" className={inputClassName} />
+                    <input type="text" placeholder="收據抬頭" value={formData.receipt.title} onChange={e => handleReceiptChange('title', e.target.value)} className={inputClassName} />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">統一編號 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
-                    <input type="text" placeholder="統一編號" className={inputClassName} />
+                    <input type="text" placeholder="統一編號" value={formData.receipt.taxId} onChange={e => handleReceiptChange('taxId', e.target.value)} className={inputClassName} />
                   </div>
                 </div>
 
@@ -299,7 +396,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
             {/* Submit */}
             <button type="submit" className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3">
                 前往結帳 
-                <span className="font-sans font-light text-sm opacity-80">(NT$ {customAmount || selectedPreset})</span>
+                <span className="font-sans font-light text-sm opacity-80">(NT$ {formData.amount})</span>
                 <i className="fas fa-arrow-right ml-2"></i>
             </button>
             <p className="text-center text-xs text-theme-text/40 mt-4">
