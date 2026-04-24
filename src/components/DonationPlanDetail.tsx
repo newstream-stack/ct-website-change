@@ -338,12 +338,13 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                     <h4 className="text-lg font-bold text-theme-text">ATM轉帳</h4>
                   </div>
                   <div className="text-theme-text/70 space-y-2 text-base md:text-lg pl-4">
-                    <div className="flex flex-col gap-1">
-                      <p className="flex items-center gap-3">
+                    <div className="flex flex-col md:gap-1">
+                      <p className="flex flex-wrap items-center gap-x-2 md:gap-x-3">
                         <span className="text-theme-text/40 text-sm font-display font-bold whitespace-nowrap">銀行代碼</span> 
                         <span className="text-theme-text/90 font-bold">008</span>
+                        <span className="md:hidden text-theme-text/50 text-sm font-medium">華南商業銀行新生分行</span>
                       </p>
-                      <p className="text-theme-text/50 text-sm md:text-base font-medium pl-0 md:pl-[4.2rem]">
+                      <p className="hidden md:block text-theme-text/50 text-sm md:text-base font-medium pl-[4.2rem]">
                         華南商業銀行新生分行
                       </p>
                     </div>
