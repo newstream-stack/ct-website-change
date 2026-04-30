@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 // 請替換為你的 Firebase Functions 本機或正式網址
-const API_URL = import.meta.env.VITE_CHAT_API_URL || "http://127.0.0.1:5001/YOUR_PROJECT_ID/us-central1/chatWithAI";
+const API_URL = (import.meta as any).env.VITE_CHAT_API_URL || "http://127.0.0.1:5001/YOUR_PROJECT_ID/us-central1/chatWithAI";
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
