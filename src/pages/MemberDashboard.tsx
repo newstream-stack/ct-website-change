@@ -142,9 +142,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       <h4 className="text-2xl font-black font-display text-theme-text">{subscription.plan}</h4>
                       <p className="text-sm text-theme-text/60 mt-2">下一次扣款日：{subscription.nextBillingDate} (NT$ {subscription.price})</p>
                     </div>
-                    <a href="https://ct-website-change.vercel.app/?category=%E6%9C%83%E5%93%A1%E6%8B%9B%E5%8B%9F" className="bg-theme-text text-theme-bg px-6 py-2.5 rounded-lg font-bold text-sm tracking-widest hover:opacity-80 transition-opacity inline-block">
+                    <button onClick={() => goToCategory('會員招募')} className="bg-theme-text text-theme-bg px-6 py-2.5 rounded-lg font-bold text-sm tracking-widest hover:opacity-80 transition-opacity">
                       管理訂閱
-                    </a>
+                    </button>
                   </div>
                 </div>
 
@@ -197,9 +197,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       <h3 className="text-xl font-serif font-bold mb-1">我的訂閱方案</h3>
                       <p className="text-sm text-theme-text/60">管理您的 IMPACT 會員資格與付款方式</p>
                     </div>
-                    <a href="https://ct-website-change.vercel.app/?category=%E6%9C%83%E5%93%A1%E6%8B%9B%E5%8B%9F" className="bg-brand-red text-white px-6 py-2 rounded-lg font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
+                    <button onClick={() => goToCategory('會員招募')} className="bg-brand-red text-white px-6 py-2 rounded-lg font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
                       升級方案
-                    </a>
+                    </button>
                   </div>
 
                   <div className="bg-theme-bg border border-theme-text/10 rounded-xl p-6 mb-8">
@@ -326,9 +326,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   </div>
 
                   <div className="mt-8 pt-6 border-t border-theme-text/10 flex justify-center">
-                    <a href="https://ct-website-change.vercel.app/?category=%E5%A5%89%E7%8D%BB" className="border border-brand-red text-brand-red px-8 py-3 rounded-xl font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group inline-block">
+                    <button onClick={() => goToCategory('奉獻')} className="border border-brand-red text-brand-red px-8 py-3 rounded-xl font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group">
                       探索更多奉獻專案 <i className="fas fa-heart ml-2 group-hover:scale-110 transition-transform" />
-                    </a>
+                    </button>
                   </div>
                 </div>
               </div>
