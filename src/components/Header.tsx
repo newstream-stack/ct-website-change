@@ -10,6 +10,7 @@ interface HeaderProps {
   showCategoryBar: boolean;
   cartItems: CartItem[];
   onOpenCart: () => void;
+  onOpenSearch: () => void;
 }
 
 export default function Header({ 
@@ -19,7 +20,8 @@ export default function Header({
   setIsMenuOpen, 
   showCategoryBar,
   cartItems,
-  onOpenCart
+  onOpenCart,
+  onOpenSearch
 }: HeaderProps) {
   const headerAd = getAd('header');
   return (
@@ -65,6 +67,14 @@ export default function Header({
                 {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
               </span>
             )}
+          </button>
+          
+          <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
+
+          {/* Search Button */}
+          <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenSearch} title="全站搜尋">
+            <i className="fas fa-search md:hidden"></i>
+            <span className="hidden md:block">Search</span>
           </button>
           
           <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>

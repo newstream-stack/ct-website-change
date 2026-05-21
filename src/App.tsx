@@ -8,6 +8,7 @@ import ArticleDetail from './pages/ArticleDetail';
 import ProductGallery from './pages/ProductGallery';
 import ProductDetail from './components/ProductDetail';
 import CartDrawer from './components/CartDrawer';
+import SearchModal from './components/SearchModal';
 import { CartItem, Product } from './types';
 import ActionPage from './pages/ActionPage';
 import DonationGallery from './pages/DonationGallery';
@@ -67,6 +68,7 @@ export default function App() {
     return [];
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Save cart to local storage when it changes
   useEffect(() => {
@@ -186,6 +188,7 @@ export default function App() {
         showCategoryBar={showCategoryBar} 
         cartItems={cartItems}
         onOpenCart={() => setIsCartOpen(true)}
+        onOpenSearch={() => setIsSearchOpen(true)}
       />
 
       <FullscreenMenu 
@@ -267,6 +270,21 @@ export default function App() {
         onRemoveItem={removeFromCart} 
         onUpdateQuantity={updateCartQuantity} 
         onClearCart={clearCart} 
+      />
+
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onSelectArticle={(id) => {
+          openArticle(id);
+        }}
+        onSelectProduct={(id) => {
+          setCurrentArticleId(null);
+          setCurrentPlanId(null);
+          setCurrentCategory('信仰好物');
+          setCurrentProductId(id);
+          window.scrollTo(0, 0);
+        }}
       />
     </div>
   );
