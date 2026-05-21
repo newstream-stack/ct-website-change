@@ -40,7 +40,34 @@ export default function CartDrawer({
     // Generate random order number
     const rand = Math.floor(1000 + Math.random() * 9000);
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    setOrderNumber(`IMPACT-${dateStr}-${rand}`);
+    const newOrderNumber = `IMPACT-${dateStr}-${rand}`;
+    setOrderNumber(newOrderNumber);
+
+    // Save order to localStorage
+    const newOrder = {
+      orderNumber: newOrderNumber,
+      date: new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
+      name,
+      phone,
+      email,
+      address,
+      paymentMethod,
+      items: [...cartItems],
+      subtotal,
+      shippingFee,
+      total,
+      status: '已付款'
+    };
+
+    try {
+      const savedOrdersStr = localStorage.getItem('impact_orders');
+      const savedOrders = savedOrdersStr ? JSON.parse(savedOrdersStr) : [];
+      savedOrders.unshift(newOrder);
+      localStorage.setItem('impact_orders', JSON.stringify(savedOrders));
+    } catch (err) {
+      console.error('Error saving order to localStorage:', err);
+    }
+
     setStep(3);
   };
 

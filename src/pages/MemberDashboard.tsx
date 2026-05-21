@@ -3,7 +3,7 @@ import ReceiptModal from '../components/ReceiptModal';
 import { getMe, getMemberStats, getDonations, getBillingHistory } from '../api/member';
 import { getNewsList } from '../api/news';
 import type { Member, MemberStats, DonationRecord, SubscriptionRecord } from '../types/member';
-import type { NewsItem } from '../types';
+import type { NewsItem, Order } from '../types';
 
 interface MemberDashboardProps {
   goToCategory: (cat: string) => void;
@@ -16,6 +16,7 @@ const TABS = [
   { id: 'subscription',  name: '我的訂閱 My Plan',        icon: 'fas fa-crown' },
   { id: 'saved',         name: '收藏文章 Saved',           icon: 'far fa-bookmark' },
   { id: 'donations',     name: '奉獻紀錄 Donations',       icon: 'fas fa-hand-holding-heart' },
+  { id: 'orders',        name: '購買商品 Purchased',      icon: 'fas fa-shopping-bag' },
   { id: 'settings',      name: '帳號設定 Settings',        icon: 'fas fa-cog' },
 ] as const;
 
@@ -64,12 +65,187 @@ function PaymentModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => void }) {
+  const handlePrint = () => {
+    window.print();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in text-black">
+      <div 
+        className="absolute inset-0 cursor-pointer" 
+        onClick={onClose}
+      ></div>
+      
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-auto z-10" style={{ maxHeight: '90vh' }}>
+        
+        {/* Action Bar (Not printed) */}
+        <div className="bg-gray-50 px-4 md:px-6 py-4 border-b border-gray-200 print:hidden flex-none w-full z-30 relative flex justify-between items-center" style={{ height: '64px' }}>
+          <h3 className="font-bold text-gray-700 font-sans text-sm md:text-base m-0">電子出貨單與收據</h3>
+          <div className="flex gap-2 md:gap-4 items-center">
+            <button 
+              onClick={handlePrint}
+              className="bg-brand-red text-white h-9 md:h-10 px-4 md:px-5 rounded-lg text-xs md:text-sm font-bold tracking-widest hover:bg-[#b31b1b] transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer"
+            >
+              <i className="fas fa-download"></i> <span>下載 / 列印</span>
+            </button>
+            <button 
+              onClick={onClose}
+              className="text-gray-400 hover:text-red-500 transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-red-50 cursor-pointer bg-white border border-gray-100"
+            >
+              <i className="fas fa-times text-lg"></i>
+            </button>
+          </div>
+        </div>
+
+        {/* Printable Content */}
+        <div className="flex-1 overflow-x-hidden overflow-y-auto p-6 sm:p-10 md:p-12 bg-white print:overflow-visible print:p-0" id="printable-order-receipt" style={{ minHeight: '0' }}>
+          
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-brand-red pb-4 mb-6 gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 px-3 bg-brand-red text-white font-black font-serif flex items-center justify-center text-base rounded-lg tracking-widest">
+                IMPACT
+              </div>
+              <div className="text-left">
+                <h2 className="text-base sm:text-lg font-serif font-black tracking-widest text-brand-red mb-0.5">財團法人基督教論壇基金會</h2>
+                <p className="text-[10px] sm:text-xs text-gray-500 tracking-widest uppercase">Product Purchase Invoice 購物收據</p>
+              </div>
+            </div>
+            <div className="text-left sm:text-right text-xs font-sans text-gray-600 space-y-0.5">
+              <p><span className="font-bold text-gray-400 mr-2 uppercase tracking-widest">Order No.</span> {order.orderNumber}</p>
+              <p><span className="font-bold text-gray-400 mr-2 uppercase tracking-widest">Date</span> {order.date}</p>
+            </div>
+          </div>
+
+          <h1 className="text-center font-serif text-2xl font-bold tracking-[0.2em] mb-8">電子購物收據</h1>
+
+          {/* Customer & Shipping Info */}
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-5 mb-6 text-xs sm:text-sm text-left">
+            <h3 className="font-serif font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">購買與收件資訊</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+              <div>
+                <span className="text-gray-400 font-medium mr-2">收件人：</span>
+                <span className="font-bold text-gray-800">{order.name}</span>
+              </div>
+              <div>
+                <span className="text-gray-400 font-medium mr-2">聯絡電話：</span>
+                <span className="font-bold text-gray-800">{order.phone}</span>
+              </div>
+              <div>
+                <span className="text-gray-400 font-medium mr-2">電子郵件：</span>
+                <span className="font-bold text-gray-800">{order.email}</span>
+              </div>
+              <div>
+                <span className="text-gray-400 font-medium mr-2">付款方式：</span>
+                <span className="font-bold text-gray-800">{order.paymentMethod === 'credit-card' ? '信用卡' : 'Line Pay'}</span>
+              </div>
+              <div className="sm:col-span-2">
+                <span className="text-gray-400 font-medium mr-2">寄送地址：</span>
+                <span className="font-bold text-gray-800">{order.address}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Items Table */}
+          <div className="border border-gray-200 rounded-xl overflow-hidden mb-6 text-xs sm:text-sm">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-gray-50 border-b border-gray-200 text-[10px] sm:text-xs text-gray-400 font-bold uppercase">
+                  <th className="px-4 py-3">商品項目 Item</th>
+                  <th className="px-4 py-3 text-center">單價 Unit Price</th>
+                  <th className="px-4 py-3 text-center">數量 Qty</th>
+                  <th className="px-4 py-3 text-right">小計 Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 text-gray-800">
+                {order.items.map((item) => (
+                  <tr key={item.product.id}>
+                    <td className="px-4 py-3.5">
+                      <div className="font-bold">{item.product.name}</div>
+                      <div className="text-[10px] text-gray-400 font-sans mt-0.5">{item.product.englishName}</div>
+                    </td>
+                    <td className="px-4 py-3.5 text-center font-display font-medium">NT$ {item.product.price.toLocaleString()}</td>
+                    <td className="px-4 py-3.5 text-center font-display font-medium">{item.quantity}</td>
+                    <td className="px-4 py-3.5 text-right font-display font-bold">NT$ {(item.product.price * item.quantity).toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Total Calculation */}
+          <div className="flex flex-col items-end gap-2 text-xs sm:text-sm mb-8 pr-4">
+            <div className="flex justify-between w-48 text-gray-500">
+              <span>小計：</span>
+              <span className="font-display font-medium">NT$ {order.subtotal.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between w-48 text-gray-500">
+              <span>運費：</span>
+              <span className="font-display font-medium">
+                {order.shippingFee === 0 ? '免運費' : `NT$ ${order.shippingFee}`}
+              </span>
+            </div>
+            <div className="flex justify-between w-48 font-bold text-brand-red border-t border-gray-200 pt-2 text-base">
+              <span>實付總額：</span>
+              <span className="font-display font-black">NT$ {order.total.toLocaleString()}</span>
+            </div>
+          </div>
+
+          {/* Footer & Stamp */}
+          <div className="flex justify-between items-end mt-8 pt-6 border-t border-gray-200 relative">
+            <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed max-w-sm font-sans z-10 w-full sm:w-auto text-left">
+              <p className="font-bold text-gray-700 mb-1 tracking-widest">注意事項：</p>
+              <ol className="list-decimal pl-4 space-y-1">
+                <li>本收據為電子購物明細及交易憑證，出貨商品均已完成付款。</li>
+                <li>如需退換貨，請於收到商品 7 日鑑賞期內保持商品完整並聯絡客服。</li>
+              </ol>
+            </div>
+            <div className="opacity-40 sm:opacity-100 pointer-events-none z-0">
+              <div className="w-24 h-24 rounded-full border-4 border-red-600/30 flex items-center justify-center transform rotate-12 bg-white">
+                <div className="w-20 h-20 rounded-full border border-red-600/30 flex flex-col items-center justify-center text-red-600/50">
+                  <span className="font-serif font-black tracking-widest text-xs">IMPACT</span>
+                  <span className="text-[6px] font-bold tracking-widest leading-tight text-center scale-90">基督教論壇基金會</span>
+                  <span className="text-[7px] font-sans mt-0.5">出貨專用章</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #printable-order-receipt, #printable-order-receipt * {
+            visibility: visible;
+          }
+          #printable-order-receipt {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            padding: 2cm !important;
+            box-sizing: border-box;
+          }
+        }
+      `}} />
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function MemberDashboard({ goToCategory }: MemberDashboardProps) {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [selectedReceipt, setSelectedReceipt] = useState<DonationRecord | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrderReceipt, setSelectedOrderReceipt] = useState<Order | null>(null);
 
   const [member, setMember] = useState<Member | null>(null);
   const [stats, setStats] = useState<MemberStats | null>(null);
@@ -86,6 +262,18 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
         setSubscriptionRecords(b);
       });
     setSavedArticles(getNewsList().slice(0, 6));
+
+    // Load orders from localStorage
+    if (typeof window !== 'undefined') {
+      const savedOrdersStr = localStorage.getItem('impact_orders');
+      if (savedOrdersStr) {
+        try {
+          setOrders(JSON.parse(savedOrdersStr));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
   }, []);
 
   if (!member || !stats) return null;
@@ -162,17 +350,28 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                   {[
-                    { value: stats.savedArticles, label: '收藏文章' },
-                    { value: stats.attendedEvents, label: '參加活動' },
-                    { value: stats.donationCount, label: '奉獻紀錄' },
-                  ].map(({ value, label }, i) => (
-                    <div key={label} className={`bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 flex flex-col justify-center items-center text-center ${i === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
-                      <span className="text-3xl font-display font-black text-brand-red mb-2">{value}</span>
-                      <span className="text-xs md:text-sm font-bold text-theme-text/70 tracking-widest">{label}</span>
-                    </div>
-                  ))}
+                    { value: stats.savedArticles, label: '收藏文章', tab: 'saved' },
+                    { value: stats.attendedEvents, label: '參加活動', tab: 'overview' },
+                    { value: stats.donationCount, label: '奉獻紀錄', tab: 'donations' },
+                    { value: orders.reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0), label: '已購商品', tab: 'orders' },
+                  ].map(({ value, label, tab }) => {
+                    const isOverview = tab === 'overview';
+                    return (
+                      <button 
+                        key={label}
+                        disabled={isOverview}
+                        onClick={() => !isOverview && setActiveTab(tab as any)}
+                        className={`bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 flex flex-col justify-center items-center text-center transition-all ${
+                          isOverview ? 'cursor-default' : 'hover:bg-theme-text/10 hover:border-brand-red/30 cursor-pointer active:scale-95'
+                        }`}
+                      >
+                        <span className="text-3xl font-display font-black text-brand-red mb-2">{value}</span>
+                        <span className="text-xs md:text-sm font-bold text-theme-text/70 tracking-widest">{label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Recent saved */}
@@ -387,6 +586,109 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               </div>
             )}
 
+            {/* ── Purchased Orders ── */}
+            {activeTab === 'orders' && (
+              <div className="flex flex-col gap-6 animate-fade-in-up">
+                <div className="flex justify-between items-end border-b border-theme-text/10 pb-4 mb-2">
+                  <h3 className="text-xl font-serif font-bold">購買商品 ({orders.reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0)})</h3>
+                  <div className="text-xs text-theme-text/50 font-sans">
+                    共 {orders.length} 筆訂單
+                  </div>
+                </div>
+
+                {orders.length === 0 ? (
+                  <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
+                    <div className="w-16 h-16 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red flex items-center justify-center mb-6">
+                      <i className="fas fa-shopping-bag text-2xl" />
+                    </div>
+                    <h4 className="text-lg font-serif font-bold mb-2">尚無購買紀錄</h4>
+                    <p className="text-sm text-theme-text/50 max-w-sm mb-8 leading-relaxed">
+                      您目前在 IMPACT 信仰好物中還沒有任何購買紀錄。快去選購精美的信仰生活好物吧！
+                    </p>
+                    <button 
+                      onClick={() => goToCategory('信仰好物')}
+                      className="bg-brand-red text-white px-8 py-3 rounded-xl font-bold tracking-widest text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-brand-red/20 cursor-pointer"
+                    >
+                      前往信仰好物選購
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-6">
+                    {orders.map((order) => (
+                      <div key={order.orderNumber} className="bg-theme-text/5 border border-theme-text/10 rounded-2xl overflow-hidden transition-all duration-300">
+                        {/* Order Header */}
+                        <div className="bg-theme-text/3 px-6 py-4 border-b border-theme-text/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm font-sans">
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                            <span className="font-bold text-theme-text/50 uppercase">訂單編號</span>
+                            <span className="font-display font-black text-theme-text text-sm sm:text-base">{order.orderNumber}</span>
+                            <span className="px-2 py-0.5 bg-[#00C300]/10 text-[#00C300] text-[10px] font-bold rounded-full">
+                              {order.status}
+                            </span>
+                          </div>
+                          <div className="text-theme-text/60">
+                            交易時間：{order.date}
+                          </div>
+                        </div>
+
+                        {/* Order Body - Items */}
+                        <div className="p-6 divide-y divide-theme-text/5 text-left">
+                          {order.items.map((item) => (
+                            <div key={item.product.id} className="flex gap-4 py-4 first:pt-0 last:pb-0">
+                              <div className="w-16 h-20 sm:w-20 sm:h-24 bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden flex-shrink-0">
+                                <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-cover" />
+                              </div>
+                              <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div className="text-left">
+                                  <h5 className="font-bold text-sm sm:text-base line-clamp-2 leading-snug">{item.product.name}</h5>
+                                  {item.product.specs && item.product.specs.length > 0 && (
+                                    <div className="text-[10px] sm:text-xs text-theme-text/55 mt-1">
+                                      規格：{item.product.specs.join(' / ')}
+                                    </div>
+                                  )}
+                                  <span className="text-[10px] sm:text-xs text-theme-text/40 font-display block mt-1 text-left">
+                                    NT$ {item.product.price.toLocaleString()} x {item.quantity}
+                                  </span>
+                                </div>
+                                <div className="text-right flex-shrink-0 self-end sm:self-auto">
+                                  <span className="font-display font-black text-sm sm:text-base text-theme-text">
+                                    NT$ {(item.product.price * item.quantity).toLocaleString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Order Footer */}
+                        <div className="bg-theme-text/2 px-6 py-5 border-t border-theme-text/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs sm:text-sm text-left">
+                          <div className="space-y-1 text-theme-text/60 max-w-md text-left">
+                            <div><span className="font-bold text-theme-text/40 mr-2">收件人</span> {order.name} ({order.phone})</div>
+                            <div className="line-clamp-1"><span className="font-bold text-theme-text/40 mr-2">收件地址</span> {order.address}</div>
+                            <div><span className="font-bold text-theme-text/40 mr-2">付款方式</span> {order.paymentMethod === 'credit-card' ? '信用卡' : 'Line Pay'}</div>
+                          </div>
+                          
+                          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 self-stretch md:self-auto justify-between md:justify-end">
+                            <div className="text-right">
+                              <div className="text-[10px] text-theme-text/50 uppercase tracking-widest">實付總金額 Total</div>
+                              <div className="font-display font-black text-xl text-brand-red mt-0.5">
+                                NT$ {order.total.toLocaleString()}
+                              </div>
+                            </div>
+                            <button 
+                              onClick={() => setSelectedOrderReceipt(order)}
+                              className="border border-brand-red text-brand-red px-5 py-2.5 rounded-lg text-xs font-bold tracking-widest hover:bg-brand-red hover:text-white transition-all duration-300 cursor-pointer w-full sm:w-auto"
+                            >
+                              下載收據 / 出貨單
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
           </div>
         </div>
       </div>
@@ -396,6 +698,10 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
       )}
 
       {isPaymentModalOpen && <PaymentModal onClose={() => setIsPaymentModalOpen(false)} />}
+
+      {selectedOrderReceipt && (
+        <OrderReceiptModal order={selectedOrderReceipt} onClose={() => setSelectedOrderReceipt(null)} />
+      )}
     </div>
   );
 }

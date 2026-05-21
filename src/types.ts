@@ -6,4 +6,4 @@
 export type { NewsItem, AdItem, Columnist, AllianceMember, ActionPlan } from './types/news';
 export type { Plan, DonationFormPayload } from './types/donation';
 export type { Member, DonationRecord, SubscriptionRecord, MemberStats } from './types/member';
-export type { Product, CartItem } from './types/product';
+export type { Product, CartItem, Order } from './types/product';
