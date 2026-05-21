@@ -63,7 +63,7 @@ export default function SearchModal({
       (item) =>
         item.title.toLowerCase().includes(lowercaseQuery) ||
         item.category.toLowerCase().includes(lowercaseQuery) ||
-        (item.subtitle && item.subtitle.toLowerCase().includes(lowercaseQuery))
+        (item.excerpt && item.excerpt.toLowerCase().includes(lowercaseQuery))
     ).slice(0, 5);
 
     // Filter Products
@@ -214,9 +214,9 @@ export default function SearchModal({
                         <h5 className="font-bold text-sm sm:text-base text-theme-text group-hover:text-brand-red transition-colors line-clamp-2 leading-snug">
                           {item.title}
                         </h5>
-                        {item.subtitle && (
+                        {item.excerpt && (
                           <p className="text-xs text-theme-text/50 line-clamp-1 mt-0.5">
-                            {item.subtitle}
+                            {item.excerpt}
                           </p>
                         )}
                       </div>
