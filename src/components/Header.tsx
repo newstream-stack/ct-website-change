@@ -1,4 +1,5 @@
-import { NEWS_CATEGORIES, MOCK_ADS } from '../data/index';
+import { NEWS_CATEGORIES } from '../api/news';
+import { getAd } from '../api/ads';
 
 interface HeaderProps {
   goToCategory: (cat: string) => void;
@@ -9,13 +10,14 @@ interface HeaderProps {
 }
 
 export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMenuOpen, showCategoryBar }: HeaderProps) {
+  const headerAd = getAd('header');
   return (
     <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-auto bg-theme-bg/95 backdrop-blur-md border-b border-theme-text/10 transition-colors duration-500 pb-1">
-      {MOCK_ADS.header && (
+      {headerAd && (
         <button onClick={() => goToCategory('會員招募')} className="w-full bg-brand-red text-white py-1.5 md:py-2 px-4 text-center text-[10px] md:text-xs font-display tracking-widest uppercase hover:bg-theme-text transition-colors duration-300 pointer-events-auto flex items-center justify-center gap-2 md:gap-4 relative group border-none outline-none appearance-none cursor-pointer">
-          <span className="font-bold opacity-80 border border-white/30 px-1.5 py-0.5 text-[8px] md:text-[9px] rounded-sm">{MOCK_ADS.header.sponsor}</span>
-          <span className="font-serif tracking-wider font-bold mb-0.5">{MOCK_ADS.header.title}</span>
-          <span className="opacity-90 hidden sm:inline-block font-sans normal-case tracking-normal text-[11px] md:text-sm"> - {MOCK_ADS.header.description}</span>
+          <span className="font-bold opacity-80 border border-white/30 px-1.5 py-0.5 text-[8px] md:text-[9px] rounded-sm">{headerAd.sponsor}</span>
+          <span className="font-serif tracking-wider font-bold mb-0.5">{headerAd.title}</span>
+          <span className="opacity-90 hidden sm:inline-block font-sans normal-case tracking-normal text-[11px] md:text-sm"> - {headerAd.description}</span>
           <i className="fas fa-arrow-right ml-1 md:ml-2 transform group-hover:translate-x-1 transition-transform text-[10px]"></i>
         </button>
       )}

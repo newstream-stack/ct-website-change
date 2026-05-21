@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-import { MOCK_NEWS } from '../data/index';
+import React, { useState, useEffect } from 'react';
 import ReceiptModal from '../components/ReceiptModal';
-import {
-  MOCK_MEMBER,
-  MOCK_MEMBER_STATS,
-  MOCK_DONATION_RECORDS,
-  MOCK_SUBSCRIPTION_RECORDS,
-} from '../mocks/member';
-import type { DonationRecord } from '../types/member';
+import { getMe, getMemberStats, getDonations, getBillingHistory } from '../api/member';
+import { getNewsList } from '../api/news';
+import type { Member, MemberStats, DonationRecord, SubscriptionRecord } from '../types/member';
+import type { NewsItem } from '../types';
 
 interface MemberDashboardProps {
   goToCategory: (cat: string) => void;
@@ -75,8 +71,25 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
   const [selectedReceipt, setSelectedReceipt] = useState<DonationRecord | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
-  const savedArticles = MOCK_NEWS.slice(0, 3);
-  const { subscription } = MOCK_MEMBER;
+  const [member, setMember] = useState<Member | null>(null);
+  const [stats, setStats] = useState<MemberStats | null>(null);
+  const [donationRecords, setDonationRecords] = useState<DonationRecord[]>([]);
+  const [subscriptionRecords, setSubscriptionRecords] = useState<SubscriptionRecord[]>([]);
+  const [savedArticles, setSavedArticles] = useState<NewsItem[]>([]);
+
+  useEffect(() => {
+    Promise.all([getMe(), getMemberStats(), getDonations(), getBillingHistory()])
+      .then(([m, s, d, b]) => {
+        setMember(m);
+        setStats(s);
+        setDonationRecords(d);
+        setSubscriptionRecords(b);
+      });
+    setSavedArticles(getNewsList().slice(0, 6));
+  }, []);
+
+  if (!member || !stats) return null;
+  const { subscription } = member;
 
   return (
     <div className="pt-[140px] md:pt-[180px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
@@ -93,8 +106,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               <i className="far fa-user" />
             </div>
             <div>
-              <p className="font-bold text-sm">{MOCK_MEMBER.name} ({MOCK_MEMBER.displayName})</p>
-              <p className="text-xs text-theme-text/60">{MOCK_MEMBER.email}</p>
+              <p className="font-bold text-sm">{member.name} ({member.displayName})</p>
+              <p className="text-xs text-theme-text/60">{member.email}</p>
             </div>
           </div>
         </div>
@@ -151,9 +164,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                   {[
-                    { value: MOCK_MEMBER_STATS.savedArticles, label: '收藏文章' },
-                    { value: MOCK_MEMBER_STATS.attendedEvents, label: '參加活動' },
-                    { value: MOCK_MEMBER_STATS.donationCount, label: '奉獻紀錄' },
+                    { value: stats.savedArticles, label: '收藏文章' },
+                    { value: stats.attendedEvents, label: '參加活動' },
+                    { value: stats.donationCount, label: '奉獻紀錄' },
                   ].map(({ value, label }, i) => (
                     <div key={label} className={`bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 flex flex-col justify-center items-center text-center ${i === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
                       <span className="text-3xl font-display font-black text-brand-red mb-2">{value}</span>
@@ -234,7 +247,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-theme-text/5 bg-theme-bg/30">
-                        {MOCK_SUBSCRIPTION_RECORDS.map((rec) => (
+                        {subscriptionRecords.map((rec) => (
                           <tr key={rec.date}>
                             <td className="px-4 py-3">{rec.date}</td>
                             <td className="px-4 py-3">{rec.item}</td>
@@ -253,13 +266,13 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             {activeTab === 'saved' && (
               <div className="flex flex-col gap-6 animate-fade-in-up">
                 <div className="flex justify-between items-end border-b border-theme-text/10 pb-4 mb-2">
-                  <h3 className="text-xl font-serif font-bold">收藏文章 ({MOCK_MEMBER_STATS.savedArticles})</h3>
+                  <h3 className="text-xl font-serif font-bold">收藏文章 ({stats.savedArticles})</h3>
                   <button className="font-bold text-theme-text/80 hover:text-brand-red transition-colors flex items-center gap-1 text-sm">
                     最新加入 <i className="fas fa-chevron-down text-[10px]" />
                   </button>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                  {MOCK_NEWS.slice(0, 6).map((article, i) => (
+                  {savedArticles.map((article, i) => (
                     <div key={i} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
                       <div className="h-40 overflow-hidden relative">
                         <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -292,7 +305,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     </div>
                     <div className="bg-brand-red/10 p-5 rounded-xl border border-brand-red/20 flex flex-col items-start md:items-end justify-center min-w-[200px]">
                       <span className="text-xs text-brand-red/70 font-bold tracking-widest uppercase mb-1">2026 年度累積奉獻</span>
-                      <span className="text-3xl font-display font-black text-brand-red">NT$ {MOCK_MEMBER_STATS.totalDonated.toLocaleString()}</span>
+                      <span className="text-3xl font-display font-black text-brand-red">NT$ {stats.totalDonated.toLocaleString()}</span>
                     </div>
                   </div>
 
@@ -306,7 +319,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-theme-text/5 bg-theme-bg/30">
-                        {MOCK_DONATION_RECORDS.map((rec) => (
+                        {donationRecords.map((rec) => (
                           <tr key={rec.id} className="hover:bg-theme-text/5 transition-colors">
                             <td className="px-4 py-4">{rec.date}</td>
                             <td className="px-4 py-4 font-bold text-brand-red">
@@ -341,9 +354,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   <h3 className="text-xl font-serif font-bold mb-6">帳號設定</h3>
                   <form className="flex flex-col gap-5 max-w-lg" onSubmit={(e) => e.preventDefault()}>
                     {[
-                      { label: '姓名 Name', type: 'text', defaultValue: MOCK_MEMBER.name, readOnly: false },
-                      { label: '電子信箱 Email Address', type: 'email', defaultValue: MOCK_MEMBER.email, readOnly: true },
-                      { label: '聯絡地址 Address', type: 'text', defaultValue: MOCK_MEMBER.address, readOnly: false },
+                      { label: '姓名 Name', type: 'text', defaultValue: member.name, readOnly: false },
+                      { label: '電子信箱 Email Address', type: 'email', defaultValue: member.email, readOnly: true },
+                      { label: '聯絡地址 Address', type: 'text', defaultValue: member.address, readOnly: false },
                     ].map(({ label, type, defaultValue, readOnly }) => (
                       <div key={label} className="flex flex-col gap-2">
                         <label className="text-xs font-bold tracking-widest text-theme-text/70">{label}</label>

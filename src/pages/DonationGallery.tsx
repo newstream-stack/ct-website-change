@@ -1,12 +1,9 @@
-import { useState } from 'react';
 
 interface DonationGalleryProps {
   openPlan?: (id: number) => void;
 }
 
 export default function DonationGallery({ openPlan }: DonationGalleryProps) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
   const plans = [
     { id: 1, title: '【新生的甘霖】復活草生命禮盒', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/23/69c0dc0e9dc17.jpg', subtitle: 'Revival亞洲論壇影響力中心2026年隆重獻禮', description: '生命未曾止息，只是正等待。在乾旱與沉默之中，我們有時蜷縮著...直到那一刻，甘霖沛降。' },
     { id: 2, title: '在沙漠中匯聚活水', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/03/13/69b3d20573950.jpg', subtitle: '將影響力推向地極', description: '這是一個充滿挑戰的時代，卻也是神正在全地興起領袖的時刻。' },

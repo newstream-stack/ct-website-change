@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 import zhTranslations from './translations/zh.json';
 
 interface I18nContextType {
-    t: (key: string) => any;
+    t(key: `${string}.plans`): unknown[];
+    t(key: string): string;
     locale: string;
     setLocale: (locale: string) => void;
 }
@@ -16,16 +17,18 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         zh: zhTranslations
     };
 
-    const t = (keyPath: string) => {
+    const t = (keyPath: string): string | unknown[] => {
         const keys = keyPath.split('.');
-        let current: any = translations[locale];
+        let current: unknown = translations[locale];
         for (const key of keys) {
-            if (current === undefined || current[key] === undefined) {
-                return keyPath; // fallback to key path if not found
+            if (current == null || typeof current !== 'object' || !(key in (current as object))) {
+                return keyPath; // fallback
             }
-            current = current[key];
+            current = (current as Record<string, unknown>)[key];
         }
-        return current;
+        if (Array.isArray(current)) return current;
+        if (typeof current === 'string') return current;
+        return keyPath;
     };
 
     return (

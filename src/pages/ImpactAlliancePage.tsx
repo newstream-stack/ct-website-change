@@ -1,28 +1,15 @@
-import { useState, useEffect } from 'react';
-import { MOCK_NEWS, ALLIANCE_MEMBERS } from '../data/index';
-import { NewsItem, AllianceMember } from '../types';
+import { getAllianceMembers, getAllianceArticles } from '../api/alliance';
+
+import { useCarousel } from '../hooks/useCarousel';
 
 interface ImpactAlliancePageProps {
   openArticle: (id: number) => void;
 }
 
 export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePageProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const sliderArticles = getAllianceArticles(5);
 
-  const featuredArticles = MOCK_NEWS.filter(n => n.category === '影響力聯盟').slice(0, 5);
-  
-  const sliderArticles = featuredArticles.length > 0 ? featuredArticles : MOCK_NEWS.slice(0, 3);
-
-  // Auto-slide effect
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % sliderArticles.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [sliderArticles.length]);
-
-  const nextSlide = () => setActiveIndex((prev) => (prev + 1) % sliderArticles.length);
-  const prevSlide = () => setActiveIndex((prev) => (prev - 1 + sliderArticles.length) % sliderArticles.length);
+  const { activeIndex, setActiveIndex, next: nextSlide, prev: prevSlide } = useCarousel(sliderArticles.length);
 
   return (
     <div className="pt-[180px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
@@ -142,7 +129,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 lg:gap-x-16">
-            {ALLIANCE_MEMBERS.map((member) => (
+            {getAllianceMembers().map((member) => (
               <div 
                 key={member.id} 
                 className="group flex flex-col"

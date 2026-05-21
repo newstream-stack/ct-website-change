@@ -19,6 +19,26 @@ const amountButtonStyle = (isActive: boolean) =>
         : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'
     }`;
 
+// ─── Type guard ───────────────────────────────────────────────────────────────
+interface RawActionPlan {
+    id: string;
+    title: string;
+    description: string;
+    subtitle?: string;
+    price?: string;
+    isPremium?: boolean;
+}
+
+function isRawActionPlan(v: unknown): v is RawActionPlan {
+    return (
+        typeof v === 'object' &&
+        v !== null &&
+        typeof (v as RawActionPlan).id === 'string' &&
+        typeof (v as RawActionPlan).title === 'string' &&
+        typeof (v as RawActionPlan).description === 'string'
+    );
+}
+
 export default function ActionPage({ category }: ActionPageProps) {
     const { t } = useI18n();
     const [selectedPlan, setSelectedPlan] = useState('one-time');
@@ -27,10 +47,9 @@ export default function ActionPage({ category }: ActionPageProps) {
     const isSubscription = category === '訂報';
     const pageType = isSubscription ? 'subscription' : 'donation';
 
-    const plans: ActionPlan[] = t(`actionPage.${pageType}.plans`).map((plan: any) => ({
-        ...plan,
-        variant: pageType
-    }));
+    const plans: ActionPlan[] = t(`actionPage.${pageType}.plans`)
+        .filter(isRawActionPlan)
+        .map((plan) => ({ ...plan, variant: pageType as ActionPlan['variant'] }));
 
     return (
         <div className={containerStyle}>

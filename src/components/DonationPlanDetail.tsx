@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { Plan, DonationFormPayload } from '../types/donation';
-import { MOCK_PLANS } from '../mocks/donationPlans';
+import { getPlan, submitDonation } from '../api/plans';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -122,16 +122,16 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const updateReceipt = (field: keyof DonationFormPayload['receipt'], value: string) =>
     setFormData((prev) => ({ ...prev, receipt: { ...prev.receipt, [field]: value } }));
 
-  // ── Data fetching — swap this block for real API ──────────────────────────
+  // ── Data fetching ─────────────────────────────────────────────────────────
   useEffect(() => {
     const fetchPlan = async () => {
       setIsLoading(true);
       try {
-        // TODO: const data = await fetch(`/api/plans/${planId}`).then(r => r.json());
-        await new Promise((r) => setTimeout(r, 300));
-        const data = MOCK_PLANS.find((p) => p.id === planId) ?? MOCK_PLANS[0];
-        setPlan(data);
-        updateForm({ planId: data.id });
+        const data = await getPlan(planId);
+        if (data) {
+          setPlan(data);
+          updateForm({ planId: data.id });
+        }
       } catch (err) {
         console.error('Failed to fetch plan:', err);
       } finally {
@@ -141,11 +141,10 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
     fetchPlan();
   }, [planId]);
 
-  // ── Form submit — swap this for real API ─────────────────────────────────
+  // ── Form submit ───────────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('API Payload:', JSON.stringify(formData, null, 2));
-    // TODO: await fetch('/api/donations', { method: 'POST', body: JSON.stringify(formData) })
+    await submitDonation(formData);
     alert('表單資料已就緒，請查看 Console');
   };
 

@@ -1,8 +1,10 @@
-import { useState, useEffect, useLayoutEffect, useRef, MouseEvent, TouchEvent } from 'react';
-import { MOCK_NEWS, MOCK_ADS } from '../data/index';
+import { useState, useLayoutEffect, useRef, MouseEvent, TouchEvent } from 'react';
+import { getNewsList } from '../api/news';
+import { getAd } from '../api/ads';
+import { getFeaturedVideos, getAccordionAd, FeaturedVideo, FeaturedAd } from '../api/home';
 import { NewsItem } from '../types';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
-import { FEATURED_VIDEOS, ACCORDION_AD, FeaturedVideo } from '../mocks/accordionPanels';
+import { useCarousel } from '../hooks/useCarousel';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -26,7 +28,7 @@ interface VideoPanel {
 
 interface AdPanel {
   type: 'ad';
-  ad: typeof ACCORDION_AD;
+  ad: FeaturedAd;
 }
 
 type AccordionPanel = NewsPanel | VideoPanel | AdPanel;
@@ -46,11 +48,11 @@ function buildPanels(news: NewsItem[]): AccordionPanel[] {
     newsCount++;
 
     if (newsCount === 3) {
-      panels.push({ type: 'video', id: 'video-feature', videos: FEATURED_VIDEOS });
+      panels.push({ type: 'video', id: 'video-feature', videos: getFeaturedVideos() });
     }
 
     if (newsCount % 4 === 0) {
-      panels.push({ type: 'ad', ad: ACCORDION_AD });
+      panels.push({ type: 'ad', ad: getAccordionAd() });
     }
   }
 
@@ -61,7 +63,7 @@ function buildPanels(news: NewsItem[]): AccordionPanel[] {
 
 export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const { activeIndex: carouselIndex, setActiveIndex: setCarouselIndex } = useCarousel(NEWS_GROUP_SIZE);
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
@@ -69,7 +71,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
-  const panels: AccordionPanel[] = buildPanels(MOCK_NEWS);
+  const panels: AccordionPanel[] = buildPanels(getNewsList());
 
   // Find the index of the video panel to know when it's active
   const videoPanelIndex = panels.findIndex((p) => p.type === 'video');
@@ -103,13 +105,6 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     };
   }, []);
 
-  // ── Auto-advance news carousel ──────────────────────────────────────────────
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setCarouselIndex((prev) => (prev + 1) % NEWS_GROUP_SIZE);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [carouselIndex]);
 
   // ── Event handlers ──────────────────────────────────────────────────────────
   const handlePanelClick = (

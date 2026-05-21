@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { MOCK_NEWS, COLUMNISTS } from '../data/index';
+import { getNewsByCategory } from '../api/news';
+import { getColumnists } from '../api/columnists';
 import { NewsItem, Columnist } from '../types';
 
 interface ColumnPageProps {
@@ -11,11 +12,8 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Get featured articles
-  const featuredArticles = MOCK_NEWS
-    .filter(n => n.category === '專欄')
-    .slice(0, 5);
-
-  const filteredColumnists = COLUMNISTS.filter(c => c.subCategory === activeTab);
+  const featuredArticles = getNewsByCategory('專欄').slice(0, 5);
+  const filteredColumnists = getColumnists(activeTab);
   
   // Auto-slide effect
   useEffect(() => {

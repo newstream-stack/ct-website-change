@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MOCK_NEWS, MOCK_ADS, dummyContentPart1, dummyContentPart2 } from '../data/index';
+import { getArticle, getRecommended, getArticleContent, getNewsList } from '../api/news';
+import { getRandomAd, getAd } from '../api/ads';
 import { NewsItem, AdItem } from '../types';
 import InlineArticleBanner from '../components/InlineArticleBanner';
 import StickySidebarAd from '../components/StickySidebarAd';
@@ -11,16 +12,12 @@ interface ArticleDetailProps {
 }
 
 export default function ArticleDetail({ articleId, openArticle, goToCategory }: ArticleDetailProps) {
-    const article = MOCK_NEWS.find(n => n.id === articleId) || MOCK_NEWS[0];
-    const recommendedNews = MOCK_NEWS.filter(n => n.id !== articleId).slice(0, 4);
+    const article = getArticle(articleId) ?? getNewsList()[0];
+    const recommendedNews = getRecommended(articleId);
 
-    // 取得隨機廣告
-    const [randomAd] = useState(() => {
-        const adValues = Object.values(MOCK_ADS);
-        return adValues.length > 0 ? adValues[Math.floor(Math.random() * adValues.length)] : null;
-    });
+    const [randomAd] = useState(() => getRandomAd() ?? null);
 
-    // 嘗試在第二段後切割內容
+    const { part1: dummyContentPart1, part2: dummyContentPart2 } = getArticleContent();
     let firstPart = dummyContentPart1;
     let secondPart = '';
     if (!article.content) {
@@ -145,7 +142,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                             <button className="w-full py-3 border border-theme-text/20 font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/90 hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition rounded-sm">View All Articles</button>
                         </div>
 
-                        {MOCK_ADS.sidebar && <StickySidebarAd ad={MOCK_ADS.sidebar} />}
+                        {getAd('sidebar') && <StickySidebarAd ad={getAd('sidebar')!} />}
                     </div>
                 </div>
 

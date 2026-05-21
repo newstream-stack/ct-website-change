@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { MOCK_NEWS, MOCK_ADS } from '../data/index';
-import { NewsItem, AdItem } from '../types';
+import React, { useState } from 'react';
+import { getNewsByCategory } from '../api/news';
+import { getAd } from '../api/ads';
+
+import { useCarousel } from '../hooks/useCarousel';
 import NativeAdCard from '../components/NativeAdCard';
 
 interface CategoryListProps {
@@ -12,31 +14,18 @@ const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '�
 
 export default function CategoryList({ category, openArticle }: CategoryListProps) {
   const [selectedSubCategory, setSelectedSubCategory] = useState('全部');
-  const [activeIndex, setActiveIndex] = useState(0);
-  
-  const allCategoryNews = MOCK_NEWS.filter(n => n.category === category);
-  
-  // Featured articles for the hero carousel (first 4 items of the category)
+  const allCategoryNews = getNewsByCategory(category);
   const featuredArticles = allCategoryNews.slice(0, 4);
 
   let filteredNews = [...allCategoryNews];
-  
-  // Apply sub-category filtering
   if (category === '生活情報' && selectedSubCategory !== '全部') {
     filteredNews = filteredNews.filter(n => n.subCategory === selectedSubCategory);
   }
 
-  // Auto-slide effect for hero carousel
-  useEffect(() => {
-    if (category !== '生活情報' || featuredArticles.length === 0) return;
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [category, featuredArticles.length]);
-
-  const nextSlide = () => setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
-  const prevSlide = () => setActiveIndex((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
+  const { activeIndex, setActiveIndex, next: nextSlide, prev: prevSlide } = useCarousel(
+    featuredArticles.length,
+    { enabled: category === '生活情報' && featuredArticles.length > 0 }
+  );
 
   // Premium Layout for "生活情報"
   if (category === '生活情報') {
@@ -213,7 +202,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
   }
 
   // Default Standard Layout for other categories
-  if (filteredNews.length === 0 && selectedSubCategory === '全部') filteredNews = MOCK_NEWS.filter(n => n.category === category);
+  if (filteredNews.length === 0 && selectedSubCategory === '全部') filteredNews = getNewsByCategory(category);
   
   return (
     <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
@@ -241,9 +230,9 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
         {filteredNews.length > 0 ? (
           filteredNews.map((news, index) => (
             <React.Fragment key={news.id}>
-              {index === 2 && MOCK_ADS.infeed && (
+              {index === 2 && getAd('infeed') && (
                 <div className="py-6 md:py-8 border-b border-theme-text/10">
-                  <NativeAdCard ad={MOCK_ADS.infeed} />
+                  <NativeAdCard ad={getAd('infeed')!} />
                 </div>
               )}
               <div className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
