@@ -156,11 +156,32 @@ export default function App() {
     }
   }, [isDarkMode]);
 
-  const goToCategory = (cat: string) => {
+  const [loginPageDefaultRegister, setLoginPageDefaultRegister] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('impact_member');
+      if (saved) {
+        try {
+          setUser(JSON.parse(saved));
+        } catch (e) {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    }
+  }, [currentCategory]);
+
+  const goToCategory = (cat: string, options?: { register?: boolean }) => {
     setCurrentArticleId(null);
     setCurrentPlanId(null);
     setCurrentProductId(null);
     setCurrentCategory(cat);
+    if (cat === '會員中心') {
+      setLoginPageDefaultRegister(!!options?.register);
+    }
     window.scrollTo(0, 0);
   };
 
@@ -181,6 +202,7 @@ export default function App() {
   return (
     <div className="font-sans relative">
       <Header 
+        user={user}
         goToCategory={goToCategory} 
         toggleTheme={toggleTheme} 
         isDarkMode={isDarkMode} 
@@ -243,11 +265,11 @@ export default function App() {
         )}
 
         {currentCategory === '會員中心' && (
-          <LoginPage goToCategory={goToCategory} />
+          <LoginPage goToCategory={goToCategory} initialRegister={loginPageDefaultRegister} />
         )}
 
         {currentCategory === '會員招募' && (
-          <MembershipPage />
+          <MembershipPage goToCategory={goToCategory} user={user} />
         )}
 
         {currentCategory === '會員專區' && (

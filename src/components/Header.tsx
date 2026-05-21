@@ -3,7 +3,8 @@ import { getAd } from '../api/ads';
 import { CartItem } from '../types';
 
 interface HeaderProps {
-  goToCategory: (cat: string) => void;
+  user: { name: string; email: string } | null;
+  goToCategory: (cat: string, options?: { register?: boolean }) => void;
   toggleTheme: () => void;
   isDarkMode: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
@@ -14,6 +15,7 @@ interface HeaderProps {
 }
 
 export default function Header({ 
+  user,
   goToCategory, 
   toggleTheme, 
   isDarkMode, 
@@ -50,11 +52,35 @@ export default function Header({
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
 
-          {/* Login (Icon on mobile, text on desktop) */}
-          <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center" onClick={() => goToCategory('會員中心')} title="Log In">
-            <i className="far fa-user md:hidden"></i>
-            <span className="hidden md:block">Log In</span>
-          </button>
+          {/* Login / Member Dashboard */}
+          {user ? (
+            <button 
+              className="font-display font-bold text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center gap-1.5 cursor-pointer" 
+              onClick={() => goToCategory('會員專區')} 
+              title="會員專區"
+            >
+              <i className="far fa-user text-brand-red"></i>
+              <span className="hidden md:block truncate max-w-[80px]">{user.name || 'Member'}</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button 
+                className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center cursor-pointer" 
+                onClick={() => goToCategory('會員中心')} 
+                title="Log In"
+              >
+                <i className="far fa-user md:hidden"></i>
+                <span className="hidden md:block">Log In</span>
+              </button>
+              <span className="hidden md:inline text-theme-text/30 text-xs">/</span>
+              <button 
+                className="hidden md:block font-display font-bold text-sm uppercase tracking-widest text-brand-red hover:text-brand-red/80 transition-colors duration-300 cursor-pointer"
+                onClick={() => goToCategory('會員中心', { register: true })}
+              >
+                Register
+              </button>
+            </div>
+          )}
           
           <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
 

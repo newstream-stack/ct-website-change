@@ -1,6 +1,11 @@
 import React from 'react';
 
-export default function MembershipPage() {
+interface MembershipPageProps {
+  goToCategory: (cat: string, options?: { register?: boolean }) => void;
+  user: { name: string; email: string } | null;
+}
+
+export default function MembershipPage({ goToCategory, user }: MembershipPageProps) {
   const plans = [
     {
       id: 'plan-a',
@@ -95,7 +100,33 @@ export default function MembershipPage() {
                     </li>
                   ))}
                 </ul>
-                <button className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}>
+                <button 
+                  onClick={() => {
+                    if (user) {
+                      alert(`感謝您訂閱 ${plan.name}！已成功為您啟用該方案權益。`);
+                      const saved = localStorage.getItem('impact_member');
+                      if (saved) {
+                        try {
+                          const customUser = JSON.parse(saved);
+                          customUser.subscription = {
+                            plan: plan.name,
+                            price: parseInt(plan.price.replace(/,/g, ''), 10),
+                            nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }),
+                            status: 'active'
+                          };
+                          localStorage.setItem('impact_member', JSON.stringify(customUser));
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }
+                      goToCategory('會員專區');
+                    } else {
+                      alert('訂閱會員方案請先註冊帳號！正在為您前往註冊頁面...');
+                      goToCategory('會員中心', { register: true });
+                    }
+                  }}
+                  className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 cursor-pointer ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}
+                >
                   立即訂閱
                 </button>
               </div>

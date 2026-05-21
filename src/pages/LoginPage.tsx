@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface LoginPageProps {
-  goToCategory: (cat: string) => void;
+  goToCategory: (cat: string, options?: { register?: boolean }) => void;
+  initialRegister?: boolean;
 }
 
-export default function LoginPage({ goToCategory }: LoginPageProps) {
-  const [isRegister, setIsRegister] = useState(false);
+export default function LoginPage({ goToCategory, initialRegister = false }: LoginPageProps) {
+  const [isRegister, setIsRegister] = useState(initialRegister);
+
+  useEffect(() => {
+    setIsRegister(initialRegister);
+  }, [initialRegister]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

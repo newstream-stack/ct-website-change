@@ -10,6 +10,24 @@ import {
 
 // GET /api/me
 export async function getMe(): Promise<Member> {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('impact_member');
+    if (saved) {
+      try {
+        const customUser = JSON.parse(saved);
+        return {
+          ...MOCK_MEMBER,
+          name: customUser.name || MOCK_MEMBER.name,
+          displayName: customUser.displayName || customUser.name || MOCK_MEMBER.displayName,
+          email: customUser.email || MOCK_MEMBER.email,
+          address: customUser.address || MOCK_MEMBER.address,
+          subscription: customUser.subscription || MOCK_MEMBER.subscription,
+        };
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
   return MOCK_MEMBER;
 }
 
@@ -32,6 +50,12 @@ export async function getBillingHistory(): Promise<SubscriptionRecord[]> {
 // Body: Partial<Member>
 export async function updateMe(data: Partial<Member>): Promise<void> {
   console.log('[mock] updateMe', data);
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('impact_member');
+    let currentUser = saved ? JSON.parse(saved) : {};
+    currentUser = { ...currentUser, ...data };
+    localStorage.setItem('impact_member', JSON.stringify(currentUser));
+  }
 }
 
 // PUT /api/me/subscription/payment
@@ -39,3 +63,4 @@ export async function updateMe(data: Partial<Member>): Promise<void> {
 export async function updatePaymentMethod(paymentMethod: string): Promise<void> {
   console.log('[mock] updatePaymentMethod', paymentMethod);
 }
+

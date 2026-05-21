@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReceiptModal from '../components/ReceiptModal';
-import { getMe, getMemberStats, getDonations, getBillingHistory } from '../api/member';
+import { getMe, getMemberStats, getDonations, getBillingHistory, updateMe } from '../api/member';
 import { getNewsList } from '../api/news';
 import type { Member, MemberStats, DonationRecord, SubscriptionRecord } from '../types/member';
 import type { NewsItem, Order } from '../types';
@@ -319,8 +319,12 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               </button>
             ))}
             <button
-              onClick={() => goToCategory('首頁')}
-              className="md:mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm text-brand-red bg-brand-red/5 md:bg-transparent hover:bg-brand-red/10 transition-colors"
+              onClick={() => {
+                localStorage.removeItem('impact_member');
+                goToCategory('首頁');
+                window.location.reload();
+              }}
+              className="md:mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm text-brand-red bg-brand-red/5 md:bg-transparent hover:bg-brand-red/10 transition-colors cursor-pointer"
             >
               <i className="fas fa-sign-out-alt text-sm md:text-base w-5 text-center mb-1 md:mb-0" />
               <span className="text-center">登出 Logout</span>
@@ -551,15 +555,31 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               <div className="flex flex-col gap-6 animate-fade-in-up">
                 <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
                   <h3 className="text-xl font-serif font-bold mb-6">帳號設定</h3>
-                  <form className="flex flex-col gap-5 max-w-lg" onSubmit={(e) => e.preventDefault()}>
+                  <form 
+                    className="flex flex-col gap-5 max-w-lg" 
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.currentTarget);
+                      const updatedName = formData.get('name') as string;
+                      const updatedAddress = formData.get('address') as string;
+                      if (!updatedName || !updatedAddress) {
+                        alert('姓名與地址不可為空！');
+                        return;
+                      }
+                      await updateMe({ name: updatedName, displayName: updatedName, address: updatedAddress });
+                      setMember(prev => prev ? { ...prev, name: updatedName, displayName: updatedName, address: updatedAddress } : null);
+                      alert('帳號設定更新成功！');
+                    }}
+                  >
                     {[
-                      { label: '姓名 Name', type: 'text', defaultValue: member.name, readOnly: false },
-                      { label: '電子信箱 Email Address', type: 'email', defaultValue: member.email, readOnly: true },
-                      { label: '聯絡地址 Address', type: 'text', defaultValue: member.address, readOnly: false },
-                    ].map(({ label, type, defaultValue, readOnly }) => (
+                      { nameAttr: 'name', label: '姓名 Name', type: 'text', defaultValue: member.name, readOnly: false },
+                      { nameAttr: 'email', label: '電子信箱 Email Address', type: 'email', defaultValue: member.email, readOnly: true },
+                      { nameAttr: 'address', label: '聯絡地址 Address', type: 'text', defaultValue: member.address, readOnly: false },
+                    ].map(({ nameAttr, label, type, defaultValue, readOnly }) => (
                       <div key={label} className="flex flex-col gap-2">
                         <label className="text-xs font-bold tracking-widest text-theme-text/70">{label}</label>
                         <input
+                          name={nameAttr}
                           type={type}
                           defaultValue={defaultValue}
                           readOnly={readOnly}
