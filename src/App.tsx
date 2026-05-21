@@ -7,6 +7,8 @@ import CategoryList from './pages/CategoryList';
 import ArticleDetail from './pages/ArticleDetail';
 import ProductGallery from './pages/ProductGallery';
 import ProductDetail from './components/ProductDetail';
+import CartDrawer from './components/CartDrawer';
+import { CartItem, Product } from './types';
 import ActionPage from './pages/ActionPage';
 import DonationGallery from './pages/DonationGallery';
 import DonationPlanDetail from './components/DonationPlanDetail';
@@ -56,6 +58,52 @@ export default function App() {
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('impact_cart');
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Save cart to local storage when it changes
+  useEffect(() => {
+    localStorage.setItem('impact_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  const addToCart = (product: Product, quantity: number) => {
+    setCartItems((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prev, { product, quantity }];
+    });
+    // Automatically open the cart drawer when a new item is added!
+    setIsCartOpen(true);
+  };
+
+  const removeFromCart = (productId: number) => {
+    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
+  };
+
+  const updateCartQuantity = (productId: number, qty: number) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.product.id === productId ? { ...item, quantity: qty } : item
+      )
+    );
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
+  };
 
   // Sync state to URL
   useEffect(() => {
@@ -136,6 +184,8 @@ export default function App() {
         isDarkMode={isDarkMode} 
         setIsMenuOpen={setIsMenuOpen} 
         showCategoryBar={showCategoryBar} 
+        cartItems={cartItems}
+        onOpenCart={() => setIsCartOpen(true)}
       />
 
       <FullscreenMenu 
@@ -170,7 +220,11 @@ export default function App() {
         )}
 
         {(currentCategory === '信仰好物' && currentProductId) && (
-          <ProductDetail productId={currentProductId} onBack={() => { setCurrentProductId(null); window.scrollTo(0, 0); }} />
+          <ProductDetail 
+            productId={currentProductId} 
+            onBack={() => { setCurrentProductId(null); window.scrollTo(0, 0); }} 
+            onAddToCart={addToCart}
+          />
         )}
 
         {(currentCategory === '訂報') && (
@@ -205,6 +259,15 @@ export default function App() {
       {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名'].includes(currentCategory) && (
         <GlobalBottomAd goToCategory={goToCategory} />
       )}
+
+      <CartDrawer 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        cartItems={cartItems} 
+        onRemoveItem={removeFromCart} 
+        onUpdateQuantity={updateCartQuantity} 
+        onClearCart={clearCart} 
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { NEWS_CATEGORIES } from '../api/news';
 import { getAd } from '../api/ads';
+import { CartItem } from '../types';
 
 interface HeaderProps {
   goToCategory: (cat: string) => void;
@@ -7,9 +8,19 @@ interface HeaderProps {
   isDarkMode: boolean;
   setIsMenuOpen: (isOpen: boolean) => void;
   showCategoryBar: boolean;
+  cartItems: CartItem[];
+  onOpenCart: () => void;
 }
 
-export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMenuOpen, showCategoryBar }: HeaderProps) {
+export default function Header({ 
+  goToCategory, 
+  toggleTheme, 
+  isDarkMode, 
+  setIsMenuOpen, 
+  showCategoryBar,
+  cartItems,
+  onOpenCart
+}: HeaderProps) {
   const headerAd = getAd('header');
   return (
     <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-auto bg-theme-bg/95 backdrop-blur-md border-b border-theme-text/10 transition-colors duration-500 pb-1">
@@ -41,6 +52,19 @@ export default function Header({ goToCategory, toggleTheme, isDarkMode, setIsMen
           <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center" onClick={() => goToCategory('會員中心')} title="Log In">
             <i className="far fa-user md:hidden"></i>
             <span className="hidden md:block">Log In</span>
+          </button>
+          
+          <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
+
+          {/* Cart Icon (Icon on mobile, text on desktop) */}
+          <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenCart} title="購物車">
+            <i className="fas fa-shopping-bag md:hidden"></i>
+            <span className="hidden md:block">Cart</span>
+            {cartItems.length > 0 && (
+              <span className="absolute -top-1.5 -right-2 bg-brand-red text-white text-[9px] font-sans font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-theme-bg shadow-sm">
+                {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+              </span>
+            )}
           </button>
           
           <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>

@@ -9,3 +9,8 @@ export interface Product {
   details: string;
   gallery: string[];
 }
+
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}

@@ -5,9 +5,10 @@ import { MOCK_PRODUCTS } from '../data/index';
 interface ProductDetailProps {
   productId: number;
   onBack: () => void;
+  onAddToCart: (product: Product, quantity: number) => void;
 }
 
-export default function ProductDetail({ productId, onBack }: ProductDetailProps) {
+export default function ProductDetail({ productId, onBack, onAddToCart }: ProductDetailProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [activeImage, setActiveImage] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
@@ -40,6 +41,9 @@ export default function ProductDetail({ productId, onBack }: ProductDetailProps)
     setTimeout(() => {
       setIsAdding(false);
       setAddedSuccess(true);
+      if (product) {
+        onAddToCart(product, quantity);
+      }
       setTimeout(() => setAddedSuccess(false), 2000);
     }, 800);
   };
