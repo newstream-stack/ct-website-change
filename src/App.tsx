@@ -6,6 +6,7 @@ import HomeAccordion from './pages/HomeAccordion';
 import CategoryList from './pages/CategoryList';
 import ArticleDetail from './pages/ArticleDetail';
 import ProductGallery from './pages/ProductGallery';
+import ProductDetail from './components/ProductDetail';
 import ActionPage from './pages/ActionPage';
 import DonationGallery from './pages/DonationGallery';
 import DonationPlanDetail from './components/DonationPlanDetail';
@@ -43,6 +44,15 @@ export default function App() {
     }
     return null;
   });
+
+  const [currentProductId, setCurrentProductId] = useState<number | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const product = params.get('product');
+      return product ? parseInt(product, 10) : null;
+    }
+    return null;
+  });
   
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -59,6 +69,9 @@ export default function App() {
     if (currentPlanId !== null) {
       params.set('plan', currentPlanId.toString());
     }
+    if (currentProductId !== null) {
+      params.set('product', currentProductId.toString());
+    }
     
     const queryString = params.toString();
     const newUrl = `${window.location.pathname}${queryString ? '?' + queryString : ''}`;
@@ -67,7 +80,7 @@ export default function App() {
     if (newUrl !== window.location.pathname + window.location.search) {
       window.history.pushState({}, '', newUrl);
     }
-  }, [currentCategory, currentArticleId, currentPlanId]);
+  }, [currentCategory, currentArticleId, currentPlanId, currentProductId]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -78,6 +91,8 @@ export default function App() {
       setCurrentArticleId(article ? parseInt(article, 10) : null);
       const plan = params.get('plan');
       setCurrentPlanId(plan ? parseInt(plan, 10) : null);
+      const product = params.get('product');
+      setCurrentProductId(product ? parseInt(product, 10) : null);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -94,6 +109,7 @@ export default function App() {
   const goToCategory = (cat: string) => {
     setCurrentArticleId(null);
     setCurrentPlanId(null);
+    setCurrentProductId(null);
     setCurrentCategory(cat);
     window.scrollTo(0, 0);
   };
@@ -149,8 +165,12 @@ export default function App() {
           <ArticleDetail articleId={currentArticleId} openArticle={openArticle} goToCategory={goToCategory} />
         )}
 
-        {currentCategory === '信仰好物' && (
-          <ProductGallery />
+        {(currentCategory === '信仰好物' && !currentProductId) && (
+          <ProductGallery onSelectProduct={setCurrentProductId} />
+        )}
+
+        {(currentCategory === '信仰好物' && currentProductId) && (
+          <ProductDetail productId={currentProductId} onBack={() => { setCurrentProductId(null); window.scrollTo(0, 0); }} />
         )}
 
         {(currentCategory === '訂報') && (

@@ -1,4 +1,8 @@
-export default function ProductGallery() {
+interface ProductGalleryProps {
+  onSelectProduct: (id: number) => void;
+}
+
+export default function ProductGallery({ onSelectProduct }: ProductGalleryProps) {
   return (
     <div className="pt-[190px] md:pt-32 pb-24 min-h-screen flex flex-col bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20 mb-8 md:mb-12 flex justify-between items-end border-b border-theme-text/20 pb-6 md:pb-10 transition-colors">
@@ -13,7 +17,7 @@ export default function ProductGallery() {
       </div>
       
       <div className="gallery-track flex gap-6 md:gap-12 px-6 md:px-12 lg:px-20 pb-20 flex-grow items-center">
-          <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer">
+          <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer" onClick={() => onSelectProduct(1)}>
               <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
                   <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt="Product 1" />
                   <div className="absolute top-6 left-6 font-display text-4xl font-black text-theme-text/30 transition-colors">01</div>
@@ -39,7 +43,7 @@ export default function ProductGallery() {
               <button className="relative z-10 font-display font-bold uppercase tracking-widest text-[10px] border border-theme-text/30 px-6 py-3 text-theme-text hover:bg-theme-text hover:text-theme-bg transition">Get Tickets</button>
           </div>
 
-          <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer">
+          <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer" onClick={() => onSelectProduct(2)}>
               <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
                   <img src="https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt="Product 2" />
                   <div className="absolute top-6 left-6 font-display text-4xl font-black text-theme-text/30 transition-colors">02</div>
@@ -53,7 +57,7 @@ export default function ProductGallery() {
               </div>
           </div>
           
-          <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer">
+          <div className="gallery-item w-[85vw] md:w-[400px] flex-shrink-0 group cursor-pointer" onClick={() => onSelectProduct(3)}>
               <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
                   <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt="Product 3" />
                   <div className="absolute top-6 left-6 font-display text-4xl font-black text-theme-text/30 transition-colors">03</div>

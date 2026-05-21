@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "name": "Devotion Classic 經典靈修手記",
+    "englishName": "Devotion Classic",
+    "price": 450,
+    "imageUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
+    "description": "精選優質皮質裝幀的每日靈修日誌，翻開每一頁都是與神對話的安靜時刻。內含精心挑選的聖經金句與反思空間，讓信仰融入您的日常生活節奏。",
+    "specs": [
+      "尺寸：A5 規格 (148 x 210 mm)",
+      "裝幀：精裝仿皮封面，手工縫線與復古燙金工藝",
+      "內頁：100g 溫潤米白色無酸書寫紙，鋼筆書寫不透墨",
+      "頁數：365 頁，包含每日經文、默想筆記與祈禱紀錄空間",
+      "配件：附贈雙色精美絲質書籤帶及聖經金句皮革書籤"
+    ],
+    "details": "這本《Devotion Classic 經典靈修手記》不僅僅是一本筆記本，更是一份陪伴您屬靈成長的珍貴禮物。在繁忙的現代生活中，每天早晨或深夜，留出十分鐘的安靜時光。精選的皮質封面帶有細緻的紋理，溫潤的紙張觸感，讓您在書寫每一次領受與禱告時，都能感受到平靜與專注。適合洗禮、生日或新年，送給自己或親友，開啟每日親近神的旅程。",
+    "gallery": [
+      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=800"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Silver Cross 現代純銀十字架項鍊",
+    "englishName": "Silver Cross",
+    "price": 1280,
+    "imageUrl": "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800",
+    "description": "由資深工匠純手工打造的純銀十字架項鍊。簡約現代的幾何線條，完美融合了傳統信仰與現代美學，是日常配戴或恩典贈禮的精緻選擇。",
+    "specs": [
+      "材質：S925 國際標準純銀，抗過敏且持久光澤",
+      "尺寸：十字架墜子高度 30 mm，寬度 20 mm，厚度 2 mm",
+      "鍊長：45 cm + 5 cm 可調節延長鍊，完美貼合頸部線條",
+      "工藝：微拉絲抗氧化拋光處理，呈現霧面質感",
+      "包裝：經典琥珀金質感壓紋禮盒、專屬拭銀布、防潮密封袋及保固卡"
+    ],
+    "details": "這款《Silver Cross 現代純銀十字架項鍊》打破傳統十字架的沉重感，以簡約的線條刻畫信仰的厚度。經過工匠手工拉絲拋光，呈現低調不失高雅的霧面純銀質感。每一個棱角與比例都經過精心設計，不僅是一件時尚百搭的配飾，更是將救贖的恩典與應許貼近心房的信物。送給即將受洗、畢業或進入新階段的摯愛，傳遞永恆的守護與祝福。",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Grace Tote Bag 恩典環保帆布托特包",
+    "englishName": "Grace Tote Bag",
+    "price": 390,
+    "imageUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
+    "description": "採用厚實環保帆布製作的托特包，印有「恩典夠用」設計英文字樣。大容量設計，不論是放聖經、筆記本、水瓶或是日常雜物都無比合適，隨身攜帶溫馨的信仰提醒。",
+    "specs": [
+      "材質：12盎司高密度環保純棉帆布，耐磨好清洗",
+      "尺寸：寬度 35 cm x 高度 40 cm，肩帶垂直高度 28 cm，背帶適中",
+      "內口袋：貼心設計拉鍊式內口袋，安全收納手機、卡片與鑰匙",
+      "印刷工藝：精細絲網環保印製，耐洗不掉色、不起毛邊",
+      "承重能力：加固縫線工藝，安全承載高達 10 公斤，輕便堅固"
+    ],
+    "details": "這款《Grace Tote Bag 恩典環保帆布托特包》旨在將信仰帶入生活中的每個日常。厚實耐用的純棉帆布，手感天然踏實，溫潤的米褐色極具百搭文藝氣息。簡約的英文字體印著精美的屬靈宣告，是上教會、讀書會、或是出門採購時的完美良伴。大容量空間可輕鬆容納聖經、平板與保溫杯，實用與美學兼具，隨時隨地展現優雅生活態度。",
+    "gallery": [
+      "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800",
+      "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800"
+    ]
+  }
+]
