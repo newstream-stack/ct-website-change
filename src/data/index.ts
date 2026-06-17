@@ -6,7 +6,7 @@ import columnistsData from './columnists.json';
 import contentData from './content.json';
 import productsData from './products.json';
 
-export const NEWS_CATEGORIES = ['最新文章', '基督教論壇報', '人物見證', '專欄', '影響力聯盟', '生活情報', '信仰知識庫'];
+export const NEWS_CATEGORIES = ['最新文章', '基督教論壇報', '人物見證', '專欄', '影響力聯盟', '生活情報', '信仰知識庫', 'IAA召集令'];
 
 export const MOCK_NEWS: NewsItem[] = newsData as NewsItem[];
 
