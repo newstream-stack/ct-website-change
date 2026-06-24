@@ -70,6 +70,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [headerHeight, setHeaderHeight] = useState(170);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
+  const touchStartX = useRef(0);
 
   const panels: AccordionPanel[] = buildPanels(getNewsList());
 
@@ -315,7 +316,21 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             key={`news-${index}`}
             className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
             onClick={(e) => handlePanelClick(e, index, 'news', news.id)}
-            onTouchEnd={(e) => handlePanelClick(e, index, 'news', news.id)}
+            onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+            onTouchEnd={(e) => {
+              const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+              if (index === activeIndex && Math.abs(deltaX) > 40) {
+                if (e.cancelable) e.preventDefault();
+                e.stopPropagation();
+                if (deltaX < 0) {
+                  setCarouselIndex((p) => (p + 1) % NEWS_GROUP_SIZE);
+                } else {
+                  setCarouselIndex((p) => (p - 1 + NEWS_GROUP_SIZE) % NEWS_GROUP_SIZE);
+                }
+                return;
+              }
+              handlePanelClick(e, index, 'news', news.id);
+            }}
             style={{ touchAction: 'manipulation' }}
           >
             {group.map((item, i) => (
