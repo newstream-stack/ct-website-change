@@ -341,11 +341,23 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
             </div>
 
             {/* Submit */}
-            <button type="submit" className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3">
-              前往結帳
-              <span className="font-sans font-light text-sm opacity-80">(NT$ {formData.amount})</span>
-              <i className="fas fa-arrow-right ml-2" />
-            </button>
+            {(() => {
+              const isInstallment = formData.paymentType === 'installment';
+              const perPeriod = isInstallment
+                ? Math.ceil(formData.amount / (formData.installmentPeriod ?? 6))
+                : null;
+              return (
+                <button type="submit" className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3">
+                  前往結帳
+                  <span className="font-sans font-light text-sm opacity-80">
+                    {isInstallment
+                      ? `(NT$ ${perPeriod} × ${formData.installmentPeriod} 期)`
+                      : `(NT$ ${formData.amount})`}
+                  </span>
+                  <i className="fas fa-arrow-right ml-2" />
+                </button>
+              );
+            })()}
             <p className="text-center text-xs text-theme-text/40 mt-4">點擊結帳即表示您同意我們的服務條款與隱私權政策。</p>
 
             {/* Alternative Payment Methods */}
