@@ -372,7 +372,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
-                    <label className="text-sm font-bold text-theme-text/80">奉獻贈禮寄送地址 <span className="text-brand-red">*</span></label>
+                    <label className="text-sm font-bold text-theme-text/80">奉獻贈禮寄送地址 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
                     <button type="button" onClick={() => setFormData((prev) => ({ ...prev, gift: { address: prev.donor.address } }))} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white border border-brand-red/30 px-3 py-1 rounded-sm transition-colors">同聯絡地址</button>
                   </div>
                   <input type="text" placeholder="贈禮寄送地址" value={formData.gift.address} onChange={(e) => setFormData((prev) => ({ ...prev, gift: { address: e.target.value } }))} className={inputCls} />
