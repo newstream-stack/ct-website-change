@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Plan, DonationFormPayload } from '../types/donation';
 import { getPlan, submitDonation } from '../api/plans';
 
@@ -111,6 +111,8 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const [plan, setPlan] = useState<Plan | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [customAmountStr, setCustomAmountStr] = useState('');
+  const [perPeriodStr, setPerPeriodStr] = useState('');
+  const isEditingPerPeriod = useRef(false);
   const [formData, setFormData] = useState<DonationFormPayload>({ planId, ...DEFAULT_FORM });
 
   const updateForm = (updates: Partial<DonationFormPayload>) =>
@@ -121,6 +123,21 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
 
   const updateReceipt = (field: keyof DonationFormPayload['receipt'], value: string) =>
     setFormData((prev) => ({ ...prev, receipt: { ...prev.receipt, [field]: value } }));
+
+  // 同步每期金額顯示（非使用者直接編輯時才更新）
+  useEffect(() => {
+    if (isEditingPerPeriod.current) return;
+    if (formData.paymentType === 'installment' && formData.installmentPeriod) {
+      setPerPeriodStr(String(Math.ceil(formData.amount / formData.installmentPeriod)));
+    }
+  }, [formData.amount, formData.installmentPeriod, formData.paymentType]);
+
+  // 切換到定期定額時，若已選 Line Pay 則自動改為信用卡
+  useEffect(() => {
+    if (formData.paymentType === 'installment' && formData.paymentMethod === 'line-pay') {
+      updateForm({ paymentMethod: 'credit-card' });
+    }
+  }, [formData.paymentType]);
 
   // ── Data fetching ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -242,19 +259,49 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
 
               {/* Installment periods */}
               {formData.paymentType === 'installment' && (
-                <div className="mt-8 pt-4 border-t border-theme-text/10">
-                  <StepLabel step="2.1" label="選擇分期期數" />
-                  <div className="grid grid-cols-3 gap-3 md:gap-4">
-                    {INSTALLMENT_PERIODS.map((period) => (
-                      <SelectButton
-                        key={period}
-                        active={formData.installmentPeriod === period}
-                        onClick={() => updateForm({ installmentPeriod: period })}
-                        className="py-3 md:py-4 font-display text-lg"
-                      >
-                        {period} 期
-                      </SelectButton>
-                    ))}
+                <div className="mt-8 pt-4 border-t border-theme-text/10 space-y-6">
+                  <div>
+                    <StepLabel step="2.1" label="選擇分期期數" />
+                    <div className="grid grid-cols-3 gap-3 md:gap-4">
+                      {INSTALLMENT_PERIODS.map((period) => (
+                        <SelectButton
+                          key={period}
+                          active={formData.installmentPeriod === period}
+                          onClick={() => {
+                            isEditingPerPeriod.current = false;
+                            updateForm({ installmentPeriod: period });
+                          }}
+                          className="py-3 md:py-4 font-display text-lg"
+                        >
+                          {period} 期
+                        </SelectButton>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-theme-text/60 text-sm mb-3">每期扣款金額（可自行調整）</p>
+                    <div className="relative group">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 font-display font-bold text-theme-text/40 group-focus-within:text-brand-red transition-colors">NT$</span>
+                      <input
+                        type="number"
+                        min="1"
+                        value={perPeriodStr}
+                        onChange={(e) => {
+                          isEditingPerPeriod.current = true;
+                          setPerPeriodStr(e.target.value);
+                          const val = Number(e.target.value);
+                          if (val > 0) {
+                            updateForm({ amount: val * (formData.installmentPeriod ?? 6) });
+                          }
+                        }}
+                        onBlur={() => { isEditingPerPeriod.current = false; }}
+                        className="w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-4 pl-14 pr-4 text-lg font-display text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors"
+                      />
+                    </div>
+                    <p className="text-theme-text/40 text-xs mt-2">
+                      總金額：NT$ {formData.amount}（{formData.installmentPeriod} 期）
+                    </p>
                   </div>
                 </div>
               )}
@@ -271,13 +318,26 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                   sublabel="Credit Card"
                   icon={<i className={`fas fa-credit-card text-xl ${formData.paymentMethod === 'credit-card' ? 'text-white' : 'text-theme-text/30'}`} />}
                 />
-                <PaymentMethodCard
-                  active={formData.paymentMethod === 'line-pay'}
-                  onClick={() => updateForm({ paymentMethod: 'line-pay' })}
-                  label="Line Pay"
-                  sublabel="Mobile Payment"
-                  icon={<div className="w-8 h-8 rounded-full bg-[#00B900] text-white flex items-center justify-center"><i className="fab fa-line text-lg" /></div>}
-                />
+                {formData.paymentType === 'installment' ? (
+                  <div className="border border-theme-text/10 p-4 rounded-sm flex items-center gap-4 opacity-40 cursor-not-allowed select-none">
+                    <div className="w-5 h-5 rounded-full border-2 border-theme-text/30 flex-shrink-0" />
+                    <div className="flex flex-col">
+                      <span className="font-bold text-theme-text">Line Pay</span>
+                      <span className="text-xs text-theme-text/50">定期定額不支援</span>
+                    </div>
+                    <div className="ml-auto">
+                      <div className="w-8 h-8 rounded-full bg-[#00B900]/40 text-white flex items-center justify-center"><i className="fab fa-line text-lg" /></div>
+                    </div>
+                  </div>
+                ) : (
+                  <PaymentMethodCard
+                    active={formData.paymentMethod === 'line-pay'}
+                    onClick={() => updateForm({ paymentMethod: 'line-pay' })}
+                    label="Line Pay"
+                    sublabel="Mobile Payment"
+                    icon={<div className="w-8 h-8 rounded-full bg-[#00B900] text-white flex items-center justify-center"><i className="fab fa-line text-lg" /></div>}
+                  />
+                )}
               </div>
             </div>
 
