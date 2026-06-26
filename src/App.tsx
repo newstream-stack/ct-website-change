@@ -191,11 +191,7 @@ export default function App() {
 
   return (
     <div className="font-sans relative">
-      <SplashAd
-        desktopImageUrl="/splash-desktop.svg"
-        mobileImageUrl="/splash-mobile.svg"
-        linkUrl="https://www.ct.org.tw"
-      />
+      <SplashAd linkUrl="https://www.ct.org.tw" />
       <Header
         user={user}
         goToCategory={goToCategory} 
