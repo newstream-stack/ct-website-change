@@ -37,7 +37,7 @@ export default function Header({
       
       <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
         <div className="pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
-          <img src="/LOGO.png" alt="IMPACT 論壇報" className="h-7 md:h-10 w-auto object-contain dark:invert" />
+          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="h-7 md:h-10 w-auto object-contain" />
         </div>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
