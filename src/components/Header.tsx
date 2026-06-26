@@ -36,10 +36,8 @@ export default function Header({
       )}
       
       <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
-        <div className="pointer-events-auto cursor-pointer flex items-center gap-4" onClick={() => goToCategory('首頁')}>
-          <span className="font-display text-2xl md:text-4xl font-bold uppercase tracking-widest leading-none">IMPACT</span>
-          <div className="w-px h-6 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
-          <span className="font-serif text-[10px] md:text-sm font-bold tracking-[0.2em] md:tracking-[0.3em] text-brand-red hidden md:block mt-1">論壇報</span>
+        <div className="pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
+          <img src="/LOGO.png" alt="IMPACT 論壇報" className="h-7 md:h-10 w-auto object-contain dark:invert" />
         </div>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
