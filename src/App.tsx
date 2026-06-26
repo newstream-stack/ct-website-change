@@ -21,6 +21,7 @@ import EventRegistrationPage from './pages/EventRegistrationPage';
 import ColumnPage from './components/ColumnPage';
 import ImpactAlliancePage from './pages/ImpactAlliancePage';
 import SplashAd from './components/SplashAd';
+import Footer from './components/Footer';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -265,6 +266,8 @@ export default function App() {
           <EventRegistrationPage />
         )}
       </main>
+
+      <Footer />
 
       {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名'].includes(currentCategory) && (
         <GlobalBottomAd goToCategory={goToCategory} />
