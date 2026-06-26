@@ -25,15 +25,15 @@ const CONTACT_SECTIONS = [
 const CONTACT_METHODS = [
   {
     label: '報紙新聞來稿',
-    value: 'ct@ct.org.tw',
+    value: 'news@ct.org.tw',
     icon: 'fa-envelope',
-    href: 'mailto:ct@ct.org.tw',
+    href: 'mailto:news@ct.org.tw',
   },
   {
     label: '網路新聞來稿',
-    value: 'web@ct.org.tw',
+    value: 'enews@ct.org.tw',
     icon: 'fa-globe',
-    href: 'mailto:web@ct.org.tw',
+    href: 'mailto:enews@ct.org.tw',
   },
   {
     label: '傳真',
