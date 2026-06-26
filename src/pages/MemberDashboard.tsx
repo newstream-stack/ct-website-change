@@ -22,6 +22,12 @@ const TABS = [
 
 type TabId = typeof TABS[number]['id'];
 
+type DashboardStat = {
+  value: number;
+  label: string;
+  tab: TabId;
+};
+
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 function PaymentModal({ onClose }: { onClose: () => void }) {
@@ -278,6 +284,12 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
 
   if (!member || !stats) return null;
   const { subscription } = member;
+  const dashboardStats: DashboardStat[] = [
+    { value: stats.savedArticles, label: '收藏文章', tab: 'saved' },
+    { value: stats.attendedEvents, label: '參加活動', tab: 'overview' },
+    { value: stats.donationCount, label: '奉獻紀錄', tab: 'donations' },
+    { value: orders.reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0), label: '已購商品', tab: 'orders' },
+  ];
 
   return (
     <div className="pt-[140px] md:pt-[180px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
@@ -355,27 +367,21 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                  {[
-                    { value: stats.savedArticles, label: '收藏文章', tab: 'saved' },
-                    { value: stats.attendedEvents, label: '參加活動', tab: 'overview' },
-                    { value: stats.donationCount, label: '奉獻紀錄', tab: 'donations' },
-                    { value: orders.reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0), label: '已購商品', tab: 'orders' },
-                  ].map(({ value, label, tab }) => {
-                    const isOverview = tab === 'overview';
-                    return (
-                      <button 
-                        key={label}
-                        disabled={isOverview}
-                        onClick={() => !isOverview && setActiveTab(tab as any)}
-                        className={`bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 flex flex-col justify-center items-center text-center transition-all ${
-                          isOverview ? 'cursor-default' : 'hover:bg-theme-text/10 hover:border-brand-red/30 cursor-pointer active:scale-95'
-                        }`}
-                      >
-                        <span className="text-3xl font-display font-black text-brand-red mb-2">{value}</span>
-                        <span className="text-xs md:text-sm font-bold text-theme-text/70 tracking-widest">{label}</span>
-                      </button>
-                    );
-                  })}
+                  {dashboardStats.map(({ value, label, tab }) => (
+                    <button
+                      key={label}
+                      disabled={tab === 'overview'}
+                      onClick={() => {
+                        if (tab !== 'overview') setActiveTab(tab);
+                      }}
+                      className={`bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 flex flex-col justify-center items-center text-center transition-all ${
+                        tab === 'overview' ? 'cursor-default' : 'hover:bg-theme-text/10 hover:border-brand-red/30 cursor-pointer active:scale-95'
+                      }`}
+                    >
+                      <span className="text-3xl font-display font-black text-brand-red mb-2">{value}</span>
+                      <span className="text-xs md:text-sm font-bold text-theme-text/70 tracking-widest">{label}</span>
+                    </button>
+                  ))}
                 </div>
 
                 {/* Recent saved */}
@@ -388,8 +394,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   </div>
                   <div className="flex flex-col gap-4">
                     {savedArticles.map((article) => (
-                      <div key={article.id} className="flex gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
-                        <div className="w-24 h-24 sm:w-32 sm:h-24 flex-shrink-0 overflow-hidden rounded-lg bg-theme-text/10">
+                      <div key={article.id} className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
+                        <div className="w-full sm:w-48 md:w-56 aspect-[832/470] flex-shrink-0 overflow-hidden rounded-lg bg-theme-text/10">
                           <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transition-all duration-500" />
                         </div>
                         <div className="flex flex-col justify-center">
@@ -477,7 +483,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   {savedArticles.map((article, i) => (
                     <div key={i} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
-                      <div className="h-40 overflow-hidden relative">
+                      <div className="aspect-[832/470] overflow-hidden relative">
                         <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         <button className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 backdrop-blur rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10" onClick={(e) => e.stopPropagation()}>
                           <i className="fas fa-bookmark text-sm" />
