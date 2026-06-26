@@ -19,7 +19,11 @@ const SOCIALS = [
   { label: 'YouTube', icon: 'fa-youtube', href: '#' },
 ];
 
-export default function Footer() {
+interface FooterProps {
+  goToCategory: (cat: string) => void;
+}
+
+export default function Footer({ goToCategory }: FooterProps) {
   return (
     <footer className="bg-[#111111] text-white">
       {/* 主體 */}
@@ -62,9 +66,12 @@ export default function Footer() {
                 <ul className="flex flex-col gap-2.5">
                   {links.map((link) => (
                     <li key={link}>
-                      <a href="#" className="text-white/55 text-xs hover:text-white transition-colors leading-none">
+                      <button
+                        onClick={() => link === '關於我們' ? goToCategory('關於我們') : undefined}
+                        className="text-white/55 text-xs hover:text-white transition-colors leading-none text-left"
+                      >
                         {link}
-                      </a>
+                      </button>
                     </li>
                   ))}
                 </ul>
