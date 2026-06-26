@@ -206,7 +206,6 @@ export default function App() {
         goToCategory={goToCategory} 
         toggleTheme={toggleTheme} 
         isDarkMode={isDarkMode} 
-        setIsMenuOpen={setIsMenuOpen} 
         showCategoryBar={showCategoryBar} 
         cartItems={cartItems}
         onOpenCart={() => setIsCartOpen(true)}

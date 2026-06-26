@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface MembershipPageProps {
   goToCategory: (cat: string, options?: { register?: boolean }) => void;
   user: { name: string; email: string } | null;
@@ -71,7 +69,7 @@ export default function MembershipPage({ goToCategory, user }: MembershipPagePro
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-8">
-          {plans.map((plan, index) => (
+          {plans.map((plan) => (
             <div 
               key={plan.id}
               className={`relative bg-theme-bg/60 backdrop-blur-xl border border-theme-text/10 rounded-2xl flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-theme-text/5 ${plan.isPopular ? 'md:-translate-y-4 md:shadow-2xl md:border-brand-red/50' : ''}`}

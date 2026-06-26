@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Product } from '../types';
 import { MOCK_PRODUCTS } from '../data/index';
 
@@ -12,7 +12,6 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
   const [product, setProduct] = useState<Product | null>(null);
   const [activeImage, setActiveImage] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
-  const [selectedSpec, setSelectedSpec] = useState<string>('');
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [addedSuccess, setAddedSuccess] = useState<boolean>(false);
 
@@ -21,9 +20,6 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
     if (foundProduct) {
       setProduct(foundProduct);
       setActiveImage(foundProduct.imageUrl);
-      if (foundProduct.specs.length > 0) {
-        setSelectedSpec(foundProduct.specs[0]);
-      }
     }
   }, [productId]);
 

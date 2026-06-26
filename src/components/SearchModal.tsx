@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MOCK_NEWS, MOCK_PRODUCTS } from '../data/index';
 import { NewsItem, Product } from '../types';
 

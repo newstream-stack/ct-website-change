@@ -15,13 +15,6 @@ export function getNewsByCategory(category: string): NewsItem[] {
   return MOCK_NEWS.filter((n) => n.category === category);
 }
 
-// GET /api/news?category={category}&subCategory={subCategory}
-export function getNewsFiltered(category: string, subCategory?: string): NewsItem[] {
-  let items = MOCK_NEWS.filter((n) => n.category === category);
-  if (subCategory) items = items.filter((n) => n.subCategory === subCategory);
-  return items;
-}
-
 // GET /api/news/{id}
 export function getArticle(id: number): NewsItem | undefined {
   return MOCK_NEWS.find((n) => n.id === id);

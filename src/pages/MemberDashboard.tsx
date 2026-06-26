@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import ReceiptModal from '../components/ReceiptModal';
 import { getMe, getMemberStats, getDonations, getBillingHistory, updateMe } from '../api/member';
 import { getNewsList } from '../api/news';
@@ -76,22 +77,22 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
     window.print();
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in text-black">
+  const modal = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in text-black">
       <div 
         className="absolute inset-0 cursor-pointer" 
         onClick={onClose}
       ></div>
       
-      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col h-auto z-10" style={{ maxHeight: '90vh' }}>
+      <div className="relative w-full max-w-4xl h-[calc(100dvh-2rem)] sm:h-[calc(100dvh-3rem)] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10">
         
         {/* Action Bar (Not printed) */}
-        <div className="bg-gray-50 px-4 md:px-6 py-4 border-b border-gray-200 print:hidden flex-none w-full z-30 relative flex justify-between items-center" style={{ height: '64px' }}>
+        <div className="sticky top-0 bg-gray-50 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 print:hidden flex-none w-full z-30 flex justify-between items-center gap-3">
           <h3 className="font-bold text-gray-700 font-sans text-sm md:text-base m-0">電子出貨單與收據</h3>
-          <div className="flex gap-2 md:gap-4 items-center">
+          <div className="flex gap-2 md:gap-3 items-center shrink-0">
             <button 
               onClick={handlePrint}
-              className="bg-brand-red text-white h-9 md:h-10 px-4 md:px-5 rounded-lg text-xs md:text-sm font-bold tracking-widest hover:bg-[#b31b1b] transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer"
+              className="bg-brand-red text-white h-9 md:h-10 px-4 md:px-5 rounded-lg text-xs md:text-sm font-bold tracking-widest hover:bg-[#b31b1b] transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
             >
               <i className="fas fa-download"></i> <span>下載 / 列印</span>
             </button>
@@ -105,22 +106,28 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
         </div>
 
         {/* Printable Content */}
-        <div className="flex-1 overflow-x-hidden overflow-y-auto p-6 sm:p-10 md:p-12 bg-white print:overflow-visible print:p-0" id="printable-order-receipt" style={{ minHeight: '0' }}>
+        <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain p-5 sm:p-8 md:p-12 bg-white print:overflow-visible print:p-0" id="printable-order-receipt">
           
           {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-brand-red pb-4 mb-6 gap-4">
-            <div className="flex items-center gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] items-start lg:items-center border-b-2 border-brand-red pb-4 mb-6 gap-4 lg:gap-6">
+            <div className="min-w-0 flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="h-10 px-3 bg-brand-red text-white font-black font-serif flex items-center justify-center text-base rounded-lg tracking-widest">
                 IMPACT
               </div>
-              <div className="text-left">
-                <h2 className="text-base sm:text-lg font-serif font-black tracking-widest text-brand-red mb-0.5">財團法人基督教論壇基金會</h2>
+              <div className="text-left min-w-0">
+                <h2 className="text-base sm:text-lg font-serif font-black tracking-widest text-brand-red mb-0.5 leading-snug break-words">財團法人基督教論壇基金會</h2>
                 <p className="text-[10px] sm:text-xs text-gray-500 tracking-widest uppercase">Product Purchase Invoice 購物收據</p>
               </div>
             </div>
-            <div className="text-left sm:text-right text-xs font-sans text-gray-600 space-y-0.5">
-              <p><span className="font-bold text-gray-400 mr-2 uppercase tracking-widest">Order No.</span> {order.orderNumber}</p>
-              <p><span className="font-bold text-gray-400 mr-2 uppercase tracking-widest">Date</span> {order.date}</p>
+            <div className="w-full lg:w-auto min-w-0 text-xs font-sans text-gray-600 space-y-0.5">
+              <p className="grid grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_auto] gap-x-2 items-baseline lg:justify-end">
+                <span className="font-bold text-gray-400 uppercase tracking-widest">Order No.</span>
+                <span className="break-all lg:text-right">{order.orderNumber}</span>
+              </p>
+              <p className="grid grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_auto] gap-x-2 items-baseline lg:justify-end">
+                <span className="font-bold text-gray-400 uppercase tracking-widest">Date</span>
+                <span className="break-all lg:text-right">{order.date}</span>
+              </p>
             </div>
           </div>
 
@@ -154,8 +161,8 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
           </div>
 
           {/* Product Items Table */}
-          <div className="border border-gray-200 rounded-xl overflow-hidden mb-6 text-xs sm:text-sm">
-            <table className="w-full text-left border-collapse">
+          <div className="border border-gray-200 rounded-xl overflow-x-auto mb-6 text-xs sm:text-sm">
+            <table className="w-full min-w-[560px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200 text-[10px] sm:text-xs text-gray-400 font-bold uppercase">
                   <th className="px-4 py-3">商品項目 Item</th>
@@ -181,25 +188,25 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
           </div>
 
           {/* Total Calculation */}
-          <div className="flex flex-col items-end gap-2 text-xs sm:text-sm mb-8 pr-4">
-            <div className="flex justify-between w-48 text-gray-500">
+          <div className="flex flex-col items-stretch sm:items-end gap-2 text-xs sm:text-sm mb-8 sm:pr-4">
+            <div className="flex justify-between w-full sm:w-48 text-gray-500">
               <span>小計：</span>
               <span className="font-display font-medium">NT$ {order.subtotal.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between w-48 text-gray-500">
+            <div className="flex justify-between w-full sm:w-48 text-gray-500">
               <span>運費：</span>
               <span className="font-display font-medium">
                 {order.shippingFee === 0 ? '免運費' : `NT$ ${order.shippingFee}`}
               </span>
             </div>
-            <div className="flex justify-between w-48 font-bold text-brand-red border-t border-gray-200 pt-2 text-base">
+            <div className="flex justify-between w-full sm:w-48 font-bold text-brand-red border-t border-gray-200 pt-2 text-base">
               <span>實付總額：</span>
               <span className="font-display font-black">NT$ {order.total.toLocaleString()}</span>
             </div>
           </div>
 
           {/* Footer & Stamp */}
-          <div className="flex justify-between items-end mt-8 pt-6 border-t border-gray-200 relative">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mt-8 pt-6 border-t border-gray-200 relative">
             <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed max-w-sm font-sans z-10 w-full sm:w-auto text-left">
               <p className="font-bold text-gray-700 mb-1 tracking-widest">注意事項：</p>
               <ol className="list-decimal pl-4 space-y-1">
@@ -207,7 +214,7 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
                 <li>如需退換貨，請於收到商品 7 日鑑賞期內保持商品完整並聯絡客服。</li>
               </ol>
             </div>
-            <div className="opacity-40 sm:opacity-100 pointer-events-none z-0">
+            <div className="self-end pointer-events-none z-0">
               <div className="w-24 h-24 rounded-full border-4 border-red-600/30 flex items-center justify-center transform rotate-12 bg-white">
                 <div className="w-20 h-20 rounded-full border border-red-600/30 flex flex-col items-center justify-center text-red-600/50">
                   <span className="font-serif font-black tracking-widest text-xs">IMPACT</span>
@@ -234,14 +241,16 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
             left: 0;
             top: 0;
             width: 100%;
-            height: 100vh;
-            padding: 2cm !important;
+            min-height: 100vh;
+            padding: 1.5cm !important;
             box-sizing: border-box;
           }
         }
       `}} />
     </div>
   );
+
+  return createPortal(modal, document.body);
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────

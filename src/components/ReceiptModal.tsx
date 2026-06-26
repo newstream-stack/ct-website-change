@@ -1,4 +1,4 @@
-import React from 'react';
+import { createPortal } from 'react-dom';
 
 interface ReceiptData {
   id: string;
@@ -20,19 +20,19 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
     window.print();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+  const modal = (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div 
         className="absolute inset-0 cursor-pointer" 
         onClick={onClose}
       ></div>
       
-      <div className="relative w-full max-w-2xl bg-white text-black rounded-2xl shadow-2xl overflow-hidden flex flex-col h-auto" style={{ maxHeight: '90vh' }}>
+      <div className="relative w-full max-w-4xl h-[calc(100dvh-2rem)] sm:h-[calc(100dvh-3rem)] bg-white text-black rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         
         {/* Receipt Action Bar (Not printed) */}
-        <div className="bg-gray-50 px-4 md:px-6 py-4 border-b border-gray-200 print:hidden flex-none w-full z-30 relative" style={{ display: 'flex', height: '64px', minHeight: '64px', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="sticky top-0 bg-gray-50 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 print:hidden flex-none w-full z-30 flex items-center justify-between gap-3">
           <h3 className="font-bold text-gray-700 font-sans text-sm md:text-base m-0">電子收據預覽</h3>
-          <div className="flex gap-2 md:gap-4 items-center">
+          <div className="flex gap-2 md:gap-3 items-center shrink-0">
             <button 
               onClick={handlePrint}
               className="bg-brand-red text-white h-9 md:h-10 px-4 md:px-5 rounded-lg text-xs md:text-sm font-bold tracking-widest hover:bg-[#b31b1b] transition-all flex items-center gap-2 shadow-md whitespace-nowrap active:scale-95"
@@ -49,29 +49,35 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
         </div>
 
         {/* Printable Receipt Content */}
-        <div className="flex-1 overflow-x-hidden overflow-y-auto p-6 sm:p-10 md:p-14 bg-white print:overflow-visible print:p-0" id="printable-receipt" style={{ minHeight: '0' }}>
+        <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain p-5 sm:p-8 md:p-12 bg-white print:overflow-visible print:p-0" id="printable-receipt">
           
           {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-brand-red pb-4 md:pb-6 mb-6 md:mb-8 gap-4 md:gap-2">
-            <div className="flex items-center gap-2 md:gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] items-start lg:items-center border-b-2 border-brand-red pb-4 md:pb-6 mb-6 md:mb-8 gap-4 lg:gap-6">
+            <div className="min-w-0 flex flex-col sm:flex-row sm:items-center gap-2 md:gap-3">
               <div className="h-8 md:h-12 px-2.5 md:px-4 bg-brand-red text-white font-black font-serif flex items-center justify-center text-sm md:text-xl rounded-lg tracking-widest flex-shrink-0">
                 IMPACT
               </div>
-              <div className="flex-shrink-1">
-                <h2 className="text-base md:text-xl font-serif font-black tracking-widest text-brand-red mb-0.5 md:mb-1 whitespace-normal md:whitespace-nowrap">財團法人基督教論壇基金會</h2>
+              <div className="min-w-0">
+                <h2 className="text-base md:text-xl font-serif font-black tracking-widest text-brand-red mb-0.5 md:mb-1 leading-snug break-words">財團法人基督教論壇基金會</h2>
                 <p className="text-[10px] md:text-xs text-gray-500 tracking-widest uppercase">Donation Receipt 奉獻收據</p>
               </div>
             </div>
-            <div className="text-left md:text-right text-[10px] md:text-sm font-sans text-gray-600 space-y-1 flex-shrink-0 whitespace-nowrap">
-              <p><span className="font-bold text-gray-400 mr-2 uppercase tracking-widest">Receipt No.</span> R-{receipt.id}</p>
-              <p><span className="font-bold text-gray-400 mr-2 uppercase tracking-widest">Date</span> {receipt.date}</p>
+            <div className="w-full lg:w-auto min-w-0 text-[10px] md:text-sm font-sans text-gray-600 space-y-1">
+              <p className="grid grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_auto] gap-x-2 items-baseline lg:justify-end">
+                <span className="font-bold text-gray-400 uppercase tracking-widest">Receipt No.</span>
+                <span className="break-all lg:text-right">R-{receipt.id}</span>
+              </p>
+              <p className="grid grid-cols-[auto_minmax(0,1fr)] lg:grid-cols-[auto_auto] gap-x-2 items-baseline lg:justify-end">
+                <span className="font-bold text-gray-400 uppercase tracking-widest">Date</span>
+                <span className="break-all lg:text-right">{receipt.date}</span>
+              </p>
             </div>
           </div>
 
           {/* Receipt Info */}
-          <h1 className="text-center font-serif text-3xl font-bold tracking-[0.2em] mb-12">電子奉獻收據</h1>
+          <h1 className="text-center font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.16em] sm:tracking-[0.2em] mb-8 md:mb-12">電子奉獻收據</h1>
 
-          <div className="bg-gray-50 border border-gray-100 rounded-xl p-5 sm:p-8 mb-4 sm:mb-8">
+          <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-5 gap-x-12 relative">
                <div className="space-y-1">
                  <p className="text-[10px] sm:text-xs font-bold text-gray-400 tracking-widest uppercase">奉獻者姓名 Name</p>
@@ -101,14 +107,14 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
                  <p className="text-[10px] sm:text-xs text-gray-400 tracking-widest uppercase mb-0.5 sm:mb-1">奉獻總金額 Total Amount</p>
                  <p className="text-[10px] sm:text-sm text-gray-300">新台幣 NTD</p>
                </div>
-               <div className="text-3xl sm:text-5xl font-display font-black tracking-tight self-end sm:self-auto">
+               <div className="text-3xl sm:text-4xl md:text-5xl font-display font-black tracking-tight self-end sm:self-auto text-right break-all">
                  {receipt.amount}
                </div>
             </div>
           </div>
 
           {/* Footer & Stamp */}
-          <div className="flex justify-between items-end mt-8 md:mt-12 pt-6 border-t border-gray-200 relative pb-16 sm:pb-0">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 mt-8 md:mt-12 pt-6 border-t border-gray-200 relative">
              <div className="text-[10px] sm:text-xs text-gray-500 leading-relaxed max-w-sm font-sans z-10 w-full sm:w-auto">
                <p className="font-bold text-gray-700 mb-1 tracking-widest">注意事項：</p>
                <ol className="list-decimal pl-4 space-y-1">
@@ -116,7 +122,7 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
                  <li>如對本收據內容有任何疑問，請聯繫本會客服中心。</li>
                </ol>
              </div>
-             <div className="absolute sm:relative bottom-0 right-[-10px] sm:right-auto opacity-30 sm:opacity-100 pointer-events-none z-0">
+             <div className="self-end pointer-events-none z-0">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-red-600/30 flex items-center justify-center transform rotate-12 bg-white">
                   <div className="w-20 h-20 sm:w-28 sm:h-28 rounded-full border border-red-600/30 flex flex-col items-center justify-center text-red-600/50">
                     <span className="font-serif font-black tracking-[0.2em] sm:tracking-widest text-xs sm:text-base">IMPACT</span>
@@ -143,12 +149,14 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
             left: 0;
             top: 0;
             width: 100%;
-            height: 100vh;
-            padding: 2cm !important;
+            min-height: 100vh;
+            padding: 1.5cm !important;
             box-sizing: border-box;
           }
         }
       `}} />
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getNewsByCategory } from '../api/news';
 import { getColumnists } from '../api/columnists';
-import { NewsItem, Columnist } from '../types';
 
 interface ColumnPageProps {
   openArticle: (id: number) => void;

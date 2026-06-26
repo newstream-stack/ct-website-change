@@ -2,11 +2,6 @@
 import type { Plan, DonationFormPayload } from '../types/donation';
 import { MOCK_PLANS } from '../mocks/donationPlans';
 
-// GET /api/plans
-export async function getPlans(): Promise<Plan[]> {
-  return MOCK_PLANS;
-}
-
 // GET /api/plans/{id}
 export async function getPlan(id: number): Promise<Plan | undefined> {
   return MOCK_PLANS.find((p) => p.id === id);

@@ -58,9 +58,3 @@ export async function updateMe(data: Partial<Member>): Promise<void> {
   }
 }
 
-// PUT /api/me/subscription/payment
-// Body: { paymentMethod: string }
-export async function updatePaymentMethod(paymentMethod: string): Promise<void> {
-  console.log('[mock] updatePaymentMethod', paymentMethod);
-}
-

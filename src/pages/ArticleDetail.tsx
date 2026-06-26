@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { getArticle, getRecommended, getArticleContent, getNewsList } from '../api/news';
 import { getRandomAd, getAd } from '../api/ads';
-import { NewsItem, AdItem } from '../types';
 import InlineArticleBanner from '../components/InlineArticleBanner';
 import StickySidebarAd from '../components/StickySidebarAd';
 

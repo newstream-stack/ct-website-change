@@ -7,7 +7,6 @@ interface HeaderProps {
   goToCategory: (cat: string, options?: { register?: boolean }) => void;
   toggleTheme: () => void;
   isDarkMode: boolean;
-  setIsMenuOpen: (isOpen: boolean) => void;
   showCategoryBar: boolean;
   cartItems: CartItem[];
   onOpenCart: () => void;
@@ -19,7 +18,6 @@ export default function Header({
   goToCategory, 
   toggleTheme, 
   isDarkMode, 
-  setIsMenuOpen, 
   showCategoryBar,
   cartItems,
   onOpenCart,

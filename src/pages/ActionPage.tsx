@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PlanCard from '../components/PlanCard';
 import { ActionPlan } from '../types';
 import { useI18n } from '../i18n/I18nContext';

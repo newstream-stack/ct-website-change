@@ -1,6 +1,5 @@
 import { useState, useLayoutEffect, useRef, MouseEvent, TouchEvent } from 'react';
 import { getNewsList } from '../api/news';
-import { getAd } from '../api/ads';
 import { getFeaturedVideos, getAccordionAd, FeaturedVideo, FeaturedAd } from '../api/home';
 import { NewsItem } from '../types';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
