@@ -33,10 +33,8 @@ export default function Footer({ goToCategory }: FooterProps) {
           {/* 左：品牌區 */}
           <div className="flex flex-col gap-6 max-w-xs">
             <div>
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="font-display text-2xl font-bold tracking-widest text-white">IMPACT</span>
-                <span className="w-px h-4 bg-brand-red inline-block mx-1"></span>
-                <span className="font-serif text-base text-brand-red tracking-wider">論壇報</span>
+              <div className="mb-2">
+                <img src="/LOGO.png" alt="IMPACT 論壇報" className="h-8 w-auto object-contain invert" />
               </div>
               <p className="text-white/40 text-xs leading-relaxed">
                 基督教論壇報，以信仰的眼光看見世界，<br/>用文字陪伴每一個在路上的靈魂。
