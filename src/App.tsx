@@ -21,6 +21,7 @@ import EventRegistrationPage from './pages/EventRegistrationPage';
 import ColumnPage from './components/ColumnPage';
 import ImpactAlliancePage from './pages/ImpactAlliancePage';
 import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 
@@ -270,11 +271,15 @@ export default function App() {
         {currentCategory === '關於我們' && (
           <AboutPage />
         )}
+
+        {currentCategory === '新聞連絡' && (
+          <ContactPage />
+        )}
       </main>
 
       <Footer goToCategory={goToCategory} />
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們'].includes(currentCategory) && (
+      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡'].includes(currentCategory) && (
         <GlobalBottomAd goToCategory={goToCategory} />
       )}
 
