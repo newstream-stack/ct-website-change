@@ -70,6 +70,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
 
   const panels: AccordionPanel[] = buildPanels(getNewsList());
 
@@ -315,9 +316,15 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             key={`news-${index}`}
             className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
             onClick={(e) => handlePanelClick(e, index, 'news', news.id)}
-            onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+            onTouchStart={(e) => {
+              touchStartX.current = e.touches[0].clientX;
+              touchStartY.current = e.touches[0].clientY;
+            }}
             onTouchEnd={(e) => {
               const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+              const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+              // 垂直滑動超過 12px 視為滾動，不觸發點擊
+              if (Math.abs(deltaY) > 12) return;
               if (index === activeIndex && Math.abs(deltaX) > 40) {
                 if (e.cancelable) e.preventDefault();
                 e.stopPropagation();
