@@ -14,9 +14,9 @@ const LINK_GROUPS = [
 ];
 
 const SOCIALS = [
-  { label: 'Instagram', icon: 'fa-instagram', href: '#' },
-  { label: 'Facebook', icon: 'fa-facebook-f', href: '#' },
-  { label: 'YouTube', icon: 'fa-youtube', href: '#' },
+  { label: 'Instagram', icon: 'fa-instagram', href: 'https://www.instagram.com/christian_tribune/' },
+  { label: 'Facebook', icon: 'fa-facebook-f', href: 'https://www.facebook.com/ctnewsfans/' },
+  { label: 'YouTube', icon: 'fa-youtube', href: 'https://www.youtube.com/@ImpactChristianTribune' },
 ];
 
 interface FooterProps {
@@ -50,6 +50,8 @@ export default function Footer({ goToCategory }: FooterProps) {
                   key={label}
                   href={href}
                   aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:border-brand-red hover:text-brand-red transition-colors"
                 >
                   <i className={`fab ${icon} text-sm`}></i>
