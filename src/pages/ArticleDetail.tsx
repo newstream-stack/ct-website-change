@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import DOMPurify from 'dompurify';
 import { getArticle, getRecommended, getArticleContent, getNewsList } from '../api/news';
 import { getRandomAd, getAd } from '../api/ads';
 import InlineArticleBanner from '../components/InlineArticleBanner';
@@ -15,6 +16,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
     const recommendedNews = getRecommended(articleId);
 
     const [randomAd] = useState(() => getRandomAd() ?? null);
+    const [copyToast, setCopyToast] = useState(false);
 
     const { part1: dummyContentPart1, part2: dummyContentPart2 } = getArticleContent();
     let firstPart = dummyContentPart1;
@@ -38,15 +40,20 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                 window.open(`https://social-plugins.line.me/lineit/share?url=${url}`, '_blank', 'width=600,height=400');
                 break;
             case 'ig':
-                // Instagram 不支援直接網頁分享，改為複製網址
                 navigator.clipboard.writeText(window.location.href);
-                alert('網址已複製，快去 IG 貼給朋友吧！');
+                setCopyToast(true);
+                setTimeout(() => setCopyToast(false), 2500);
                 break;
         }
     };
 
     return (
         <>
+            {copyToast && (
+                <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-theme-text text-theme-bg text-xs font-bold tracking-widest px-5 py-3 rounded-full shadow-lg pointer-events-none">
+                    網址已複製，快去 IG 分享！
+                </div>
+            )}
             <div className="relative w-full h-[65svh] md:h-[70svh] bg-theme-text/5 overflow-hidden border-b border-theme-text/10 transition-colors duration-500">
                 <img src={article.imageUrl} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt="Cover" />
                 <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 md:p-12 lg:p-20 pb-10 md:pb-16 bg-gradient-to-t from-theme-bg via-theme-bg/90 to-theme-bg/30 transition-colors duration-500">
@@ -103,21 +110,21 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                         </div>
 
                         {article.content ? (
-                            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
                         ) : (
                             <>
-                                <div dangerouslySetInnerHTML={{ __html: firstPart }} />
+                                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(firstPart) }} />
 
                                 {randomAd && <InlineArticleBanner ad={randomAd} />}
 
-                                {secondPart && <div dangerouslySetInnerHTML={{ __html: secondPart }} />}
+                                {secondPart && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(secondPart) }} />}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
                                     <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
                                     <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
                                 </div>
 
-                                <div dangerouslySetInnerHTML={{ __html: dummyContentPart2 }} />
+                                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dummyContentPart2) }} />
                             </>
                         )}
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { getNewsByCategory } from '../api/news';
 import { getAd } from '../api/ads';
 
@@ -229,7 +229,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
       <div className="flex flex-col border-t border-theme-text/10 transition-colors">
         {filteredNews.length > 0 ? (
           filteredNews.map((news, index) => (
-            <React.Fragment key={news.id}>
+            <Fragment key={news.id}>
               {index === 2 && getAd('infeed') && (
                 <div className="py-6 md:py-8 border-b border-theme-text/10">
                   <NativeAdCard ad={getAd('infeed')!} />
@@ -252,7 +252,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                   </div>
                 </div>
               </div>
-            </React.Fragment>
+            </Fragment>
           ))
         ) : (
           <div className="py-20 text-center">

@@ -25,6 +25,7 @@ export default function CartDrawer({
   const [address, setAddress] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'credit-card' | 'line-pay'>('credit-card');
   const [orderNumber, setOrderNumber] = useState('');
+  const [formError, setFormError] = useState('');
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const shippingFee = subtotal > 1000 || subtotal === 0 ? 0 : 80;
@@ -33,9 +34,10 @@ export default function CartDrawer({
   const handleCheckoutSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone || !email || !address) {
-      alert('請填寫所有必填欄位');
+      setFormError('請填寫所有必填欄位');
       return;
     }
+    setFormError('');
     
     // Generate random order number
     const rand = Math.floor(1000 + Math.random() * 9000);
@@ -361,6 +363,13 @@ export default function CartDrawer({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
+            )}
+
+            {step === 2 && formError && (
+              <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold tracking-wide px-4 py-3 rounded-xl mb-2">
+                <i className="fas fa-exclamation-circle shrink-0" />
+                {formError}
+              </div>
             )}
 
             {step === 2 && (

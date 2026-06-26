@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from './hooks/useAuth';
 import { NEWS_CATEGORIES } from './data/index';
 import Header from './components/Header';
-import FullscreenMenu from './components/FullscreenMenu';
 import HomeAccordion from './pages/HomeAccordion';
 import CategoryList from './pages/CategoryList';
 import ArticleDetail from './pages/ArticleDetail';
@@ -57,7 +57,6 @@ export default function App() {
     return null;
   });
   
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
@@ -157,22 +156,12 @@ export default function App() {
   }, [isDarkMode]);
 
   const [loginPageDefaultRegister, setLoginPageDefaultRegister] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const { user, refreshUser } = useAuth();
 
+  // Re-check auth state after navigation (e.g. after login redirects back)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('impact_member');
-      if (saved) {
-        try {
-          setUser(JSON.parse(saved));
-        } catch (e) {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    }
-  }, [currentCategory]);
+    refreshUser();
+  }, [currentCategory, refreshUser]);
 
   const goToCategory = (cat: string, options?: { register?: boolean }) => {
     setCurrentArticleId(null);
@@ -212,11 +201,6 @@ export default function App() {
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      <FullscreenMenu 
-        isOpen={isMenuOpen} 
-        closeMenu={() => setIsMenuOpen(false)} 
-        goToCategory={goToCategory} 
-      />
 
       <main className="w-full min-h-[100dvh] page-transition" key={`${currentCategory}-${currentArticleId}`}>
         {currentCategory === '首頁' && !currentArticleId && (
@@ -268,7 +252,7 @@ export default function App() {
         )}
 
         {currentCategory === '會員招募' && (
-          <MembershipPage goToCategory={goToCategory} user={user} />
+          <MembershipPage goToCategory={goToCategory} />
         )}
 
         {currentCategory === '會員專區' && (

@@ -204,7 +204,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
               </button>
 
               <button
-                onClick={() => alert(`立即購買：${product.name} x ${quantity}，共 NT$ ${(product.price * quantity).toLocaleString()} 元`)}
+                onClick={() => onAddToCart(product, quantity)}
                 className="py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-0.5 hover:shadow-lg rounded-sm"
               >
                 立即購買

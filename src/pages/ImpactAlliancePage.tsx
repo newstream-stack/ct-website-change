@@ -1,5 +1,4 @@
 import { getAllianceMembers, getAllianceArticles } from '../api/alliance';
-
 import { useCarousel } from '../hooks/useCarousel';
 
 interface ImpactAlliancePageProps {

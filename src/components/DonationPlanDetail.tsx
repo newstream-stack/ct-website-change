@@ -114,6 +114,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const [perPeriodStr, setPerPeriodStr] = useState('');
   const isEditingPerPeriod = useRef(false);
   const [formData, setFormData] = useState<DonationFormPayload>({ planId, ...DEFAULT_FORM });
+  const [submitMsg, setSubmitMsg] = useState('');
 
   const updateForm = (updates: Partial<DonationFormPayload>) =>
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -162,7 +163,8 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await submitDonation(formData);
-    alert('表單資料已就緒，請查看 Console');
+    // TODO: replace with real payment flow; submitDonation will call POST /api/donations
+    setSubmitMsg('表單已送出，感謝您的奉獻！');
   };
 
   if (isLoading || !plan) return <LoadingScreen />;
@@ -407,15 +409,23 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 ? Math.ceil(formData.amount / (formData.installmentPeriod ?? 6))
                 : null;
               return (
-                <button type="submit" className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3">
-                  前往結帳
-                  <span className="font-sans font-light text-sm opacity-80">
-                    {isInstallment
-                      ? `(NT$ ${perPeriod} × ${formData.installmentPeriod} 期)`
-                      : `(NT$ ${formData.amount})`}
-                  </span>
-                  <i className="fas fa-arrow-right ml-2" />
-                </button>
+                <>
+                  {submitMsg && (
+                    <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm font-bold tracking-wide px-4 py-3 rounded-xl mt-6">
+                      <i className="fas fa-circle-check shrink-0" />
+                      {submitMsg}
+                    </div>
+                  )}
+                  <button type="submit" className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3">
+                    前往結帳
+                    <span className="font-sans font-light text-sm opacity-80">
+                      {isInstallment
+                        ? `(NT$ ${perPeriod} × ${formData.installmentPeriod} 期)`
+                        : `(NT$ ${formData.amount})`}
+                    </span>
+                    <i className="fas fa-arrow-right ml-2" />
+                  </button>
+                </>
               );
             })()}
             <p className="text-center text-xs text-theme-text/40 mt-4">點擊結帳即表示您同意我們的服務條款與隱私權政策。</p>

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { logout } from '../api/auth';
 import { createPortal } from 'react-dom';
 import ReceiptModal from '../components/ReceiptModal';
 import { getMe, getMemberStats, getDonations, getBillingHistory, updateMe } from '../api/member';
@@ -32,8 +33,6 @@ type DashboardStat = {
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 function PaymentModal({ onClose }: { onClose: () => void }) {
-  const inputCls =
-    'w-full bg-theme-text/5 border border-theme-text/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-red/50 transition-all font-sans text-theme-text';
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-theme-bg/80 backdrop-blur-md" onClick={onClose} />
@@ -41,32 +40,28 @@ function PaymentModal({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} className="absolute top-4 right-4 text-theme-text/40 hover:text-theme-text transition-colors">
           <i className="fas fa-times text-xl" />
         </button>
-        <h3 className="text-2xl font-serif font-black mb-6">更新付款資訊</h3>
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-theme-text/60">卡號 Card Number</label>
-            <div className="relative">
-              <i className="far fa-credit-card absolute left-4 top-1/2 -translate-y-1/2 text-theme-text/40" />
-              <input type="text" placeholder="**** **** **** 4242" className={`${inputCls} pl-11`} />
-            </div>
+        <h3 className="text-2xl font-serif font-black mb-2">更新付款資訊</h3>
+        <p className="text-xs text-theme-text/50 tracking-wide mb-6">Payment method management</p>
+
+        {/* TODO: replace this block with Stripe Elements / ECPay embedded form */}
+        <div className="flex flex-col items-center gap-4 py-10 border border-dashed border-theme-text/20 rounded-xl bg-theme-text/3">
+          <div className="w-14 h-14 rounded-full bg-brand-red/10 flex items-center justify-center">
+            <i className="far fa-credit-card text-2xl text-brand-red/60" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-theme-text/60">有效期 Expiry</label>
-              <input type="text" placeholder="MM/YY" className={inputCls} />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-theme-text/60">驗證碼 CVC</label>
-              <input type="text" placeholder="***" className={inputCls} />
-            </div>
+          <div className="text-center">
+            <p className="font-bold text-sm tracking-widest text-theme-text/80 mb-1">金流串接中</p>
+            <p className="text-xs text-theme-text/40 leading-relaxed">
+              付款資訊管理將由第三方金流（Stripe / ECPay）<br />安全處理，卡號不經過本伺服器
+            </p>
           </div>
-          <button
-            onClick={() => { alert('付款資訊預覽更新成功！'); onClose(); }}
-            className="mt-4 w-full bg-brand-red text-white font-bold tracking-widest py-3.5 rounded-xl hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-brand-red/20"
-          >
-            確 認 更 新
-          </button>
         </div>
+
+        <button
+          onClick={onClose}
+          className="mt-6 w-full bg-theme-text/10 text-theme-text font-bold tracking-widest py-3.5 rounded-xl hover:bg-theme-text/15 active:scale-[0.98] transition-all"
+        >
+          關 閉
+        </button>
       </div>
     </div>
   );
@@ -261,6 +256,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrderReceipt, setSelectedOrderReceipt] = useState<Order | null>(null);
+  const [settingsMsg, setSettingsMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const settingsMsgTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [member, setMember] = useState<Member | null>(null);
   const [stats, setStats] = useState<MemberStats | null>(null);
@@ -269,13 +266,14 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
   const [savedArticles, setSavedArticles] = useState<NewsItem[]>([]);
 
   useEffect(() => {
-    Promise.all([getMe(), getMemberStats(), getDonations(), getBillingHistory()])
+    Promise.allSettled([getMe(), getMemberStats(), getDonations(), getBillingHistory()])
       .then(([m, s, d, b]) => {
-        setMember(m);
-        setStats(s);
-        setDonationRecords(d);
-        setSubscriptionRecords(b);
-      });
+        if (m.status === 'fulfilled') setMember(m.value);
+        if (s.status === 'fulfilled') setStats(s.value);
+        if (d.status === 'fulfilled') setDonationRecords(d.value);
+        if (b.status === 'fulfilled') setSubscriptionRecords(b.value);
+      })
+      .catch(err => console.error('Dashboard load error:', err));
     setSavedArticles(getNewsList().slice(0, 6));
 
     // Load orders from localStorage
@@ -341,9 +339,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             ))}
             <button
               onClick={() => {
-                localStorage.removeItem('impact_member');
+                logout();
                 goToCategory('首頁');
-                window.location.reload();
               }}
               className="md:mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm text-brand-red bg-brand-red/5 md:bg-transparent hover:bg-brand-red/10 transition-colors cursor-pointer"
             >
@@ -570,20 +567,22 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               <div className="flex flex-col gap-6 animate-fade-in-up">
                 <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
                   <h3 className="text-xl font-serif font-bold mb-6">帳號設定</h3>
-                  <form 
-                    className="flex flex-col gap-5 max-w-lg" 
+                  <form
+                    className="flex flex-col gap-5 max-w-lg"
                     onSubmit={async (e) => {
                       e.preventDefault();
                       const formData = new FormData(e.currentTarget);
                       const updatedName = formData.get('name') as string;
                       const updatedAddress = formData.get('address') as string;
                       if (!updatedName || !updatedAddress) {
-                        alert('姓名與地址不可為空！');
+                        setSettingsMsg({ type: 'error', text: '姓名與地址不可為空' });
                         return;
                       }
                       await updateMe({ name: updatedName, displayName: updatedName, address: updatedAddress });
                       setMember(prev => prev ? { ...prev, name: updatedName, displayName: updatedName, address: updatedAddress } : null);
-                      alert('帳號設定更新成功！');
+                      if (settingsMsgTimer.current) clearTimeout(settingsMsgTimer.current);
+                      setSettingsMsg({ type: 'success', text: '帳號設定更新成功' });
+                      settingsMsgTimer.current = setTimeout(() => setSettingsMsg(null), 3000);
                     }}
                   >
                     {[
@@ -611,6 +610,13 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       <input type="password" placeholder="輸入舊密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                       <input type="password" placeholder="設定新密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                     </div>
+
+                    {settingsMsg && (
+                      <div className={`flex items-center gap-2 text-xs font-bold tracking-wide px-4 py-3 rounded-xl ${settingsMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
+                        <i className={`fas ${settingsMsg.type === 'success' ? 'fa-circle-check' : 'fa-exclamation-circle'} shrink-0`} />
+                        {settingsMsg.text}
+                      </div>
+                    )}
 
                     <div className="mt-6 flex flex-col sm:flex-row gap-4">
                       <button type="submit" className="bg-brand-red text-white font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-[#b31b1b] hover:-translate-y-0.5 transition-all shadow-lg shadow-brand-red/20">儲存變更 Save</button>
