@@ -23,6 +23,7 @@ import ImpactAlliancePage from './pages/ImpactAlliancePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import SubmitPage from './pages/SubmitPage';
+import PrivacyPage from './pages/PrivacyPage';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 
@@ -280,11 +281,15 @@ export default function App() {
         {currentCategory === '我要投稿' && (
           <SubmitPage />
         )}
+
+        {currentCategory === '版權隱私權聲明' && (
+          <PrivacyPage />
+        )}
       </main>
 
       <Footer goToCategory={goToCategory} />
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿'].includes(currentCategory) && (
+      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿', '版權隱私權聲明'].includes(currentCategory) && (
         <GlobalBottomAd goToCategory={goToCategory} />
       )}
 
