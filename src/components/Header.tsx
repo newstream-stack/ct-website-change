@@ -35,13 +35,10 @@ export default function Header({
         </button>
       )}
       
-      <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500 relative">
-        {/* 手機：absolute 置中；桌機：一般流排 */}
-        <div className="md:hidden absolute left-1/2 -translate-x-1/2 pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
-          <img src="/LOGO-m.png" alt="IMPACT 論壇報" className="h-7 w-auto object-contain scale-[1.9]" />
-        </div>
-        <div className="hidden md:block pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
-          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="h-10 w-auto object-contain origin-left scale-[3.6]" />
+      <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
+        <div className="pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
+          <img src="/LOGO-m.png" alt="IMPACT 論壇報" className="md:hidden h-7 w-auto object-contain origin-left scale-[1.9] translate-y-2" />
+          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
         </div>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
