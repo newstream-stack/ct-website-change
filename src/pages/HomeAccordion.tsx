@@ -244,7 +244,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 )}
               </div>
 
-              <div className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex ? 'bg-black/60' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'}`} />
+              <div className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex ? 'accordion-vignette' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'}`} />
 
               {/* Collapsed */}
               <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] pointer-events-none">
