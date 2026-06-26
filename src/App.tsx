@@ -22,6 +22,7 @@ import ColumnPage from './components/ColumnPage';
 import ImpactAlliancePage from './pages/ImpactAlliancePage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import SubmitPage from './pages/SubmitPage';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 
@@ -275,11 +276,15 @@ export default function App() {
         {currentCategory === '新聞連絡' && (
           <ContactPage />
         )}
+
+        {currentCategory === '我要投稿' && (
+          <SubmitPage />
+        )}
       </main>
 
       <Footer goToCategory={goToCategory} />
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡'].includes(currentCategory) && (
+      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿'].includes(currentCategory) && (
         <GlobalBottomAd goToCategory={goToCategory} />
       )}
 

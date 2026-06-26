@@ -70,6 +70,7 @@ export default function Footer({ goToCategory }: FooterProps) {
                         onClick={() => {
                           if (link === '關於我們') goToCategory('關於我們');
                           else if (link === '新聞連絡') goToCategory('新聞連絡');
+                          else if (link === '我要投稿') goToCategory('我要投稿');
                         }}
                         className="text-white/55 text-xs hover:text-white transition-colors leading-none text-left"
                       >
