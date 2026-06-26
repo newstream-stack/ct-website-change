@@ -20,6 +20,7 @@ import MemberDashboard from './pages/MemberDashboard';
 import EventRegistrationPage from './pages/EventRegistrationPage';
 import ColumnPage from './components/ColumnPage';
 import ImpactAlliancePage from './pages/ImpactAlliancePage';
+import SplashAd from './components/SplashAd';
 
 export default function App() {
   const [currentCategory, setCurrentCategory] = useState(() => {
@@ -190,7 +191,12 @@ export default function App() {
 
   return (
     <div className="font-sans relative">
-      <Header 
+      <SplashAd
+        desktopImageUrl="/splash-desktop.svg"
+        mobileImageUrl="/splash-mobile.svg"
+        linkUrl="https://www.ct.org.tw"
+      />
+      <Header
         user={user}
         goToCategory={goToCategory} 
         toggleTheme={toggleTheme} 
