@@ -36,8 +36,11 @@ export default function Header({
       )}
       
       <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
-        <div className="pointer-events-auto cursor-pointer flex-1 md:flex-none flex justify-center md:block" onClick={() => goToCategory('首頁')}>
-          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="h-7 md:h-10 w-auto object-contain origin-center md:origin-left scale-[2.2] md:scale-[3.6]" />
+        <div className="pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
+          {/* 手機：去除上下留白的裁切版 logo，左對齊放大（h-7 維持 header 高度不變，transform 不影響版面） */}
+          <img src="/LOGO-m.png" alt="IMPACT 論壇報" className="md:hidden h-7 w-auto object-contain origin-left scale-[1.9]" />
+          {/* 桌機：維持原本的滿版方形 logo */}
+          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
         </div>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
