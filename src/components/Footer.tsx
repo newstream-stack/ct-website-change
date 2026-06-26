@@ -72,6 +72,7 @@ export default function Footer({ goToCategory }: FooterProps) {
                           else if (link === '新聞連絡') goToCategory('新聞連絡');
                           else if (link === '我要投稿') goToCategory('我要投稿');
                           else if (link === '版權隱私權聲明') goToCategory('版權隱私權聲明');
+                          else if (link === '財務報表') goToCategory('財務報表');
                         }}
                         className="text-white/55 text-xs hover:text-white transition-colors leading-none text-left"
                       >
