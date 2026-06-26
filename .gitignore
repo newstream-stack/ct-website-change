@@ -94,7 +94,7 @@ dist
 
 # Gatsby files
 .cache/
-public
+# public  ← Gatsby build output; removed because this is a Vite project (public/ is source assets)
 
 # vue-cli build objects
 dist
