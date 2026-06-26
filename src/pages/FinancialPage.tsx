@@ -7,119 +7,76 @@ interface ReportSection {
   images: string[];
 }
 
+const B = 'https://ct.org.tw/upload/static_cooperation_cms';
+const p = (name: string, pages: number[]) =>
+  pages.map((n) => `${B}/${name}_%E9%A0%81%E9%9D%A2_${n}.jpg`);
+
 const REPORTS: ReportSection[] = [
   {
     year: '民國 115 年',
     label: '預算及工作計劃書',
     type: 'budget',
-    images: [
-      '/financial-reports/y115-budget-1.jpg',
-      '/financial-reports/y115-budget-2.jpg',
-    ],
+    images: p('doc02919420260409111050', [1, 2]),
   },
   {
     year: '民國 114 年',
     label: '預算及工作計劃書',
     type: 'budget',
-    images: [
-      '/financial-reports/y114-budget-1.jpg',
-      '/financial-reports/y114-budget-2.jpg',
-    ],
+    images: p('doc02356520251107104327', [1, 2]),
   },
   {
     year: '民國 113 年',
     label: '結算財務報表',
     type: 'final',
-    images: [
-      '/financial-reports/y113-final-1.jpg',
-      '/financial-reports/y113-final-2.jpg',
-      '/financial-reports/y113-final-3.jpg',
-      '/financial-reports/y113-final-4.jpg',
-      '/financial-reports/y113-final-5.jpg',
-    ],
+    images: p('doc02356420251107104241', [1, 2, 3, 4, 5]),
   },
   {
     year: '民國 113 年',
     label: '預算財務報表',
     type: 'budget',
-    images: [
-      '/financial-reports/y113-budget-1.jpg',
-      '/financial-reports/y113-budget-2.jpg',
-      '/financial-reports/y113-budget-3.jpg',
-      '/financial-reports/y113-budget-4.jpg',
-      '/financial-reports/y113-budget-5.jpg',
-    ],
+    images: p('doc02356720251107112229', [1, 2, 3, 4, 5]),
   },
   {
     year: '民國 112 年',
     label: '結算財務報表',
     type: 'final',
-    images: [
-      '/financial-reports/y112-final-1.jpg',
-      '/financial-reports/y112-final-2.jpg',
-      '/financial-reports/y112-final-3.jpg',
-      '/financial-reports/y112-final-4.jpg',
-      '/financial-reports/y112-final-5.jpg',
-    ],
+    images: p('202306160847-1', [1, 2, 3, 4, 5]),
   },
   {
     year: '民國 112 年',
     label: '預算財務報表',
     type: 'budget',
-    images: [
-      '/financial-reports/y112-budget-1.jpg',
-      '/financial-reports/y112-budget-2.jpg',
-    ],
+    images: p('2024%E9%A0%90%E7%AE%97%E8%B2%A1%E5%A0%B1', [1, 2]),
   },
   {
     year: '民國 111 年',
     label: '結算財務報表',
     type: 'final',
-    images: [
-      '/financial-reports/y111-final-1.jpg',
-      '/financial-reports/y111-final-2.jpg',
-      '/financial-reports/y111-final-3.jpg',
-      '/financial-reports/y111-final-4.jpg',
-      '/financial-reports/y111-final-5.jpg',
-    ],
+    images: p('202207051142', [1, 2, 3, 4, 5]),
   },
   {
     year: '民國 111 年',
     label: '預算財務報表',
     type: 'budget',
-    images: [
-      '/financial-reports/y111-budget-2.jpg',
-    ],
+    images: p('2023%E5%B9%B4%E8%AB%96%E5%A3%87%E9%A0%90%E7%AE%97', [2]),
   },
   {
     year: '民國 110 年',
     label: '結算財務報表',
     type: 'final',
-    images: [
-      '/financial-reports/y110-final-1.jpg',
-      '/financial-reports/y110-final-2.jpg',
-      '/financial-reports/y110-final-3.jpg',
-    ],
+    images: p('202202251037', [1, 2, 3]),
   },
   {
     year: '民國 110 年',
     label: '預算財務報表',
     type: 'budget',
-    images: [
-      '/financial-reports/y110-budget-1.jpg',
-      '/financial-reports/y110-budget-2.jpg',
-    ],
+    images: p('202202180951', [1, 2]),
   },
   {
     year: '民國 109 年',
     label: '預算財務報表',
     type: 'budget',
-    images: [
-      '/financial-reports/y109-budget-1.jpg',
-      '/financial-reports/y109-budget-2.jpg',
-      '/financial-reports/y109-budget-3.jpg',
-      '/financial-reports/y109-budget-4.jpg',
-    ],
+    images: p('202109021550', [1, 2, 3, 4]),
   },
 ];
 
