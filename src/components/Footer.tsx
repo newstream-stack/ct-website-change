@@ -1,58 +1,85 @@
-const NAV_LINKS = [
-  '關於我們', '新聞連絡', '我要投稿', '廣告刊登', '申請合作',
-  '客戶服務', '招募夥伴', '版權隱私權聲明', '財務報表', '祝福卡申辦/捐款',
+const LINK_GROUPS = [
+  {
+    title: '關於',
+    links: ['關於我們', '新聞連絡', '招募夥伴', '財務報表'],
+  },
+  {
+    title: '服務',
+    links: ['我要投稿', '廣告刊登', '申請合作', '客戶服務'],
+  },
+  {
+    title: '更多',
+    links: ['版權隱私權聲明', '祝福卡申辦/捐款', '論壇Line貼圖'],
+  },
+];
+
+const SOCIALS = [
+  { label: 'Instagram', icon: 'fa-instagram', href: '#' },
+  { label: 'Facebook', icon: 'fa-facebook-f', href: '#' },
+  { label: 'YouTube', icon: 'fa-youtube', href: '#' },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1a1a1a] text-white/60 text-sm">
-      {/* 導覽列 */}
-      <div className="border-b border-white/10 px-6 py-5">
-        <nav className="max-w-6xl mx-auto flex flex-wrap gap-x-6 gap-y-2 justify-center md:justify-start">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link}
-              href="#"
-              className="hover:text-white transition-colors whitespace-nowrap"
-            >
-              {link}
-            </a>
-          ))}
-        </nav>
-      </div>
+    <footer className="bg-[#111111] text-white">
+      {/* 主體 */}
+      <div className="max-w-6xl mx-auto px-6 pt-14 pb-10">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-12">
 
-      {/* 社群 + 法人資訊 */}
-      <div className="border-b border-white/10 px-6 py-5">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          {/* 左：社群 icon */}
-          <div className="flex items-center gap-3">
-            <a href="#" aria-label="Instagram" className="w-9 h-9 rounded-full bg-gradient-to-br from-[#f09433] via-[#e6683c] via-[#dc2743] via-[#cc2366] to-[#bc1888] flex items-center justify-center text-white hover:opacity-80 transition-opacity">
-              <i className="fab fa-instagram text-base"></i>
-            </a>
-            <a href="#" aria-label="Facebook" className="w-9 h-9 rounded-full bg-[#1877F2] flex items-center justify-center text-white hover:opacity-80 transition-opacity">
-              <i className="fab fa-facebook-f text-base"></i>
-            </a>
-            <a href="#" aria-label="YouTube" className="w-9 h-9 rounded-full bg-[#FF0000] flex items-center justify-center text-white hover:opacity-80 transition-opacity">
-              <i className="fab fa-youtube text-base"></i>
-            </a>
+          {/* 左：品牌區 */}
+          <div className="flex flex-col gap-6 max-w-xs">
+            <div>
+              <div className="flex items-baseline gap-2 mb-2">
+                <span className="font-display text-2xl font-bold tracking-widest text-white">IMPACT</span>
+                <span className="w-px h-4 bg-brand-red inline-block mx-1"></span>
+                <span className="font-serif text-base text-brand-red tracking-wider">論壇報</span>
+              </div>
+              <p className="text-white/40 text-xs leading-relaxed">
+                基督教論壇報，以信仰的眼光看見世界，<br/>用文字陪伴每一個在路上的靈魂。
+              </p>
+            </div>
+
+            {/* 社群 */}
+            <div className="flex gap-3">
+              {SOCIALS.map(({ label, icon, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/50 hover:border-brand-red hover:text-brand-red transition-colors"
+                >
+                  <i className={`fab ${icon} text-sm`}></i>
+                </a>
+              ))}
+            </div>
           </div>
 
-          {/* 中：Line 貼圖 */}
-          <a href="#" className="text-white/50 hover:text-white transition-colors text-sm">
-            論壇Line貼圖
-          </a>
-
-          {/* 右：法人資訊 */}
-          <div className="text-right text-xs leading-relaxed text-white/40">
-            <p>財團法人基督教論壇基金會</p>
-            <p>統一編號：00965377</p>
+          {/* 右：連結群組 */}
+          <div className="grid grid-cols-3 gap-8 md:gap-12">
+            {LINK_GROUPS.map(({ title, links }) => (
+              <div key={title}>
+                <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] mb-4 font-display">{title}</p>
+                <ul className="flex flex-col gap-2.5">
+                  {links.map((link) => (
+                    <li key={link}>
+                      <a href="#" className="text-white/55 text-xs hover:text-white transition-colors leading-none">
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* 版權 */}
-      <div className="px-6 py-4 text-center text-xs text-white/30">
-        © 2026 基督教論壇報 All Rights Reserved. 版權所有 盜用必究
+      {/* 底部條 */}
+      <div className="border-t border-white/8">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-[11px] text-white/25">
+          <span>© 2026 基督教論壇報 All Rights Reserved. 版權所有 盜用必究</span>
+          <span>財團法人基督教論壇基金會｜統一編號 00965377</span>
+        </div>
       </div>
     </footer>
   );
