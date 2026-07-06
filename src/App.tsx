@@ -64,8 +64,6 @@ export default function App() {
     return null;
   });
   
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('impact_cart');
@@ -154,14 +152,6 @@ export default function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
-
   const [loginPageDefaultRegister, setLoginPageDefaultRegister] = useState(false);
   const { user, refreshUser } = useAuth();
 
@@ -191,8 +181,6 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
-  const toggleTheme = () => setIsDarkMode(!isDarkMode);
-
   const showCategoryBar = (currentCategory === '首頁' || NEWS_CATEGORIES.includes(currentCategory) || !!currentArticleId);
 
   return (
@@ -201,8 +189,6 @@ export default function App() {
       <Header
         user={user}
         goToCategory={goToCategory} 
-        toggleTheme={toggleTheme} 
-        isDarkMode={isDarkMode} 
         showCategoryBar={showCategoryBar} 
         cartItems={cartItems}
         onOpenCart={() => setIsCartOpen(true)}

@@ -289,7 +289,7 @@ export default function CartDrawer({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-serif font-black text-2xl mb-2 text-green-600 dark:text-green-400">訂購成功！</h3>
+              <h3 className="font-serif font-black text-2xl mb-2 text-green-600">訂購成功！</h3>
               <p className="text-sm text-theme-text/60 font-light mb-8 max-w-xs">感謝您的支持。我們已收到您的訂單，隨後將發送明細至您的 Email 信箱。</p>
               
               {/* Order Box */}

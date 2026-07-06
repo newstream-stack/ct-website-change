@@ -5,8 +5,6 @@ import { CartItem } from '../types';
 interface HeaderProps {
   user: { name: string; email: string } | null;
   goToCategory: (cat: string, options?: { register?: boolean }) => void;
-  toggleTheme: () => void;
-  isDarkMode: boolean;
   showCategoryBar: boolean;
   cartItems: CartItem[];
   onOpenCart: () => void;
@@ -16,8 +14,6 @@ interface HeaderProps {
 export default function Header({ 
   user,
   goToCategory, 
-  toggleTheme, 
-  isDarkMode, 
   showCategoryBar,
   cartItems,
   onOpenCart,
@@ -98,12 +94,6 @@ export default function Header({
           <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenSearch} title="全站搜尋">
             <i className="fas fa-search md:hidden"></i>
             <span className="hidden md:block">Search</span>
-          </button>
-          
-          <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
-          
-          <button className="flex items-center justify-center w-6 md:w-8 hover:text-brand-red transition-colors text-lg" onClick={toggleTheme} title="切換日夜模式">
-            {isDarkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
           </button>
         </div>
       </div>

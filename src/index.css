@@ -15,10 +15,6 @@
     --bg-base: 255 255 255;
     --text-base: 10 10 10;
   }
-  .dark {
-    --bg-base: 10 10 10;
-    --text-base: 255 255 255;
-  }
   
   body {
     background-color: rgb(var(--bg-base));

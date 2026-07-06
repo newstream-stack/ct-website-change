@@ -612,7 +612,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     </div>
 
                     {settingsMsg && (
-                      <div className={`flex items-center gap-2 text-xs font-bold tracking-wide px-4 py-3 rounded-xl ${settingsMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
+                      <div className={`flex items-center gap-2 text-xs font-bold tracking-wide px-4 py-3 rounded-xl ${settingsMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
                         <i className={`fas ${settingsMsg.type === 'success' ? 'fa-circle-check' : 'fa-exclamation-circle'} shrink-0`} />
                         {settingsMsg.text}
                       </div>

@@ -411,7 +411,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               return (
                 <>
                   {submitMsg && (
-                    <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-sm font-bold tracking-wide px-4 py-3 rounded-xl mt-6">
+                    <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-600 text-sm font-bold tracking-wide px-4 py-3 rounded-xl mt-6">
                       <i className="fas fa-circle-check shrink-0" />
                       {submitMsg}
                     </div>
