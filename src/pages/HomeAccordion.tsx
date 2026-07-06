@@ -67,6 +67,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(170);
+  const [isMobileLayout, setIsMobileLayout] = useState(() => window.innerWidth < 768);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const touchStartX = useRef(0);
@@ -76,7 +77,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
   // Find the index of the video panel to know when it's active
   const videoPanelIndex = panels.findIndex((p) => p.type === 'video');
-  const isVideoActive = activeIndex === videoPanelIndex;
+  const isVideoActive = isMobileLayout || activeIndex === videoPanelIndex;
 
   // ── YouTube hook ────────────────────────────────────────────────────────────
   const { play, pause, mute } = useYouTubePlayer(
@@ -94,6 +95,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     const update = () => {
       const header = document.querySelector('header');
       if (header) setHeaderHeight(header.offsetHeight);
+      setIsMobileLayout(window.innerWidth < 768);
     };
     update();
     window.addEventListener('resize', update);
@@ -114,6 +116,20 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     type: PanelType,
     newsId?: number,
   ) => {
+    if (isMobileLayout) {
+      if (e.type === 'touchend') {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+      }
+
+      if (type === 'video') {
+        isPlaying ? pause() : play();
+      } else if (type === 'news' && newsId) {
+        openArticle(newsId);
+      }
+      return;
+    }
+
     if (activeIndex !== index) {
       if (e.cancelable) e.preventDefault();
       e.stopPropagation();
@@ -147,9 +163,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       ref={containerRef}
       className="accordion-container relative md:pt-0"
       style={{
-        paddingTop: window.innerWidth < 768 ? `${headerHeight}px` : 0,
+        paddingTop: isMobileLayout ? `${headerHeight}px` : 0,
         height: '100dvh',
-        overflowY: window.innerWidth < 768 ? 'auto' : 'hidden',
+        overflowY: isMobileLayout ? 'auto' : 'hidden',
       }}
     >
       {panels.map((panel, index) => {
@@ -219,7 +235,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               style={{ touchAction: 'manipulation' }}
             >
               <div className="absolute inset-0 w-full h-full overflow-hidden">
-                {index === activeIndex ? (
+                {isMobileLayout || index === activeIndex ? (
                   <div className="relative w-full h-full">
                     <iframe
                       id={`youtube-player-${index}`}
@@ -325,7 +341,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               const deltaY = e.changedTouches[0].clientY - touchStartY.current;
               // 垂直滑動超過 12px 視為滾動，不觸發點擊
               if (Math.abs(deltaY) > 12) return;
-              if (index === activeIndex && Math.abs(deltaX) > 40) {
+              if ((window.innerWidth < 768 || index === activeIndex) && Math.abs(deltaX) > 40) {
                 if (e.cancelable) e.preventDefault();
                 e.stopPropagation();
                 if (deltaX < 0) {

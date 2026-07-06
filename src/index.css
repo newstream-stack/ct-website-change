@@ -182,6 +182,50 @@
   opacity: 0;
 }
 
+/* Mobile home: show every accordion panel expanded as stacked story sections. */
+@media (max-width: 767px) {
+  .accordion-container {
+    height: auto !important;
+    min-height: 100dvh;
+    overflow-y: auto !important;
+    padding-bottom: 136px;
+  }
+
+  .accordion-panel,
+  .accordion-panel.active {
+    flex: none !important;
+    min-height: 62dvh;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(255 255 255 / 0.35);
+    will-change: auto;
+  }
+
+  .accordion-bg,
+  .accordion-panel.active .accordion-bg {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.02);
+  }
+
+  .accordion-bg.opacity-50 {
+    opacity: 1 !important;
+  }
+
+  .accordion-panel .content-expanded,
+  .accordion-panel.active .content-expanded {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .accordion-panel .content-collapsed,
+  .accordion-panel.active .content-collapsed {
+    display: none;
+  }
+}
+
 /* ─── Mobile phone (≤639px): no hover, no grayscale — opacity handled by JS ─── */
 @media (max-width: 639px) {
   .accordion-bg {
