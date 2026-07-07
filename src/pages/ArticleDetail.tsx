@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { getArticle, getRecommended, getArticleContent, getNewsList } from '../api/news';
 import { getRandomAd, getAd } from '../api/ads';
@@ -14,9 +14,22 @@ interface ArticleDetailProps {
 export default function ArticleDetail({ articleId, openArticle, goToCategory }: ArticleDetailProps) {
     const article = getArticle(articleId) ?? getNewsList()[0];
     const recommendedNews = getRecommended(articleId);
+    const popularNews = getRecommended(articleId, 5);
 
     const [randomAd] = useState(() => getRandomAd() ?? null);
-    const [copyToast, setCopyToast] = useState(false);
+    const topAd = getAd('infeed');
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [isSaved, setIsSaved] = useState(false);
+
+    const showToast = (message: string) => {
+        setToastMessage(message);
+        setTimeout(() => setToastMessage(null), 2500);
+    };
+
+    useEffect(() => {
+        const saved: number[] = JSON.parse(localStorage.getItem('impact_saved_articles') || '[]');
+        setIsSaved(saved.includes(article.id));
+    }, [article.id]);
 
     const { part1: dummyContentPart1, part2: dummyContentPart2 } = getArticleContent();
     let firstPart = dummyContentPart1;
@@ -41,32 +54,41 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                 break;
             case 'ig':
                 navigator.clipboard.writeText(window.location.href);
-                setCopyToast(true);
-                setTimeout(() => setCopyToast(false), 2500);
+                showToast('網址已複製，快去 IG 分享！');
                 break;
         }
     };
 
+    const handleToggleSave = () => {
+        const saved: number[] = JSON.parse(localStorage.getItem('impact_saved_articles') || '[]');
+        const next = isSaved ? saved.filter((id) => id !== article.id) : [...saved, article.id];
+        localStorage.setItem('impact_saved_articles', JSON.stringify(next));
+        setIsSaved(!isSaved);
+        showToast(isSaved ? '已取消收藏' : '已加入收藏！');
+    };
+
     return (
         <>
-            {copyToast && (
+            {toastMessage && (
                 <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-theme-text text-theme-bg text-xs font-bold tracking-widest px-5 py-3 rounded-full shadow-lg pointer-events-none">
-                    網址已複製，快去 IG 分享！
+                    {toastMessage}
                 </div>
             )}
-            <div className="relative w-full h-[65svh] md:h-[70svh] bg-theme-text/5 overflow-hidden border-b border-theme-text/10 transition-colors duration-500">
-                <img src={article.imageUrl} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt="Cover" />
-                <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-6 md:p-12 lg:p-20 pb-10 md:pb-16 bg-gradient-to-t from-theme-bg via-theme-bg/90 to-theme-bg/30 transition-colors duration-500">
-                    <div className="max-w-[90rem] mx-auto w-full z-10 translate-y-2 md:translate-y-10">
-                        <span className="inline-block bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm">{article.category}</span>
-                        <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-[80px] font-serif font-black text-theme-text leading-[1.3] md:leading-[1.1] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-5xl transition-colors duration-500 drop-shadow-md">
-                            {article.title}
-                        </h1>
-                        <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 font-display uppercase tracking-widest text-[9px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
-                            <span>Words by <strong className="text-brand-red">{article.author}</strong></span>
-                            <span className="text-theme-text/30 transition-colors">|</span>
-                            <span>Published {article.date}, 2026</span>
-                        </div>
+
+            <div className="pt-[190px] md:pt-32 px-5 sm:px-6 md:px-12 lg:px-20 bg-theme-bg transition-colors duration-500">
+                <div className="max-w-[90rem] mx-auto w-full">
+                    <div className="w-full aspect-[832/470] bg-theme-text/5 overflow-hidden border border-theme-text/10 rounded-sm mb-8 md:mb-10 transition-colors duration-500">
+                        <img src={article.imageUrl} className="w-full h-full object-cover transition-opacity duration-700" alt="Cover" />
+                    </div>
+
+                    <span className="inline-block bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm">{article.category}</span>
+                    <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-[80px] font-serif font-black text-theme-text leading-[1.3] md:leading-[1.1] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-5xl transition-colors duration-500">
+                        {article.title}
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 font-display uppercase tracking-widest text-[9px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
+                        <span>Words by <strong className="text-brand-red">{article.author}</strong></span>
+                        <span className="text-theme-text/30 transition-colors">|</span>
+                        <span>Published {article.date}, 2026</span>
                     </div>
                 </div>
             </div>
@@ -75,6 +97,28 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                 <div className="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 relative">
 
                     <div className="lg:col-span-8 article-content">
+                        {topAd && (
+                            <a href={topAd.link} className="relative overflow-hidden bg-theme-text text-theme-bg flex flex-col sm:flex-row items-center gap-4 md:gap-6 px-5 md:px-8 py-6 md:py-7 mb-10 md:mb-14 group transition-colors duration-500 rounded-sm">
+                                <div
+                                    className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay pointer-events-none transition-transform duration-1000 group-hover:scale-105"
+                                    style={{ backgroundImage: `url(${topAd.imageUrl})` }}
+                                ></div>
+                                <div className="relative flex items-center gap-4 flex-1 w-full min-w-0">
+                                    <div className="w-1.5 h-12 md:h-14 bg-brand-red hidden sm:block shrink-0"></div>
+                                    <div className="flex-1 min-w-0">
+                                        <span className="text-[9px] md:text-[10px] font-display tracking-[0.3em] uppercase text-theme-bg/60 font-bold block mb-1">{topAd.sponsor} · Sponsored</span>
+                                        <h3 className="font-serif font-black text-base md:text-xl tracking-wide text-theme-bg leading-snug">{topAd.title}</h3>
+                                        <p className="text-xs md:text-sm text-theme-bg/70 font-light mt-1.5 hidden md:block max-w-xl">{topAd.description}</p>
+                                    </div>
+                                </div>
+                                <div className="relative shrink-0 w-full sm:w-auto">
+                                    <span className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-red text-white font-display text-[10px] md:text-xs tracking-widest uppercase font-bold py-2.5 md:py-3 px-6 md:px-8 group-hover:bg-white group-hover:text-brand-red transition-colors duration-300 ring-1 ring-brand-red rounded-sm">
+                                        了解更多 <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
+                                    </span>
+                                </div>
+                            </a>
+                        )}
+
                         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-theme-text/10 transition-colors">
                             {/* 1. Share 文字 */}
                             <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 transition-colors">
@@ -106,6 +150,19 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                                 >
                                     <i className="fab fa-line text-xs"></i>
                                 </div>
+                            </div>
+
+                            {/* 3. 收藏 */}
+                            <div className="w-px h-5 bg-theme-text/10 mx-1"></div>
+                            <div
+                                onClick={handleToggleSave}
+                                className={`flex items-center gap-2 px-3 h-8 rounded-full border transition cursor-pointer font-display text-[10px] font-bold uppercase tracking-widest ${isSaved
+                                    ? 'bg-brand-red border-brand-red text-white'
+                                    : 'border-theme-text/20 bg-theme-text/5 text-theme-text/80 hover:bg-brand-red hover:text-white hover:border-brand-red'
+                                    }`}
+                            >
+                                <i className={`${isSaved ? 'fas' : 'far'} fa-bookmark text-xs`}></i>
+                                {isSaved ? '已收藏' : '收藏'}
                             </div>
                         </div>
 
@@ -140,12 +197,19 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                     </div>
 
                     <div className="lg:col-span-4 space-y-10 md:space-y-12 mt-8 lg:mt-0">
-                        <div className="border border-theme-text/10 p-6 md:p-8 bg-theme-text/5 backdrop-blur-md relative group rounded-sm mt-6 lg:mt-0 transition-colors">
-                            <div className="absolute -top-6 left-6 lg:-top-5 lg:-left-5 w-12 md:w-14 h-12 md:h-14 bg-brand-red rounded-full flex items-center justify-center text-white text-lg md:text-xl border-4 border-theme-bg group-hover:scale-110 shadow-lg shadow-brand-red/30 transition-transform z-10"><i className="fas fa-pen-nib"></i></div>
-                            <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 block mb-1 mt-2 transition-colors">Author Profile</span>
-                            <h4 className="font-serif font-black text-2xl md:text-3xl mb-3 text-theme-text transition-colors">{article.author}</h4>
-                            <p className="font-light text-sm md:text-base opacity-80 mb-6 text-theme-text leading-relaxed transition-colors">Dedicated to exploring the intersection of faith, culture, and modern society through an avant-garde lens.</p>
-                            <button className="w-full py-3 border border-theme-text/20 font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/90 hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition rounded-sm">View All Articles</button>
+                        <div className="border border-theme-text/10 bg-theme-text/5 backdrop-blur-md rounded-sm p-6 md:p-8 transition-colors">
+                            <h4 className="font-display text-xs md:text-sm font-black uppercase tracking-[0.2em] text-theme-text mb-6 pb-4 border-b border-theme-text/10 flex items-center gap-2 transition-colors">
+                                <span className="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
+                                熱門文章
+                            </h4>
+                            <div className="flex flex-col gap-5">
+                                {popularNews.map((n, i) => (
+                                    <div key={n.id} className="flex items-start gap-4 cursor-pointer group" onClick={() => openArticle(n.id)}>
+                                        <span className="font-serif font-black text-2xl md:text-3xl text-theme-text/15 group-hover:text-brand-red/40 transition-colors leading-none shrink-0 w-8">{String(i + 1).padStart(2, '0')}</span>
+                                        <h5 className="font-serif font-bold text-sm md:text-base text-theme-text leading-snug group-hover:text-brand-red transition-colors line-clamp-3">{n.title}</h5>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
                         {getAd('sidebar') && <StickySidebarAd ad={getAd('sidebar')!} />}
