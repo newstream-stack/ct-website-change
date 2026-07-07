@@ -3,7 +3,7 @@
 @theme {
   --color-theme-bg: rgb(var(--bg-base));
   --color-theme-text: rgb(var(--text-base));
-  --color-brand-red: #8E2D3D;
+  --color-brand-red: #9C1B23;
   --color-brand-teal: #0F8B8D;
   --color-brand-gold: #D4A64A;
 
@@ -14,7 +14,7 @@
 
 @layer base {
   :root {
-    --bg-base: 247 245 240;
+    --bg-base: 250 249 246;
     --text-base: 10 10 10;
   }
   
@@ -95,7 +95,7 @@
   }
   .accordion-panel.active::after,
   .accordion-panel:hover::after {
-    background: #8E2D3D;
+    background: #9C1B23;
   }
 }
 
@@ -270,7 +270,7 @@
   padding-right: 0.15rem;
   margin-bottom: -0.2rem;
   font-family: 'Noto Serif TC', serif;
-  color: #8E2D3D;
+  color: #9C1B23;
 }
 @media (min-width: 768px) {
   .article-content p.drop-cap::first-letter {
@@ -286,7 +286,7 @@
   font-weight: 900;
   margin: 2.5rem 0 1rem 0;
   color: rgb(var(--text-base));
-  border-left: 4px solid #8E2D3D;
+  border-left: 4px solid #9C1B23;
   padding-left: 0.75rem;
   transition: color 0.5s;
 }
@@ -294,7 +294,7 @@
   .article-content h2 {
     font-size: 2.2rem;
     margin: 3.5rem 0 1.5rem 0;
-    border-left: 6px solid #8E2D3D;
+    border-left: 6px solid #9C1B23;
     padding-left: 1rem;
   }
 }
