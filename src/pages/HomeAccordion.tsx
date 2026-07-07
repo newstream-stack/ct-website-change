@@ -68,10 +68,12 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [isMuted, setIsMuted] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(170);
   const [isMobileLayout, setIsMobileLayout] = useState(() => window.innerWidth < 768);
+  const [pinnedHeight, setPinnedHeight] = useState(() => window.innerHeight);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLIFrameElement>(null);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
+  const pinnedHeightRef = useRef(pinnedHeight);
 
   const panels: AccordionPanel[] = buildPanels(getNewsList());
 
@@ -92,10 +94,20 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
   // ── Header height measurement ───────────────────────────────────────────────
   useLayoutEffect(() => {
+    // Vertical center of the collapsed panel indicators only re-pins once the
+    // window height has changed meaningfully, so it doesn't drift up/down
+    // while the browser window is being live-resized.
+    const PIN_THRESHOLD = 120;
     const update = () => {
       const header = document.querySelector('header');
       if (header) setHeaderHeight(header.offsetHeight);
       setIsMobileLayout(window.innerWidth < 768);
+
+      const h = window.innerHeight;
+      if (Math.abs(h - pinnedHeightRef.current) > PIN_THRESHOLD) {
+        pinnedHeightRef.current = h;
+        setPinnedHeight(h);
+      }
     };
     update();
     window.addEventListener('resize', update);
@@ -194,10 +206,17 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 }`}
               />
               {/* Collapsed */}
-              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
-                <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">AD</span>
+              <div
+                className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20"
+                style={{ bottom: 'auto', height: pinnedHeight }}
+              >
+                <div className="md:h-11 md:flex md:items-center md:justify-center">
+                  <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">AD</span>
+                </div>
                 <div className="hidden md:block w-5 h-px bg-brand-red/80 mx-auto" />
-                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:writing-vertical-rl text-brand-red font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">SPONSOR</span>
+                <div className="md:h-24 md:flex md:items-center md:justify-center">
+                  <span className="font-display tracking-[0.25em] uppercase text-[10px] md:text-xs md:[writing-mode:vertical-rl] text-brand-red font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">SPONSOR</span>
+                </div>
               </div>
               {/* Expanded */}
               <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
@@ -206,7 +225,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <span className="bg-brand-red text-white font-display font-bold text-[10px] tracking-[0.2em] uppercase px-2.5 py-1">SPONSORED</span>
                     <span className="font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">{ad.sponsor}</span>
                   </div>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-[3.2rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     {ad.title}
                   </h2>
                   <p className="text-white/90 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 max-w-md mb-4 md:mb-8 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
@@ -264,10 +283,17 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <div className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${index === activeIndex ? 'accordion-vignette' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'}`} />
 
               {/* Collapsed */}
-              <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] pointer-events-none">
-                <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" />
+              <div
+                className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-[40] pointer-events-none"
+                style={{ bottom: 'auto', height: pinnedHeight }}
+              >
+                <div className="md:h-11 md:flex md:items-center md:justify-center">
+                  <i className="fas fa-play-circle text-xl md:text-[2rem] text-white/80 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" />
+                </div>
                 <div className="hidden md:block w-5 h-px bg-white/30 mx-auto" />
-                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:writing-vertical-rl text-white/80 font-bold">{video.category}</span>
+                <div className="md:h-24 md:flex md:items-center md:justify-center">
+                  <span className="font-display tracking-[0.25em] uppercase text-[10px] md:text-xs md:[writing-mode:vertical-rl] text-white/80 font-bold">{video.category}</span>
+                </div>
               </div>
 
               {index !== activeIndex && <div className="absolute inset-0 z-[60] cursor-pointer pointer-events-auto bg-transparent" />}
@@ -302,7 +328,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       </button>
                     </div>
                   </div>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                  <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-[3.2rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
                     {video.title}
                   </h2>
                   <p className="hidden md:block text-white/90 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md mb-4 md:mb-8">
@@ -378,14 +404,21 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             />
 
             {/* Collapsed */}
-            <div className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20">
-              <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                0{displayIndex + 1}
-              </span>
+            <div
+              className="content-collapsed absolute inset-0 flex flex-row md:flex-col items-center justify-start md:justify-center px-5 py-0 md:p-6 gap-3 md:gap-5 z-20"
+              style={{ bottom: 'auto', height: pinnedHeight }}
+            >
+              <div className="md:h-11 md:flex md:items-center md:justify-center">
+                <span className="font-display text-xl md:text-[2rem] font-bold text-white tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                  0{displayIndex + 1}
+                </span>
+              </div>
               <div className="hidden md:block w-5 h-px bg-white/30 mx-auto" />
-              <span className="font-display tracking-[0.25em] uppercase text-[10px] md:writing-vertical-rl text-white/80 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                {news.category}
-              </span>
+              <div className="md:h-24 md:flex md:items-center md:justify-center">
+                <span className="font-display tracking-[0.25em] uppercase text-[10px] md:text-xs md:[writing-mode:vertical-rl] text-white/80 font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+                  {news.category}
+                </span>
+              </div>
             </div>
 
             {/* Expanded */}
@@ -425,8 +458,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   ))}
                 </div>
 
-                <div className="min-h-[5.5rem] md:min-h-[8.5rem] lg:min-h-[10rem] mb-2 md:mb-4 overflow-hidden">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-serif font-black text-white leading-[1.2] tracking-tight line-clamp-3 drop-shadow-lg">
+                <div className="min-h-[5.5rem] md:min-h-[10rem] lg:min-h-[12rem] mb-2 md:mb-4 overflow-hidden">
+                  <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-[3.2rem] font-serif font-black text-white leading-[1.2] tracking-tight line-clamp-3 drop-shadow-lg">
                     {news.title}
                   </h2>
                 </div>
