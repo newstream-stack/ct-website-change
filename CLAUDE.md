@@ -2,7 +2,9 @@
 
 ## 專案概述
 
-IMPACT 論壇報的前端重設計原型。SPA 架構，無後端，所有路由/狀態皆在前端。
+IMPACT 論壇報的前端重設計原型。SPA 架構，**沒有 React Router**，所有路由/狀態皆在前端（`App.tsx`）。
+
+> 目前沒有接真實後端，但 `src/api/` 層刻意寫成「假裝在打真實 REST API」的形狀（見下方「API 層」），方便未來直接把 mock 換成真的 fetch。**不要把這層當成純裝飾拿掉或簡化**。
 
 ---
 
@@ -15,26 +17,48 @@ IMPACT 論壇報的前端重設計原型。SPA 架構，無後端，所有路由
 | 樣式 | **Tailwind CSS v4** + Vanilla CSS (`src/index.css`) |
 | 字體 | Google Fonts：Noto Sans TC、Noto Serif TC、Oswald、Playfair Display |
 | Icon | Font Awesome 6 (CDN，`index.html` 引入) |
+| i18n | `src/i18n/I18nContext.tsx`（目前僅 `zh`，`t()` 有 fallback 回傳 key 本身） |
 
 > ⚠️ 使用的是 **Tailwind v4**，不是 v3。`@theme` 取代舊版 `tailwind.config.js`，自訂 CSS 變數直接寫在 `index.css` 的 `@theme {}` block。
+>
+> ⚠️ Tailwind v4 沒有內建 `xs:` breakpoint。寫 `hidden xs:block` 這種 class 不會報錯，但也永遠不會生效（等同一直 `hidden`）。要嘛用 `sm:`，要嘛在 `@theme` 自訂。
 
 ---
 
 ## 路由 / 頁面架構
 
-路由是純前端 state，**沒有 React Router**。`App.tsx` 管理所有狀態：
+`App.tsx` 用多組 state 決定畫面，並透過 `window.history.pushState` 把狀態同步進 URL（`?category=xxx&article=123&plan=1&product=1`），支援瀏覽器上一頁 / 下一頁（`popstate`）。
 
 ```
-currentCategory (string) + currentArticleId (number | null)
+currentCategory (string)
++ currentArticleId / currentPlanId / currentProductId (number | null)
     │
-    ├── '首頁' + no article → <HomeAccordion>
-    ├── NEWS_CATEGORIES + no article → <CategoryList>
-    ├── any + articleId → <ArticleDetail>
-    ├── '信仰好物' → <ProductGallery>
-    └── '訂報' | '奉獻' → <ActionPage>
+    ├── '首頁'                        → <HomeAccordion>
+    ├── '專欄'                        → <ColumnPage>
+    ├── '影響力聯盟'                   → <ImpactAlliancePage>
+    ├── NEWS_CATEGORIES（其餘分類）     → <CategoryList>
+    ├── 任何分類 + articleId           → <ArticleDetail>（優先權最高）
+    ├── '信仰好物' + 無 productId       → <ProductGallery>
+    ├── '信仰好物' + productId         → <ProductDetail>
+    ├── '訂報'                        → <ActionPage>
+    ├── '奉獻' + 無 planId             → <DonationGallery>
+    ├── '奉獻' + planId               → <DonationPlanDetail>
+    ├── '會員中心'                     → <LoginPage>
+    ├── '會員招募'                     → <MembershipPage>
+    ├── '會員專區'                     → <MemberDashboard>
+    ├── '活動報名'                     → <EventRegistrationPage>
+    ├── '關於我們' / '新聞連絡' / '我要投稿' / '版權隱私權聲明' / '財務報表'
+    │                                → 對應靜態頁（About/Contact/Submit/Privacy/Financial）
+    └── (全域，不受 category 影響)     → <SplashAd>、<Header>、<Footer>、
+                                        <CartDrawer>、<SearchModal>
 ```
 
-URL 通過 `window.history.pushState` 同步（`?category=xxx&article=123`），支援瀏覽器上一頁。
+`main` 用 `key={\`${currentCategory}-${currentArticleId}\`}` 強制切換頁面時重新掛載（避免不同文章間 state 殘留）。
+
+`GlobalBottomAd` 在以下分類**不顯示**（`App.tsx` 排除清單，目前共 12 個）：
+`訂報`、`奉獻`、`信仰好物`、`會員中心`、`會員招募`、`會員專區`、`活動報名`、`關於我們`、`新聞連絡`、`我要投稿`、`版權隱私權聲明`、`財務報表`。
+
+登入狀態用 `useAuth()` hook（`sessionStorage` 存 `auth_token` / `auth_user`），每次切換 `currentCategory` 都會 `refreshUser()`。
 
 ---
 
@@ -42,55 +66,92 @@ URL 通過 `window.history.pushState` 同步（`?category=xxx&article=123`），
 
 ```
 src/
-├── App.tsx              # 路由邏輯 + 全域主題切換
+├── App.tsx                 # 路由邏輯、購物車 state、登入狀態、URL 同步
 ├── main.tsx
-├── index.css            # 全域 CSS：@theme、Accordion 動畫、RWD
-├── data.ts              # MockData：NewsItem[]、AdItem、分類設定
+├── index.css                # 全域 CSS：@theme、Accordion 動畫、RWD
+├── types.ts                  # re-export，實際型別在 src/types/*.ts
+├── types/
+│   ├── news.ts               # NewsItem、AdItem、Columnist、AllianceMember、ActionPlan
+│   ├── donation.ts           # Plan、DonationFormPayload
+│   ├── member.ts             # Member、DonationRecord、SubscriptionRecord、MemberStats
+│   └── product.ts            # Product、CartItem、Order
+├── data/                      # 核心內容資料（JSON + index.ts 匯出）
+│   ├── index.ts               # 匯出 NEWS_CATEGORIES / MOCK_NEWS / MOCK_ADS / ALLIANCE_MEMBERS / COLUMNISTS / MOCK_PRODUCTS
+│   ├── news.json / ads.json / alliance_members.json / columnists.json / products.json / content.json
+├── mocks/                     # 個別頁面專用的假資料（非核心內容模型）
+│   ├── accordionPanels.ts    # HomeAccordion 的 featured 影片/廣告
+│   ├── donationPlans.ts
+│   └── member.ts              # MOCK_MEMBER（會員中心用）
+├── api/                        # 模擬 REST API 的呼叫層（見下方「API 層」）
+│   ├── client.ts              # apiGet/apiPost/apiPut/apiDel，含 401 自動登出
+│   ├── auth.ts                # login/register/socialLogin，內含 dev 測試帳號
+│   ├── news.ts / ads.ts / home.ts / alliance.ts / columnists.ts / plans.ts / member.ts
+├── hooks/
+│   ├── useAuth.ts             # 讀 sessionStorage 使用者、跨分頁同步
+│   ├── useCarousel.ts
+│   └── useYouTubePlayer.ts
+├── i18n/
+│   ├── I18nContext.tsx
+│   └── translations/zh.json
 ├── components/
-│   ├── Header.tsx           # Fixed 頂部導覽，含 mobile actions bar + category bar
-│   ├── GlobalBottomAd.tsx   # Fixed 底部廣告條
-│   ├── FullscreenMenu.tsx   # 手機全螢幕選單
-│   ├── InlineArticleBanner.tsx
+│   ├── Header.tsx             # Fixed 頂部導覽，含 header ad bar + mobile actions bar + category bar
+│   ├── Footer.tsx
+│   ├── GlobalBottomAd.tsx     # Fixed 底部廣告條
+│   ├── SplashAd.tsx           # 進站全螢幕贊助彈窗（SVG 版面，桌機/手機不同排版）
+│   ├── FullscreenMenu.tsx     # 手機全螢幕選單
+│   ├── InlineArticleBanner.tsx # 文章內文中段廣告卡（可傳 className 覆蓋預設 margin）
 │   ├── NativeAdCard.tsx
-│   └── StickySidebarAd.tsx
+│   ├── StickySidebarAd.tsx
+│   ├── SearchModal.tsx / CartDrawer.tsx / ReceiptModal.tsx
+│   ├── ProductDetail.tsx / PlanCard.tsx / DonationPlanDetail.tsx
+│   └── ColumnPage.tsx
 └── pages/
-    ├── HomeAccordion.tsx    # 首頁核心：全螢幕手風琴 + carousel
-    ├── CategoryList.tsx     # 分類文章列表
-    ├── ArticleDetail.tsx    # 文章閱讀頁
-    ├── ActionPage.tsx       # 訂報 / 奉獻頁
-    ├── ProductGallery.tsx   # 信仰好物頁（橫向 scroll gallery）
-    ├── LoginPage.tsx
-    ├── MemberDashboard.tsx
-    ├── EventRegistrationPage.tsx
-    ├── ImpactAlliancePage.tsx
-    ├── MembershipPage.tsx
-    └── DonationGallery.tsx
+    ├── HomeAccordion.tsx      # 首頁核心：全螢幕手風琴 + carousel
+    ├── CategoryList.tsx       # 分類文章列表
+    ├── ArticleDetail.tsx      # 文章閱讀頁（詳見下方專節）
+    ├── ActionPage.tsx         # 訂報頁
+    ├── ProductGallery.tsx     # 信仰好物頁（橫向 scroll gallery）
+    ├── DonationGallery.tsx    # 奉獻方案列表
+    ├── LoginPage.tsx / MembershipPage.tsx / MemberDashboard.tsx
+    ├── EventRegistrationPage.tsx / ImpactAlliancePage.tsx
+    └── AboutPage.tsx / ContactPage.tsx / SubmitPage.tsx / PrivacyPage.tsx / FinancialPage.tsx
 ```
+
+---
+
+## API 層（`src/api/`）
+
+這層是刻意做出來的「未來可以無痛換真後端」介面，**寫新功能時要延續這個慣例**：
+
+- 每個 export 上方用註解標出對應的真實 endpoint，例如：
+  ```ts
+  // GET /api/news/{id}/recommended
+  export function getRecommended(id: number, limit = 4): NewsItem[] {
+    return MOCK_NEWS.filter((n) => n.id !== id).slice(0, limit);
+  }
+  ```
+  之後接後端時，把 function body 換成 `return apiGet<T>('/api/news/...')` 即可，簽名不變。
+- `client.ts` 提供 `apiGet/apiPost/apiPut/apiDel`，統一處理 `Authorization` header 與 401 自動清 session + reload。
+- `auth.ts` 有一組 **dev 測試帳號**（`test@ct.org.tw` / `impact2024`），`login()/register()/socialLogin()` 目前都是 `devDelay()` 後回傳假資料，真正串接時把 `// TODO: replace with real API call` 那行打開即可。
+- `data/`（核心內容：新聞、廣告、聯盟成員、專欄作家、商品）與 `mocks/`（個別頁面專用假資料：首頁精選影片、奉獻方案、會員個人資料）是分開的兩個目錄，寫新頁面時先判斷資料屬於哪一種再決定放哪裡。
 
 ---
 
 ## 主題系統
 
-### CSS 變數（`index.css` 的 `@layer base`）
+**目前只有單一（淺色）主題，沒有 dark mode 切換**（舊版有 `.dark` class + toggle，已於後續版本移除）。CSS 變數（`index.css` 的 `@layer base`）：
 
 ```css
 :root {
-  --bg-base: 255 255 255;   /* light mode */
+  --bg-base: 253 252 250;   /* 米白 */
   --text-base: 10 10 10;
-}
-.dark {
-  --bg-base: 10 10 10;      /* dark mode */
-  --text-base: 255 255 255;
 }
 ```
 
-在 Tailwind 使用：`bg-theme-bg`、`text-theme-text`、`border-theme-text/10` 等。
+在 Tailwind 使用：`bg-theme-bg`、`text-theme-text`、`border-theme-text/10` 等，**即使沒有 dark mode 也要繼續用這組 token**（不要硬寫 `bg-white`/`text-black`），保留未來重新加回主題切換的彈性。
 
 ### 品牌色
 - `--color-brand-red: #C62828` → Tailwind class: `bg-brand-red`、`text-brand-red`
-
-### Dark mode 切換
-`App.tsx` 的 `toggleTheme` 在 `document.documentElement` 上加/移除 `.dark` class。
 
 ---
 
@@ -102,9 +163,9 @@ Header 是 `position: fixed; z-index: 40`。各頁面的 **top padding 必須清
 
 | 行 | class | 估算高度 |
 |----|-------|---------|
-| 頂部廣告條 | `py-1.5` | ~26px |
+| 頂部廣告條（`getAd('header')`，可能不顯示）| `py-1.5` | ~26px |
 | Logo + 導覽列 | `p-3` | ~60px |
-| Mobile actions bar（信仰好物/訂閱/奉獻）| `pb-3.5` | ~34px |
+| Mobile actions bar（信仰好物/奉獻）| `pb-3.5` | ~34px |
 | Category bar（`showCategoryBar` 時）| `py-2.5` | ~39px |
 | Header `pb-1` | | ~4px |
 | **總計** | | **~163–175px** |
@@ -114,12 +175,33 @@ Header 是 `position: fixed; z-index: 40`。各頁面的 **top padding 必須清
 | Component | Mobile | Desktop |
 |-----------|--------|---------|
 | `HomeAccordion` | **動態**（ResizeObserver） | `md:pt-0`（圖片從頂部滿版） |
-| `CategoryList` | `pt-[190px]` | `md:pt-48` |
+| `CategoryList`（標準版型） | `pt-[190px]` | `md:pt-48` |
+| `CategoryList`（首頁精選版型） | `pt-[180px]` | `md:pt-[190px]` |
 | `ActionPage` | `pt-[190px]` | `md:pt-0` |
 | `ProductGallery` | `pt-[190px]` | `md:pt-32` |
-| `ArticleDetail` | 無（hero 圖片全螢幕，header 疊在上面是刻意設計） | — |
+| `ArticleDetail` | `pt-[190px]` | `md:pt-32`（見下方專節） |
 
 > ⚠️ **不要用 `pt-16`（64px）或 `pt-24`（96px）當手機 header 清除值**，會跑版。安全值為 `pt-[190px]`。
+
+---
+
+## ArticleDetail — 文章頁結構
+
+文章頁**由上到下**的順序（不要把廣告插到圖片/標題前面，會讓使用者滑到標題前先看到廣告）：
+
+1. 主圖：`aspect-[832/470]`、`object-cover`、有邊框 + 圓角（**不是滿版**，跟廣告/標題共用同一組左右 padding，視覺上才會對齊一致）
+2. 分類標籤 + 標題（`h1`）+ 作者/日期 meta row
+3. （進入雙欄 grid 後）左欄：贊助商廣告（`getAd('infeed')`，樣式沿用 `GlobalBottomAd` 的「Premium Sponsorship」視覺語言：`bg-theme-text` 深底、brand-red 直條、serif 粗體標題、紅色 CTA）→ Share／收藏列 → 內文（`article.content` 或 `firstPart` + 文中插播的 `randomAd` + `secondPart`）
+4. 右欄：「熱門文章」編號列表（`getRecommended(articleId, 5)`）+ `getAd('sidebar')`
+5. 「推薦文章 / UP NEXT」grid（`getRecommended(articleId)`，預設 4 筆）
+6. 「Back to Index」全螢幕黑底 CTA
+
+### 收藏（Bookmark）功能
+- 狀態存在 `localStorage` key `impact_saved_articles`（`number[]`，文章 id），**不是**呼叫 `api/`（純前端功能，沒有對應 endpoint）。
+- 切換時用共用的 `toastMessage` state 跳提示（跟複製連結分享共用同一個 toast UI，不要各自寫一份）。
+- `isSaved` 用 `useEffect` 依 `article.id` 重新計算，**不要**只用 lazy `useState` 初始化，否則同一個掛載中切換文章（不同 `articleId` prop）狀態不會更新。
+
+> 圖片、標題、廣告都包在同一個 `max-w-[90rem] mx-auto` + 同一組 `px-5 sm:px-6 md:px-12 lg:px-20`容器裡，**不要**再拆成多層各自宣告 padding 的 div，之前這樣做造成間距重複、版面「怪怪的」。
 
 ---
 
@@ -203,28 +285,42 @@ content-expanded 的底部 padding 必須大於這個值：
 ## GlobalBottomAd
 
 - `fixed bottom-0 z-50`，高度估算：手機 ~56px，桌機 ~74px
-- **`GlobalBottomAd` 不在 `訂報`、`奉獻`、`信仰好物` 頁顯示**（`App.tsx` 第 125 行）
+- 排除清單見上方「路由 / 頁面架構」一節（12 個分類）
 - 其他頁面的內容底部必須留足夠 padding 避免被遮
+- 在 Playwright 等工具做**全頁（fullPage）截圖**時，`position: fixed` 元素常會被畫在錯誤的絕對位置、疊在頁面中段內容上——**這是截圖工具的已知瑕疵，不是真的版面 bug**。要驗證 fixed 元素要用一般 viewport 截圖 + 手動 `scrollTo`，不要看 fullPage 截圖。
 
 ---
 
-## 資料結構（`src/data.ts`）
+## 資料結構（`src/data/`）
 
-### NewsItem
+### NewsItem（`src/types/news.ts`）
 ```ts
 interface NewsItem {
   id: number;
   title: string;
   excerpt: string;
-  category: string; // 對應 NEWS_CATEGORIES
+  category: string;   // 對應 NEWS_CATEGORIES
   author: string;
-  date: string;     // 'APR 11' 格式
-  imageUrl: string; // Unsplash URL 或 ct.org.tw 圖片
-  content?: string; // HTML string，只有 id:1 有真實內容
+  date: string;        // 'APR 11' 格式
+  imageUrl: string;    // Unsplash URL 或 ct.org.tw 圖片
+  content?: string;    // HTML string，只有 id:1 有真實內容
+  subCategory?: string;
 }
 ```
 
-### MOCK_NEWS 分組
+### AdItem
+```ts
+interface AdItem {
+  id: string;
+  sponsor: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  link: string;
+}
+```
+
+### MOCK_NEWS 分組（HomeAccordion）
 Accordion 每個面板對應 5 筆，共 5 面板（+ 1 個 AD 面板）：
 - Panel 1（index 0）：最新文章，items id 1,7,8,9,10
 - Panel 2（index 1）：專欄，items id 2,11,12,13,14
@@ -234,6 +330,17 @@ Accordion 每個面板對應 5 筆，共 5 面板（+ 1 個 AD 面板）：
 
 ### MOCK_ADS slots
 `infeed` | `inline` | `sidebar` | `accordion` | `header`
+（`ArticleDetail` 的贊助商廣告與 `CategoryList` 的 `NativeAdCard` 都吃 `infeed`；`header` 是 Header 頂部那條紅色 CTA 條，跟文章頁廣告是不同東西，不要搞混）
+
+### localStorage / sessionStorage key 慣例
+| Key | 存放位置 | 內容 |
+|-----|---------|------|
+| `impact_cart` | localStorage | 購物車 `CartItem[]` |
+| `impact_orders` | localStorage | 已完成訂單 |
+| `impact_saved_articles` | localStorage | 收藏文章 id 陣列（`number[]`） |
+| `auth_token` / `auth_user` | sessionStorage | 登入 session（由 `api/auth.ts` 寫入） |
+
+新功能要做「純前端持久化」時，沿用 `impact_` 前綴命名。
 
 ---
 
@@ -246,11 +353,18 @@ export const NEWS_CATEGORIES = [
 ];
 ```
 
-特殊分類（不走 CategoryList）：
+特殊分類（不走 `CategoryList`，由 `App.tsx` 直接分派元件）：
 - `'首頁'` → HomeAccordion
-- `'信仰好物'` → ProductGallery
-- `'訂報'` | `'奉獻'` → ActionPage
-- `'會員中心'` → 目前無實作（placeholder）
+- `'專欄'` → ColumnPage
+- `'影響力聯盟'` → ImpactAlliancePage
+- `'信仰好物'` → ProductGallery / ProductDetail
+- `'訂報'` → ActionPage
+- `'奉獻'` → DonationGallery / DonationPlanDetail
+- `'會員中心'` → LoginPage
+- `'會員招募'` → MembershipPage
+- `'會員專區'` → MemberDashboard
+- `'活動報名'` → EventRegistrationPage
+- `'關於我們'` / `'新聞連絡'` / `'我要投稿'` / `'版權隱私權聲明'` / `'財務報表'` → 對應靜態頁
 
 ---
 
@@ -284,6 +398,12 @@ export const NEWS_CATEGORIES = [
 
 6. **`accordion-container` 的 padding-top 是 inline style（ResizeObserver 寫入）**，覆蓋優先度高於 Tailwind class，不要在 className 同時加 `pt-[Npx]` 造成衝突。
 
+7. **Tailwind v4 沒有 `xs:` breakpoint**——寫了不會報錯但永遠不生效，等於一直 `hidden`。改用 `sm:` 或在 `@theme` 自訂。
+
+8. **同一個區塊不要拆成多層各自宣告 padding/max-width 的 div**——容易造成間距疊加、版面「看起來怪怪的」，且改一次要改好幾處。優先合併成單一容器。
+
+9. **驗證 `position: fixed` 元素（Header、GlobalBottomAd）時不要用 Playwright fullPage 截圖**，會被畫在錯誤位置疊在內容上；改用一般 viewport 截圖 + `scrollTo` 驗證。
+
 ---
 
 ## Dev 指令
@@ -300,5 +420,6 @@ npm run preview # 預覽 dist
 
 - **行動優先（Mobile First）**，但 HomeAccordion 的 hover 互動是桌機專屬
 - 字體：heading 用 `font-serif`（Noto Serif TC）、UI label 用 `font-display`（Oswald）、內文用 `font-sans`（Noto Sans TC）
-- 色調：白底黑字 light mode，黑底白字 dark mode，品牌紅（#C62828）作為 accent
+- 色調：米白底黑字（單一主題，無 dark mode），品牌紅（#C62828）作為 accent
 - 圖片盡量保持 `grayscale opacity-70`，hover/active 時轉全彩——這是整站的視覺語言
+- 廣告/贊助內容統一走「Premium Sponsorship」視覺語言（`bg-theme-text` 深底 + brand-red 直條 + serif 粗體標題 + 紅色 CTA），**不要**每個廣告位置各自發明新樣式（先前迭代過幾種「滿版圖片疊文字」的設計都被認為不好看，最後收斂到這個方案）

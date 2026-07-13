@@ -161,6 +161,17 @@ export default function App() {
   }, [currentCategory, refreshUser]);
 
   const goToCategory = (cat: string, options?: { register?: boolean }) => {
+    // Update the route as part of the navigation event.  Relying solely on the
+    // state-sync effect leaves a short interval where a header click can be
+    // followed by the old (home) route being rendered again.
+    const params = new URLSearchParams();
+    if (cat !== '首頁') params.set('category', cat);
+    const queryString = params.toString();
+    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
+    if (nextUrl !== window.location.pathname + window.location.search) {
+      window.history.pushState({}, '', nextUrl);
+    }
+
     setCurrentArticleId(null);
     setCurrentPlanId(null);
     setCurrentProductId(null);

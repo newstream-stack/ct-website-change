@@ -32,10 +32,15 @@ export default function Header({
       )}
       
       <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
-        <div className="pointer-events-auto cursor-pointer" onClick={() => goToCategory('首頁')}>
-          <img src="/LOGO-m.png" alt="IMPACT 論壇報" className="md:hidden h-7 w-auto object-contain origin-left scale-[1.9] translate-y-2" />
-          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
-        </div>
+        <button
+          type="button"
+          aria-label="回到首頁"
+          onClick={() => goToCategory('首頁')}
+          className="relative isolate flex h-8 w-[120px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-10 md:w-40"
+        >
+          <img src="/LOGO-m.png" alt="IMPACT 論壇報" className="pointer-events-none md:hidden h-7 w-auto object-contain origin-left scale-[1.9] translate-y-2" />
+          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
+        </button>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
           {/* Desktop Right CTAs */}
@@ -110,7 +115,14 @@ export default function Header({
         <div className="w-full border-t border-theme-text/10 transition-colors duration-500">
           <div className="max-w-[100vw] px-4 md:px-6 py-2.5 md:py-3 flex items-center gap-5 md:gap-8 overflow-x-auto hide-scrollbar font-sans font-bold text-xs md:text-sm tracking-widest text-theme-text/70 whitespace-nowrap">
             {NEWS_CATEGORIES.map(cat => (
-              <a key={cat} href="#" onClick={(e) => { e.preventDefault(); goToCategory(cat); }} className="hover:text-brand-red hover:text-theme-text transition-colors">{cat}</a>
+              <button
+                key={cat}
+                type="button"
+                onClick={() => goToCategory(cat)}
+                className="cursor-pointer hover:text-brand-red hover:text-theme-text transition-colors"
+              >
+                {cat}
+              </button>
             ))}
           </div>
         </div>
