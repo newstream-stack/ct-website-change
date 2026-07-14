@@ -462,8 +462,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </h2>
                 </div>
 
-                <div className="h-[4.25rem] md:h-[4.5rem] max-w-xl mb-4 md:mb-8 overflow-hidden">
-                  <p className="border-l-2 border-brand-red bg-black/40 px-3 py-2 text-white/95 font-normal text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 shadow-md backdrop-blur-[2px]">
+                <div className="h-auto md:h-[4.5rem] max-w-xl mb-4 md:mb-8 overflow-visible md:overflow-hidden">
+                  <p className="border-l-2 border-brand-red bg-black/40 px-3 py-2 text-white/95 font-normal text-xs sm:text-sm md:text-base leading-relaxed line-clamp-none md:line-clamp-2 shadow-md backdrop-blur-[2px]">
                     {news.excerpt}
                   </p>
                 </div>
