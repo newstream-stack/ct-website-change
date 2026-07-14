@@ -25,6 +25,10 @@ import ContactPage from './pages/ContactPage';
 import SubmitPage from './pages/SubmitPage';
 import PrivacyPage from './pages/PrivacyPage';
 import FinancialPage from './pages/FinancialPage';
+import CustomerServicePage from './pages/CustomerServicePage';
+import PartnershipPage from './pages/PartnershipPage';
+import LineStickersPage from './pages/LineStickersPage';
+import BlessingCardPage from './pages/BlessingCardPage';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 
@@ -287,11 +291,27 @@ export default function App() {
         {currentCategory === '財務報表' && (
           <FinancialPage />
         )}
+
+        {currentCategory === '客戶服務' && (
+          <CustomerServicePage />
+        )}
+
+        {currentCategory === '申請合作' && (
+          <PartnershipPage />
+        )}
+
+        {currentCategory === '論壇Line貼圖' && (
+          <LineStickersPage />
+        )}
+
+        {currentCategory === '祝福卡申辦/捐款' && (
+          <BlessingCardPage />
+        )}
       </main>
 
       <Footer goToCategory={goToCategory} />
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿', '版權隱私權聲明', '財務報表'].includes(currentCategory) && (
+      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'].includes(currentCategory) && (
         <GlobalBottomAd goToCategory={goToCategory} />
       )}
 

@@ -1,11 +1,11 @@
 const LINK_GROUPS = [
   {
     title: '關於',
-    links: ['關於我們', '新聞連絡', '招募夥伴', '財務報表'],
+    links: ['關於我們', '新聞連絡', '財務報表'],
   },
   {
     title: '服務',
-    links: ['我要投稿', '廣告刊登', '申請合作', '客戶服務'],
+    links: ['我要投稿', '申請合作', '客戶服務'],
   },
   {
     title: '更多',
@@ -73,6 +73,10 @@ export default function Footer({ goToCategory }: FooterProps) {
                           if (link === '關於我們') goToCategory('關於我們');
                           else if (link === '新聞連絡') goToCategory('新聞連絡');
                           else if (link === '我要投稿') goToCategory('我要投稿');
+                          else if (link === '申請合作') goToCategory('申請合作');
+                          else if (link === '客戶服務') goToCategory('客戶服務');
+                          else if (link === '論壇Line貼圖') goToCategory('論壇Line貼圖');
+                          else if (link === '祝福卡申辦/捐款') goToCategory('祝福卡申辦/捐款');
                           else if (link === '版權隱私權聲明') goToCategory('版權隱私權聲明');
                           else if (link === '財務報表') goToCategory('財務報表');
                         }}
