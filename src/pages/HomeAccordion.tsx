@@ -432,12 +432,13 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             {/* Expanded */}
             <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
               <div className="max-w-xl w-full">
-                <div className="flex items-center gap-3 h-8 mb-2 md:h-9 md:mb-4">
-                  <span className="text-brand-red font-display font-bold text-[10px] tracking-[0.2em] uppercase border border-brand-red/50 px-2.5 py-1 whitespace-nowrap shrink-0">
+                <div className="inline-flex w-fit items-center gap-3 rounded-sm border border-white/15 bg-black/45 px-2.5 py-2 shadow-lg backdrop-blur-sm mb-3 md:mb-4">
+                  <span className="bg-brand-red text-white font-display font-bold text-[10px] tracking-[0.16em] uppercase px-2.5 py-1 whitespace-nowrap shrink-0 shadow-sm">
                     {news.category}
                   </span>
-                  <span className="font-display text-[10px] text-white/50 tracking-[0.2em] uppercase shrink-0">
-                    0{carouselIndex + 1} / 0{NEWS_GROUP_SIZE}
+                  <span className="font-display text-[11px] font-bold text-white tracking-[0.16em] uppercase whitespace-nowrap shrink-0">
+                    <span className="text-white/60 mr-1">文章</span>
+                    0{carouselIndex + 1}<span className="text-white/55 mx-1">/</span>0{NEWS_GROUP_SIZE}
                   </span>
                   <div className="hidden md:flex items-center gap-1.5 shrink-0">
                     <button
@@ -455,25 +456,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </div>
                 </div>
 
-                <div className="hidden sm:flex items-center gap-1.5 h-5 mb-4 md:mb-5">
-                  {Array.from({ length: NEWS_GROUP_SIZE }, (_, i) => (
-                    <button
-                      key={i}
-                      onClick={(e) => { e.stopPropagation(); setCarouselIndex(i); }}
-                      className={`transition-all duration-300 rounded-full ${i === carouselIndex ? 'w-5 h-1.5 bg-brand-red' : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'}`}
-                      aria-label={`Go to story ${i + 1}`}
-                    />
-                  ))}
-                </div>
-
                 <div className="min-h-[5.5rem] md:min-h-[10rem] lg:min-h-[12rem] mb-2 md:mb-4 overflow-hidden">
                   <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-[3.2rem] font-serif font-black text-white leading-[1.2] tracking-tight line-clamp-3 drop-shadow-lg">
                     {news.title}
                   </h2>
                 </div>
 
-                <div className="h-10 md:h-12 mb-4 md:mb-8 overflow-hidden">
-                  <p className="text-white/70 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 max-w-md">
+                <div className="h-[4.25rem] md:h-[4.5rem] max-w-xl mb-4 md:mb-8 overflow-hidden">
+                  <p className="border-l-2 border-brand-red bg-black/40 px-3 py-2 text-white/95 font-normal text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 shadow-md backdrop-blur-[2px]">
                     {news.excerpt}
                   </p>
                 </div>
