@@ -263,23 +263,6 @@
   }
 }
 
-.article-content p.drop-cap::first-letter {
-  float: left;
-  font-size: 3.5rem;
-  line-height: 1;
-  padding-right: 0.15rem;
-  margin-bottom: -0.2rem;
-  font-family: 'Noto Serif TC', serif;
-  color: #9C1B23;
-}
-@media (min-width: 768px) {
-  .article-content p.drop-cap::first-letter {
-    font-size: 5rem;
-    padding-right: 0.2rem;
-    padding-top: 0.05em;
-  }
-}
-
 .article-content h2 {
   font-size: 1.75rem;
   font-family: 'Noto Serif TC', serif;

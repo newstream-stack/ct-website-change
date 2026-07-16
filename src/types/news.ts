@@ -8,6 +8,7 @@ export interface NewsItem {
   imageUrl: string;
   content?: string;
   subCategory?: string;
+  tags?: string[];
 }
 
 export interface AdItem {

@@ -29,6 +29,9 @@ import CustomerServicePage from './pages/CustomerServicePage';
 import PartnershipPage from './pages/PartnershipPage';
 import LineStickersPage from './pages/LineStickersPage';
 import BlessingCardPage from './pages/BlessingCardPage';
+import KnowledgeBasePage from './pages/KnowledgeBasePage';
+import TagResultsPage from './pages/TagResultsPage';
+import AuthorResultsPage from './pages/AuthorResultsPage';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 
@@ -46,6 +49,20 @@ export default function App() {
       const params = new URLSearchParams(window.location.search);
       const article = params.get('article');
       return article ? parseInt(article, 10) : null;
+    }
+    return null;
+  });
+
+  const [currentTag, setCurrentTag] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return new URLSearchParams(window.location.search).get('tag');
+    }
+    return null;
+  });
+
+  const [currentAuthor, setCurrentAuthor] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return new URLSearchParams(window.location.search).get('author');
     }
     return null;
   });
@@ -124,6 +141,12 @@ export default function App() {
     if (currentArticleId !== null) {
       params.set('article', currentArticleId.toString());
     }
+    if (currentTag) {
+      params.set('tag', currentTag);
+    }
+    if (currentAuthor) {
+      params.set('author', currentAuthor);
+    }
     if (currentPlanId !== null) {
       params.set('plan', currentPlanId.toString());
     }
@@ -138,7 +161,7 @@ export default function App() {
     if (newUrl !== window.location.pathname + window.location.search) {
       window.history.pushState({}, '', newUrl);
     }
-  }, [currentCategory, currentArticleId, currentPlanId, currentProductId]);
+  }, [currentCategory, currentArticleId, currentPlanId, currentProductId, currentTag, currentAuthor]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -147,6 +170,8 @@ export default function App() {
       setCurrentCategory(params.get('category') || '首頁');
       const article = params.get('article');
       setCurrentArticleId(article ? parseInt(article, 10) : null);
+      setCurrentTag(params.get('tag'));
+      setCurrentAuthor(params.get('author'));
       const plan = params.get('plan');
       setCurrentPlanId(plan ? parseInt(plan, 10) : null);
       const product = params.get('product');
@@ -177,6 +202,8 @@ export default function App() {
     }
 
     setCurrentArticleId(null);
+    setCurrentTag(null);
+    setCurrentAuthor(null);
     setCurrentPlanId(null);
     setCurrentProductId(null);
     setCurrentCategory(cat);
@@ -188,6 +215,26 @@ export default function App() {
 
   const openArticle = (id: number) => {
     setCurrentArticleId(id);
+    window.scrollTo(0, 0);
+  };
+
+  const goToTag = (tag: string) => {
+    setCurrentArticleId(null);
+    setCurrentPlanId(null);
+    setCurrentProductId(null);
+    setCurrentCategory('最新文章');
+    setCurrentTag(tag);
+    setCurrentAuthor(null);
+    window.scrollTo(0, 0);
+  };
+
+  const goToAuthor = (author: string) => {
+    setCurrentArticleId(null);
+    setCurrentPlanId(null);
+    setCurrentProductId(null);
+    setCurrentCategory('最新文章');
+    setCurrentTag(null);
+    setCurrentAuthor(author);
     window.scrollTo(0, 0);
   };
 
@@ -211,25 +258,37 @@ export default function App() {
       />
 
 
-      <main className="w-full min-h-[100dvh] page-transition" key={`${currentCategory}-${currentArticleId}`}>
-        {currentCategory === '首頁' && !currentArticleId && (
+      <main className="w-full min-h-[100dvh] page-transition" key={`${currentCategory}-${currentArticleId}-${currentTag}-${currentAuthor}`}>
+        {currentAuthor && !currentArticleId && (
+          <AuthorResultsPage author={currentAuthor} openArticle={openArticle} />
+        )}
+
+        {currentTag && !currentAuthor && !currentArticleId && (
+          <TagResultsPage tag={currentTag} openArticle={openArticle} />
+        )}
+
+        {currentCategory === '首頁' && !currentArticleId && !currentTag && !currentAuthor && (
           <HomeAccordion openArticle={openArticle} />
         )}
 
-        {currentCategory === '專欄' && !currentArticleId && (
+        {currentCategory === '專欄' && !currentArticleId && !currentTag && !currentAuthor && (
           <ColumnPage openArticle={openArticle} />
         )}
 
-        {currentCategory === '影響力聯盟' && !currentArticleId && (
+        {currentCategory === '影響力聯盟' && !currentArticleId && !currentTag && !currentAuthor && (
           <ImpactAlliancePage openArticle={openArticle} />
         )}
 
-        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && currentCategory !== '專欄' && currentCategory !== '影響力聯盟' && (
+        {currentCategory === '信仰知識庫' && !currentArticleId && !currentTag && !currentAuthor && (
+          <KnowledgeBasePage />
+        )}
+
+        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && !currentTag && !currentAuthor && currentCategory !== '專欄' && currentCategory !== '影響力聯盟' && currentCategory !== '信仰知識庫' && (
           <CategoryList category={currentCategory} openArticle={openArticle} />
         )}
 
         {currentArticleId && (
-          <ArticleDetail articleId={currentArticleId} openArticle={openArticle} goToCategory={goToCategory} />
+          <ArticleDetail articleId={currentArticleId} openArticle={openArticle} goToCategory={goToCategory} goToTag={goToTag} goToAuthor={goToAuthor} />
         )}
 
         {(currentCategory === '信仰好物' && !currentProductId) && (

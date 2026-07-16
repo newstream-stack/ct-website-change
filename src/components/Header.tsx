@@ -65,17 +65,17 @@ export default function Header({
               <button 
                 className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center cursor-pointer" 
                 onClick={() => goToCategory('會員中心')} 
-                title="Log In"
+                title="登入"
               >
                 <i className="far fa-user md:hidden"></i>
-                <span className="hidden md:block">Log In</span>
+                <span className="hidden md:block">登入</span>
               </button>
               <span className="hidden md:inline text-theme-text/30 text-xs">/</span>
-              <button 
+              <button
                 className="hidden md:block font-display font-bold text-sm uppercase tracking-widest text-brand-red hover:text-brand-red/80 transition-colors duration-300 cursor-pointer"
                 onClick={() => goToCategory('會員中心', { register: true })}
               >
-                Register
+                註冊
               </button>
             </div>
           )}
@@ -85,7 +85,7 @@ export default function Header({
           {/* Cart Icon (Icon on mobile, text on desktop) */}
           <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenCart} title="購物車">
             <i className="fas fa-shopping-bag md:hidden"></i>
-            <span className="hidden md:block">Cart</span>
+            <span className="hidden md:block">購物車</span>
             {cartItems.length > 0 && (
               <span className="absolute -top-1.5 -right-2 bg-brand-red text-white text-[9px] font-sans font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-theme-bg shadow-sm">
                 {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
@@ -98,7 +98,7 @@ export default function Header({
           {/* Search Button */}
           <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenSearch} title="全站搜尋">
             <i className="fas fa-search md:hidden"></i>
-            <span className="hidden md:block">Search</span>
+            <span className="hidden md:block">搜尋</span>
           </button>
         </div>
       </div>

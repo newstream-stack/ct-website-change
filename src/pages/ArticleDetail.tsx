@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
-import { getArticle, getRecommended, getArticleContent, getNewsList } from '../api/news';
+import { getArticle, getArticleContent, getArticleTags, getRecommended, getNewsList } from '../api/news';
 import { getRandomAd, getAd } from '../api/ads';
 import InlineArticleBanner from '../components/InlineArticleBanner';
 import StickySidebarAd from '../components/StickySidebarAd';
@@ -9,12 +9,15 @@ interface ArticleDetailProps {
     articleId: number;
     openArticle: (id: number) => void;
     goToCategory: (cat: string) => void;
+    goToTag: (tag: string) => void;
+    goToAuthor: (author: string) => void;
 }
 
-export default function ArticleDetail({ articleId, openArticle, goToCategory }: ArticleDetailProps) {
+export default function ArticleDetail({ articleId, openArticle, goToCategory, goToTag, goToAuthor }: ArticleDetailProps) {
     const article = getArticle(articleId) ?? getNewsList()[0];
     const recommendedNews = getRecommended(articleId);
     const popularNews = getRecommended(articleId, 5);
+    const articleTags = getArticleTags(article);
 
     const [randomAd] = useState(() => getRandomAd() ?? null);
     const topAd = getAd('infeed');
@@ -81,12 +84,15 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                         <img src={article.imageUrl} className="w-full h-full object-cover transition-opacity duration-700" alt="Cover" />
                     </div>
 
-                    <span className="inline-block bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.2em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm">{article.category}</span>
-                    <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-[80px] font-serif font-black text-theme-text leading-[1.3] md:leading-[1.1] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-5xl transition-colors duration-500">
+                    <button onClick={() => goToCategory(article.category)} className="inline-flex items-center gap-2 bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.16em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm hover:bg-brand-red/85 transition-colors">
+                        {article.category}
+                        {article.subCategory && <><span className="h-3 w-px bg-white/50" />{article.subCategory}</>}
+                    </button>
+                    <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-serif font-black text-theme-text leading-[1.28] md:leading-[1.16] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-6xl transition-colors duration-500">
                         {article.title}
                     </h1>
                     <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 font-display uppercase tracking-widest text-[9px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
-                        <span>Words by <strong className="text-brand-red">{article.author}</strong></span>
+                        <span>Words by <button onClick={() => goToAuthor(article.author)} className="text-brand-red hover:underline underline-offset-2">{article.author}</button></span>
                         <span className="text-theme-text/30 transition-colors">|</span>
                         <span>Published {article.date}, 2026</span>
                     </div>
@@ -187,8 +193,11 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
 
                         <div className="mt-12 md:mt-16 pt-8 border-t border-theme-text/10 flex flex-col sm:flex-row justify-between items-center gap-6 transition-colors">
                             <div className="flex flex-wrap justify-center gap-2">
-                                <span className="font-display text-[10px] font-bold uppercase tracking-widest border border-theme-text/20 text-theme-text/80 px-3 py-1 hover:bg-theme-text hover:text-theme-bg cursor-pointer transition rounded-full">#Faith</span>
-                                <span className="font-display text-[10px] font-bold uppercase tracking-widest border border-theme-text/20 text-theme-text/80 px-3 py-1 hover:bg-theme-text hover:text-theme-bg cursor-pointer transition rounded-full">#ModernSociety</span>
+                                {articleTags.map((tag) => (
+                                    <button key={tag} onClick={() => goToTag(tag)} className="font-display text-[10px] font-bold uppercase tracking-widest border border-theme-text/20 text-theme-text/80 px-3 py-1 hover:bg-theme-text hover:text-theme-bg cursor-pointer transition rounded-full">
+                                        #{tag.replace(/\s+/g, '')}
+                                    </button>
+                                ))}
                             </div>
                             <div className="flex lg:hidden">
                                 <button onClick={() => window.scrollTo(0, 0)} className="text-[10px] font-display tracking-widest uppercase text-theme-text/60 hover:text-theme-text transition-colors"><i className="fas fa-arrow-up mr-2"></i>Back to top</button>
@@ -225,7 +234,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory }: 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {recommendedNews.map(n => (
                             <div key={n.id} className="group cursor-pointer flex flex-col h-full" onClick={() => openArticle(n.id)}>
-                                <div className="w-full aspect-[4/3] bg-theme-text/10 overflow-hidden mb-4 border border-theme-text/5 transition-colors rounded-sm">
+                                <div className="w-full aspect-[832/470] bg-theme-text/10 overflow-hidden mb-4 border border-theme-text/5 transition-colors rounded-sm">
                                     <img src={n.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt={n.title} />
                                 </div>
                                 <span className="text-brand-red font-display font-bold text-[10px] uppercase tracking-widest mb-2">{n.category}</span>
