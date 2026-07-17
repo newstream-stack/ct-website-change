@@ -27,6 +27,9 @@ async function request<T>(
   body?: unknown,
   options: ApiRequestOptions = {},
 ): Promise<T> {
+  if (!API_BASE_URL) {
+    throw new ApiError('REST API 模式尚未設定有效的 VITE_API_BASE_URL', 0);
+  }
   const controller = new AbortController();
   const timeout = window.setTimeout(() => controller.abort(), options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
   const abortFromCaller = () => controller.abort();

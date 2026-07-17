@@ -15,6 +15,8 @@ const allowViteDevelopmentBootstrap = (): Plugin => ({
 });
 
 export default defineConfig({
+    // Relative asset URLs also work when the site is deployed below a domain subpath.
+    base: './',
     plugins: [allowViteDevelopmentBootstrap(), react(), tailwindcss()],
     resolve: {
       alias: {
