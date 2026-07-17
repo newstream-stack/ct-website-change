@@ -39,8 +39,8 @@ export default function Header({
           onClick={() => goToCategory('首頁')}
           className="relative isolate flex h-8 w-[120px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-10 md:w-40"
         >
-          <img src="/LOGO-m.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none md:hidden h-7 w-auto object-contain origin-left scale-[1.9] translate-y-2" />
-          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
+          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none md:hidden h-7 w-auto object-contain origin-left scale-[2.9] translate-y-4" />
+          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[5.2] translate-y-3" />
         </button>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">

@@ -22,19 +22,28 @@ IMPACT 論壇報的前端重設計原型。SPA 架構，目前以 mock API 運�
 
 ## 路由 / 頁面架構
 
-路由是純前端 state，**沒有 React Router**。`App.tsx` 管理所有狀態：
+路由是純前端 state，**沒有 React Router**。`src/routing.ts` 負責解析／產生 query string，`App.tsx` 負責畫面切換：
 
 ```
-currentCategory (string) + currentArticleId (number | null)
+AppRoute
+├── category
+├── articleId / tag / author
+├── planId / productId
+└── paymentType / paymentReference
     │
     ├── '首頁' + no article → <HomeAccordion>
-    ├── NEWS_CATEGORIES + no article → <CategoryList>
-    ├── any + articleId → <ArticleDetail>
-    ├── '信仰好物' → <ProductGallery>
-    └── '訂報' | '奉獻' → <ActionPage>
+    ├── 一般 NEWS_CATEGORIES → <CategoryList>
+    ├── '專欄' / '影響力聯盟' / '信仰知識庫' → 各自專用頁
+    ├── articleId / tag / author → 文章、標籤或作者結果頁
+    ├── '信仰好物' → <ProductGallery> / <ProductDetail>
+    ├── '訂報' → <ActionPage>
+    ├── '奉獻' → <DonationGallery> / <DonationPlanDetail>
+    ├── '會員中心' / '會員招募' / '會員專區' → 登入、招募或會員儀表板
+    ├── paymentType → <PaymentResultPage>
+    └── 其他特殊分類 → 活動與一般資訊頁
 ```
 
-URL 通過 `window.history.pushState` 同步（`?category=xxx&article=123`），支援瀏覽器上一頁。
+URL 透過 `window.history.pushState` 同步，支援 `category`、`article`、`tag`、`author`、`plan`、`product`、`payment`、`reference` 與瀏覽器上一頁。所有輸入都必須經過 `readRoute()` 驗證，不要直接信任 query string。
 
 ---
 
@@ -42,29 +51,30 @@ URL 通過 `window.history.pushState` 同步（`?category=xxx&article=123`），
 
 ```
 src/
-├── App.tsx              # 路由邏輯 + 全域狀態
+├── App.tsx              # 頁面切換、購物車與全域 UI 狀態
+├── routing.ts           # Query route 解析、驗證與產生
 ├── main.tsx
 ├── index.css            # 全域 CSS：@theme、Accordion 動畫、RWD
-├── data.ts              # MockData：NewsItem[]、AdItem、分類設定
+├── api/                 # Mock / REST 共用的非同步資料存取層
 ├── components/
-│   ├── Header.tsx           # Fixed 頂部導覽，含 mobile actions bar + category bar
-│   ├── GlobalBottomAd.tsx   # Fixed 底部廣告條
-│   ├── InlineArticleBanner.tsx
-│   ├── NativeAdCard.tsx
-│   └── StickySidebarAd.tsx
-└── pages/
-    ├── HomeAccordion.tsx    # 首頁核心：全螢幕手風琴 + carousel
-    ├── CategoryList.tsx     # 分類文章列表
-    ├── ArticleDetail.tsx    # 文章閱讀頁
-    ├── ActionPage.tsx       # 訂報 / 奉獻頁
-    ├── ProductGallery.tsx   # 信仰好物頁（橫向 scroll gallery）
-    ├── LoginPage.tsx
-    ├── MemberDashboard.tsx
-    ├── EventRegistrationPage.tsx
-    ├── ImpactAlliancePage.tsx
-    ├── MembershipPage.tsx
-    └── DonationGallery.tsx
+│   ├── Header.tsx       # Fixed 頂部導覽，含 mobile actions bar + category bar
+│   ├── GlobalBottomAd.tsx
+│   └── 共用 UI、Modal、廣告與商品／奉獻詳情元件
+├── data/                # JSON mock 內容與 index.ts 匯出
+├── hooks/               # 非同步資料、登入、輪播與 YouTube hooks
+├── mocks/               # 非 JSON 的會員、活動、方案與首頁 mock
+├── pages/
+│   ├── HomeAccordion.tsx    # 首頁核心：手風琴 + carousel
+│   ├── CategoryList.tsx     # 分類文章列表
+│   ├── ArticleDetail.tsx    # 文章閱讀頁
+│   ├── ActionPage.tsx       # 訂報方案展示
+│   ├── ProductGallery.tsx   # 信仰好物頁（橫向 scroll gallery）
+│   └── 會員、奉獻、活動、付款結果與一般資訊頁
+├── types/               # 依領域拆分的共用型別；types.ts 為相容 barrel
+└── utils/               # 安全導頁、storage 與 auth event 工具
 ```
+
+根目錄另有 `tests/`（單元測試）、`e2e/`（Playwright）、`docs/`（API／資安文件）及 `.github/workflows/`（CI）。
 
 ---
 
@@ -120,30 +130,29 @@ Header 是 `position: fixed; z-index: 40`。各頁面的 **top padding 必須清
 ### 動態 Header 高度
 ```tsx
 useLayoutEffect(() => {
-  const header = document.querySelector('header') as HTMLElement | null;
-  const applyPt = () => {
-    const c = containerRef.current;
-    if (!c) return;
-    if (window.innerWidth < 768) {
-      c.style.paddingTop = `${header?.offsetHeight ?? 170}px`;
-    } else {
-      c.style.paddingTop = '';
-    }
+  const update = () => {
+    const header = document.querySelector('header');
+    if (header) setHeaderHeight(header.offsetHeight);
+    setIsMobileLayout(window.innerWidth < 768);
   };
-  applyPt();
-  const ro = header ? new ResizeObserver(applyPt) : null;
-  if (ro && header) ro.observe(header);
-  window.addEventListener('resize', applyPt, { passive: true });
-  return () => { ro?.disconnect(); window.removeEventListener('resize', applyPt); };
+  update();
+  window.addEventListener('resize', update);
+  const observer = new ResizeObserver(update);
+  const header = document.querySelector('header');
+  if (header) observer.observe(header);
+  return () => {
+    window.removeEventListener('resize', update);
+    observer.disconnect();
+  };
 }, []);
 ```
-**不要改回 `pt-[Npx]` 的靜態寫法**，會在不同裝置上跑版。
+容器透過 `style={{ paddingTop: isMobileLayout ? `${headerHeight}px` : 0 }}` 套用量測值。**不要改回 `pt-[Npx]` 的靜態寫法**，也不要同時加 Tailwind `pt-*` 與 inline padding。
 
-### Accordion CSS 動畫原理
-- 所有面板都是 flexbox 子元素（`display: flex; flex-direction: row`）
-- `flex` 屬性變化驅動展開/收合動畫（非 `width/height` 過渡）
-- Active panel: `flex: 7`，inactive: `flex: 1`，CSS `transition: flex 0.65s cubic-bezier(...)`
-- **不要用 `width:` 過渡**，會破壞動畫
+### Accordion RWD 與動畫原理
+- 手機（<768px）：面板垂直堆疊，全部顯示 expanded content；每個面板至少 `62dvh`
+- 桌機（≥768px）：面板橫向排列，inactive `flex: 1`、active / hover `flex: 7`
+- 桌機以 `flex` 屬性變化驅動展開／收合，CSS `transition: flex 0.65s cubic-bezier(...)`
+- **不要用 `width:` 過渡，也不要在手機恢復收合式 flex 行為**
 
 ### 圖片 Grayscale 邏輯
 - **Active panel** 的 carousel 圖片：`opacity-100`（全彩）
@@ -175,17 +184,17 @@ bg-black/50 sm:bg-black/35 md:bg-black/25
 ### 內容固定高度（防止切換文章時版面位移）
 ```tsx
 // Title — 固定最小高度
-<div className="min-h-[5.5rem] md:min-h-[8.5rem] lg:min-h-[10rem] overflow-hidden">
+<div className="min-h-[5.5rem] md:min-h-[10rem] lg:min-h-[12rem] overflow-hidden">
 
-// Excerpt — 固定高度
-<div className="h-10 md:h-12 overflow-hidden">
+// Excerpt — 手機自動高度，桌機固定高度
+<div className="h-auto md:h-[4.5rem] overflow-visible md:overflow-hidden">
 ```
 
 ### 底部 padding（清除 GlobalBottomAd）
 GlobalBottomAd 是 `fixed bottom-0`，高度：`md:py-4` 時約 **74px**。
 content-expanded 的底部 padding 必須大於這個值：
 ```tsx
-// 手機: pb-6 (accordion-container 本身已有 pb-[136px])
+// 手機: accordion-container 本身已有 padding-bottom: 136px
 // 平板: md:pb-20 (80px > 56px ad)
 // 桌機: lg:pb-24 (96px > 74px ad)
 ```
@@ -195,12 +204,19 @@ content-expanded 的底部 padding 必須大於這個值：
 ## GlobalBottomAd
 
 - `fixed bottom-0 z-50`，高度估算：手機 ~56px，桌機 ~74px
-- **`GlobalBottomAd` 不在 `訂報`、`奉獻`、`信仰好物` 頁顯示**（`App.tsx` 第 125 行）
+- 顯示條件集中在 `App.tsx` 的 `<GlobalBottomAd>` render condition；商務、會員、活動與一般資訊頁目前都排除
+- 新增特殊頁面時，必須同步確認是否加入排除清單；不要依賴容易失效的固定行號
 - 其他頁面的內容底部必須留足夠 padding 避免被遮
 
 ---
 
-## 資料結構（`src/data.ts`）
+## 資料與 API 架構
+
+- `src/data/*.json`：新聞、廣告、商品、專欄作者、聯盟與訂報 mock 資料
+- `src/data/index.ts`：靜態資料的型別化匯出與 `NEWS_CATEGORIES`
+- `src/mocks/`：首頁影音／廣告、奉獻、活動、會員與會員方案 mock
+- `src/api/`：頁面唯一的資料存取入口；頁面不要直接 import mock JSON
+- `src/types/`：領域型別；舊引用可暫時透過 `src/types.ts` barrel
 
 ### NewsItem
 ```ts
@@ -212,17 +228,18 @@ interface NewsItem {
   author: string;
   date: string;     // 'APR 11' 格式
   imageUrl: string; // Unsplash URL 或 ct.org.tw 圖片
-  content?: string; // HTML string，只有 id:1 有真實內容
+  content?: string; // 顯示前必須經 DOMPurify sanitize
+  subCategory?: string;
+  tags?: string[];
 }
 ```
 
-### MOCK_NEWS 分組
-Accordion 每個面板對應 5 筆，共 5 面板（+ 1 個 AD 面板）：
-- Panel 1（index 0）：最新文章，items id 1,7,8,9,10
-- Panel 2（index 1）：專欄，items id 2,11,12,13,14
-- Panel 3（index 2）：人物見證，items id 3,15,16,17,18
-- Panel 4（index 3）：生活情報，items id 4,19,20,21,22
-- Panel 5（index 4）：信仰知識庫，items id 5,23,24,25,6
+### HomeAccordion 面板組合
+- 每個 news panel 使用 5 筆文章，最多建立 5 組
+- 第 3 個 news panel 後插入 video panel（有影音資料時）
+- 第 4 個 news panel 後插入 accordion ad（有廣告資料時）
+- 因此完整 mock 通常為 **5 news + 1 video + 1 ad = 7 panels**
+- 面板由 `buildPanels()` 動態建立，不要在文件或 UI 寫死文章 ID
 
 ### MOCK_ADS slots
 `infeed` | `inline` | `sidebar` | `accordion` | `header`
@@ -240,9 +257,17 @@ export const NEWS_CATEGORIES = [
 
 特殊分類（不走 CategoryList）：
 - `'首頁'` → HomeAccordion
-- `'信仰好物'` → ProductGallery
-- `'訂報'` | `'奉獻'` → ActionPage
-- `'會員中心'` → 目前無實作（placeholder）
+- `'專欄'` → ColumnPage
+- `'影響力聯盟'` → ImpactAlliancePage
+- `'信仰知識庫'` → KnowledgeBasePage
+- `'信仰好物'` → ProductGallery / ProductDetail
+- `'訂報'` → ActionPage
+- `'奉獻'` → DonationGallery / DonationPlanDetail
+- `'會員中心'` → LoginPage（登入／註冊）
+- `'會員招募'` → MembershipPage
+- `'會員專區'` → MemberDashboard；未登入時顯示 LoginPage
+- `'活動報名'` 與一般資訊分類 → 各自專用頁
+- 付款回跳由 `payment` + `reference` query 進入 PaymentResultPage，前端 query 不可直接判定付款成功
 
 ---
 
@@ -274,17 +299,53 @@ export const NEWS_CATEGORIES = [
 
 5. **`bg-theme-bg/85` 在 inactive 面板會把圖片洗白**——現在改用 `bg-black/50`，使圖片暗但不失色彩。
 
-6. **`accordion-container` 的 padding-top 是 inline style（ResizeObserver 寫入）**，覆蓋優先度高於 Tailwind class，不要在 className 同時加 `pt-[Npx]` 造成衝突。
+6. **`accordion-container` 的 padding-top 由 ResizeObserver → React state → inline style 套用**，覆蓋優先度高於 Tailwind class，不要在 className 同時加 `pt-[Npx]` 造成衝突。
+
+7. **正式 build 預設仍使用 mock API**。只有明確設定 `VITE_USE_MOCK_API=false` 才進 REST；此時必須同時提供有效且正式環境為 HTTPS 的 `VITE_API_BASE_URL`。
+
+8. **Vite `base: './'` 是部署必要設定**，讓 `/assets` 在網域子路徑也能載入。不要改回絕對 `/`，否則部分主機會白畫面。
+
+9. **付款成功只能由後端查詢／webhook 確認**。`payment`、`reference` 或第三方回跳 query 都是不可信輸入，不能單靠前端參數清空購物車或顯示成功。
+
+10. **外部 HTML 與 URL 必須走既有安全工具**。文章 HTML 使用 DOMPurify；外部導頁使用 `getSafeExternalUrl` / `redirectToExternalUrl`；local/session storage 使用 `utils/storage.ts` 的驗證函式。
+
+---
+
+## API、部署與資安
+
+### 前端確認／mock 模式（目前預設）
+```env
+VITE_USE_MOCK_API=true
+VITE_API_BASE_URL=
+```
+
+### REST 模式
+```env
+VITE_USE_MOCK_API=false
+VITE_API_BASE_URL=https://api.example.com
+```
+
+- 頁面只能呼叫 `src/api/`，由 API 層依環境切換 mock / REST
+- `useAsyncData` 統一處理 loading、error、retry、AbortSignal 與 stale request
+- REST 回應必須經 `src/api/validators.ts` runtime validation，不能只靠 TypeScript assertion
+- 正式部署必須上傳最新 `dist/`，並保留相對 asset URL
+- CSP 目前寫在 `index.html`；正式主機應再以 HTTP response headers 設定 CSP、HSTS、`X-Content-Type-Options` 等
+- API 契約見 `docs/api-contract.md`，部署資安見 `docs/security.md`
 
 ---
 
 ## Dev 指令
 
 ```bash
-npm run dev    # 開發（Vite HMR）
-npm run build  # 生產打包
-npm run preview # 預覽 dist
+npm run dev       # 開發（Vite HMR，port 3000）
+npm run lint      # TypeScript type check
+npm test          # tsx + Node test runner 單元測試
+npm run test:e2e  # Playwright 桌機／手機 Chromium E2E
+npm run build     # 生產打包
+npm run preview   # 預覽 dist（需先 build）
 ```
+
+提交前至少執行 `npm run lint && npm test && npm run build`；路由、表單、Header、互動或部署相關修改需再跑 `npm run test:e2e`。CI 會在 push / pull request 重跑以上檢查與 `npm audit`。
 
 ---
 

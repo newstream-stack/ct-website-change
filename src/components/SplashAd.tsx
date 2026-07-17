@@ -22,8 +22,8 @@ function DesktopAd() {
       <line x1="0" y1="150" x2="800" y2="500" stroke="#181818" strokeWidth="1"/>
       <line x1="200" y1="0" x2="800" y2="500" stroke="#181818" strokeWidth="1"/>
       <rect x="60" y="60" width="5" height="380" fill="#8E2D3D"/>
-      <text x="88" y="155" fontFamily="Georgia, serif" fontSize="78" fontWeight="bold" fill="#ffffff" letterSpacing="6">IMPACT</text>
-      <text x="90" y="200" fontFamily="Georgia, serif" fontSize="28" fill="#8E2D3D" letterSpacing="4">論壇報</text>
+      <text x="88" y="155" fontFamily="Georgia, serif" fontSize="78" fontWeight="bold" fill="#ffffff" letterSpacing="6">論壇報</text>
+      <text x="90" y="200" fontFamily="Georgia, serif" fontSize="28" fill="#8E2D3D" letterSpacing="4">IMPACT</text>
       <rect x="88" y="228" width="300" height="1" fill="#333333"/>
       <text x="88" y="272" fontFamily="Arial, sans-serif" fontSize="21" fill="#cccccc">2026 全球華人影響力高峰會</text>
       <text x="88" y="308" fontFamily="Arial, sans-serif" fontSize="13" fill="#777777">結合理性與靈性的視野，邀請重量級講員獨家探討</text>
@@ -57,8 +57,8 @@ function MobileAd() {
       <line x1="150" y1="0" x2="500" y2="500" stroke="#181818" strokeWidth="1"/>
       <rect x="0" y="0" width="500" height="290" fill="url(#mgrad)"/>
       <text x="250" y="220" fontFamily="Georgia, serif" fontSize="160" fill="#ffffff" textAnchor="middle" opacity="0.05">十</text>
-      <text x="250" y="125" fontFamily="Georgia, serif" fontSize="52" fontWeight="bold" fill="#ffffff" textAnchor="middle" letterSpacing="5">IMPACT</text>
-      <text x="250" y="165" fontFamily="Georgia, serif" fontSize="21" fill="#8E2D3D" textAnchor="middle" letterSpacing="4">論壇報</text>
+      <text x="250" y="125" fontFamily="Georgia, serif" fontSize="52" fontWeight="bold" fill="#ffffff" textAnchor="middle" letterSpacing="5">論壇報</text>
+      <text x="250" y="165" fontFamily="Georgia, serif" fontSize="21" fill="#8E2D3D" textAnchor="middle" letterSpacing="4">IMPACT</text>
       <rect x="80" y="305" width="340" height="1" fill="#2a2a2a"/>
       <rect x="48" y="335" width="4" height="255" fill="#8E2D3D"/>
       <text x="70" y="370" fontFamily="Georgia, serif" fontSize="20" fill="#ffffff">2026 全球華人</text>
