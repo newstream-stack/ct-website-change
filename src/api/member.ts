@@ -1,50 +1,51 @@
-// → swap each function body to: return apiGet/apiPost<T>('/api/me/...')
-// All endpoints require Authentication header: Bearer <token>
-import type { Member, MemberStats, DonationRecord, SubscriptionRecord } from '../types/member';
+import type { Member, MemberStats, DonationRecord, PaymentMethodSessionResponse, SubscriptionRecord, UpdateMemberRequest } from '../types/member';
 import { getStoredUser } from './auth';
-import {
-  MOCK_MEMBER,
-  MOCK_MEMBER_STATS,
-  MOCK_DONATION_RECORDS,
-  MOCK_SUBSCRIPTION_RECORDS,
-} from '../mocks/member';
+import { apiGet, apiPost, apiPut, type ApiRequestOptions } from './client';
+import { USE_MOCK_API } from './config';
+import { MOCK_MEMBER, MOCK_MEMBER_STATS, MOCK_DONATION_RECORDS, MOCK_SUBSCRIPTION_RECORDS } from '../mocks/member';
+import { assertApiData, isDonationRecord, isMember, isMemberStats, isRecord, isSubscriptionRecord } from './validators';
 
-// GET /api/me
-export async function getMe(): Promise<Member> {
-  // TODO: return apiGet<Member>('/api/me');
+export async function getMe(options?: ApiRequestOptions): Promise<Member> {
+  if (!USE_MOCK_API) return assertApiData(await apiGet<unknown>('/api/me', options), isMember, '會員資料');
   const sessionUser = getStoredUser();
-  if (sessionUser) {
-    return {
-      ...MOCK_MEMBER,
-      name: sessionUser.name || MOCK_MEMBER.name,
-      displayName: sessionUser.name || MOCK_MEMBER.displayName,
-      email: sessionUser.email || MOCK_MEMBER.email,
-    };
-  }
-  return MOCK_MEMBER;
+  return sessionUser ? {
+    ...MOCK_MEMBER,
+    name: sessionUser.name || MOCK_MEMBER.name,
+    displayName: sessionUser.name || MOCK_MEMBER.displayName,
+    email: sessionUser.email || MOCK_MEMBER.email,
+  } : MOCK_MEMBER;
 }
 
-// GET /api/me/stats
-export async function getMemberStats(): Promise<MemberStats> {
-  // TODO: return apiGet<MemberStats>('/api/me/stats');
-  return MOCK_MEMBER_STATS;
+export async function getMemberStats(options?: ApiRequestOptions): Promise<MemberStats> {
+  return USE_MOCK_API ? MOCK_MEMBER_STATS : assertApiData(await apiGet<unknown>('/api/me/stats', options), isMemberStats, '會員統計');
 }
 
-// GET /api/me/donations
-export async function getDonations(): Promise<DonationRecord[]> {
-  // TODO: return apiGet<DonationRecord[]>('/api/me/donations');
-  return MOCK_DONATION_RECORDS;
+export async function getDonations(options?: ApiRequestOptions): Promise<DonationRecord[]> {
+  return USE_MOCK_API ? MOCK_DONATION_RECORDS : assertApiData(
+    await apiGet<unknown>('/api/me/donations', options),
+    (value): value is DonationRecord[] => Array.isArray(value) && value.every(isDonationRecord),
+    '奉獻紀錄',
+  );
 }
 
-// GET /api/me/subscription/billing
-export async function getBillingHistory(): Promise<SubscriptionRecord[]> {
-  // TODO: return apiGet<SubscriptionRecord[]>('/api/me/subscription/billing');
-  return MOCK_SUBSCRIPTION_RECORDS;
+export async function getBillingHistory(options?: ApiRequestOptions): Promise<SubscriptionRecord[]> {
+  return USE_MOCK_API ? MOCK_SUBSCRIPTION_RECORDS : assertApiData(
+    await apiGet<unknown>('/api/me/subscription/billing', options),
+    (value): value is SubscriptionRecord[] => Array.isArray(value) && value.every(isSubscriptionRecord),
+    '扣款紀錄',
+  );
 }
 
-// PUT /api/me
-export async function updateMe(data: Partial<Member>): Promise<void> {
-  // TODO: return apiPut('/api/me', data);
-  console.log('[mock] updateMe', data);
+export async function updateMe(data: UpdateMemberRequest, options?: ApiRequestOptions): Promise<Member> {
+  if (!USE_MOCK_API) return assertApiData(await apiPut<unknown>('/api/me', data, options), isMember, '會員資料');
+  return { ...MOCK_MEMBER, ...data };
 }
 
+export async function createPaymentMethodSession(returnUrl: string, options?: ApiRequestOptions): Promise<PaymentMethodSessionResponse> {
+  if (!USE_MOCK_API) return assertApiData(
+    await apiPost<unknown>('/api/me/payment-method/session', { returnUrl }, options),
+    (value): value is PaymentMethodSessionResponse => isRecord(value) && (value.managementUrl === undefined || typeof value.managementUrl === 'string'),
+    '付款方式管理',
+  );
+  return {};
+}

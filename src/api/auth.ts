@@ -1,17 +1,11 @@
-// ─── Types ────────────────────────────────────────────────────────────────────
+import type { AuthResponse, AuthUser, ChangePasswordRequest, ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, RegisterRequest, SocialLoginResponse, SocialProvider } from '../types/auth';
+import { apiPost, type ApiRequestOptions } from './client';
+import { USE_MOCK_API } from './config';
+import { readJsonStorage, removeStorageItem, writeJsonStorage, writeStringStorage } from '../utils/storage';
+import { assertApiData, isAuthResponse, isRecord } from './validators';
+import { broadcastLogout } from '../utils/authEvents';
 
-export interface AuthUser {
-  id: string;
-  name: string;
-  email: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: AuthUser;
-}
-
-// ─── Dev stub (remove block when backend is ready) ────────────────────────────
+export type { AuthResponse, AuthUser, LoginRequest, RegisterRequest, SocialProvider } from '../types/auth';
 
 const DEV_ACCOUNT = {
   email: 'test@ct.org.tw',
@@ -20,33 +14,20 @@ const DEV_ACCOUNT = {
 };
 
 async function devDelay() {
-  await new Promise(r => setTimeout(r, 450));
+  await new Promise((resolve) => setTimeout(resolve, 450));
 }
 
-// ─── Auth API ─────────────────────────────────────────────────────────────────
-
-export async function login(email: string, password: string): Promise<AuthResponse> {
-  // TODO: replace with real API call ↓
-  // const res = await apiClient.post<AuthResponse>('/auth/login', { email, password });
-  // return res.data;
-
+export async function login(params: LoginRequest, options?: ApiRequestOptions): Promise<AuthResponse> {
+  if (!USE_MOCK_API) return assertApiData(await apiPost<unknown>('/api/auth/login', params, options), isAuthResponse, '登入');
   await devDelay();
-  if (email === DEV_ACCOUNT.email && password === DEV_ACCOUNT.password) {
+  if (params.email === DEV_ACCOUNT.email && params.password === DEV_ACCOUNT.password) {
     return { token: 'dev-token-placeholder', user: DEV_ACCOUNT.user };
   }
   throw new Error('帳號或密碼錯誤');
 }
 
-export async function register(params: {
-  name: string;
-  email: string;
-  password: string;
-  address: string;
-}): Promise<AuthResponse> {
-  // TODO: replace with real API call ↓
-  // const res = await apiClient.post<AuthResponse>('/auth/register', params);
-  // return res.data;
-
+export async function register(params: RegisterRequest, options?: ApiRequestOptions): Promise<AuthResponse> {
+  if (!USE_MOCK_API) return assertApiData(await apiPost<unknown>('/api/auth/register', params, options), isAuthResponse, '註冊');
   await devDelay();
   return {
     token: 'dev-token-placeholder',
@@ -54,10 +35,12 @@ export async function register(params: {
   };
 }
 
-export async function socialLogin(provider: 'facebook' | 'google'): Promise<AuthResponse> {
-  // TODO: replace with real OAuth2 flow ↓
-  // window.location.href = `/auth/${provider}`;
-
+export async function socialLogin(provider: SocialProvider, options?: ApiRequestOptions): Promise<SocialLoginResponse> {
+  if (!USE_MOCK_API) return assertApiData(
+    await apiPost<unknown>('/api/auth/social-login', { provider }, options),
+    (value): value is SocialLoginResponse => isAuthResponse(value) || (isRecord(value) && typeof value.authorizationUrl === 'string'),
+    '社群登入',
+  );
   await devDelay();
   return {
     token: 'dev-token-placeholder',
@@ -65,22 +48,45 @@ export async function socialLogin(provider: 'facebook' | 'google'): Promise<Auth
   };
 }
 
-export function logout(): void {
-  sessionStorage.removeItem('auth_token');
-  sessionStorage.removeItem('auth_user');
-  // TODO: call POST /auth/logout to invalidate server-side session
+export async function forgotPassword(params: ForgotPasswordRequest, options?: ApiRequestOptions): Promise<ForgotPasswordResponse> {
+  if (!USE_MOCK_API) return assertApiData(
+    await apiPost<unknown>('/api/auth/forgot-password', params, options),
+    (value): value is ForgotPasswordResponse => isRecord(value) && value.accepted === true,
+    '忘記密碼',
+  );
+  await devDelay();
+  return { accepted: true };
+}
+
+export async function changePassword(params: ChangePasswordRequest, options?: ApiRequestOptions): Promise<void> {
+  if (!USE_MOCK_API) return apiPost<void>('/api/me/password', params, options);
+  await devDelay();
+  if (!params.currentPassword || params.newPassword.length < 8) throw new Error('新密碼至少需要 8 個字元');
+}
+
+export async function logout(options?: ApiRequestOptions): Promise<void> {
+  const request = USE_MOCK_API
+    ? Promise.resolve()
+    : apiPost<void>('/api/auth/logout', undefined, options).catch(() => undefined);
+  removeStorageItem(sessionStorage, 'auth_token');
+  removeStorageItem(sessionStorage, 'auth_user');
+  removeStorageItem(sessionStorage, 'auth_refresh_token');
+  window.dispatchEvent(new CustomEvent('auth:expired'));
+  broadcastLogout();
+  await request;
 }
 
 export function getStoredUser(): AuthUser | null {
-  try {
-    const raw = sessionStorage.getItem('auth_user');
-    return raw ? (JSON.parse(raw) as AuthUser) : null;
-  } catch {
-    return null;
-  }
+  return readJsonStorage(sessionStorage, 'auth_user', null, (value): value is AuthUser => {
+    if (typeof value !== 'object' || value === null) return false;
+    const user = value as Partial<AuthUser>;
+    return typeof user.id === 'string' && typeof user.name === 'string' && typeof user.email === 'string';
+  });
 }
 
-export function saveSession(res: AuthResponse): void {
-  sessionStorage.setItem('auth_token', res.token);
-  sessionStorage.setItem('auth_user', JSON.stringify(res.user));
+export function saveSession(response: AuthResponse): void {
+  writeStringStorage(sessionStorage, 'auth_token', response.token);
+  writeJsonStorage(sessionStorage, 'auth_user', response.user);
+  // Refresh tokens should be delivered through Secure, HttpOnly cookies rather than browser JavaScript.
+  removeStorageItem(sessionStorage, 'auth_refresh_token');
 }

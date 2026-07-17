@@ -1,11 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
-import { logout } from '../api/auth';
+import { useState, useEffect, useRef, type FormEvent } from 'react';
+import { changePassword, logout } from '../api/auth';
 import { createPortal } from 'react-dom';
 import ReceiptModal from '../components/ReceiptModal';
-import { getMe, getMemberStats, getDonations, getBillingHistory, updateMe } from '../api/member';
-import { getNewsList } from '../api/news';
+import { createPaymentMethodSession, getMe, getMemberStats, getDonations, getBillingHistory, updateMe } from '../api/member';
+import { getOrders } from '../api/orders';
+import { getSavedArticles, removeSavedArticle } from '../api/savedArticles';
 import type { Member, MemberStats, DonationRecord, SubscriptionRecord } from '../types/member';
 import type { NewsItem, Order } from '../types';
+import { getSafeExternalUrl, redirectToExternalUrl } from '../utils/navigation';
+import AsyncPageState from '../components/AsyncPageState';
 
 interface MemberDashboardProps {
   goToCategory: (cat: string) => void;
@@ -30,9 +33,40 @@ type DashboardStat = {
   tab: TabId;
 };
 
+const ORDER_STATUS_LABEL: Record<Order['status'], string> = {
+  pending: '處理中',
+  payment_pending: '待付款',
+  paid: '已付款',
+  failed: '付款失敗',
+  cancelled: '已取消',
+  refunded: '已退款',
+};
+
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 function PaymentModal({ onClose }: { onClose: () => void }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleManagePayment = async () => {
+    try {
+      setMessage('');
+      setIsLoading(true);
+      const returnUrl = new URL(window.location.pathname, window.location.origin);
+      returnUrl.searchParams.set('category', '會員專區');
+      const response = await createPaymentMethodSession(returnUrl.toString());
+      if (!response.managementUrl) {
+        setMessage('Mock 模式不會連接真實金流；正式 API 回傳管理網址後會自動導向。');
+        return;
+      }
+      redirectToExternalUrl(response.managementUrl);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : '無法開啟付款方式管理，請稍後再試');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-theme-bg/80 backdrop-blur-md" onClick={onClose} />
@@ -43,24 +77,26 @@ function PaymentModal({ onClose }: { onClose: () => void }) {
         <h3 className="text-2xl font-serif font-black mb-2">更新付款資訊</h3>
         <p className="text-xs text-theme-text/50 tracking-wide mb-6">Payment method management</p>
 
-        {/* TODO: replace this block with Stripe Elements / ECPay embedded form */}
         <div className="flex flex-col items-center gap-4 py-10 border border-dashed border-theme-text/20 rounded-xl bg-theme-text/3">
           <div className="w-14 h-14 rounded-full bg-brand-red/10 flex items-center justify-center">
             <i className="far fa-credit-card text-2xl text-brand-red/60" />
           </div>
           <div className="text-center">
-            <p className="font-bold text-sm tracking-widest text-theme-text/80 mb-1">金流串接中</p>
+            <p className="font-bold text-sm tracking-widest text-theme-text/80 mb-1">安全管理付款方式</p>
             <p className="text-xs text-theme-text/40 leading-relaxed">
-              付款資訊管理將由第三方金流（Stripe / ECPay）<br />安全處理，卡號不經過本伺服器
+              將前往第三方金流的安全頁面進行設定，<br />本站不會接收或保存您的完整卡號。
             </p>
           </div>
         </div>
 
+        {message && <p role="status" className="mt-4 text-xs leading-relaxed text-amber-600">{message}</p>}
+
         <button
-          onClick={onClose}
-          className="mt-6 w-full bg-theme-text/10 text-theme-text font-bold tracking-widest py-3.5 rounded-xl hover:bg-theme-text/15 active:scale-[0.98] transition-all"
+          onClick={() => void handleManagePayment()}
+          disabled={isLoading}
+          className="mt-6 w-full bg-brand-red text-white font-bold tracking-widest py-3.5 rounded-xl hover:bg-brand-red/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-wait"
         >
-          關 閉
+          {isLoading ? '建立安全連線中…' : '前往管理付款方式'}
         </button>
       </div>
     </div>
@@ -258,48 +294,148 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
   const [selectedOrderReceipt, setSelectedOrderReceipt] = useState<Order | null>(null);
   const [settingsMsg, setSettingsMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const settingsMsgTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
+  const [settingsFormVersion, setSettingsFormVersion] = useState(0);
 
   const [member, setMember] = useState<Member | null>(null);
   const [stats, setStats] = useState<MemberStats | null>(null);
   const [donationRecords, setDonationRecords] = useState<DonationRecord[]>([]);
   const [subscriptionRecords, setSubscriptionRecords] = useState<SubscriptionRecord[]>([]);
   const [savedArticles, setSavedArticles] = useState<NewsItem[]>([]);
+  const [savedArticlesError, setSavedArticlesError] = useState('');
+  const [removingSavedId, setRemovingSavedId] = useState<number | null>(null);
+  const [savedSortDirection, setSavedSortDirection] = useState<'newest' | 'oldest'>('newest');
+  const [isDashboardLoading, setIsDashboardLoading] = useState(true);
+  const [dashboardError, setDashboardError] = useState<Error | null>(null);
+  const [dashboardReloadToken, setDashboardReloadToken] = useState(0);
 
-  useEffect(() => {
-    Promise.allSettled([getMe(), getMemberStats(), getDonations(), getBillingHistory()])
-      .then(([m, s, d, b]) => {
-        if (m.status === 'fulfilled') setMember(m.value);
-        if (s.status === 'fulfilled') setStats(s.value);
-        if (d.status === 'fulfilled') setDonationRecords(d.value);
-        if (b.status === 'fulfilled') setSubscriptionRecords(b.value);
-      })
-      .catch(err => console.error('Dashboard load error:', err));
-    setSavedArticles(getNewsList().slice(0, 6));
-
-    // Load orders from localStorage
-    if (typeof window !== 'undefined') {
-      const savedOrdersStr = localStorage.getItem('impact_orders');
-      if (savedOrdersStr) {
-        try {
-          setOrders(JSON.parse(savedOrdersStr));
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
+  useEffect(() => () => {
+    if (settingsMsgTimer.current) clearTimeout(settingsMsgTimer.current);
   }, []);
 
-  if (!member || !stats) return null;
+  useEffect(() => {
+    const controller = new AbortController();
+    setIsDashboardLoading(true);
+    setDashboardError(null);
+
+    const load = async () => {
+      try {
+        const [loadedMember, loadedStats] = await Promise.all([
+          getMe({ signal: controller.signal }),
+          getMemberStats({ signal: controller.signal }),
+        ]);
+        const [donations, billing, orderResult, savedResult] = await Promise.allSettled([
+          getDonations({ signal: controller.signal }),
+          getBillingHistory({ signal: controller.signal }),
+          getOrders({ signal: controller.signal }),
+          getSavedArticles(true, { signal: controller.signal }),
+        ]);
+        if (controller.signal.aborted) return;
+        setMember(loadedMember);
+        setStats(loadedStats);
+        if (donations.status === 'fulfilled') setDonationRecords(donations.value);
+        if (billing.status === 'fulfilled') setSubscriptionRecords(billing.value);
+        if (orderResult.status === 'fulfilled') setOrders(orderResult.value);
+        if (savedResult.status === 'fulfilled') setSavedArticles(savedResult.value);
+        else setSavedArticlesError(savedResult.reason instanceof Error ? savedResult.reason.message : '收藏文章載入失敗');
+      } catch (loadError) {
+        if (!controller.signal.aborted) {
+          setDashboardError(loadError instanceof Error ? loadError : new Error('會員資料載入失敗'));
+        }
+      } finally {
+        if (!controller.signal.aborted) setIsDashboardLoading(false);
+      }
+    };
+
+    void load();
+    return () => controller.abort();
+  }, [dashboardReloadToken]);
+
+  const handleRemoveSavedArticle = async (articleId: number) => {
+    if (removingSavedId !== null) return;
+    try {
+      setSavedArticlesError('');
+      setRemovingSavedId(articleId);
+      await removeSavedArticle(articleId, true);
+      setSavedArticles((articles) => articles.filter((article) => article.id !== articleId));
+    } catch (removeError) {
+      setSavedArticlesError(removeError instanceof Error ? removeError.message : '取消收藏失敗，請稍後再試');
+    } finally {
+      setRemovingSavedId(null);
+    }
+  };
+
+  const handleSettingsSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSavingSettings) return;
+    const formData = new FormData(event.currentTarget);
+    const updatedName = String(formData.get('name') ?? '').trim();
+    const updatedAddress = String(formData.get('address') ?? '').trim();
+    const currentPassword = String(formData.get('currentPassword') ?? '');
+    const newPassword = String(formData.get('newPassword') ?? '');
+    const confirmPassword = String(formData.get('confirmPassword') ?? '');
+    const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
+    const profileChanged = updatedName !== member?.name || updatedAddress !== member?.address;
+
+    if (!updatedName || !updatedAddress) {
+      setSettingsMsg({ type: 'error', text: '姓名與地址不可為空' });
+      return;
+    }
+    if (wantsPasswordChange && (!currentPassword || !newPassword || !confirmPassword)) {
+      setSettingsMsg({ type: 'error', text: '變更密碼時請完整填寫三個密碼欄位' });
+      return;
+    }
+    if (wantsPasswordChange && newPassword.length < 8) {
+      setSettingsMsg({ type: 'error', text: '新密碼至少需要 8 個字元' });
+      return;
+    }
+    if (wantsPasswordChange && newPassword !== confirmPassword) {
+      setSettingsMsg({ type: 'error', text: '新密碼與確認密碼不一致' });
+      return;
+    }
+    if (wantsPasswordChange && profileChanged) {
+      setSettingsMsg({ type: 'error', text: '為避免部分更新，請分開儲存基本資料與密碼' });
+      return;
+    }
+    if (!wantsPasswordChange && !profileChanged) {
+      setSettingsMsg({ type: 'success', text: '目前沒有需要儲存的變更' });
+      return;
+    }
+
+    try {
+      setIsSavingSettings(true);
+      if (wantsPasswordChange) {
+        await changePassword({ currentPassword, newPassword });
+      } else {
+        const updatedMember = await updateMe({ name: updatedName, displayName: updatedName, address: updatedAddress });
+        setMember(updatedMember);
+      }
+      setSettingsFormVersion((version) => version + 1);
+      setSettingsMsg({ type: 'success', text: wantsPasswordChange ? '帳號資料與密碼更新成功' : '帳號設定更新成功' });
+    } catch (settingsError) {
+      setSettingsMsg({ type: 'error', text: settingsError instanceof Error ? settingsError.message : '帳號設定更新失敗' });
+    } finally {
+      setIsSavingSettings(false);
+      if (settingsMsgTimer.current) clearTimeout(settingsMsgTimer.current);
+      settingsMsgTimer.current = setTimeout(() => setSettingsMsg(null), 3000);
+    }
+  };
+
+  if (isDashboardLoading) return <AsyncPageState />;
+  if (dashboardError || !member || !stats) {
+    return <AsyncPageState error={dashboardError ?? new Error('會員資料不完整')} onRetry={() => setDashboardReloadToken((token) => token + 1)} />;
+  }
   const { subscription } = member;
   const dashboardStats: DashboardStat[] = [
-    { value: stats.savedArticles, label: '收藏文章', tab: 'saved' },
+    { value: savedArticles.length, label: '收藏文章', tab: 'saved' },
     { value: stats.attendedEvents, label: '參加活動', tab: 'overview' },
     { value: stats.donationCount, label: '奉獻紀錄', tab: 'donations' },
     { value: orders.reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0), label: '已購商品', tab: 'orders' },
   ];
+  const displayedSavedArticles = savedSortDirection === 'newest' ? savedArticles : [...savedArticles].reverse();
 
   return (
-    <div className="pt-[140px] md:pt-[180px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[190px] md:pt-[180px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="max-w-[1200px] mx-auto animate-fade-in-up">
 
         {/* Header */}
@@ -399,10 +535,10 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     </button>
                   </div>
                   <div className="flex flex-col gap-4">
-                    {savedArticles.map((article) => (
+                    {savedArticles.slice(0, 3).map((article) => (
                       <div key={article.id} className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
                         <div className="w-full sm:w-48 md:w-56 aspect-[832/470] flex-shrink-0 overflow-hidden rounded-lg bg-theme-text/10">
-                          <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transition-all duration-500" />
+                          <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-500" />
                         </div>
                         <div className="flex flex-col justify-center">
                           <span className="text-[10px] font-bold text-brand-red tracking-widest uppercase mb-1">{article.category}</span>
@@ -481,17 +617,33 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             {activeTab === 'saved' && (
               <div className="flex flex-col gap-6 animate-fade-in-up">
                 <div className="flex justify-between items-end border-b border-theme-text/10 pb-4 mb-2">
-                  <h3 className="text-xl font-serif font-bold">收藏文章 ({stats.savedArticles})</h3>
-                  <button className="font-bold text-theme-text/80 hover:text-brand-red transition-colors flex items-center gap-1 text-sm">
-                    最新加入 <i className="fas fa-chevron-down text-[10px]" />
+                  <h3 className="text-xl font-serif font-bold">收藏文章 ({savedArticles.length})</h3>
+                  <button
+                    type="button"
+                    onClick={() => setSavedSortDirection((direction) => direction === 'newest' ? 'oldest' : 'newest')}
+                    className="font-bold text-theme-text/80 hover:text-brand-red transition-colors flex items-center gap-1 text-sm"
+                  >
+                    {savedSortDirection === 'newest' ? '最新加入' : '最早加入'} <i className="fas fa-chevron-down text-[10px]" />
                   </button>
                 </div>
+                {savedArticlesError && <p role="alert" className="text-sm font-bold text-red-500">{savedArticlesError}</p>}
+                {savedArticles.length === 0 && !savedArticlesError && (
+                  <div className="min-h-64 rounded-2xl border border-theme-text/10 bg-theme-text/5 flex items-center justify-center text-sm text-theme-text/50">
+                    尚無收藏文章
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                  {savedArticles.map((article, i) => (
-                    <div key={i} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
+                  {displayedSavedArticles.map((article) => (
+                    <div key={article.id} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
                       <div className="aspect-[832/470] overflow-hidden relative">
-                        <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <button className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 backdrop-blur rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10" onClick={(e) => e.stopPropagation()}>
+                        <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <button
+                          type="button"
+                          aria-label="取消收藏"
+                          disabled={removingSavedId !== null}
+                          className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 backdrop-blur rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10 disabled:opacity-50 disabled:cursor-wait"
+                          onClick={(event) => { event.stopPropagation(); void handleRemoveSavedArticle(article.id); }}
+                        >
                           <i className="fas fa-bookmark text-sm" />
                         </button>
                       </div>
@@ -538,7 +690,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                           <tr key={rec.id} className="hover:bg-theme-text/5 transition-colors">
                             <td className="px-4 py-4">{rec.date}</td>
                             <td className="px-4 py-4 font-bold text-brand-red">
-                              <a href={rec.projectUrl} className="hover:underline underline-offset-4">{rec.project}</a>
+                              <a href={getSafeExternalUrl(rec.projectUrl)} className="hover:underline underline-offset-4">{rec.project}</a>
                             </td>
                             <td className="px-4 py-4 text-theme-text/60">{rec.method}</td>
                             <td className="px-4 py-4 font-bold">{rec.amount}</td>
@@ -568,22 +720,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
                   <h3 className="text-xl font-serif font-bold mb-6">帳號設定</h3>
                   <form
+                    key={settingsFormVersion}
                     className="flex flex-col gap-5 max-w-lg"
-                    onSubmit={async (e) => {
-                      e.preventDefault();
-                      const formData = new FormData(e.currentTarget);
-                      const updatedName = formData.get('name') as string;
-                      const updatedAddress = formData.get('address') as string;
-                      if (!updatedName || !updatedAddress) {
-                        setSettingsMsg({ type: 'error', text: '姓名與地址不可為空' });
-                        return;
-                      }
-                      await updateMe({ name: updatedName, displayName: updatedName, address: updatedAddress });
-                      setMember(prev => prev ? { ...prev, name: updatedName, displayName: updatedName, address: updatedAddress } : null);
-                      if (settingsMsgTimer.current) clearTimeout(settingsMsgTimer.current);
-                      setSettingsMsg({ type: 'success', text: '帳號設定更新成功' });
-                      settingsMsgTimer.current = setTimeout(() => setSettingsMsg(null), 3000);
-                    }}
+                    onSubmit={handleSettingsSubmit}
                   >
                     {[
                       { nameAttr: 'name', label: '姓名 Name', type: 'text', defaultValue: member.name, readOnly: false },
@@ -597,6 +736,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                           type={type}
                           defaultValue={defaultValue}
                           readOnly={readOnly}
+                          required={!readOnly}
+                          maxLength={nameAttr === 'address' ? 300 : nameAttr === 'email' ? 254 : 100}
+                          autoComplete={nameAttr === 'address' ? 'street-address' : nameAttr === 'email' ? 'email' : 'name'}
                           className={`bg-theme-bg border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text ${readOnly ? 'border-theme-text/10 opacity-60 cursor-not-allowed' : 'border-theme-text/20'}`}
                         />
                         {readOnly && <span className="text-[10px] text-theme-text/40 mt-1"><i className="fas fa-info-circle mr-1" />信箱作為登入帳號，如需修改請聯繫客服。</span>}
@@ -607,8 +749,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
 
                     <div className="flex flex-col gap-3">
                       <label className="text-xs font-bold tracking-widest text-theme-text/70">變更密碼 Change Password</label>
-                      <input type="password" placeholder="輸入舊密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
-                      <input type="password" placeholder="設定新密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                      <input name="currentPassword" type="password" maxLength={128} autoComplete="current-password" placeholder="輸入舊密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                      <input name="newPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="設定新密碼（至少 8 個字元）" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                      <input name="confirmPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="再次輸入新密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                     </div>
 
                     {settingsMsg && (
@@ -619,8 +762,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     )}
 
                     <div className="mt-6 flex flex-col sm:flex-row gap-4">
-                      <button type="submit" className="bg-brand-red text-white font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-[#b31b1b] hover:-translate-y-0.5 transition-all shadow-lg shadow-brand-red/20">儲存變更 Save</button>
-                      <button type="button" className="border border-theme-text/20 text-theme-text/70 font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-theme-text/10 transition-colors">取消 Cancel</button>
+                      <button type="submit" disabled={isSavingSettings} className="bg-brand-red text-white font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-[#b31b1b] hover:-translate-y-0.5 transition-all shadow-lg shadow-brand-red/20 disabled:opacity-50 disabled:cursor-wait">{isSavingSettings ? '儲存中…' : '儲存變更 Save'}</button>
+                      <button type="button" disabled={isSavingSettings} onClick={() => { setSettingsFormVersion((version) => version + 1); setSettingsMsg(null); }} className="border border-theme-text/20 text-theme-text/70 font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-theme-text/10 transition-colors">取消 Cancel</button>
                     </div>
                   </form>
                 </div>
@@ -663,7 +806,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                             <span className="font-bold text-theme-text/50 uppercase">訂單編號</span>
                             <span className="font-display font-black text-theme-text text-sm sm:text-base">{order.orderNumber}</span>
                             <span className="px-2 py-0.5 bg-[#00C300]/10 text-[#00C300] text-[10px] font-bold rounded-full">
-                              {order.status}
+                              {ORDER_STATUS_LABEL[order.status] ?? order.status}
                             </span>
                           </div>
                           <div className="text-theme-text/60">
@@ -676,7 +819,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                           {order.items.map((item) => (
                             <div key={item.product.id} className="flex gap-4 py-4 first:pt-0 last:pb-0">
                               <div className="w-16 h-20 sm:w-20 sm:h-24 bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden flex-shrink-0">
-                                <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-cover" />
+                                <img src={item.product.imageUrl} alt={item.product.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                               </div>
                               <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div className="text-left">
@@ -719,7 +862,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                               onClick={() => setSelectedOrderReceipt(order)}
                               className="border border-brand-red text-brand-red px-5 py-2.5 rounded-lg text-xs font-bold tracking-widest hover:bg-brand-red hover:text-white transition-all duration-300 cursor-pointer w-full sm:w-auto"
                             >
-                              下載收據 / 出貨單
+                              {order.status === 'paid' ? '下載收據 / 出貨單' : '查看訂單'}
                             </button>
                           </div>
                         </div>

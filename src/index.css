@@ -207,10 +207,6 @@
     transform: scale(1.02);
   }
 
-  .accordion-bg.opacity-50 {
-    opacity: 1 !important;
-  }
-
   .accordion-panel .content-expanded,
   .accordion-panel.active .content-expanded {
     opacity: 1;

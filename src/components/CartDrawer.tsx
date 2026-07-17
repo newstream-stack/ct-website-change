@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { CartItem } from '../types';
+import { useRef, useState } from 'react';
+import { createOrder } from '../api/orders';
+import type { CartItem, Order, PaymentMethod } from '../types';
+import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -23,54 +25,47 @@ export default function CartDrawer({
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState<'credit-card' | 'line-pay'>('credit-card');
-  const [orderNumber, setOrderNumber] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('credit-card');
+  const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
   const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const idempotency = useRef<{ fingerprint: string; key: string } | null>(null);
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
   const shippingFee = subtotal > 1000 || subtotal === 0 ? 0 : 80;
   const total = subtotal + shippingFee;
 
-  const handleCheckoutSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !phone || !email || !address) {
+  const handleCheckoutSubmit = async () => {
+    if (isSubmitting) return;
+    if (![name, phone, email, address].every((value) => value.trim())) {
       setFormError('請填寫所有必填欄位');
       return;
     }
-    setFormError('');
-    
-    // Generate random order number
-    const rand = Math.floor(1000 + Math.random() * 9000);
-    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const newOrderNumber = `IMPACT-${dateStr}-${rand}`;
-    setOrderNumber(newOrderNumber);
-
-    // Save order to localStorage
-    const newOrder = {
-      orderNumber: newOrderNumber,
-      date: new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-'),
-      name,
-      phone,
-      email,
-      address,
-      paymentMethod,
-      items: [...cartItems],
-      subtotal,
-      shippingFee,
-      total,
-      status: '已付款'
-    };
-
     try {
-      const savedOrdersStr = localStorage.getItem('impact_orders');
-      const savedOrders = savedOrdersStr ? JSON.parse(savedOrdersStr) : [];
-      savedOrders.unshift(newOrder);
-      localStorage.setItem('impact_orders', JSON.stringify(savedOrders));
-    } catch (err) {
-      console.error('Error saving order to localStorage:', err);
+      setFormError('');
+      setIsSubmitting(true);
+      const payload = {
+        returnUrl: buildPaymentReturnUrl('order'),
+        recipient: { name: name.trim(), phone: phone.trim(), email: email.trim(), address: address.trim() },
+        paymentMethod,
+        items: cartItems.map(({ product, quantity }) => ({ productId: product.id, quantity })),
+      };
+      const fingerprint = JSON.stringify(payload);
+      if (idempotency.current?.fingerprint !== fingerprint) {
+        idempotency.current = { fingerprint, key: crypto.randomUUID() };
+      }
+      const response = await createOrder(payload, idempotency.current.key);
+      setCreatedOrder(response.order);
+      if (response.paymentUrl) {
+        redirectToExternalUrl(response.paymentUrl);
+        return;
+      }
+      setStep(3);
+    } catch (error) {
+      setFormError(error instanceof Error ? error.message : '訂單建立失敗，請稍後再試');
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setStep(3);
   };
 
   const handleFinish = () => {
@@ -80,6 +75,8 @@ export default function CartDrawer({
     setPhone('');
     setEmail('');
     setAddress('');
+    setCreatedOrder(null);
+    idempotency.current = null;
     onClose();
   };
 
@@ -87,6 +84,10 @@ export default function CartDrawer({
     <>
       {/* Backdrop */}
       <div 
+        role="dialog"
+        aria-modal={isOpen ? 'true' : undefined}
+        aria-hidden={!isOpen}
+        aria-label="購物車"
         className={`fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-500 ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
@@ -113,6 +114,7 @@ export default function CartDrawer({
           </div>
           <button 
             onClick={step === 3 ? handleFinish : onClose} 
+            aria-label="關閉購物車"
             className="w-8 h-8 rounded-full border border-theme-text/10 flex items-center justify-center text-theme-text/60 hover:text-theme-text hover:border-theme-text/30 transition-all cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -148,7 +150,7 @@ export default function CartDrawer({
                   {cartItems.map((item) => (
                     <div key={item.product.id} className="flex gap-4 pb-6 border-b border-theme-text/10 last:border-0">
                       <div className="w-20 h-24 bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden flex-shrink-0">
-                        <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-cover" />
+                        <img src={item.product.imageUrl} alt={item.product.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
@@ -200,12 +202,14 @@ export default function CartDrawer({
 
           {/* STEP 2: CHECKOUT FORM */}
           {step === 2 && (
-            <form onSubmit={handleCheckoutSubmit} className="space-y-5">
+            <form onSubmit={(event) => { event.preventDefault(); void handleCheckoutSubmit(); }} className="space-y-5">
               <div className="space-y-1.5">
                 <label className="text-xs font-bold uppercase tracking-wider text-theme-text/60">收件人姓名 *</label>
                 <input 
                   type="text" 
                   required
+                  maxLength={100}
+                  autoComplete="name"
                   placeholder="真實姓名"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -218,6 +222,8 @@ export default function CartDrawer({
                 <input 
                   type="tel" 
                   required
+                  maxLength={30}
+                  autoComplete="tel"
                   placeholder="聯絡電話"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -230,6 +236,8 @@ export default function CartDrawer({
                 <input 
                   type="email" 
                   required
+                  maxLength={254}
+                  autoComplete="email"
                   placeholder="電子信箱"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -242,6 +250,8 @@ export default function CartDrawer({
                 <input 
                   type="text" 
                   required
+                  maxLength={300}
+                  autoComplete="street-address"
                   placeholder="收件地址"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -284,19 +294,19 @@ export default function CartDrawer({
           {/* STEP 3: SUCCESS PAGE */}
           {step === 3 && (
             <div className="flex flex-col items-center justify-center text-center py-8">
-              <div className="w-20 h-20 rounded-full bg-green-500/10 text-green-500 flex items-center justify-center mb-6 border border-green-500/25 animate-bounce">
+              <div className="w-20 h-20 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mb-6 border border-amber-500/25">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="font-serif font-black text-2xl mb-2 text-green-600">訂購成功！</h3>
-              <p className="text-sm text-theme-text/60 font-light mb-8 max-w-xs">感謝您的支持。我們已收到您的訂單，隨後將發送明細至您的 Email 信箱。</p>
+              <h3 className="font-serif font-black text-2xl mb-2 text-amber-600">訂單已建立</h3>
+              <p className="text-sm text-theme-text/60 font-light mb-8 max-w-xs">我們已收到您的訂單。付款結果確認後，訂單狀態才會更新為已付款。</p>
               
               {/* Order Box */}
               <div className="w-full bg-theme-text/5 border border-theme-text/10 rounded-sm p-5 text-left mb-10 space-y-3.5">
                 <div className="flex justify-between items-center text-xs pb-2 border-b border-theme-text/10">
                   <span className="font-bold text-theme-text/50">訂單編號</span>
-                  <span className="font-display font-bold">{orderNumber}</span>
+                  <span className="font-display font-bold">{createdOrder?.orderNumber}</span>
                 </div>
                 <div className="flex justify-between items-center text-xs">
                   <span className="text-theme-text/50 font-medium">收件人</span>
@@ -312,7 +322,7 @@ export default function CartDrawer({
                 </div>
                 <div className="flex justify-between items-center text-xs pt-2 border-t border-theme-text/10">
                   <span className="font-bold text-brand-red">實付金額</span>
-                  <span className="font-display font-black text-brand-red text-base">NT$ {total.toLocaleString()}</span>
+                  <span className="font-display font-black text-brand-red text-base">NT$ {(createdOrder?.total ?? total).toLocaleString()}</span>
                 </div>
               </div>
             </div>
@@ -377,15 +387,17 @@ export default function CartDrawer({
                 <button 
                   type="button"
                   onClick={() => setStep(1)}
+                  disabled={isSubmitting}
                   className="col-span-1 py-4 border border-theme-text/20 text-theme-text/75 font-display font-bold text-xs uppercase tracking-wider hover:bg-theme-text/5 transition-all rounded-sm cursor-pointer"
                 >
                   返回
                 </button>
                 <button 
-                  onClick={handleCheckoutSubmit}
-                  className="col-span-2 py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-0.5 hover:shadow-lg rounded-sm flex items-center justify-center gap-2 cursor-pointer"
+                  onClick={() => void handleCheckoutSubmit()}
+                  disabled={isSubmitting}
+                  className="col-span-2 py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-0.5 hover:shadow-lg rounded-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-wait"
                 >
-                  確認付款
+                  {isSubmitting ? '建立訂單中…' : '前往付款'}
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                   </svg>

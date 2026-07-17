@@ -41,6 +41,41 @@ interface UseYouTubePlayerOptions {
   onPlayStateChange: (playing: boolean) => void;
 }
 
+const YOUTUBE_API_SCRIPT_ID = 'youtube-iframe-api';
+let youtubeApiPromise: Promise<void> | null = null;
+
+function loadYouTubeApi(): Promise<void> {
+  if (window.YT?.Player) return Promise.resolve();
+  if (youtubeApiPromise) return youtubeApiPromise;
+
+  youtubeApiPromise = new Promise<void>((resolve, reject) => {
+    const previousReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      previousReady?.();
+      resolve();
+    };
+
+    const existing = document.getElementById(YOUTUBE_API_SCRIPT_ID) as HTMLScriptElement | null;
+    if (existing) {
+      existing.addEventListener('error', () => reject(new Error('YouTube API 載入失敗')), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = YOUTUBE_API_SCRIPT_ID;
+    script.src = 'https://www.youtube.com/iframe_api';
+    script.async = true;
+    script.addEventListener('error', () => {
+      script.remove();
+      youtubeApiPromise = null;
+      reject(new Error('YouTube API 載入失敗'));
+    }, { once: true });
+    document.head.appendChild(script);
+  });
+
+  return youtubeApiPromise;
+}
+
 export function useYouTubePlayer(
   videoRef: RefObject<HTMLIFrameElement | null>,
   deps: unknown[],
@@ -48,22 +83,13 @@ export function useYouTubePlayer(
 ) {
   const playerRef = useRef<YTPlayer | null>(null);
 
-  /** Load the YouTube IFrame API script once */
-  useEffect(() => {
-    if (window.YT) return;
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.getElementsByTagName('script')[0].parentNode?.insertBefore(
-      tag,
-      document.getElementsByTagName('script')[0],
-    );
-  }, []);
-
   /** (Re-)initialise the player whenever deps or enabled change */
   useEffect(() => {
     if (!enabled || !videoRef.current) return;
+    let cancelled = false;
 
     const init = () => {
+      if (cancelled || !window.YT?.Player) return;
       try {
         playerRef.current?.destroy();
         playerRef.current = null;
@@ -85,18 +111,15 @@ export function useYouTubePlayer(
             },
           },
         });
-      } catch (err) {
-        console.error('YT player init error:', err);
-      }
+      } catch { /* The iframe may have been removed while the API was initialising. */ }
     };
 
-    if (!window.YT?.Player) {
-      window.onYouTubeIframeAPIReady = init;
-    } else {
-      init();
-    }
+    void loadYouTubeApi().then(init).catch(() => {
+      if (!cancelled) onPlayStateChange(false);
+    });
 
     return () => {
+      cancelled = true;
       try { playerRef.current?.destroy(); } catch { /* noop */ }
       playerRef.current = null;
     };

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getNewsByCategory } from '../api/news';
 import { getColumnists } from '../api/columnists';
+import AsyncPageState from './AsyncPageState';
+import { useAsyncData } from '../hooks/useAsyncData';
 
 interface ColumnPageProps {
   openArticle: (id: number) => void;
@@ -11,22 +13,37 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Get featured articles
-  const featuredArticles = getNewsByCategory('專欄').slice(0, 5);
-  const filteredColumnists = getColumnists(activeTab);
+  const { data, error, isLoading, reload } = useAsyncData(
+    'column-page',
+    async (signal) => {
+      const [columnNews, columnists] = await Promise.all([
+        getNewsByCategory('專欄', { signal }),
+        getColumnists(undefined, { signal }),
+      ]);
+      return { columnNews, columnists };
+    },
+    null,
+  );
+  const featuredArticles = data?.columnNews.slice(0, 5) ?? [];
+  const filteredColumnists = data?.columnists.filter((columnist) => columnist.subCategory === activeTab) ?? [];
   
   // Auto-slide effect
   useEffect(() => {
+    if (featuredArticles.length <= 1) return;
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
     }, 5000);
     return () => clearInterval(timer);
   }, [featuredArticles.length]);
 
-  const nextSlide = () => setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
-  const prevSlide = () => setActiveIndex((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
+  const nextSlide = () => featuredArticles.length > 0 && setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
+  const prevSlide = () => featuredArticles.length > 0 && setActiveIndex((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
+
+  if (isLoading) return <AsyncPageState />;
+  if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
   return (
-    <div className="pt-[180px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Page Header */}
       <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
@@ -63,12 +80,14 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
                    <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
                       <button 
                         onClick={(e) => { e.stopPropagation(); prevSlide(); }}
+                        aria-label="上一篇精選專欄"
                         className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
                       >
                          <i className="fas fa-chevron-left text-sm md:text-base"></i>
                       </button>
                       <button 
                         onClick={(e) => { e.stopPropagation(); nextSlide(); }}
+                        aria-label="下一篇精選專欄"
                         className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
                       >
                          <i className="fas fa-chevron-right text-sm md:text-base"></i>
@@ -149,7 +168,7 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
               {/* Profile Frame */}
               <div className="relative mb-8 flex justify-center">
                  <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden">
-                    <img src={author.avatarUrl} className="w-full h-full object-cover rounded-full transition-all duration-700 group-hover:scale-110" alt={author.name} />
+                    <img src={author.avatarUrl} loading="lazy" decoding="async" className="w-full h-full object-cover rounded-full transition-all duration-700 group-hover:scale-110" alt={author.name} />
                  </div>
                  <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">Verified Author</div>
               </div>
@@ -169,9 +188,6 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
                    {author.latestArticleTitle}
                  </h5>
                  
-                 <div className="mt-8 pt-6 border-t border-theme-text/5 flex justify-center gap-4">
-                    <button className="px-6 py-2 bg-theme-text/5 hover:bg-brand-red hover:text-white text-[10px] font-bold tracking-widest uppercase transition-all rounded-sm">Follow Author</button>
-                 </div>
               </div>
             </div>
           ))}
@@ -192,12 +208,6 @@ export default function ColumnPage({ openArticle }: ColumnPageProps) {
          </div>
       </div>
 
-      {/* 6. Load More - Minimalist */}
-      <div className="mt-24 flex justify-center px-5">
-         <button className="w-full max-w-sm border border-theme-text/10 py-5 text-xs md:text-sm font-bold tracking-[0.4em] font-display hover:bg-theme-text hover:text-theme-bg transition-all uppercase flex items-center justify-center gap-4 group">
-            Discover More Authors <i className="fas fa-plus text-[10px] group-hover:rotate-90 transition-transform"></i>
-         </button>
-      </div>
     </div>
   );
 }

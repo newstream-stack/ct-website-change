@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import { useEffect } from 'react';
 
 interface ReceiptData {
   id: string;
@@ -16,12 +17,20 @@ interface ReceiptModalProps {
 }
 
 export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handlePrint = () => {
     window.print();
   };
 
   const modal = (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
+    <div role="dialog" aria-modal="true" aria-label="電子收據預覽" className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div 
         className="absolute inset-0 cursor-pointer" 
         onClick={onClose}
@@ -41,6 +50,7 @@ export default function ReceiptModal({ receipt, onClose }: ReceiptModalProps) {
             </button>
             <button 
               onClick={onClose}
+              aria-label="關閉電子收據"
               className="text-gray-400 hover:text-red-500 transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-red-50 cursor-pointer bg-white border border-gray-100 sm:border-none"
             >
               <i className="fas fa-times text-lg"></i>

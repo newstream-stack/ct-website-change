@@ -1,6 +1,7 @@
 import { NEWS_CATEGORIES } from '../api/news';
 import { getAd } from '../api/ads';
 import { CartItem } from '../types';
+import { useAsyncData } from '../hooks/useAsyncData';
 
 interface HeaderProps {
   user: { name: string; email: string } | null;
@@ -19,7 +20,7 @@ export default function Header({
   onOpenCart,
   onOpenSearch
 }: HeaderProps) {
-  const headerAd = getAd('header');
+  const { data: headerAd } = useAsyncData('header-ad', (signal) => getAd('header', { signal }), undefined);
   return (
     <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-auto bg-theme-bg/95 backdrop-blur-md border-b border-theme-text/10 transition-colors duration-500 pb-1">
       {headerAd && (
@@ -38,8 +39,8 @@ export default function Header({
           onClick={() => goToCategory('首頁')}
           className="relative isolate flex h-8 w-[120px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-10 md:w-40"
         >
-          <img src="/LOGO-m.png" alt="IMPACT 論壇報" className="pointer-events-none md:hidden h-7 w-auto object-contain origin-left scale-[1.9] translate-y-2" />
-          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
+          <img src="/LOGO-m.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none md:hidden h-7 w-auto object-contain origin-left scale-[1.9] translate-y-2" />
+          <img src="/LOGO.png?v=2" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[3.6]" />
         </button>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">

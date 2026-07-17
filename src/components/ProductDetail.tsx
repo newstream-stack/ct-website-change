@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Product } from '../types';
-import { MOCK_PRODUCTS } from '../data/index';
+import { getProduct } from '../api/products';
+import { useAsyncData } from '../hooks/useAsyncData';
+import AsyncPageState from './AsyncPageState';
 
 interface ProductDetailProps {
   productId: number;
@@ -9,48 +11,42 @@ interface ProductDetailProps {
 }
 
 export default function ProductDetail({ productId, onBack, onAddToCart }: ProductDetailProps) {
-  const [product, setProduct] = useState<Product | null>(null);
+  const { data: product, error, isLoading, reload } = useAsyncData<Product | null>(
+    `product:${productId}`,
+    async (signal) => (await getProduct(productId, { signal })) ?? null,
+    null,
+  );
   const [activeImage, setActiveImage] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
   const [addedSuccess, setAddedSuccess] = useState<boolean>(false);
+  const successTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const foundProduct = MOCK_PRODUCTS.find((p) => p.id === productId);
-    if (foundProduct) {
-      setProduct(foundProduct);
-      setActiveImage(foundProduct.imageUrl);
-    }
-  }, [productId]);
+    if (product) setActiveImage(product.imageUrl);
+  }, [product]);
 
-  if (!product) {
-    return (
-      <div className="w-full h-[100dvh] flex flex-col items-center justify-center bg-theme-bg text-theme-text transition-colors duration-500">
-        <div className="w-12 h-12 border-4 border-theme-text/20 border-t-brand-red rounded-full animate-spin mb-4" />
-        <p className="font-display tracking-widest text-sm text-theme-text/60">載入商品中...</p>
-      </div>
-    );
-  }
+  useEffect(() => () => {
+    if (successTimer.current) clearTimeout(successTimer.current);
+  }, []);
+
+  if (error) return <AsyncPageState error={error} onRetry={reload} />;
+  if (isLoading || !product) return <AsyncPageState />;
 
   const handleAddToCart = () => {
-    setIsAdding(true);
-    setTimeout(() => {
-      setIsAdding(false);
-      setAddedSuccess(true);
-      if (product) {
-        onAddToCart(product, quantity);
-      }
-      setTimeout(() => setAddedSuccess(false), 2000);
-    }, 800);
+    onAddToCart(product, quantity);
+    setAddedSuccess(true);
+    if (successTimer.current) clearTimeout(successTimer.current);
+    successTimer.current = setTimeout(() => setAddedSuccess(false), 2000);
   };
 
   return (
-    <div className="w-full min-h-[100dvh] pt-[140px] md:pt-32 pb-24 bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="w-full min-h-[100dvh] pt-[190px] md:pt-32 pb-24 bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20">
         
         {/* Back Button */}
         <button 
           onClick={onBack}
+          aria-label="返回好物畫廊"
           className="group mb-8 flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-theme-text/60 hover:text-brand-red transition-colors"
         >
           <div className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center group-hover:border-brand-red transition-all">
@@ -72,6 +68,8 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
               <img 
                 src={activeImage} 
                 alt={product.name} 
+                decoding="async"
+                fetchPriority="high"
                 className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
               />
               <div className="absolute top-6 left-6 font-display text-2xl font-black text-theme-text/30 bg-theme-bg/60 backdrop-blur-md px-3 py-1 rounded-sm border border-theme-text/10">
@@ -86,13 +84,14 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
                   <button
                     key={idx}
                     onClick={() => setActiveImage(imgUrl)}
+                    aria-label={`查看商品圖片 ${idx + 1}`}
                     className={`w-20 md:w-28 aspect-[4/3] flex-shrink-0 border-2 rounded-sm overflow-hidden transition-all duration-300 ${
                       activeImage === imgUrl 
                         ? 'border-brand-red scale-95 shadow-lg' 
                         : 'border-theme-text/10 hover:border-theme-text/40 opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -155,6 +154,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
               <div className="flex items-center border border-theme-text/20 bg-theme-text/5 rounded-sm overflow-hidden h-11">
                 <button 
                   onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                  aria-label="減少購買數量"
                   className="w-10 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -163,8 +163,10 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
                 </button>
                 <span className="w-12 text-center font-display font-bold text-base">{quantity}</span>
                 <button 
-                  onClick={() => setQuantity(prev => prev + 1)}
-                  className="w-10 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors"
+                  onClick={() => setQuantity(prev => Math.min(99, prev + 1))}
+                  disabled={quantity >= 99}
+                  aria-label="增加購買數量"
+                  className="w-10 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -177,16 +179,14 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={handleAddToCart}
-                disabled={isAdding || addedSuccess}
+                disabled={addedSuccess}
                 className={`py-4 border font-display font-bold text-sm uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2 ${
                   addedSuccess
                     ? 'border-green-600 bg-green-600 text-white'
                     : 'border-theme-text/30 bg-transparent text-theme-text hover:bg-theme-text/10'
                 }`}
               >
-                {isAdding ? (
-                  <div className="w-4 h-4 border-2 border-theme-text/30 border-t-theme-text rounded-full animate-spin" />
-                ) : addedSuccess ? (
+                {addedSuccess ? (
                   <>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -211,7 +211,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
               </button>
             </div>
             
-            <p className="text-center text-xs text-theme-text/40 mt-4">全站使用金流安全加密技術，保障您的交易資訊。</p>
+            <p className="text-center text-xs text-theme-text/40 mt-4">付款將導向金流託管頁面，本站不接收或儲存完整卡號與安全碼。</p>
 
           </div>
 

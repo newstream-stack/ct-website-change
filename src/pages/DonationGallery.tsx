@@ -16,7 +16,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
   const featuredPlan = plans[0];
 
   return (
-    <div className="pt-[160px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Header Section */}
       <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-16">
@@ -121,20 +121,6 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
             <div className="w-16 h-1 bg-brand-red mx-auto mt-12 mb-6"></div>
             <p className="text-theme-text/40 font-display text-xs md:text-sm tracking-[0.4em] uppercase">哥林多後書 8:9</p>
          </div>
-      </div>
-
-      {/* 5. Pagination - Minimalist */}
-      <div className="mt-24 flex items-center justify-center gap-6 px-5">
-         <button className="text-theme-text/40 hover:text-brand-red flex items-center gap-4 text-xs font-bold tracking-widest uppercase transition-all group">
-            <i className="fas fa-chevron-left group-hover:-translate-x-1 transition-transform"></i> Prev
-         </button>
-         <div className="flex items-center gap-4">
-            <span className="w-8 h-8 flex items-center justify-center bg-theme-text text-theme-bg font-display font-black text-xs">01</span>
-            <span className="w-8 h-8 flex items-center justify-center text-theme-text/40 font-display font-black text-xs hover:text-theme-text cursor-pointer">02</span>
-         </div>
-         <button className="text-theme-text/40 hover:text-brand-red flex items-center gap-4 text-xs font-bold tracking-widest uppercase transition-all group">
-            Next <i className="fas fa-chevron-right group-hover:translate-x-1 transition-transform"></i>
-         </button>
       </div>
 
     </div>

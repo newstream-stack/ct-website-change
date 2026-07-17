@@ -1,4 +1,5 @@
 import { AdItem } from '../types';
+import { getSafeExternalUrl } from '../utils/navigation';
 
 interface NativeAdCardProps {
   ad: AdItem;
@@ -6,9 +7,9 @@ interface NativeAdCardProps {
 
 export default function NativeAdCard({ ad }: NativeAdCardProps) {
   return (
-    <a href={ad.link} className="group relative flex flex-col sm:flex-row md:flex-col overflow-hidden bg-theme-text/5 hover:bg-theme-text/10 transition-colors border border-brand-red/20 shadow-sm cursor-pointer col-span-1">
+    <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className="group relative flex flex-col sm:flex-row md:flex-col overflow-hidden bg-theme-text/5 hover:bg-theme-text/10 transition-colors border border-brand-red/20 shadow-sm cursor-pointer col-span-1">
       <div className="w-full sm:w-2/5 md:w-full h-48 sm:h-auto md:h-64 flex-shrink-0 relative overflow-hidden bg-theme-text/10">
-        <img src={ad.imageUrl} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={ad.title} />
+        <img src={ad.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={ad.title} />
         <div className="absolute top-3 left-3 bg-brand-red text-white text-[10px] uppercase tracking-widest px-2 py-0.5 font-bold animate-pulse">Sponsored</div>
       </div>
       <div className="p-5 flex flex-col justify-between flex-grow">

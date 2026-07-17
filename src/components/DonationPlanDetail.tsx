@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Plan, DonationFormPayload } from '../types/donation';
 import { getPlan, submitDonation } from '../api/plans';
+import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
+import AsyncPageState from './AsyncPageState';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -12,7 +14,7 @@ interface DonationPlanDetailProps {
 
 const PRESET_AMOUNTS = [1000, 3000, 5000, 10000, 50000];
 const INSTALLMENT_PERIODS = [6, 12, 18];
-const RECEIPT_OPTIONS = ['年度匯開', '按月寄送', '不需收據'] as const;
+const RECEIPT_OPTIONS = ['年度彙開', '按月寄送', '不需收據'] as const;
 
 const DEFAULT_FORM: Omit<DonationFormPayload, 'planId'> = {
   paymentType: 'one-time',
@@ -20,7 +22,7 @@ const DEFAULT_FORM: Omit<DonationFormPayload, 'planId'> = {
   installmentPeriod: 6,
   paymentMethod: 'credit-card',
   donor: { name: '', phone: '', email: '', address: '' },
-  receipt: { address: '', option: '年度匯開', title: '', taxId: '' },
+  receipt: { address: '', option: '年度彙開', title: '', taxId: '' },
   gift: { address: '' },
 };
 
@@ -114,7 +116,11 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
   const [perPeriodStr, setPerPeriodStr] = useState('');
   const isEditingPerPeriod = useRef(false);
   const [formData, setFormData] = useState<DonationFormPayload>({ planId, ...DEFAULT_FORM });
-  const [submitMsg, setSubmitMsg] = useState('');
+  const [submitMsg, setSubmitMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [loadError, setLoadError] = useState<Error | null>(null);
+  const [reloadToken, setReloadToken] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const idempotency = useRef<{ fingerprint: string; key: string } | null>(null);
 
   const updateForm = (updates: Partial<DonationFormPayload>) =>
     setFormData((prev) => ({ ...prev, ...updates }));
@@ -142,44 +148,75 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
 
   // ── Data fetching ─────────────────────────────────────────────────────────
   useEffect(() => {
+    const controller = new AbortController();
     const fetchPlan = async () => {
       setIsLoading(true);
+      setLoadError(null);
       try {
-        const data = await getPlan(planId);
+        const data = await getPlan(planId, { signal: controller.signal });
         if (data) {
           setPlan(data);
           updateForm({ planId: data.id });
         }
       } catch (err) {
-        console.error('Failed to fetch plan:', err);
+        if (!controller.signal.aborted) setLoadError(err instanceof Error ? err : new Error('無法載入奉獻專案'));
       } finally {
-        setIsLoading(false);
+        if (!controller.signal.aborted) setIsLoading(false);
       }
     };
     fetchPlan();
-  }, [planId]);
+    return () => controller.abort();
+  }, [planId, reloadToken]);
 
   // ── Form submit ───────────────────────────────────────────────────────────
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await submitDonation(formData);
-    // TODO: replace with real payment flow; submitDonation will call POST /api/donations
-    setSubmitMsg('表單已送出，感謝您的奉獻！');
+    if (isSubmitting) return;
+    const requiredFields = [formData.donor.name, formData.donor.phone, formData.donor.email, formData.donor.address];
+    if (formData.receipt.option !== '不需收據') requiredFields.push(formData.receipt.address);
+    if (requiredFields.some((value) => !value.trim())) {
+      setSubmitMsg({ type: 'error', text: '請完整填寫所有必填資料。' });
+      return;
+    }
+    if (!Number.isFinite(formData.amount) || formData.amount < 100 || formData.amount > 10_000_000) {
+      setSubmitMsg({ type: 'error', text: '奉獻金額需介於 NT$100 至 NT$10,000,000。' });
+      return;
+    }
+    try {
+      setIsSubmitting(true);
+      setSubmitMsg(null);
+      const payload = { ...formData, returnUrl: buildPaymentReturnUrl('donation') };
+      const fingerprint = JSON.stringify(payload);
+      if (idempotency.current?.fingerprint !== fingerprint) {
+        idempotency.current = { fingerprint, key: crypto.randomUUID() };
+      }
+      const response = await submitDonation(payload, idempotency.current.key);
+      if (response.paymentUrl) {
+        redirectToExternalUrl(response.paymentUrl);
+        return;
+      }
+      setSubmitMsg({ type: 'success', text: `奉獻資料已建立（編號：${response.donationId}），請依後續付款指示完成程序。` });
+    } catch (error) {
+      setSubmitMsg({ type: 'error', text: error instanceof Error ? error.message : '奉獻資料送出失敗，請稍後再試。' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (isLoading || !plan) return <LoadingScreen />;
+  if (isLoading) return <LoadingScreen />;
+  if (loadError || !plan) return <AsyncPageState error={loadError ?? new Error('找不到奉獻專案')} onRetry={() => setReloadToken((value) => value + 1)} />;
 
   const inputCls =
     'w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-3 px-4 text-base text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors placeholder-theme-text/30';
 
   // ── View ─────────────────────────────────────────────────────────────────
   return (
-    <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[90px] md:pt-0 bg-theme-bg transition-colors duration-500">
+    <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[190px] md:pt-0 bg-theme-bg transition-colors duration-500">
       
       {/* ── Left: Plan Info ─────────────────────────────────────────────── */}
       <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
         <div className="w-full md:min-h-[40vh] md:max-h-[55vh] relative flex-shrink-0 overflow-hidden flex items-center justify-center">
-          <img src={plan.imageUrl} alt={plan.title} className="w-full h-auto md:h-full object-cover" />
+          <img src={plan.imageUrl} alt={plan.title} decoding="async" fetchPriority="high" className="w-full h-auto md:h-full object-cover" />
         </div>
         <div className="p-8 md:p-12 lg:p-16 flex flex-col text-theme-text flex-grow">
           <span className="font-display text-brand-red text-xs md:text-sm tracking-[0.4em] uppercase mb-4 block font-bold">
@@ -250,6 +287,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                     placeholder="自訂金額"
                     value={customAmountStr}
                     min="100"
+                    max="10000000"
                     onChange={(e) => {
                       setCustomAmountStr(e.target.value);
                       updateForm({ amount: Number(e.target.value) || 0 });
@@ -288,6 +326,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                       <input
                         type="number"
                         min="1"
+                        max="10000000"
                         value={perPeriodStr}
                         onChange={(e) => {
                           isEditingPerPeriod.current = true;
@@ -350,34 +389,34 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">姓名 <span className="text-brand-red">*</span></label>
-                    <input type="text" placeholder="真實姓名" value={formData.donor.name} onChange={(e) => updateDonor('name', e.target.value)} className={inputCls} />
+                    <input type="text" required maxLength={100} autoComplete="name" placeholder="真實姓名" value={formData.donor.name} onChange={(e) => updateDonor('name', e.target.value)} className={inputCls} />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">電話 <span className="text-brand-red">*</span></label>
-                    <input type="tel" placeholder="聯絡電話" value={formData.donor.phone} onChange={(e) => updateDonor('phone', e.target.value)} className={inputCls} />
+                    <input type="tel" required maxLength={30} autoComplete="tel" placeholder="聯絡電話" value={formData.donor.phone} onChange={(e) => updateDonor('phone', e.target.value)} className={inputCls} />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-theme-text/80">Email <span className="text-brand-red">*</span></label>
-                  <input type="email" placeholder="電子信箱" value={formData.donor.email} onChange={(e) => updateDonor('email', e.target.value)} className={inputCls} />
+                  <input type="email" required maxLength={254} autoComplete="email" placeholder="電子信箱" value={formData.donor.email} onChange={(e) => updateDonor('email', e.target.value)} className={inputCls} />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-theme-text/80">聯絡地址 <span className="text-brand-red">*</span></label>
-                  <input type="text" placeholder="聯絡地址" value={formData.donor.address} onChange={(e) => updateDonor('address', e.target.value)} className={inputCls} />
+                  <input type="text" required maxLength={300} autoComplete="street-address" placeholder="聯絡地址" value={formData.donor.address} onChange={(e) => updateDonor('address', e.target.value)} className={inputCls} />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
                     <label className="text-sm font-bold text-theme-text/80">奉獻收據地址 <span className="text-brand-red">*</span></label>
                     <button type="button" onClick={() => updateReceipt('address', formData.donor.address)} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white border border-brand-red/30 px-3 py-1 rounded-sm transition-colors">同聯絡地址</button>
                   </div>
-                  <input type="text" placeholder="收據寄送地址" value={formData.receipt.address} onChange={(e) => updateReceipt('address', e.target.value)} className={inputCls} />
+                  <input type="text" required={formData.receipt.option !== '不需收據'} maxLength={300} placeholder="收據寄送地址" value={formData.receipt.address} onChange={(e) => updateReceipt('address', e.target.value)} className={inputCls} />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-end">
                     <label className="text-sm font-bold text-theme-text/80">奉獻贈禮寄送地址 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
                     <button type="button" onClick={() => setFormData((prev) => ({ ...prev, gift: { address: prev.donor.address } }))} className="text-[12px] font-bold text-brand-red hover:bg-brand-red hover:text-white border border-brand-red/30 px-3 py-1 rounded-sm transition-colors">同聯絡地址</button>
                   </div>
-                  <input type="text" placeholder="贈禮寄送地址" value={formData.gift.address} onChange={(e) => setFormData((prev) => ({ ...prev, gift: { address: e.target.value } }))} className={inputCls} />
+                  <input type="text" maxLength={300} placeholder="贈禮寄送地址" value={formData.gift.address} onChange={(e) => setFormData((prev) => ({ ...prev, gift: { address: e.target.value } }))} className={inputCls} />
                 </div>
                 <div className="space-y-3 pt-4 border-t border-theme-text/10">
                   <label className="text-sm font-bold text-theme-text/80">收據寄送選項 <span className="text-brand-red">*</span></label>
@@ -392,11 +431,11 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">收據抬頭 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
-                    <input type="text" placeholder="收據抬頭" value={formData.receipt.title} onChange={(e) => updateReceipt('title', e.target.value)} className={inputCls} />
+                    <input type="text" maxLength={150} placeholder="收據抬頭" value={formData.receipt.title} onChange={(e) => updateReceipt('title', e.target.value)} className={inputCls} />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-theme-text/80">統一編號 <span className="text-xs opacity-60 ml-2 font-normal">(選填)</span></label>
-                    <input type="text" placeholder="統一編號" value={formData.receipt.taxId} onChange={(e) => updateReceipt('taxId', e.target.value)} className={inputCls} />
+                    <input type="text" inputMode="numeric" maxLength={8} pattern="[0-9]{8}" placeholder="統一編號" value={formData.receipt.taxId} onChange={(e) => updateReceipt('taxId', e.target.value)} className={inputCls} />
                   </div>
                 </div>
               </div>
@@ -411,13 +450,13 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               return (
                 <>
                   {submitMsg && (
-                    <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-600 text-sm font-bold tracking-wide px-4 py-3 rounded-xl mt-6">
-                      <i className="fas fa-circle-check shrink-0" />
-                      {submitMsg}
+                    <div className={`flex items-center gap-2 text-sm font-bold tracking-wide px-4 py-3 rounded-xl mt-6 ${submitMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
+                      <i className={`fas ${submitMsg.type === 'success' ? 'fa-circle-check' : 'fa-exclamation-circle'} shrink-0`} />
+                      {submitMsg.text}
                     </div>
                   )}
-                  <button type="submit" className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3">
-                    前往結帳
+                  <button type="submit" disabled={isSubmitting} className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-wait disabled:transform-none">
+                    {isSubmitting ? '處理中…' : '前往結帳'}
                     <span className="font-sans font-light text-sm opacity-80">
                       {isInstallment
                         ? `(NT$ ${perPeriod} × ${formData.installmentPeriod} 期)`

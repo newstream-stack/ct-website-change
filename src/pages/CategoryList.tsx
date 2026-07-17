@@ -4,6 +4,8 @@ import { getAd } from '../api/ads';
 
 import { useCarousel } from '../hooks/useCarousel';
 import NativeAdCard from '../components/NativeAdCard';
+import AsyncPageState from '../components/AsyncPageState';
+import { useAsyncData } from '../hooks/useAsyncData';
 
 interface CategoryListProps {
   category: string;
@@ -14,7 +16,18 @@ const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '�
 
 export default function CategoryList({ category, openArticle }: CategoryListProps) {
   const [selectedSubCategory, setSelectedSubCategory] = useState('全部');
-  const allCategoryNews = getNewsByCategory(category);
+  const { data, error, isLoading, reload } = useAsyncData(
+    `news-category:${category}`,
+    async (signal) => {
+      const [allCategoryNews, infeedAd] = await Promise.all([
+        getNewsByCategory(category, { signal }),
+        getAd('infeed', { signal }).catch(() => undefined),
+      ]);
+      return { allCategoryNews, infeedAd };
+    },
+    null,
+  );
+  const allCategoryNews = data?.allCategoryNews ?? [];
   const featuredArticles = allCategoryNews.slice(0, 4);
 
   let filteredNews = [...allCategoryNews];
@@ -27,10 +40,13 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
     { enabled: category === '生活情報' && featuredArticles.length > 0 }
   );
 
+  if (isLoading) return <AsyncPageState />;
+  if (error) return <AsyncPageState error={error} onRetry={reload} />;
+
   // Premium Layout for "生活情報"
   if (category === '生活情報') {
     return (
-      <div className="pt-[180px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+      <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
         
         {/* 1. Page Header */}
         <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
@@ -202,8 +218,6 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
   }
 
   // Default Standard Layout for other categories
-  if (filteredNews.length === 0 && selectedSubCategory === '全部') filteredNews = getNewsByCategory(category);
-  
   return (
     <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="mb-12 md:mb-16 border-b border-theme-text/20 pb-6 md:pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 transition-colors">
@@ -217,7 +231,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
       </div>
       
       <div className="w-full h-32 md:h-48 border border-theme-text/10 bg-theme-text/5 backdrop-blur-sm mb-12 md:mb-20 flex items-center justify-center relative cursor-pointer group overflow-hidden transition-colors">
-        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700 group-hover:scale-105" alt="Ad" />
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700 group-hover:scale-105" alt="贊助內容" />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-red/20 to-transparent opacity-50"></div>
         <span className="absolute top-2 md:top-4 right-2 md:right-4 text-[10px] md:text-xs font-display uppercase tracking-widest border border-theme-text/20 text-theme-text/70 px-1 md:px-2 py-0.5 z-10 bg-theme-bg/70 transition-colors">ADVERTISEMENT</span>
         <div className="z-10 text-center relative">
@@ -230,14 +244,14 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
         {filteredNews.length > 0 ? (
           filteredNews.map((news, index) => (
             <Fragment key={news.id}>
-              {index === 2 && getAd('infeed') && (
+              {index === 2 && data?.infeedAd && (
                 <div className="py-6 md:py-8 border-b border-theme-text/10">
-                  <NativeAdCard ad={getAd('infeed')!} />
+                  <NativeAdCard ad={data.infeedAd} />
                 </div>
               )}
-              <div className="flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
+              <button type="button" className="w-full text-left flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
                 <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm">
-                  <img src={news.imageUrl} className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
+                  <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
                   <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
                     {news.subCategory || news.category}
                   </div>
@@ -251,7 +265,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                     <span>{news.date}, 2026</span>
                   </div>
                 </div>
-              </div>
+              </button>
             </Fragment>
           ))
         ) : (

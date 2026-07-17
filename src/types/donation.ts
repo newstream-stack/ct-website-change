@@ -7,6 +7,7 @@ export interface Plan {
 
 export interface DonationFormPayload {
   planId: number;
+  returnUrl?: string;
   paymentType: 'one-time' | 'installment';
   amount: number;
   installmentPeriod: number;
@@ -26,4 +27,11 @@ export interface DonationFormPayload {
   gift: {
     address: string;
   };
+}
+
+export interface DonationResponse {
+  success: boolean;
+  donationId: string;
+  status: 'pending' | 'paid' | 'failed';
+  paymentUrl?: string;
 }

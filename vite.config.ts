@@ -1,24 +1,28 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, loadEnv} from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 
-export default defineConfig(({mode}) => {
-  const env = loadEnv(mode, '.', '');
-  return {
-    plugins: [react(), tailwindcss()],
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
+const allowViteDevelopmentBootstrap = (): Plugin => ({
+  name: 'allow-vite-development-bootstrap',
+  apply: 'serve',
+  transformIndexHtml(html) {
+    return html.replace(
+      "script-src 'self' https://www.youtube.com",
+      "script-src 'self' 'unsafe-inline' https://www.youtube.com",
+    );
+  },
+});
+
+export default defineConfig({
+    plugins: [allowViteDevelopmentBootstrap(), react(), tailwindcss()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // HMR can be disabled in automated environments that do not support file watching.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
-  };
 });

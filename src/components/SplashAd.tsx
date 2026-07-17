@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { getSafeExternalUrl } from '../utils/navigation';
 
 interface SplashAdProps {
   linkUrl?: string;
@@ -77,18 +78,26 @@ function MobileAd() {
 export default function SplashAd({ linkUrl, onClose }: SplashAdProps) {
   const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
-
-  if (!visible) return null;
-
-  const close = () => {
+  const close = useCallback(() => {
     setVisible(false);
     document.body.style.overflow = '';
     onClose?.();
-  };
+  }, [onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [close]);
+
+  if (!visible) return null;
+  const safeLinkUrl = getSafeExternalUrl(linkUrl);
 
   const adContent = (
     <>
@@ -99,6 +108,9 @@ export default function SplashAd({ linkUrl, onClose }: SplashAdProps) {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="贊助廣告"
       className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80"
       onClick={close}
     >
@@ -108,8 +120,8 @@ export default function SplashAd({ linkUrl, onClose }: SplashAdProps) {
           md:w-[800px] md:h-[500px]"
         onClick={(e) => e.stopPropagation()}
       >
-        {linkUrl ? (
-          <a href={linkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+        {safeLinkUrl ? (
+          <a href={safeLinkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
             {adContent}
           </a>
         ) : adContent}
@@ -117,6 +129,7 @@ export default function SplashAd({ linkUrl, onClose }: SplashAdProps) {
         <button
           onClick={close}
           aria-label="關閉廣告"
+          autoFocus
           className="absolute -top-4 -right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/80 border border-white/20 text-white hover:bg-black transition-colors text-sm"
         >
           ✕

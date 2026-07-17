@@ -132,6 +132,8 @@ dist
 # Vite build output
 dist/
 dist-ssr/
+playwright-report/
+test-results/
 *.local
 
 # SvelteKit build output

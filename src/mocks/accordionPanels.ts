@@ -1,6 +1,5 @@
 /**
- * MOCK DATA — HomeAccordion panels (video + ad)
- * TODO: Replace with real API call → GET /api/home/featured
+ * MOCK DATA — HomeAccordion panels used when VITE_USE_MOCK_API=true.
  */
 
 export interface FeaturedVideo {

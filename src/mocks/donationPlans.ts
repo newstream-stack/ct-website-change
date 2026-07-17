@@ -1,8 +1,7 @@
 import type { Plan } from '../types/donation';
 
 /**
- * MOCK DATA — Donation Plans
- * TODO: Replace with real API call → GET /api/plans
+ * MOCK DATA — Donation plans used when VITE_USE_MOCK_API=true.
  */
 export const MOCK_PLANS: Plan[] = [
   {

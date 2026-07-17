@@ -1,8 +1,7 @@
 import type { Member, MemberStats, DonationRecord, SubscriptionRecord } from '../types/member';
 
 /**
- * MOCK DATA — Member
- * TODO: Replace with real API call → GET /api/me
+ * MOCK DATA — Member used when VITE_USE_MOCK_API=true.
  */
 export const MOCK_MEMBER: Member = {
   name: '王大明',
@@ -18,8 +17,7 @@ export const MOCK_MEMBER: Member = {
 };
 
 /**
- * MOCK DATA — Member Stats
- * TODO: Replace with real API call → GET /api/me/stats
+ * MOCK DATA — Member stats used when VITE_USE_MOCK_API=true.
  */
 export const MOCK_MEMBER_STATS: MemberStats = {
   savedArticles: 12,
@@ -29,8 +27,7 @@ export const MOCK_MEMBER_STATS: MemberStats = {
 };
 
 /**
- * MOCK DATA — Donation Records
- * TODO: Replace with real API call → GET /api/me/donations
+ * MOCK DATA — Donation records used when VITE_USE_MOCK_API=true.
  */
 export const MOCK_DONATION_RECORDS: DonationRecord[] = [
   {
@@ -54,8 +51,7 @@ export const MOCK_DONATION_RECORDS: DonationRecord[] = [
 ];
 
 /**
- * MOCK DATA — Subscription Billing Records
- * TODO: Replace with real API call → GET /api/me/subscription/billing
+ * MOCK DATA — Billing records used when VITE_USE_MOCK_API=true.
  */
 export const MOCK_SUBSCRIPTION_RECORDS: SubscriptionRecord[] = [
   {

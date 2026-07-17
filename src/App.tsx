@@ -1,118 +1,129 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { useAuth } from './hooks/useAuth';
 import { NEWS_CATEGORIES } from './data/index';
 import Header from './components/Header';
 import HomeAccordion from './pages/HomeAccordion';
-import CategoryList from './pages/CategoryList';
-import ArticleDetail from './pages/ArticleDetail';
-import ProductGallery from './pages/ProductGallery';
-import ProductDetail from './components/ProductDetail';
-import CartDrawer from './components/CartDrawer';
-import SearchModal from './components/SearchModal';
 import { CartItem, Product } from './types';
-import ActionPage from './pages/ActionPage';
-import DonationGallery from './pages/DonationGallery';
-import DonationPlanDetail from './components/DonationPlanDetail';
 import GlobalBottomAd from './components/GlobalBottomAd';
-import LoginPage from './pages/LoginPage';
-import MembershipPage from './pages/MembershipPage';
-import MemberDashboard from './pages/MemberDashboard';
-import EventRegistrationPage from './pages/EventRegistrationPage';
-import ColumnPage from './components/ColumnPage';
-import ImpactAlliancePage from './pages/ImpactAlliancePage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
-import SubmitPage from './pages/SubmitPage';
-import PrivacyPage from './pages/PrivacyPage';
-import FinancialPage from './pages/FinancialPage';
-import CustomerServicePage from './pages/CustomerServicePage';
-import PartnershipPage from './pages/PartnershipPage';
-import LineStickersPage from './pages/LineStickersPage';
-import BlessingCardPage from './pages/BlessingCardPage';
-import KnowledgeBasePage from './pages/KnowledgeBasePage';
-import TagResultsPage from './pages/TagResultsPage';
-import AuthorResultsPage from './pages/AuthorResultsPage';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
+import { buildRouteUrl, readRoute, type AppRoute } from './routing';
+import { readJsonStorage, writeJsonStorage } from './utils/storage';
+
+const ProductGallery = lazy(() => import('./pages/ProductGallery'));
+const CategoryList = lazy(() => import('./pages/CategoryList'));
+const ArticleDetail = lazy(() => import('./pages/ArticleDetail'));
+const CartDrawer = lazy(() => import('./components/CartDrawer'));
+const SearchModal = lazy(() => import('./components/SearchModal'));
+const ProductDetail = lazy(() => import('./components/ProductDetail'));
+const ActionPage = lazy(() => import('./pages/ActionPage'));
+const DonationGallery = lazy(() => import('./pages/DonationGallery'));
+const DonationPlanDetail = lazy(() => import('./components/DonationPlanDetail'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const MembershipPage = lazy(() => import('./pages/MembershipPage'));
+const MemberDashboard = lazy(() => import('./pages/MemberDashboard'));
+const EventRegistrationPage = lazy(() => import('./pages/EventRegistrationPage'));
+const ColumnPage = lazy(() => import('./components/ColumnPage'));
+const ImpactAlliancePage = lazy(() => import('./pages/ImpactAlliancePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const SubmitPage = lazy(() => import('./pages/SubmitPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const FinancialPage = lazy(() => import('./pages/FinancialPage'));
+const CustomerServicePage = lazy(() => import('./pages/CustomerServicePage'));
+const PartnershipPage = lazy(() => import('./pages/PartnershipPage'));
+const LineStickersPage = lazy(() => import('./pages/LineStickersPage'));
+const BlessingCardPage = lazy(() => import('./pages/BlessingCardPage'));
+const KnowledgeBasePage = lazy(() => import('./pages/KnowledgeBasePage'));
+const TagResultsPage = lazy(() => import('./pages/TagResultsPage'));
+const AuthorResultsPage = lazy(() => import('./pages/AuthorResultsPage'));
+const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
+
+const SPECIAL_CATEGORIES = new Set([
+  '首頁', '信仰好物', '訂報', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名',
+  '關於我們', '新聞連絡', '我要投稿', '版權隱私權聲明', '財務報表', '客戶服務',
+  '申請合作', '論壇Line貼圖', '祝福卡申辦/捐款',
+]);
+
+const getBrowserRoute = () => readRoute(typeof window === 'undefined' ? '' : window.location.search);
+
+const isCartItems = (value: unknown): value is CartItem[] => Array.isArray(value) && value.every((item) => {
+  if (typeof item !== 'object' || item === null) return false;
+  const candidate = item as Partial<CartItem>;
+  return Number.isInteger(candidate.quantity) && (candidate.quantity ?? 0) > 0 && (candidate.quantity ?? 0) <= 99
+    && typeof candidate.product === 'object' && candidate.product !== null
+    && Number.isInteger(candidate.product.id)
+    && typeof candidate.product.name === 'string'
+    && typeof candidate.product.price === 'number';
+});
+
+function RouteFallback() {
+  return (
+    <div className="min-h-[100dvh] pt-[190px] md:pt-32 flex items-center justify-center bg-theme-bg text-theme-text">
+      <div className="flex items-center gap-3 font-display text-xs font-bold uppercase tracking-[0.2em] text-theme-text/50">
+        <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" />
+        Loading
+      </div>
+    </div>
+  );
+}
+
+function NotFoundPage({ onGoHome }: { onGoHome: () => void }) {
+  return (
+    <div className="min-h-[100dvh] pt-[190px] pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
+      <div className="text-center">
+        <p className="font-display text-brand-red text-sm tracking-[0.3em] font-bold mb-3">404</p>
+        <h1 className="font-serif text-3xl font-black mb-4">找不到這個頁面</h1>
+        <button type="button" onClick={onGoHome} className="bg-brand-red text-white px-7 py-3 text-sm font-bold tracking-widest">回到首頁</button>
+      </div>
+    </div>
+  );
+}
 
 export default function App() {
-  const [currentCategory, setCurrentCategory] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('category') || '首頁';
-    }
-    return '首頁';
-  });
-  
-  const [currentArticleId, setCurrentArticleId] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const article = params.get('article');
-      return article ? parseInt(article, 10) : null;
-    }
-    return null;
-  });
-
-  const [currentTag, setCurrentTag] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return new URLSearchParams(window.location.search).get('tag');
-    }
-    return null;
-  });
-
-  const [currentAuthor, setCurrentAuthor] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return new URLSearchParams(window.location.search).get('author');
-    }
-    return null;
-  });
-
-  const [currentPlanId, setCurrentPlanId] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const plan = params.get('plan');
-      return plan ? parseInt(plan, 10) : null;
-    }
-    return null;
-  });
-
-  const [currentProductId, setCurrentProductId] = useState<number | null>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const product = params.get('product');
-      return product ? parseInt(product, 10) : null;
-    }
-    return null;
-  });
+  const [route, setRoute] = useState<AppRoute>(getBrowserRoute);
+  const {
+    category: currentCategory,
+    articleId: currentArticleId,
+    tag: currentTag,
+    author: currentAuthor,
+    planId: currentPlanId,
+    productId: currentProductId,
+    paymentType,
+    paymentReference,
+  } = route;
   
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('impact_cart');
-      return saved ? JSON.parse(saved) : [];
+      return readJsonStorage(localStorage, 'impact_cart', [], isCartItems);
     }
     return [];
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [hasOpenedCart, setHasOpenedCart] = useState(false);
+  const [hasOpenedSearch, setHasOpenedSearch] = useState(false);
 
   // Save cart to local storage when it changes
   useEffect(() => {
-    localStorage.setItem('impact_cart', JSON.stringify(cartItems));
+    writeJsonStorage(localStorage, 'impact_cart', cartItems);
   }, [cartItems]);
 
   const addToCart = (product: Product, quantity: number) => {
+    const safeQuantity = Math.max(1, Math.min(99, Math.trunc(quantity)));
     setCartItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
         return prev.map((item) =>
           item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: Math.min(99, item.quantity + safeQuantity) }
             : item
         );
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity: safeQuantity }];
     });
     // Automatically open the cart drawer when a new item is added!
+    setHasOpenedCart(true);
     setIsCartOpen(true);
   };
 
@@ -121,61 +132,32 @@ export default function App() {
   };
 
   const updateCartQuantity = (productId: number, qty: number) => {
+    const safeQuantity = Math.max(1, Math.min(99, Math.trunc(qty)));
     setCartItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity: qty } : item
+        item.product.id === productId ? { ...item, quantity: safeQuantity } : item
       )
     );
   };
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
-  };
+  }, []);
 
   // Sync state to URL
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (currentCategory !== '首頁') {
-      params.set('category', currentCategory);
-    }
-    if (currentArticleId !== null) {
-      params.set('article', currentArticleId.toString());
-    }
-    if (currentTag) {
-      params.set('tag', currentTag);
-    }
-    if (currentAuthor) {
-      params.set('author', currentAuthor);
-    }
-    if (currentPlanId !== null) {
-      params.set('plan', currentPlanId.toString());
-    }
-    if (currentProductId !== null) {
-      params.set('product', currentProductId.toString());
-    }
-    
-    const queryString = params.toString();
-    const newUrl = `${window.location.pathname}${queryString ? '?' + queryString : ''}`;
+    const newUrl = buildRouteUrl(window.location.pathname, route);
     
     // Only pushstate if URL actually changed
     if (newUrl !== window.location.pathname + window.location.search) {
       window.history.pushState({}, '', newUrl);
     }
-  }, [currentCategory, currentArticleId, currentPlanId, currentProductId, currentTag, currentAuthor]);
+  }, [route]);
 
   // Handle browser back/forward buttons
   useEffect(() => {
     const handlePopState = () => {
-      const params = new URLSearchParams(window.location.search);
-      setCurrentCategory(params.get('category') || '首頁');
-      const article = params.get('article');
-      setCurrentArticleId(article ? parseInt(article, 10) : null);
-      setCurrentTag(params.get('tag'));
-      setCurrentAuthor(params.get('author'));
-      const plan = params.get('plan');
-      setCurrentPlanId(plan ? parseInt(plan, 10) : null);
-      const product = params.get('product');
-      setCurrentProductId(product ? parseInt(product, 10) : null);
+      setRoute(readRoute(window.location.search));
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -193,20 +175,19 @@ export default function App() {
     // Update the route as part of the navigation event.  Relying solely on the
     // state-sync effect leaves a short interval where a header click can be
     // followed by the old (home) route being rendered again.
-    const params = new URLSearchParams();
-    if (cat !== '首頁') params.set('category', cat);
-    const queryString = params.toString();
-    const nextUrl = `${window.location.pathname}${queryString ? `?${queryString}` : ''}`;
+    const nextUrl = buildRouteUrl(window.location.pathname, {
+      category: cat,
+      articleId: null,
+      tag: null,
+      author: null,
+      planId: null,
+      productId: null,
+    });
     if (nextUrl !== window.location.pathname + window.location.search) {
       window.history.pushState({}, '', nextUrl);
     }
 
-    setCurrentArticleId(null);
-    setCurrentTag(null);
-    setCurrentAuthor(null);
-    setCurrentPlanId(null);
-    setCurrentProductId(null);
-    setCurrentCategory(cat);
+    setRoute({ category: cat, articleId: null, tag: null, author: null, planId: null, productId: null });
     if (cat === '會員中心') {
       setLoginPageDefaultRegister(!!options?.register);
     }
@@ -214,36 +195,28 @@ export default function App() {
   };
 
   const openArticle = (id: number) => {
-    setCurrentArticleId(id);
+    setRoute((current) => ({ ...current, articleId: id, tag: null, author: null, planId: null, productId: null }));
     window.scrollTo(0, 0);
   };
 
   const goToTag = (tag: string) => {
-    setCurrentArticleId(null);
-    setCurrentPlanId(null);
-    setCurrentProductId(null);
-    setCurrentCategory('最新文章');
-    setCurrentTag(tag);
-    setCurrentAuthor(null);
+    setRoute({ category: '最新文章', articleId: null, tag, author: null, planId: null, productId: null });
     window.scrollTo(0, 0);
   };
 
   const goToAuthor = (author: string) => {
-    setCurrentArticleId(null);
-    setCurrentPlanId(null);
-    setCurrentProductId(null);
-    setCurrentCategory('最新文章');
-    setCurrentTag(null);
-    setCurrentAuthor(author);
+    setRoute({ category: '最新文章', articleId: null, tag: null, author, planId: null, productId: null });
     window.scrollTo(0, 0);
   };
 
   const openPlan = (id: number) => {
-    setCurrentPlanId(id);
+    setRoute((current) => ({ ...current, planId: id }));
     window.scrollTo(0, 0);
   };
 
   const showCategoryBar = (currentCategory === '首頁' || NEWS_CATEGORIES.includes(currentCategory) || !!currentArticleId);
+  const isUnknownRoute = !currentArticleId && !currentTag && !currentAuthor
+    && !paymentType && !NEWS_CATEGORIES.includes(currentCategory) && !SPECIAL_CATEGORIES.has(currentCategory);
 
   return (
     <div className="font-sans relative">
@@ -253,12 +226,13 @@ export default function App() {
         goToCategory={goToCategory} 
         showCategoryBar={showCategoryBar} 
         cartItems={cartItems}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenSearch={() => setIsSearchOpen(true)}
+        onOpenCart={() => { setHasOpenedCart(true); setIsCartOpen(true); }}
+        onOpenSearch={() => { setHasOpenedSearch(true); setIsSearchOpen(true); }}
       />
 
 
       <main className="w-full min-h-[100dvh] page-transition" key={`${currentCategory}-${currentArticleId}-${currentTag}-${currentAuthor}`}>
+        <Suspense fallback={<RouteFallback />}>
         {currentAuthor && !currentArticleId && (
           <AuthorResultsPage author={currentAuthor} openArticle={openArticle} />
         )}
@@ -292,19 +266,19 @@ export default function App() {
         )}
 
         {(currentCategory === '信仰好物' && !currentProductId) && (
-          <ProductGallery onSelectProduct={setCurrentProductId} />
+          <ProductGallery onSelectProduct={(productId) => setRoute((current) => ({ ...current, productId }))} goToCategory={goToCategory} />
         )}
 
         {(currentCategory === '信仰好物' && currentProductId) && (
           <ProductDetail 
             productId={currentProductId} 
-            onBack={() => { setCurrentProductId(null); window.scrollTo(0, 0); }} 
+            onBack={() => { setRoute((current) => ({ ...current, productId: null })); window.scrollTo(0, 0); }}
             onAddToCart={addToCart}
           />
         )}
 
         {(currentCategory === '訂報') && (
-          <ActionPage category={currentCategory} />
+          <ActionPage />
         )}
 
         {(currentCategory === '奉獻' && !currentPlanId) && (
@@ -324,11 +298,13 @@ export default function App() {
         )}
 
         {currentCategory === '會員專區' && (
-          <MemberDashboard goToCategory={goToCategory} />
+          user
+            ? <MemberDashboard goToCategory={goToCategory} />
+            : <LoginPage goToCategory={goToCategory} />
         )}
 
         {currentCategory === '活動報名' && (
-          <EventRegistrationPage />
+          <EventRegistrationPage goToCategory={goToCategory} />
         )}
 
         {currentCategory === '關於我們' && (
@@ -366,6 +342,18 @@ export default function App() {
         {currentCategory === '祝福卡申辦/捐款' && (
           <BlessingCardPage />
         )}
+
+        {currentCategory === '付款結果' && paymentType && (
+          <PaymentResultPage
+            type={paymentType}
+            reference={paymentReference ?? null}
+            onOrderPaid={clearCart}
+            goToCategory={goToCategory}
+          />
+        )}
+
+        {isUnknownRoute && <NotFoundPage onGoHome={() => goToCategory('首頁')} />}
+        </Suspense>
       </main>
 
       <Footer goToCategory={goToCategory} />
@@ -374,29 +362,32 @@ export default function App() {
         <GlobalBottomAd goToCategory={goToCategory} />
       )}
 
-      <CartDrawer 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        cartItems={cartItems} 
-        onRemoveItem={removeFromCart} 
-        onUpdateQuantity={updateCartQuantity} 
-        onClearCart={clearCart} 
-      />
+      <Suspense fallback={null}>
+        {hasOpenedCart && (
+          <CartDrawer
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            cartItems={cartItems}
+            onRemoveItem={removeFromCart}
+            onUpdateQuantity={updateCartQuantity}
+            onClearCart={clearCart}
+          />
+        )}
 
-      <SearchModal
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        onSelectArticle={(id) => {
-          openArticle(id);
-        }}
-        onSelectProduct={(id) => {
-          setCurrentArticleId(null);
-          setCurrentPlanId(null);
-          setCurrentCategory('信仰好物');
-          setCurrentProductId(id);
-          window.scrollTo(0, 0);
-        }}
-      />
+        {hasOpenedSearch && (
+          <SearchModal
+            isOpen={isSearchOpen}
+            onClose={() => setIsSearchOpen(false)}
+            onSelectArticle={(id) => {
+              openArticle(id);
+            }}
+            onSelectProduct={(id) => {
+              setRoute({ category: '信仰好物', articleId: null, tag: null, author: null, planId: null, productId: id });
+              window.scrollTo(0, 0);
+            }}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

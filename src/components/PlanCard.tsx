@@ -8,7 +8,7 @@ interface PlanCardProps {
 }
 
 // 樣式變數化，增強可讀性
-const BASE_CARD_STYLE = "group border p-6 md:p-8 cursor-pointer rounded-sm transition-colors duration-500 relative";
+const BASE_CARD_STYLE = "group border p-6 md:p-8 rounded-sm transition-colors duration-500 relative";
 
 // 根據不同情況的卡片樣式
 const getCardStyle = (variant: string, isPremium?: boolean, isSelected?: boolean) => {
@@ -28,10 +28,21 @@ const getCardStyle = (variant: string, isPremium?: boolean, isSelected?: boolean
 const PlanCard: React.FC<PlanCardProps> = ({ plan, isSelected, onClick }) => {
   const { title, subtitle, price, description, isPremium, variant } = plan;
   const isDonation = variant === 'donation';
-  const cardClassName = getCardStyle(variant, isPremium, isSelected);
+  const cardClassName = `${getCardStyle(variant, isPremium, isSelected)} ${onClick ? 'cursor-pointer' : 'cursor-default'}`;
 
   return (
-    <div className={cardClassName} onClick={onClick}>
+    <div
+      className={cardClassName}
+      onClick={onClick}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onClick();
+        }
+      } : undefined}
+    >
       {/* 標籤Badge：高級訂閱或被選中的捐款選項 */}
       {(isPremium || (isDonation && isSelected)) && (
         <div className={`absolute top-4 right-4 text-[10px] font-display uppercase tracking-widest border border-current px-2 py-1 ${

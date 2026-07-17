@@ -2,7 +2,7 @@
 
 ## 專案概述
 
-IMPACT 論壇報的前端重設計原型。SPA 架構，無後端，所有路由/狀態皆在前端。
+IMPACT 論壇報的前端重設計原型。SPA 架構，目前以 mock API 運作，並可透過環境設定切換 REST 後端。
 
 ---
 
@@ -10,7 +10,7 @@ IMPACT 論壇報的前端重設計原型。SPA 架構，無後端，所有路由
 
 | 層級 | 技術 |
 |------|------|
-| 框架 | React 18 + TypeScript |
+| 框架 | React 19 + TypeScript |
 | 打包 | Vite |
 | 樣式 | **Tailwind CSS v4** + Vanilla CSS (`src/index.css`) |
 | 字體 | Google Fonts：Noto Sans TC、Noto Serif TC、Oswald、Playfair Display |
@@ -42,14 +42,13 @@ URL 通過 `window.history.pushState` 同步（`?category=xxx&article=123`），
 
 ```
 src/
-├── App.tsx              # 路由邏輯 + 全域主題切換
+├── App.tsx              # 路由邏輯 + 全域狀態
 ├── main.tsx
 ├── index.css            # 全域 CSS：@theme、Accordion 動畫、RWD
 ├── data.ts              # MockData：NewsItem[]、AdItem、分類設定
 ├── components/
 │   ├── Header.tsx           # Fixed 頂部導覽，含 mobile actions bar + category bar
 │   ├── GlobalBottomAd.tsx   # Fixed 底部廣告條
-│   ├── FullscreenMenu.tsx   # 手機全螢幕選單
 │   ├── InlineArticleBanner.tsx
 │   ├── NativeAdCard.tsx
 │   └── StickySidebarAd.tsx
@@ -71,16 +70,14 @@ src/
 
 ## 主題系統
 
+目前只有單一淺色主題，沒有 dark mode 切換。`theme-*` 命名仍作為設計 token 使用，避免各元件硬寫顏色。
+
 ### CSS 變數（`index.css` 的 `@layer base`）
 
 ```css
 :root {
-  --bg-base: 255 255 255;   /* light mode */
+  --bg-base: 253 252 250;
   --text-base: 10 10 10;
-}
-.dark {
-  --bg-base: 10 10 10;      /* dark mode */
-  --text-base: 255 255 255;
 }
 ```
 
@@ -88,11 +85,6 @@ src/
 
 ### 品牌色
 - `--color-brand-red: #C62828` → Tailwind class: `bg-brand-red`、`text-brand-red`
-
-### Dark mode 切換
-`App.tsx` 的 `toggleTheme` 在 `document.documentElement` 上加/移除 `.dark` class。
-
----
 
 ## 固定 Header 高度（RWD 關鍵）
 
@@ -300,5 +292,5 @@ npm run preview # 預覽 dist
 
 - **行動優先（Mobile First）**，但 HomeAccordion 的 hover 互動是桌機專屬
 - 字體：heading 用 `font-serif`（Noto Serif TC）、UI label 用 `font-display`（Oswald）、內文用 `font-sans`（Noto Sans TC）
-- 色調：白底黑字 light mode，黑底白字 dark mode，品牌紅（#C62828）作為 accent
+- 色調：米白底黑字的單一主題，品牌紅（#C62828）作為 accent
 - 圖片盡量保持 `grayscale opacity-70`，hover/active 時轉全彩——這是整站的視覺語言

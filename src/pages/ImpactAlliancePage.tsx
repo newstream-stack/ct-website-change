@@ -1,17 +1,33 @@
 import { getAllianceMembers, getAllianceArticles } from '../api/alliance';
 import { useCarousel } from '../hooks/useCarousel';
+import { useAsyncData } from '../hooks/useAsyncData';
+import AsyncPageState from '../components/AsyncPageState';
 
 interface ImpactAlliancePageProps {
   openArticle: (id: number) => void;
 }
 
 export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePageProps) {
-  const sliderArticles = getAllianceArticles(5);
+  const { data, error, isLoading, reload } = useAsyncData(
+    'alliance-page',
+    async (signal) => {
+      const [sliderArticles, members] = await Promise.all([
+        getAllianceArticles(5, { signal }),
+        getAllianceMembers({ signal }),
+      ]);
+      return { sliderArticles, members };
+    },
+    null,
+  );
+  const sliderArticles = data?.sliderArticles ?? [];
 
   const { activeIndex, setActiveIndex, next: nextSlide, prev: prevSlide } = useCarousel(sliderArticles.length);
 
+  if (isLoading) return <AsyncPageState />;
+  if (error || !data) return <AsyncPageState error={error ?? new Error('聯盟資料載入失敗')} onRetry={reload} />;
+
   return (
-    <div className="pt-[180px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Page Header */}
       <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
@@ -128,7 +144,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 lg:gap-x-16">
-            {getAllianceMembers().map((member) => (
+            {data.members.map((member) => (
               <div 
                 key={member.id} 
                 className="group flex flex-col"
@@ -136,7 +152,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
                 {/* Round Logo Frame */}
                 <div className="relative mb-8 flex justify-center">
                    <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden flex items-center justify-center bg-white">
-                      <img src={member.logoUrl} className="w-[70%] h-[70%] object-contain transition-all duration-700 group-hover:scale-110" alt={member.name} />
+                      <img src={member.logoUrl} loading="lazy" decoding="async" className="w-[70%] h-[70%] object-contain transition-all duration-700 group-hover:scale-110" alt={member.name} />
                    </div>
                    <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">Verified Member</div>
                 </div>
@@ -156,21 +172,11 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
                      {member.latestArticleTitle}
                    </p>
                    
-                   <div className="mt-8 pt-6 border-t border-theme-text/5 flex justify-center gap-4">
-                      <button className="px-6 py-2 bg-theme-text/5 hover:bg-brand-red hover:text-white text-[10px] font-bold tracking-widest uppercase transition-all rounded-sm">Follow Member</button>
-                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* 5. Load More */}
-      <div className="mt-24 flex justify-center px-5">
-         <button className="w-full max-w-sm border border-theme-text/10 py-5 text-xs md:text-sm font-bold tracking-[0.4em] font-display hover:bg-theme-text hover:text-theme-bg transition-all uppercase flex items-center justify-center gap-4 group">
-           Explore More Network Members <i className="fas fa-plus text-[10px] group-hover:rotate-90 transition-transform"></i>
-         </button>
       </div>
 
     </div>

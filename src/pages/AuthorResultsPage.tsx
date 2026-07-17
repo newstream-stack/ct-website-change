@@ -1,4 +1,6 @@
 import { getNewsByAuthor } from '../api/news';
+import AsyncPageState from '../components/AsyncPageState';
+import { useAsyncData } from '../hooks/useAsyncData';
 
 interface AuthorResultsPageProps {
   author: string;
@@ -6,7 +8,14 @@ interface AuthorResultsPageProps {
 }
 
 export default function AuthorResultsPage({ author, openArticle }: AuthorResultsPageProps) {
-  const articles = getNewsByAuthor(author);
+  const { data: articles, error, isLoading, reload } = useAsyncData(
+    `news-author:${author}`,
+    (signal) => getNewsByAuthor(author, { signal }),
+    [],
+  );
+
+  if (isLoading) return <AsyncPageState />;
+  if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
   return (
     <div className="pt-[190px] md:pt-48 pb-32 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
@@ -21,7 +30,7 @@ export default function AuthorResultsPage({ author, openArticle }: AuthorResults
           {articles.map((article) => (
             <button key={article.id} onClick={() => openArticle(article.id)} className="group text-left">
               <div className="aspect-[832/470] overflow-hidden bg-theme-text/5 mb-5 border border-theme-text/10">
-                <img src={article.imageUrl} alt={article.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               </div>
               <p className="font-display text-[10px] tracking-[0.16em] text-brand-red uppercase mb-3">{article.category}</p>
               <h2 className="font-serif text-xl md:text-2xl font-bold leading-snug group-hover:text-brand-red transition-colors">{article.title}</h2>

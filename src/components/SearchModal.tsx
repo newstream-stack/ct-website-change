@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { MOCK_NEWS, MOCK_PRODUCTS } from '../data/index';
+import { searchNews } from '../api/news';
+import { getProducts, searchProducts } from '../api/products';
 import { NewsItem, Product } from '../types';
+import { useAsyncData } from '../hooks/useAsyncData';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -20,25 +22,33 @@ export default function SearchModal({
   const [query, setQuery] = useState('');
   const [articleResults, setArticleResults] = useState<NewsItem[]>([]);
   const [productResults, setProductResults] = useState<Product[]>([]);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { data: featuredProducts } = useAsyncData(
+    `search-featured-products:${isOpen}`,
+    (signal) => isOpen ? getProducts(3, { signal }) : Promise.resolve([]),
+    [],
+  );
 
   // Auto focus input when modal opens
   useEffect(() => {
+    let focusTimer: ReturnType<typeof setTimeout> | null = null;
     if (isOpen) {
-      setTimeout(() => {
+      focusTimer = setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
     }
     return () => {
-      document.body.style.overflow = '';
+      if (focusTimer) clearTimeout(focusTimer);
+      if (isOpen) document.body.style.overflow = '';
     };
   }, [isOpen]);
 
   // Handle keyboard ESC key to close
   useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
@@ -46,36 +56,36 @@ export default function SearchModal({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [isOpen, onClose]);
 
   // Real-time search filter with debounced feel
   useEffect(() => {
     if (!query.trim()) {
       setArticleResults([]);
       setProductResults([]);
+      setSearchError(null);
+      setIsSearching(false);
       return;
     }
 
-    const lowercaseQuery = query.toLowerCase().trim();
+    const controller = new AbortController();
+    setSearchError(null);
+    setIsSearching(true);
+    Promise.all([
+      searchNews(query, 5, { signal: controller.signal }),
+      searchProducts(query, 5, { signal: controller.signal }),
+    ]).then(([articles, products]) => {
+      setArticleResults(articles);
+      setProductResults(products);
+      setIsSearching(false);
+    }).catch((error: unknown) => {
+      if (!controller.signal.aborted) {
+        setSearchError(error instanceof Error ? error.message : '搜尋失敗');
+        setIsSearching(false);
+      }
+    });
 
-    // Filter News
-    const filteredNews = MOCK_NEWS.filter(
-      (item) =>
-        item.title.toLowerCase().includes(lowercaseQuery) ||
-        item.category.toLowerCase().includes(lowercaseQuery) ||
-        (item.excerpt && item.excerpt.toLowerCase().includes(lowercaseQuery))
-    ).slice(0, 5);
-
-    // Filter Products
-    const filteredProducts = MOCK_PRODUCTS.filter(
-      (item) =>
-        item.name.toLowerCase().includes(lowercaseQuery) ||
-        item.englishName.toLowerCase().includes(lowercaseQuery) ||
-        item.description.toLowerCase().includes(lowercaseQuery)
-    ).slice(0, 5);
-
-    setArticleResults(filteredNews);
-    setProductResults(filteredProducts);
+    return () => controller.abort();
   }, [query]);
 
   const handleKeywordClick = (keyword: string) => {
@@ -97,10 +107,11 @@ export default function SearchModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-start pt-[10vh] px-4 md:px-8 bg-theme-bg/95 backdrop-blur-lg transition-all duration-300 animate-fade-in">
+    <div role="dialog" aria-modal="true" aria-label="網站搜尋" className="fixed inset-0 z-50 flex flex-col items-center justify-start pt-[10vh] px-4 md:px-8 bg-theme-bg/95 backdrop-blur-lg transition-all duration-300 animate-fade-in">
       {/* Close button top right */}
       <button 
         onClick={onClose}
+        aria-label="關閉搜尋"
         className="absolute top-6 right-6 w-12 h-12 rounded-full border border-theme-text/10 flex items-center justify-center text-theme-text/60 hover:text-theme-text hover:border-theme-text/30 hover:rotate-90 transition-all duration-300 cursor-pointer z-50"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -118,12 +129,14 @@ export default function SearchModal({
             type="text"
             placeholder="搜尋文章、新聞或信仰好物..."
             value={query}
+            maxLength={200}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full bg-theme-text/5 border border-theme-text/15 rounded-2xl pl-16 pr-12 py-5 text-lg md:text-2xl text-theme-text focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans font-medium placeholder-theme-text/25"
           />
           {query && (
             <button 
               onClick={() => setQuery('')}
+              aria-label="清除搜尋文字"
               className="absolute right-6 top-1/2 -translate-y-1/2 text-theme-text/40 hover:text-theme-text cursor-pointer transition-colors"
             >
               <i className="fas fa-times-circle text-lg" />
@@ -133,7 +146,16 @@ export default function SearchModal({
 
         {/* Dynamic Content Area */}
         <div className="flex-1 min-h-[50vh] overflow-y-auto max-h-[65vh] scrollbar-hide pb-12">
-          {!query.trim() ? (
+          {isSearching ? (
+            <div className="flex items-center justify-center py-20 gap-3 font-display text-xs font-bold uppercase tracking-widest text-theme-text/50">
+              <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" /> 搜尋中
+            </div>
+          ) : searchError ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <h4 className="font-serif font-black text-xl mb-2">搜尋暫時無法使用</h4>
+              <p className="text-sm text-theme-text/50">{searchError}</p>
+            </div>
+          ) : !query.trim() ? (
             /* Recommendations & Popular keywords */
             <div className="flex flex-col gap-8 py-4">
               <div className="space-y-3.5 text-left">
@@ -155,16 +177,19 @@ export default function SearchModal({
               <div className="space-y-4 text-left mt-4 border-t border-theme-text/5 pt-8">
                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-theme-text/40">精選信仰好物 Featured Goods</h4>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {MOCK_PRODUCTS.slice(0, 3).map((product) => (
-                    <div 
+                  {featuredProducts.map((product) => (
+                    <button
+                      type="button"
                       key={product.id}
                       onClick={() => handleProductClick(product.id)}
-                      className="bg-theme-text/3 border border-theme-text/5 rounded-xl overflow-hidden hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col h-full"
+                      className="w-full text-left bg-theme-text/3 border border-theme-text/5 rounded-xl overflow-hidden hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col h-full"
                     >
                       <div className="h-28 overflow-hidden bg-theme-text/5 relative">
                         <img 
                           src={product.imageUrl} 
                           alt={product.name} 
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                         />
                       </div>
@@ -173,7 +198,7 @@ export default function SearchModal({
                         <p className="text-[10px] text-theme-text/40 mt-0.5 line-clamp-1">{product.englishName}</p>
                         <span className="text-xs font-display font-bold text-brand-red mt-2 block">NT$ {product.price.toLocaleString()}</span>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -202,10 +227,11 @@ export default function SearchModal({
                 ) : (
                   <div className="flex flex-col gap-3.5">
                     {articleResults.map((item) => (
-                      <div
+                      <button
+                        type="button"
                         key={item.id}
                         onClick={() => handleArticleClick(item.id)}
-                        className="p-3.5 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col gap-1.5"
+                        className="w-full text-left p-3.5 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col gap-1.5"
                       >
                         <div className="flex justify-between items-center text-[10px] font-bold tracking-wider text-brand-red uppercase">
                           <span>{item.category}</span>
@@ -219,7 +245,7 @@ export default function SearchModal({
                             {item.excerpt}
                           </p>
                         )}
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -235,15 +261,18 @@ export default function SearchModal({
                 ) : (
                   <div className="flex flex-col gap-3.5">
                     {productResults.map((product) => (
-                      <div
+                      <button
+                        type="button"
                         key={product.id}
                         onClick={() => handleProductClick(product.id)}
-                        className="flex gap-4 p-3 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group"
+                        className="w-full text-left flex gap-4 p-3 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group"
                       >
                         <div className="w-16 h-20 bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden flex-shrink-0 relative">
                           <img 
                             src={product.imageUrl} 
                             alt={product.name} 
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                           />
                         </div>
@@ -261,7 +290,7 @@ export default function SearchModal({
                         <div className="flex items-center pr-2 text-theme-text/20 group-hover:text-brand-red transition-colors">
                           <i className="fas fa-chevron-right text-xs" />
                         </div>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 )}

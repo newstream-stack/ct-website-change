@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getStoredUser, logout as apiLogout } from '../api/auth';
 import type { AuthUser } from '../api/auth';
+import { subscribeToLogout } from '../utils/authEvents';
 
 interface UseAuthReturn {
   user: AuthUser | null;
@@ -17,19 +18,19 @@ export function useAuth(): UseAuthReturn {
   }, []);
 
   const logout = useCallback(() => {
-    apiLogout();
+    void apiLogout();
     setUser(null);
   }, []);
 
-  // Sync across tabs via storage events
+  // Session credentials stay isolated per tab; only logout is broadcast without sharing tokens.
   useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === 'auth_user') {
-        setUser(e.newValue ? JSON.parse(e.newValue) : null);
-      }
-    };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    return subscribeToLogout(() => setUser(null));
+  }, []);
+
+  useEffect(() => {
+    const onAuthExpired = () => setUser(null);
+    window.addEventListener('auth:expired', onAuthExpired);
+    return () => window.removeEventListener('auth:expired', onAuthExpired);
   }, []);
 
   return { user, isLoggedIn: user !== null, logout, refreshUser };

@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
-import { getArticle, getArticleContent, getArticleTags, getRecommended, getNewsList } from '../api/news';
+import { getArticle, getArticleContent, getArticleTags, getRecommended } from '../api/news';
 import { getRandomAd, getAd } from '../api/ads';
 import InlineArticleBanner from '../components/InlineArticleBanner';
 import StickySidebarAd from '../components/StickySidebarAd';
+import AsyncPageState from '../components/AsyncPageState';
+import { useAsyncData } from '../hooks/useAsyncData';
+import { getArticleSavedStatus, removeSavedArticle, saveArticle } from '../api/savedArticles';
+import { useAuth } from '../hooks/useAuth';
+import { getSafeExternalUrl } from '../utils/navigation';
 
 interface ArticleDetailProps {
     articleId: number;
@@ -14,27 +19,52 @@ interface ArticleDetailProps {
 }
 
 export default function ArticleDetail({ articleId, openArticle, goToCategory, goToTag, goToAuthor }: ArticleDetailProps) {
-    const article = getArticle(articleId) ?? getNewsList()[0];
-    const recommendedNews = getRecommended(articleId);
-    const popularNews = getRecommended(articleId, 5);
-    const articleTags = getArticleTags(article);
-
-    const [randomAd] = useState(() => getRandomAd() ?? null);
-    const topAd = getAd('infeed');
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [isSaved, setIsSaved] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { isLoggedIn } = useAuth();
+    const { data, error, isLoading, reload } = useAsyncData(
+        `article:${articleId}:auth:${isLoggedIn}`,
+        async (signal) => {
+            const [article, recommendedNews, popularNews, content, saved, randomAd, topAd, sidebarAd] = await Promise.all([
+                getArticle(articleId, { signal }),
+                getRecommended(articleId, 4, { signal }),
+                getRecommended(articleId, 5, { signal }),
+                getArticleContent(articleId, { signal }),
+                getArticleSavedStatus(articleId, isLoggedIn, { signal }).catch(() => false),
+                getRandomAd({ signal }).catch(() => undefined),
+                getAd('infeed', { signal }).catch(() => undefined),
+                getAd('sidebar', { signal }).catch(() => undefined),
+            ]);
+            if (!article) throw new Error('找不到文章');
+            return { article, recommendedNews, popularNews, content, saved, randomAd, topAd, sidebarAd };
+        },
+        null,
+    );
 
     const showToast = (message: string) => {
         setToastMessage(message);
-        setTimeout(() => setToastMessage(null), 2500);
+        if (toastTimer.current) clearTimeout(toastTimer.current);
+        toastTimer.current = setTimeout(() => setToastMessage(null), 2500);
     };
 
-    useEffect(() => {
-        const saved: number[] = JSON.parse(localStorage.getItem('impact_saved_articles') || '[]');
-        setIsSaved(saved.includes(article.id));
-    }, [article.id]);
+    useEffect(() => () => {
+        if (toastTimer.current) clearTimeout(toastTimer.current);
+    }, []);
 
-    const { part1: dummyContentPart1, part2: dummyContentPart2 } = getArticleContent();
+    useEffect(() => {
+        if (!data) return;
+        setIsSaved(data.saved);
+    }, [data]);
+
+    if (error) return <AsyncPageState error={error} onRetry={reload} />;
+    if (isLoading || !data) return <AsyncPageState />;
+
+    const { article, recommendedNews, popularNews, content, randomAd, topAd, sidebarAd } = data;
+    const articleTags = getArticleTags(article);
+
+    const { part1: dummyContentPart1, part2: dummyContentPart2 } = content;
     let firstPart = dummyContentPart1;
     let secondPart = '';
     if (!article.content) {
@@ -62,12 +92,19 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
         }
     };
 
-    const handleToggleSave = () => {
-        const saved: number[] = JSON.parse(localStorage.getItem('impact_saved_articles') || '[]');
-        const next = isSaved ? saved.filter((id) => id !== article.id) : [...saved, article.id];
-        localStorage.setItem('impact_saved_articles', JSON.stringify(next));
-        setIsSaved(!isSaved);
-        showToast(isSaved ? '已取消收藏' : '已加入收藏！');
+    const handleToggleSave = async () => {
+        if (isSaving) return;
+        try {
+            setIsSaving(true);
+            if (isSaved) await removeSavedArticle(article.id, isLoggedIn);
+            else await saveArticle(article.id, isLoggedIn);
+            setIsSaved((value) => !value);
+            showToast(isSaved ? '已取消收藏' : '已加入收藏！');
+        } catch (saveError) {
+            showToast(saveError instanceof Error ? saveError.message : '收藏操作失敗，請稍後再試');
+        } finally {
+            setIsSaving(false);
+        }
     };
 
     return (
@@ -81,7 +118,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
             <div className="pt-[190px] md:pt-32 px-5 sm:px-6 md:px-12 lg:px-20 bg-theme-bg transition-colors duration-500">
                 <div className="max-w-[90rem] mx-auto w-full">
                     <div className="w-full aspect-[832/470] bg-theme-text/5 overflow-hidden border border-theme-text/10 rounded-sm mb-8 md:mb-10 transition-colors duration-500">
-                        <img src={article.imageUrl} className="w-full h-full object-cover transition-opacity duration-700" alt="Cover" />
+                        <img src={article.imageUrl} decoding="async" fetchPriority="high" className="w-full h-full object-cover transition-opacity duration-700" alt={article.title} />
                     </div>
 
                     <button onClick={() => goToCategory(article.category)} className="inline-flex items-center gap-2 bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.16em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm hover:bg-brand-red/85 transition-colors">
@@ -104,7 +141,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
 
                     <div className="lg:col-span-8 article-content">
                         {topAd && (
-                            <a href={topAd.link} className="relative overflow-hidden bg-theme-text text-theme-bg flex flex-col sm:flex-row items-center gap-4 md:gap-6 px-5 md:px-8 py-6 md:py-7 mb-10 md:mb-14 group transition-colors duration-500 rounded-sm">
+                            <a href={getSafeExternalUrl(topAd.link)} target="_blank" rel="noopener noreferrer" className="relative overflow-hidden bg-theme-text text-theme-bg flex flex-col sm:flex-row items-center gap-4 md:gap-6 px-5 md:px-8 py-6 md:py-7 mb-10 md:mb-14 group transition-colors duration-500 rounded-sm">
                                 <div
                                     className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay pointer-events-none transition-transform duration-1000 group-hover:scale-105"
                                     style={{ backgroundImage: `url(${topAd.imageUrl})` }}
@@ -160,16 +197,18 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
 
                             {/* 3. 收藏 */}
                             <div className="w-px h-5 bg-theme-text/10 mx-1"></div>
-                            <div
+                            <button
+                                type="button"
                                 onClick={handleToggleSave}
-                                className={`flex items-center gap-2 px-3 h-8 rounded-full border transition cursor-pointer font-display text-[10px] font-bold uppercase tracking-widest ${isSaved
+                                disabled={isSaving}
+                                className={`flex items-center gap-2 px-3 h-8 rounded-full border transition cursor-pointer disabled:opacity-50 disabled:cursor-wait font-display text-[10px] font-bold uppercase tracking-widest ${isSaved
                                     ? 'bg-brand-red border-brand-red text-white'
                                     : 'border-theme-text/20 bg-theme-text/5 text-theme-text/80 hover:bg-brand-red hover:text-white hover:border-brand-red'
                                     }`}
                             >
                                 <i className={`${isSaved ? 'fas' : 'far'} fa-bookmark text-xs`}></i>
                                 {isSaved ? '已收藏' : '收藏'}
-                            </div>
+                            </button>
                         </div>
 
                         {article.content ? (
@@ -183,8 +222,8 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 {secondPart && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(secondPart) }} />}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
-                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="Content 1" /></div>
-                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="Content 2" /></div>
+                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" loading="lazy" decoding="async" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="文章內容圖片一" /></div>
+                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" loading="lazy" decoding="async" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="文章內容圖片二" /></div>
                                 </div>
 
                                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dummyContentPart2) }} />
@@ -213,47 +252,47 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                             </h4>
                             <div className="flex flex-col gap-5">
                                 {popularNews.map((n, i) => (
-                                    <div key={n.id} className="flex items-start gap-4 cursor-pointer group" onClick={() => openArticle(n.id)}>
+                                    <button type="button" key={n.id} className="w-full text-left flex items-start gap-4 cursor-pointer group" onClick={() => openArticle(n.id)}>
                                         <span className="font-serif font-black text-2xl md:text-3xl text-theme-text/15 group-hover:text-brand-red/40 transition-colors leading-none shrink-0 w-8">{String(i + 1).padStart(2, '0')}</span>
                                         <h5 className="font-serif font-bold text-sm md:text-base text-theme-text leading-snug group-hover:text-brand-red transition-colors line-clamp-3">{n.title}</h5>
-                                    </div>
+                                    </button>
                                 ))}
                             </div>
                         </div>
 
-                        {getAd('sidebar') && <StickySidebarAd ad={getAd('sidebar')!} />}
+                        {sidebarAd && <StickySidebarAd ad={sidebarAd} />}
                     </div>
                 </div>
 
                 <div className="max-w-[90rem] mx-auto px-6 md:px-12 lg:px-20 mt-16 md:mt-20 pt-16 border-t border-theme-text/10 transition-colors">
                     <div className="flex items-end justify-between mb-8 md:mb-10">
                         <h3 className="font-display text-3xl md:text-5xl font-black uppercase tracking-tighter text-theme-text transition-colors">推薦文章 <span className="text-theme-text/40 font-light text-xl md:text-3xl ml-2 transition-colors">/ UP NEXT</span></h3>
-                        <a href="#" className="font-display text-xs md:text-sm font-bold uppercase tracking-widest text-brand-red hover:text-theme-text transition hidden md:block">View All Features &rarr;</a>
+                        <button type="button" onClick={() => goToCategory('最新文章')} className="font-display text-xs md:text-sm font-bold uppercase tracking-widest text-brand-red hover:text-theme-text transition hidden md:block">View All Features &rarr;</button>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {recommendedNews.map(n => (
-                            <div key={n.id} className="group cursor-pointer flex flex-col h-full" onClick={() => openArticle(n.id)}>
+                            <button type="button" key={n.id} className="group cursor-pointer flex flex-col h-full text-left" onClick={() => openArticle(n.id)}>
                                 <div className="w-full aspect-[832/470] bg-theme-text/10 overflow-hidden mb-4 border border-theme-text/5 transition-colors rounded-sm">
-                                    <img src={n.imageUrl} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt={n.title} />
+                                    <img src={n.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt={n.title} />
                                 </div>
                                 <span className="text-brand-red font-display font-bold text-[10px] uppercase tracking-widest mb-2">{n.category}</span>
                                 <h4 className="text-lg md:text-xl font-serif font-black text-theme-text leading-[1.4] md:leading-snug group-hover:text-brand-red transition-colors line-clamp-2 mb-3 tracking-wide md:tracking-normal">{n.title}</h4>
                                 <div className="mt-auto font-display text-[9px] uppercase tracking-widest text-theme-text/60 pt-4 border-t border-theme-text/10 transition-colors">
                                     By {n.author} &nbsp;|&nbsp; {n.date}
                                 </div>
-                            </div>
+                            </button>
                         ))}
                     </div>
                 </div>
             </div>
 
-            <div className="w-full bg-theme-text text-theme-bg py-24 md:py-40 px-6 text-center group cursor-pointer border-t border-theme-text/10 transition-colors duration-500" onClick={() => goToCategory('首頁')}>
+            <button type="button" className="w-full bg-theme-text text-theme-bg py-24 md:py-40 px-6 text-center group cursor-pointer border-t border-theme-text/10 transition-colors duration-500" onClick={() => goToCategory('首頁')}>
                 <span className="font-display text-brand-red font-bold text-xs md:text-sm tracking-[0.2em] uppercase block mb-6 md:mb-10">Return to Cover</span>
                 <h2 className="text-4xl sm:text-6xl md:text-[100px] font-serif font-black text-outline-inverse group-hover:text-theme-bg transition-all duration-500 leading-none">
                     Back to Index <i className="fas fa-long-arrow-alt-right ml-2 md:ml-4 inline-block transform md:group-hover:translate-x-12 transition-transform duration-500 text-brand-red"></i>
                 </h2>
-            </div>
+            </button>
         </>
     );
 }

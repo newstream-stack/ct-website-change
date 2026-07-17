@@ -49,7 +49,7 @@ export default function LineStickersPage() {
           {STICKERS.map((sticker) => (
             <a key={sticker.title} href={LINE_STORE_URL} target="_blank" rel="noreferrer" className="group border border-theme-text/10 hover:border-brand-red transition-colors duration-300 bg-theme-text/[0.02]">
               <div className="aspect-[4/5] overflow-hidden bg-theme-text/5">
-                <img src={sticker.image} alt={sticker.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                <img src={sticker.image} alt={sticker.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
               </div>
               <p className="p-4 text-sm font-medium leading-relaxed group-hover:text-brand-red transition-colors">{sticker.title}</p>
             </a>

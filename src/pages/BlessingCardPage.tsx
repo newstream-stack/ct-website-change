@@ -16,7 +16,7 @@ export default function BlessingCardPage() {
 
         <div className="grid md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-8 md:gap-14 items-center">
           <div className="border border-theme-text/10 bg-theme-text/[0.02] p-3 md:p-5">
-            <img src={CARD_IMAGE} alt="臺灣銀行詩篇23篇祝福卡" className="w-full h-auto" />
+            <img src={CARD_IMAGE} alt="臺灣銀行詩篇23篇祝福卡" loading="lazy" decoding="async" className="w-full h-auto" />
           </div>
 
           <div>

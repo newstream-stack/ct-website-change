@@ -5,5 +5,9 @@
  */
 export type { NewsItem, AdItem, Columnist, AllianceMember, ActionPlan } from './types/news';
 export type { Plan, DonationFormPayload } from './types/donation';
-export type { Member, DonationRecord, SubscriptionRecord, MemberStats } from './types/member';
-export type { Product, CartItem, Order } from './types/product';
+export type { Member, DonationRecord, SubscriptionRecord, MemberStats, PaymentMethodSessionResponse } from './types/member';
+export type { Product, CartItem, PaymentMethod, OrderStatus, Order, CreateOrderRequest, CreateOrderResponse } from './types/product';
+export type { AuthUser, LoginRequest, RegisterRequest, ForgotPasswordRequest, ForgotPasswordResponse, ChangePasswordRequest, SocialProvider, SocialLoginRequest, SocialLoginResponse, OAuthRedirectResponse, AuthResponse } from './types/auth';
+export type { MembershipPlan, CreateMembershipSubscriptionRequest, CreateMembershipSubscriptionResponse } from './types/membership';
+export type { EventTicket, EventDetail, EventRegistrationRequest, EventRegistrationResponse } from './types/event';
+export type { PaymentResourceType, PaymentResourceStatus, PaymentStatusResponse } from './types/payment';

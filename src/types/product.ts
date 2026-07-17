@@ -15,6 +15,9 @@ export interface CartItem {
   quantity: number;
 }
 
+export type PaymentMethod = 'credit-card' | 'line-pay';
+export type OrderStatus = 'pending' | 'payment_pending' | 'paid' | 'failed' | 'cancelled' | 'refunded';
+
 export interface Order {
   orderNumber: string;
   date: string;
@@ -22,11 +25,30 @@ export interface Order {
   phone: string;
   email: string;
   address: string;
-  paymentMethod: 'credit-card' | 'line-pay';
+  paymentMethod: PaymentMethod;
   items: CartItem[];
   subtotal: number;
   shippingFee: number;
   total: number;
-  status: string;
+  status: OrderStatus;
 }
 
+export interface CreateOrderRequest {
+  returnUrl: string;
+  recipient: {
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+  };
+  paymentMethod: PaymentMethod;
+  items: Array<{
+    productId: number;
+    quantity: number;
+  }>;
+}
+
+export interface CreateOrderResponse {
+  order: Order;
+  paymentUrl?: string;
+}

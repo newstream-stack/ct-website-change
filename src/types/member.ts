@@ -35,3 +35,13 @@ export interface SubscriptionRecord {
   amount: string;
   status: '扣款成功' | '扣款失敗';
 }
+
+export interface UpdateMemberRequest {
+  name: string;
+  displayName: string;
+  address: string;
+}
+
+export interface PaymentMethodSessionResponse {
+  managementUrl?: string;
+}

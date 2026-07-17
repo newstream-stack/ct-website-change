@@ -46,7 +46,7 @@ export default function KnowledgeBasePage() {
               {KNOWLEDGE_ARTICLES.map((article) => (
                 <a key={article.title} href={article.href} target="_blank" rel="noreferrer" className="group grid sm:grid-cols-[190px_1fr] gap-5 md:gap-7 py-6 md:py-8 border-b border-theme-text/10 hover:bg-theme-text/[0.03] transition-colors md:px-4 md:-mx-4">
                   <div className="aspect-[16/10] overflow-hidden bg-theme-text/5">
-                    <img src={article.image} alt="" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img src={article.image} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <div className="flex flex-col justify-center">
                     <p className="font-display text-[10px] md:text-xs tracking-[0.16em] text-brand-red uppercase mb-3">{article.date}　{article.source}／{article.author}</p>

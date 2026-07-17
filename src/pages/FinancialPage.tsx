@@ -119,6 +119,8 @@ function ReportBlock({ report }: { report: ReportSection }) {
                 <img
                   src={src}
                   alt={`${report.year} ${report.label} 第 ${i + 1} 頁`}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
@@ -148,6 +150,7 @@ function ReportBlock({ report }: { report: ReportSection }) {
           <img
             src={lightbox}
             alt=""
+            decoding="async"
             className="max-w-full max-h-[90dvh] object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
@@ -175,7 +178,7 @@ export default function FinancialPage() {
 
         {/* Report list */}
         <div className="flex flex-col gap-2">
-          {REPORTS.map((r, i) => (
+          {REPORTS.map((r) => (
             <ReportBlock key={`${r.year}-${r.label}`} report={r} />
           ))}
         </div>

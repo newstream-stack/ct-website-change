@@ -12,12 +12,11 @@ IMPACT 論壇報的前端重設計原型。SPA 架構，**沒有 React Router**�
 
 | 層級 | 技術 |
 |------|------|
-| 框架 | React 18 + TypeScript |
+| 框架 | React 19 + TypeScript |
 | 打包 | Vite |
 | 樣式 | **Tailwind CSS v4** + Vanilla CSS (`src/index.css`) |
 | 字體 | Google Fonts：Noto Sans TC、Noto Serif TC、Oswald、Playfair Display |
 | Icon | Font Awesome 6 (CDN，`index.html` 引入) |
-| i18n | `src/i18n/I18nContext.tsx`（目前僅 `zh`，`t()` 有 fallback 回傳 key 本身） |
 
 > ⚠️ 使用的是 **Tailwind v4**，不是 v3。`@theme` 取代舊版 `tailwind.config.js`，自訂 CSS 變數直接寫在 `index.css` 的 `@theme {}` block。
 >
@@ -74,10 +73,11 @@ src/
 │   ├── news.ts               # NewsItem、AdItem、Columnist、AllianceMember、ActionPlan
 │   ├── donation.ts           # Plan、DonationFormPayload
 │   ├── member.ts             # Member、DonationRecord、SubscriptionRecord、MemberStats
+│   ├── auth.ts               # AuthUser 與登入/註冊 request-response
 │   └── product.ts            # Product、CartItem、Order
 ├── data/                      # 核心內容資料（JSON + index.ts 匯出）
 │   ├── index.ts               # 匯出 NEWS_CATEGORIES / MOCK_NEWS / MOCK_ADS / ALLIANCE_MEMBERS / COLUMNISTS / MOCK_PRODUCTS
-│   ├── news.json / ads.json / alliance_members.json / columnists.json / products.json / content.json
+│   ├── news.json / ads.json / alliance_members.json / columnists.json / products.json / content.json / subscription.json
 ├── mocks/                     # 個別頁面專用的假資料（非核心內容模型）
 │   ├── accordionPanels.ts    # HomeAccordion 的 featured 影片/廣告
 │   ├── donationPlans.ts
@@ -85,20 +85,16 @@ src/
 ├── api/                        # 模擬 REST API 的呼叫層（見下方「API 層」）
 │   ├── client.ts              # apiGet/apiPost/apiPut/apiDel，含 401 自動登出
 │   ├── auth.ts                # login/register/socialLogin，內含 dev 測試帳號
-│   ├── news.ts / ads.ts / home.ts / alliance.ts / columnists.ts / plans.ts / member.ts
+│   ├── news.ts / ads.ts / home.ts / alliance.ts / columnists.ts / plans.ts / member.ts / products.ts / subscriptions.ts
 ├── hooks/
 │   ├── useAuth.ts             # 讀 sessionStorage 使用者、跨分頁同步
 │   ├── useCarousel.ts
 │   └── useYouTubePlayer.ts
-├── i18n/
-│   ├── I18nContext.tsx
-│   └── translations/zh.json
 ├── components/
 │   ├── Header.tsx             # Fixed 頂部導覽，含 header ad bar + mobile actions bar + category bar
 │   ├── Footer.tsx
 │   ├── GlobalBottomAd.tsx     # Fixed 底部廣告條
 │   ├── SplashAd.tsx           # 進站全螢幕贊助彈窗（SVG 版面，桌機/手機不同排版）
-│   ├── FullscreenMenu.tsx     # 手機全螢幕選單
 │   ├── InlineArticleBanner.tsx # 文章內文中段廣告卡（可傳 className 覆蓋預設 margin）
 │   ├── NativeAdCard.tsx
 │   ├── StickySidebarAd.tsx
@@ -123,16 +119,19 @@ src/
 
 這層是刻意做出來的「未來可以無痛換真後端」介面，**寫新功能時要延續這個慣例**：
 
-- 每個 export 上方用註解標出對應的真實 endpoint，例如：
+- 核心內容 API 統一使用非同步簽名，並透過 `VITE_USE_MOCK_API` 切換 mock / REST，例如：
   ```ts
   // GET /api/news/{id}/recommended
-  export function getRecommended(id: number, limit = 4): NewsItem[] {
-    return MOCK_NEWS.filter((n) => n.id !== id).slice(0, limit);
+  export async function getRecommended(id: number, limit = 4, options?: ApiRequestOptions): Promise<NewsItem[]> {
+    return USE_MOCK_API
+      ? MOCK_NEWS.filter((n) => n.id !== id).slice(0, limit)
+      : apiGet<NewsItem[]>(`/api/news/${id}/recommended?limit=${limit}`, options);
   }
   ```
-  之後接後端時，把 function body 換成 `return apiGet<T>('/api/news/...')` 即可，簽名不變。
-- `client.ts` 提供 `apiGet/apiPost/apiPut/apiDel`，統一處理 `Authorization` header 與 401 自動清 session + reload。
-- `auth.ts` 有一組 **dev 測試帳號**（`test@ct.org.tw` / `impact2024`），`login()/register()/socialLogin()` 目前都是 `devDelay()` 後回傳假資料，真正串接時把 `// TODO: replace with real API call` 那行打開即可。
+  頁面使用 `useAsyncData` 統一處理 loading、error、retry 與 AbortController。
+- `client.ts` 提供 `apiGet/apiPost/apiPut/apiDel`，統一處理 Authorization、timeout、204、JSON/文字錯誤與 401 `auth:expired` 事件。
+- `auth.ts` 有一組 **dev 測試帳號**（`test@ct.org.tw` / `impact2024`）；在 mock mode 使用本地資料，`VITE_USE_MOCK_API=false` 時呼叫正式登入、註冊、社群登入與登出端點。
+- 前後端端點、request-response 與尚未定案項目記錄於 `docs/api-contract.md`，串接前需共同確認。
 - `data/`（核心內容：新聞、廣告、聯盟成員、專欄作家、商品）與 `mocks/`（個別頁面專用假資料：首頁精選影片、奉獻方案、會員個人資料）是分開的兩個目錄，寫新頁面時先判斷資料屬於哪一種再決定放哪裡。
 
 ---

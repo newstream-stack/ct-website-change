@@ -4,6 +4,9 @@ import { getFeaturedVideos, getAccordionAd, FeaturedVideo, FeaturedAd } from '..
 import { NewsItem } from '../types';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
 import { useCarousel } from '../hooks/useCarousel';
+import { useAsyncData } from '../hooks/useAsyncData';
+import AsyncPageState from '../components/AsyncPageState';
+import { getSafeExternalUrl } from '../utils/navigation';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,21 +40,22 @@ type AccordionPanel = NewsPanel | VideoPanel | AdPanel;
 const NEWS_GROUP_SIZE = 5;
 const NEWS_GROUPS_COUNT = 5;
 
-function buildPanels(news: NewsItem[]): AccordionPanel[] {
+function buildPanels(news: NewsItem[], videos: FeaturedVideo[], accordionAd?: FeaturedAd): AccordionPanel[] {
   const panels: AccordionPanel[] = [];
   let newsCount = 0;
 
   for (let i = 0; i < NEWS_GROUPS_COUNT; i++) {
     const group = news.slice(i * NEWS_GROUP_SIZE, (i + 1) * NEWS_GROUP_SIZE);
+    if (group.length === 0) break;
     panels.push({ type: 'news', group, displayIndex: newsCount });
     newsCount++;
 
-    if (newsCount === 3) {
-      panels.push({ type: 'video', id: 'video-feature', videos: getFeaturedVideos() });
+    if (newsCount === 3 && videos.length > 0) {
+      panels.push({ type: 'video', id: 'video-feature', videos });
     }
 
-    if (newsCount % 4 === 0) {
-      panels.push({ type: 'ad', ad: getAccordionAd() });
+    if (newsCount % 4 === 0 && accordionAd) {
+      panels.push({ type: 'ad', ad: accordionAd });
     }
   }
 
@@ -75,7 +79,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const touchStartY = useRef(0);
   const pinnedHeightRef = useRef(pinnedHeight);
 
-  const panels: AccordionPanel[] = buildPanels(getNewsList());
+  const { data, error, isLoading, reload } = useAsyncData(
+    'home-content',
+    async (signal) => {
+      const [news, videos, accordionAd] = await Promise.all([
+        getNewsList({ signal }),
+        getFeaturedVideos({ signal }).catch(() => []),
+        getAccordionAd({ signal }).catch(() => undefined),
+      ]);
+      return { news, videos, accordionAd };
+    },
+    null,
+  );
+  const panels: AccordionPanel[] = data ? buildPanels(data.news, data.videos, data.accordionAd) : [];
 
   // Find the index of the video panel to know when it's active
   const videoPanelIndex = panels.findIndex((p) => p.type === 'video');
@@ -119,6 +135,12 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       observer.disconnect();
     };
   }, []);
+
+  if (isLoading) return <AsyncPageState />;
+  if (error) return <AsyncPageState error={error} onRetry={reload} />;
+  if (data && data.news.length === 0) {
+    return <div className="min-h-[100dvh] pt-[190px] flex items-center justify-center bg-theme-bg text-theme-text text-sm text-theme-text/55">目前沒有可顯示的文章</div>;
+  }
 
 
   // ── Event handlers ──────────────────────────────────────────────────────────
@@ -233,7 +255,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   <p className="text-white/90 font-light text-xs sm:text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 max-w-md mb-4 md:mb-8 drop-shadow-[0_1px_3px_rgba(0,0,0,0.5)]">
                     {ad.description}
                   </p>
-                  <a href={ad.link} className="group/cta inline-flex items-center gap-3 font-display font-bold uppercase tracking-[0.25em] text-[11px] md:text-xs text-white">
+                  <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className="group/cta inline-flex items-center gap-3 font-display font-bold uppercase tracking-[0.25em] text-[11px] md:text-xs text-white">
                     <span className="border-b border-white/40 group-hover/cta:border-brand-red group-hover/cta:text-brand-red transition-colors pb-0.5">Learn More</span>
                     <i className="fas fa-arrow-right text-[10px] group-hover/cta:translate-x-1.5 transition-transform" />
                   </a>
@@ -245,8 +267,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
         // ── Video panel ───────────────────────────────────────────────────────
         if (panel.type === 'video') {
-          const video = panel.videos[videoCarouselIndex];
           const videoCount = panel.videos.length;
+          const video = panel.videos[videoCarouselIndex % videoCount];
           return (
             <div
               key={panel.id}
@@ -272,6 +294,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <button
                       onClick={toggleMute}
                       onTouchEnd={toggleMute}
+                      aria-label={isMuted ? '開啟影片聲音' : '關閉影片聲音'}
                       className="absolute top-4 right-4 z-[50] w-10 h-10 rounded-full bg-black/30 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/50 transition-all sm:top-auto sm:bottom-24 lg:bottom-32 pointer-events-auto"
                     >
                       <i className={`fas ${isMuted ? 'fa-volume-mute' : 'fa-volume-up'} text-sm`} />
@@ -321,6 +344,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + videoCount) % videoCount); }}
                         onTouchEnd={(e) => { if (e.cancelable) e.preventDefault(); e.stopPropagation(); setVideoCarouselIndex((p) => (p - 1 + videoCount) % videoCount); }}
+                        aria-label="上一部影片"
                         className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-left text-[8px]" />
@@ -328,6 +352,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                       <button
                         onClick={(e) => { e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % videoCount); }}
                         onTouchEnd={(e) => { if (e.cancelable) e.preventDefault(); e.stopPropagation(); setVideoCarouselIndex((p) => (p + 1) % videoCount); }}
+                        aria-label="下一部影片"
                         className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red transition-all"
                       >
                         <i className="fas fa-angle-right text-[8px]" />
@@ -358,7 +383,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
         // ── News panel ────────────────────────────────────────────────────────
         const { group, displayIndex } = panel;
-        const news = group[carouselIndex] || group[0];
+        const itemIndex = carouselIndex % group.length;
+        const news = group[itemIndex];
         return (
           <div
             key={`news-${index}`}
@@ -377,9 +403,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 if (e.cancelable) e.preventDefault();
                 e.stopPropagation();
                 if (deltaX < 0) {
-                  setCarouselIndex((p) => (p + 1) % NEWS_GROUP_SIZE);
+                  setCarouselIndex((p) => (p + 1) % group.length);
                 } else {
-                  setCarouselIndex((p) => (p - 1 + NEWS_GROUP_SIZE) % NEWS_GROUP_SIZE);
+                  setCarouselIndex((p) => (p - 1 + group.length) % group.length);
                 }
                 return;
               }
@@ -392,14 +418,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 key={item.id}
                 src={item.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${
-                  i === carouselIndex
+                  i === itemIndex
                     ? index === activeIndex
                       ? 'opacity-100'
                       : 'opacity-50 md:opacity-80 group-hover:opacity-100'
                     : 'opacity-0'
                 }`}
                 alt=""
-                style={{ zIndex: i === carouselIndex ? 1 : 0 }}
+                style={{ zIndex: i === itemIndex ? 1 : 0 }}
               />
             ))}
 
@@ -438,17 +464,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </span>
                   <span className="font-display text-[11px] font-bold text-white tracking-[0.16em] uppercase whitespace-nowrap shrink-0">
                     <span className="text-white/60 mr-1">文章</span>
-                    0{carouselIndex + 1}<span className="text-white/55 mx-1">/</span>0{NEWS_GROUP_SIZE}
+                    0{itemIndex + 1}<span className="text-white/55 mx-1">/</span>0{group.length}
                   </span>
                   <div className="hidden md:flex items-center gap-1.5 shrink-0">
                     <button
-                      onClick={(e) => { e.stopPropagation(); setCarouselIndex((p) => (p - 1 + NEWS_GROUP_SIZE) % NEWS_GROUP_SIZE); }}
+                      onClick={(e) => { e.stopPropagation(); setCarouselIndex((p) => (p - 1 + group.length) % group.length); }}
+                      aria-label="上一篇文章"
                       className="w-7 h-7 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                     >
                       <i className="fas fa-angle-left text-[8px]" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); setCarouselIndex((p) => (p + 1) % NEWS_GROUP_SIZE); }}
+                      onClick={(e) => { e.stopPropagation(); setCarouselIndex((p) => (p + 1) % group.length); }}
+                      aria-label="下一篇文章"
                       className="w-7 h-7 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                     >
                       <i className="fas fa-angle-right text-[8px]" />

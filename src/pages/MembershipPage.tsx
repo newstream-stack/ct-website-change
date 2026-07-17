@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import { createMembershipSubscription, getMembershipPlans } from '../api/membership';
+import { useAsyncData } from '../hooks/useAsyncData';
+import AsyncPageState from '../components/AsyncPageState';
+import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
 
 interface MembershipPageProps {
   goToCategory: (cat: string, options?: { register?: boolean }) => void;
@@ -7,64 +11,55 @@ interface MembershipPageProps {
 
 export default function MembershipPage({ goToCategory }: MembershipPageProps) {
   const { isLoggedIn } = useAuth();
-  const [subscribeMsg, setSubscribeMsg] = useState<string | null>(null);
-  const plans = [
-    {
-      id: 'plan-a',
-      name: '數位輕享版',
-      price: '150',
-      period: '月',
-      description: '適合喜愛數位閱讀的你，隨時隨地掌握最新消息。',
-      features: [
-        '數位內容免費閱讀',
-        '每週電子報寄送',
-        '60年資料庫查詢',
-        '論壇報活動優先報名與禮品折扣或搶先購'
-      ],
-      isPopular: false
-    },
-    {
-      id: 'plan-b',
-      name: '尊榮會員年約',
-      price: '1,600',
-      period: '年',
-      description: '給予我們最堅定的支持，享有完整數位資源與獨家實體禮品。',
-      features: [
-        '數位內容免費閱讀',
-        '每週電子報寄送',
-        '60年資料庫查詢',
-        '本報設計寵鵝好禮',
-        '會員專屬禱告卡或禱告書',
-        '論壇報活動優先報名與禮品折扣或搶先購'
-      ],
-      isPopular: true
-    },
-    {
-      id: 'plan-c',
-      name: '全典藏年約版',
-      price: '2,400',
-      period: '年',
-      description: '完美結合實體與數位，不漏接任何信仰養分，深度閱讀愛好者首選。',
-      features: [
-        '數位內容免費閱讀',
-        '每週電子報寄送',
-        '60年資料庫查詢',
-        '紙本論壇報',
-        '本報設計寵鵝好禮',
-        '會員專屬禱告卡或禱告書',
-        '論壇報活動優先報名與禮品折扣或搶先購'
-      ],
-      isPopular: false
+  const [subscribeMsg, setSubscribeMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [submittingPlanId, setSubmittingPlanId] = useState<string | null>(null);
+  const idempotencyKeys = useRef(new Map<string, string>());
+  const { data: plans, error, isLoading, reload } = useAsyncData(
+    'membership-plans',
+    (signal) => getMembershipPlans({ signal }),
+    [],
+  );
+
+  const handleSubscribe = async (planId: string) => {
+    if (!isLoggedIn) {
+      goToCategory('會員中心', { register: true });
+      return;
     }
-  ];
+
+    try {
+      setSubscribeMsg(null);
+      setSubmittingPlanId(planId);
+      const key = idempotencyKeys.current.get(planId) ?? crypto.randomUUID();
+      idempotencyKeys.current.set(planId, key);
+      const response = await createMembershipSubscription({ planId, returnUrl: buildPaymentReturnUrl('membership') }, key);
+      if (response.paymentUrl) {
+        redirectToExternalUrl(response.paymentUrl);
+        return;
+      }
+      setSubscribeMsg({
+        type: 'success',
+        text: response.status === 'active' ? '訂閱已啟用' : '訂閱申請已建立，等待付款確認',
+      });
+    } catch (submitError) {
+      setSubscribeMsg({
+        type: 'error',
+        text: submitError instanceof Error ? submitError.message : '訂閱建立失敗，請稍後再試',
+      });
+    } finally {
+      setSubmittingPlanId(null);
+    }
+  };
+
+  if (isLoading) return <AsyncPageState />;
+  if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
   return (
-    <div className="pt-[140px] md:pt-[190px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[190px] md:pt-[190px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="max-w-[1200px] mx-auto relative z-10 animate-fade-in-up">
         
         {subscribeMsg && (
-          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-brand-red text-white text-xs font-bold tracking-widest px-6 py-3 rounded-full shadow-lg animate-fade-in-up">
-            {subscribeMsg}
+          <div className={`fixed top-24 left-1/2 -translate-x-1/2 z-50 text-white text-xs font-bold tracking-widest px-6 py-3 rounded-full shadow-lg animate-fade-in-up ${subscribeMsg.type === 'error' ? 'bg-red-600' : 'bg-amber-600'}`}>
+            {subscribeMsg.text}
           </div>
         )}
 
@@ -93,8 +88,8 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
               <div className="p-8 md:p-10 flex flex-col h-full">
                 <h3 className="text-xl md:text-2xl font-serif font-bold text-theme-text mb-2">{plan.name}</h3>
                 <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl lg:text-4xl font-display font-black text-brand-red">NT$ {plan.price}</span>
-                  <span className="text-sm font-sans text-theme-text/60">/ {plan.period}</span>
+                  <span className="text-3xl lg:text-4xl font-display font-black text-brand-red">NT$ {plan.price.toLocaleString()}</span>
+                  <span className="text-sm font-sans text-theme-text/60">/ {plan.billingPeriod === 'month' ? '月' : '年'}</span>
                 </div>
                 <p className="text-xs sm:text-sm text-theme-text/60 mb-8 md:flex-1">{plan.description}</p>
                 
@@ -109,19 +104,11 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
                   ))}
                 </ul>
                 <button
-                  onClick={() => {
-                    if (isLoggedIn) {
-                      // TODO: call POST /api/subscription { planId: plan.id }
-                      setSubscribeMsg(`感謝您訂閱 ${plan.name}！`);
-                      setTimeout(() => goToCategory('會員專區'), 1200);
-                    } else {
-                      setSubscribeMsg('請先登入或註冊帳號');
-                      setTimeout(() => goToCategory('會員中心', { register: true }), 1200);
-                    }
-                  }}
-                  className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 cursor-pointer ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}
+                  onClick={() => void handleSubscribe(plan.id)}
+                  disabled={submittingPlanId !== null}
+                  className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-wait ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}
                 >
-                  立即訂閱
+                  {submittingPlanId === plan.id ? '建立訂閱中…' : '立即訂閱'}
                 </button>
               </div>
             </div>
@@ -132,7 +119,7 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
         <div className="mt-20 text-center max-w-3xl mx-auto border-t border-theme-text/10 pt-10">
           <h4 className="text-lg font-serif font-bold mb-4 text-theme-text">需要協助？</h4>
           <p className="text-sm text-theme-text/60 mb-6">如果您對於會員方案有任何疑問，或需要企業大量訂閱報價，歡迎聯絡我們的客服團隊。</p>
-          <button className="text-brand-red border-b border-brand-red pb-1 tracking-widest font-bold text-sm hover:opacity-70 transition-opacity">
+          <button type="button" onClick={() => goToCategory('客戶服務')} className="text-brand-red border-b border-brand-red pb-1 tracking-widest font-bold text-sm hover:opacity-70 transition-opacity">
             聯絡我們 <i className="fas fa-arrow-right text-[10px] ml-1"></i>
           </button>
         </div>
