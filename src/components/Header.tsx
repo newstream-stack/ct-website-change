@@ -46,18 +46,18 @@ export default function Header({
         <div className="flex items-center gap-3 md:gap-6 pointer-events-auto">
           {/* Desktop Right CTAs */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6 font-sans font-bold text-sm tracking-widest text-theme-text/90">
-            <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
             <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:text-theme-text transition flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full">奉獻 <i className="fas fa-arrow-right text-[10px]"></i></button>
+            <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
 
-          {/* Mobile compact CTAs (信仰好物 icon + 奉獻 pill) */}
+          {/* Mobile compact CTAs (奉獻 pill + 信仰好物 icon) */}
           <div className="flex md:hidden items-center gap-2">
-            <button onClick={() => goToCategory('信仰好物')} title="信仰好物" className="hover:text-brand-red transition flex items-center cursor-pointer">
-              <i className="fas fa-gift text-lg"></i>
-            </button>
             <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:bg-brand-red hover:text-white transition-all flex items-center gap-1 border border-brand-red px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest cursor-pointer">
               奉獻 <i className="fas fa-arrow-right text-[8px]"></i>
+            </button>
+            <button onClick={() => goToCategory('信仰好物')} title="信仰好物" className="hover:text-brand-red transition flex items-center cursor-pointer">
+              <i className="fas fa-gift text-lg"></i>
             </button>
           </div>
           <div className="w-px h-4 bg-theme-text/30 md:hidden transition-colors duration-500"></div>
