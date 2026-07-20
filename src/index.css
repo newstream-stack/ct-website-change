@@ -130,7 +130,9 @@
   /* When hovering elsewhere, shrink the active panel */
   .accordion-container:hover .accordion-panel.active:not(:hover) { flex: 1; }
   .accordion-container:hover .accordion-panel.active:not(:hover) .accordion-bg {
-    opacity: 0.4;
+    /* !important: accordion-bg opacity is set inline in JSX, which normally
+       out-prioritizes this rule; force the hover-elsewhere dim to still win. */
+    opacity: 0.4 !important;
     transform: translate(-50%, -50%) scale(1.08);
   }
   .accordion-container:hover .accordion-panel.active:not(:hover) .content-expanded {
@@ -220,11 +222,10 @@
   }
 }
 
-/* ─── Mobile phone (≤639px): no hover, no grayscale — opacity handled by JS ─── */
+/* ─── Mobile phone (≤639px): no hover, no grayscale — opacity is set inline in JSX ─── */
 @media (max-width: 639px) {
   .accordion-bg {
     filter: none !important;
-    /* opacity is intentionally NOT overridden — let JS classes (opacity-50 / opacity-100) work */
   }
 }
 

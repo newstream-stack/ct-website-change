@@ -216,11 +216,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             >
               <img
                 src={ad.imageUrl}
-                className={`accordion-bg transition-all duration-1000 ${
-                  isMobileLayout || index === activeIndex ? 'opacity-100' : 'opacity-50 md:opacity-80 group-hover:opacity-100'
-                }`}
+                className="accordion-bg transition-all duration-1000 group-hover:!opacity-100"
                 alt=""
-                style={{ zIndex: 1 }}
+                style={{ zIndex: 1, opacity: isMobileLayout || index === activeIndex ? 1 : 0.8 }}
               />
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
@@ -299,7 +297,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     </button>
                   </div>
                 ) : (
-                  <img src={video.thumbnail} className="accordion-bg object-cover opacity-100" alt={video.title} />
+                  <img src={video.thumbnail} className="accordion-bg object-cover" alt={video.title} style={{ opacity: 1 }} />
                 )}
               </div>
 
@@ -410,21 +408,19 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             }}
             style={{ touchAction: 'manipulation' }}
           >
-            {group.map((item, i) => (
-              <img
-                key={item.id}
-                src={item.imageUrl}
-                className={`accordion-bg transition-all duration-1000 ${
-                  i === itemIndex
-                    ? isMobileLayout || index === activeIndex
-                      ? 'opacity-100'
-                      : 'opacity-50 md:opacity-80 group-hover:opacity-100'
-                    : 'opacity-0'
-                }`}
-                alt=""
-                style={{ zIndex: i === itemIndex ? 1 : 0 }}
-              />
-            ))}
+            {group.map((item, i) => {
+              const isCurrent = i === itemIndex;
+              const opacity = !isCurrent ? 0 : isMobileLayout || index === activeIndex ? 1 : 0.8;
+              return (
+                <img
+                  key={item.id}
+                  src={item.imageUrl}
+                  className={`accordion-bg transition-all duration-1000 ${isCurrent ? 'group-hover:!opacity-100' : ''}`}
+                  alt=""
+                  style={{ zIndex: isCurrent ? 1 : 0, opacity }}
+                />
+              );
+            })}
 
             <div
               className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
