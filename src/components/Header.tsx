@@ -37,18 +37,30 @@ export default function Header({
           type="button"
           aria-label="回到首頁"
           onClick={() => goToCategory('首頁')}
-          className="relative isolate flex h-10 w-[140px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-12 md:w-48"
+          className="relative isolate flex h-9 w-[104px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-10 md:w-40"
         >
-          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none h-full w-full object-contain object-left" />
+          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none md:hidden h-full w-full object-contain object-left" />
+          <img src="/S__86589483-original.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[5.2] translate-y-3" />
         </button>
 
-        <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
+        <div className="flex items-center gap-3 md:gap-6 pointer-events-auto">
           {/* Desktop Right CTAs */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6 font-sans font-bold text-sm tracking-widest text-theme-text/90">
             <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
             <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:text-theme-text transition flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full">奉獻 <i className="fas fa-arrow-right text-[10px]"></i></button>
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
+
+          {/* Mobile compact CTAs (信仰好物 icon + 奉獻 pill) */}
+          <div className="flex md:hidden items-center gap-2">
+            <button onClick={() => goToCategory('信仰好物')} title="信仰好物" className="hover:text-brand-red transition flex items-center cursor-pointer">
+              <i className="fas fa-gift text-lg"></i>
+            </button>
+            <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:bg-brand-red hover:text-white transition-all flex items-center gap-1 border border-brand-red px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest cursor-pointer">
+              奉獻 <i className="fas fa-arrow-right text-[8px]"></i>
+            </button>
+          </div>
+          <div className="w-px h-4 bg-theme-text/30 md:hidden transition-colors duration-500"></div>
 
           {/* Login / Member Dashboard */}
           {user ? (
@@ -101,14 +113,6 @@ export default function Header({
             <span className="hidden md:block">搜尋</span>
           </button>
         </div>
-      </div>
-
-      {/* Mobile Actions Bar - Hidden on md+ as they move to the main row */}
-      <div className="md:hidden w-full flex items-center justify-end px-5 pb-3.5 font-sans font-bold tracking-widest text-theme-text/80 transition-colors duration-500 gap-6">
-         <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition text-[12px]">信仰好物</button>
-         <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:bg-brand-red hover:text-white transition-all flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full text-[11px]">
-           奉獻 <i className="fas fa-arrow-right text-[10px]"></i>
-         </button>
       </div>
 
       {showCategoryBar && (
