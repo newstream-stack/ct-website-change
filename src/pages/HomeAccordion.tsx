@@ -224,9 +224,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               />
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                  isMobileLayout
-                    ? 'bg-gradient-to-t from-black/70 via-black/15 to-transparent'
-                    : index === activeIndex ? 'accordion-vignette' : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                  isMobileLayout || index === activeIndex ? '' : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
                 }`}
               />
               {/* Collapsed */}
@@ -306,9 +304,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               </div>
 
               <div className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                isMobileLayout
-                  ? 'bg-gradient-to-t from-black/70 via-black/15 to-transparent'
-                  : index === activeIndex ? 'accordion-vignette' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
+                isMobileLayout || index === activeIndex ? '' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
               }`} />
 
               {/* Collapsed */}
@@ -431,9 +427,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
             <div
               className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                isMobileLayout
-                  ? 'bg-gradient-to-t from-black/70 via-black/15 to-transparent'
-                  : index === activeIndex ? 'bg-black/70' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
+                isMobileLayout || index === activeIndex ? '' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
               }`}
             />
 

@@ -37,10 +37,9 @@ export default function Header({
           type="button"
           aria-label="回到首頁"
           onClick={() => goToCategory('首頁')}
-          className="relative isolate flex h-8 w-[120px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-10 md:w-40"
+          className="relative isolate flex h-10 w-[140px] shrink-0 cursor-pointer items-center border-0 bg-transparent p-0 text-left md:h-12 md:w-48"
         >
-          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none md:hidden h-7 w-auto object-contain origin-left scale-[2.9] translate-y-4" />
-          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[5.2] translate-y-3" />
+          <img src="/S__86589483.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none h-full w-full object-contain object-left" />
         </button>
 
         <div className="flex items-center gap-4 md:gap-6 pointer-events-auto">
