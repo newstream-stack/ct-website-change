@@ -5,6 +5,8 @@ import Header from './components/Header';
 import HomeAccordion from './pages/HomeAccordion';
 import { CartItem, Product } from './types';
 import GlobalBottomAd from './components/GlobalBottomAd';
+import FloatingImageAd from './components/FloatingImageAd';
+import FloatingDonateButton from './components/FloatingDonateButton';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 import { buildRouteUrl, readRoute, type AppRoute } from './routing';
@@ -38,6 +40,8 @@ const KnowledgeBasePage = lazy(() => import('./pages/KnowledgeBasePage'));
 const TagResultsPage = lazy(() => import('./pages/TagResultsPage'));
 const AuthorResultsPage = lazy(() => import('./pages/AuthorResultsPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
+
+const BOTTOM_AD_EXCLUDED_CATEGORIES = ['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'];
 
 const SPECIAL_CATEGORIES = new Set([
   '首頁', '信仰好物', '訂報', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名',
@@ -358,8 +362,12 @@ export default function App() {
 
       <Footer goToCategory={goToCategory} />
 
-      {!['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'].includes(currentCategory) && (
-        <GlobalBottomAd goToCategory={goToCategory} />
+      {!BOTTOM_AD_EXCLUDED_CATEGORIES.includes(currentCategory) && (
+        <>
+          <GlobalBottomAd goToCategory={goToCategory} />
+          <FloatingImageAd />
+          <FloatingDonateButton goToCategory={goToCategory} />
+        </>
       )}
 
       <Suspense fallback={null}>

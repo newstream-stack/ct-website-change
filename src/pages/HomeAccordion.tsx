@@ -217,7 +217,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               <img
                 src={ad.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${
-                  index === activeIndex ? 'opacity-100' : 'opacity-50 md:opacity-80 group-hover:opacity-100'
+                  isMobileLayout || index === activeIndex ? 'opacity-100' : 'opacity-50 md:opacity-80 group-hover:opacity-100'
                 }`}
                 alt=""
                 style={{ zIndex: 1 }}
@@ -393,9 +393,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             onTouchEnd={(e) => {
               const deltaX = e.changedTouches[0].clientX - touchStartX.current;
               const deltaY = e.changedTouches[0].clientY - touchStartY.current;
-              // 垂直滑動超過 12px 視為滾動，不觸發點擊
-              if (Math.abs(deltaY) > 12) return;
-              if ((window.innerWidth < 768 || index === activeIndex) && Math.abs(deltaX) > 40) {
+              // 只有明顯偏水平的滑動才算左右切換，避免跟垂直滾動衝突
+              const isHorizontalSwipe = Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
+              if (!isHorizontalSwipe && Math.abs(deltaY) > 12) return;
+              if ((window.innerWidth < 768 || index === activeIndex) && isHorizontalSwipe) {
                 if (e.cancelable) e.preventDefault();
                 e.stopPropagation();
                 if (deltaX < 0) {
@@ -415,7 +416,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 src={item.imageUrl}
                 className={`accordion-bg transition-all duration-1000 ${
                   i === itemIndex
-                    ? index === activeIndex
+                    ? isMobileLayout || index === activeIndex
                       ? 'opacity-100'
                       : 'opacity-50 md:opacity-80 group-hover:opacity-100'
                     : 'opacity-0'

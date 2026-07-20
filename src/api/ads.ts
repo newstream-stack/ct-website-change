@@ -4,7 +4,7 @@ import { apiGet, type ApiRequestOptions } from './client';
 import { USE_MOCK_API } from './config';
 import { assertApiData, isAdItem } from './validators';
 
-type AdPlacement = 'header' | 'infeed' | 'inline' | 'sidebar' | 'accordion';
+type AdPlacement = 'header' | 'infeed' | 'inline' | 'sidebar' | 'accordion' | 'floating';
 
 // GET /api/ads/{placement}
 export async function getAd(placement: AdPlacement, options?: ApiRequestOptions): Promise<AdItem | undefined> {

@@ -38,5 +38,13 @@
     "description": "享受無廣告閱讀與專屬內容。",
     "imageUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
     "link": "#"
+  },
+  "floating": {
+    "id": "ad-floating-1",
+    "sponsor": "獨家贊助",
+    "title": "2026 IMPACT 全球華人影響力高峰會",
+    "description": "邀請重量級講員獨家探討未來的企業倫理與信仰實踐。",
+    "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=1200",
+    "link": "#"
   }
 }
