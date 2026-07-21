@@ -4,7 +4,7 @@
     "sponsor": "全球論壇",
     "title": "重新定義信仰與工作：2026 職場特會開放報名",
     "description": "匯集國內外領袖，為新世代信徒量身打造的實戰工作坊。",
-    "imageUrl": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800",
+    "imageUrl": "./images/article-workplace-conference-banner.png",
     "link": "#"
   },
   "inline": {
@@ -20,7 +20,7 @@
     "sponsor": "影響力聯盟",
     "title": "IMPACT 會員招募中",
     "description": "加入成為影響力領袖，獨家獲得最新雙週刊。",
-    "imageUrl": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800",
+    "imageUrl": "./images/article-sidebar-membership-ad.png",
     "link": "#"
   },
   "accordion": {

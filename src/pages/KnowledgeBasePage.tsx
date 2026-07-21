@@ -1,3 +1,5 @@
+import SummitBanner from '../components/SummitBanner';
+
 const KNOWLEDGE_ARTICLES = [
   {
     date: '2023-10-17',
@@ -35,6 +37,8 @@ export default function KnowledgeBasePage() {
           <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">Faith Archive</p>
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight">信仰知識庫</h1>
         </div>
+
+        <SummitBanner className="mb-12 md:mb-16" />
 
         <div className="grid lg:grid-cols-[minmax(0,1fr)_260px] gap-12 lg:gap-16">
           <section>

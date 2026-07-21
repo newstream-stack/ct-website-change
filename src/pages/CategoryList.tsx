@@ -5,6 +5,7 @@ import { getAd } from '../api/ads';
 import { useCarousel } from '../hooks/useCarousel';
 import NativeAdCard from '../components/NativeAdCard';
 import AsyncPageState from '../components/AsyncPageState';
+import SummitBanner from '../components/SummitBanner';
 import { useAsyncData } from '../hooks/useAsyncData';
 
 interface CategoryListProps {
@@ -55,6 +56,12 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
               {category} 
               <span className="text-lg md:text-2xl font-display font-light text-theme-text/40 md:ml-4 tracking-widest uppercase mt-1 md:mt-0">Life Info</span>
             </h1>
+          </div>
+        </div>
+
+        <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
+          <div className="max-w-[1400px] mx-auto">
+            <SummitBanner />
           </div>
         </div>
 
@@ -230,15 +237,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
         </div>
       </div>
       
-      <div className="w-full h-32 md:h-48 border border-theme-text/10 bg-theme-text/5 backdrop-blur-sm mb-12 md:mb-20 flex items-center justify-center relative cursor-pointer group overflow-hidden transition-colors">
-        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1600" loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700 group-hover:scale-105" alt="贊助內容" />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-red/20 to-transparent opacity-50"></div>
-        <span className="absolute top-2 md:top-4 right-2 md:right-4 text-[10px] md:text-xs font-display uppercase tracking-widest border border-theme-text/20 text-theme-text/70 px-1 md:px-2 py-0.5 z-10 bg-theme-bg/70 transition-colors">ADVERTISEMENT</span>
-        <div className="z-10 text-center relative">
-          <h3 className="font-serif font-black text-2xl md:text-4xl text-theme-text drop-shadow-lg transition-colors">IMPACT 2026 SUMMIT</h3>
-          <p className="font-display text-sm md:text-base tracking-widest uppercase mt-2 font-bold text-brand-red group-hover:text-theme-text transition-colors">Register Now <i className="fas fa-arrow-right"></i></p>
-        </div>
-      </div>
+      <SummitBanner className="mb-12 md:mb-20" />
 
       <div className="flex flex-col border-t border-theme-text/10 transition-colors">
         {filteredNews.length > 0 ? (

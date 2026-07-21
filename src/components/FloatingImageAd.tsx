@@ -24,9 +24,6 @@ export default function FloatingImageAd() {
           decoding="async"
           className="h-full w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-100"
         />
-        <span className="absolute top-2 left-2 bg-theme-bg/90 text-theme-text text-[9px] uppercase tracking-widest px-1.5 py-0.5 font-bold">
-          Advertisement
-        </span>
         <button
           type="button"
           onClick={(e) => {

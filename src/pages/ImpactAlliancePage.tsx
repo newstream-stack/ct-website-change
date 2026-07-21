@@ -2,6 +2,7 @@ import { getAllianceMembers, getAllianceArticles } from '../api/alliance';
 import { useCarousel } from '../hooks/useCarousel';
 import { useAsyncData } from '../hooks/useAsyncData';
 import AsyncPageState from '../components/AsyncPageState';
+import SummitBanner from '../components/SummitBanner';
 
 interface ImpactAlliancePageProps {
   openArticle: (id: number) => void;
@@ -36,6 +37,12 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
              影響力聯盟 
              <span className="text-lg md:text-2xl font-display font-light text-theme-text/40 md:ml-4 tracking-widest uppercase mt-1 md:mt-0">Alliance Network</span>
            </h1>
+        </div>
+      </div>
+
+      <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
+        <div className="max-w-[1400px] mx-auto">
+          <SummitBanner />
         </div>
       </div>
 

@@ -140,28 +140,6 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                 <div className="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 relative">
 
                     <div className="lg:col-span-8 article-content">
-                        {topAd && (
-                            <a href={getSafeExternalUrl(topAd.link)} target="_blank" rel="noopener noreferrer" className="relative overflow-hidden bg-theme-text text-theme-bg flex flex-col sm:flex-row items-center gap-4 md:gap-6 px-5 md:px-8 py-6 md:py-7 mb-10 md:mb-14 group transition-colors duration-500 rounded-sm">
-                                <div
-                                    className="absolute inset-0 opacity-20 bg-cover bg-center mix-blend-overlay pointer-events-none transition-transform duration-1000 group-hover:scale-105"
-                                    style={{ backgroundImage: `url(${topAd.imageUrl})` }}
-                                ></div>
-                                <div className="relative flex items-center gap-4 flex-1 w-full min-w-0">
-                                    <div className="w-1.5 h-12 md:h-14 bg-brand-red hidden sm:block shrink-0"></div>
-                                    <div className="flex-1 min-w-0">
-                                        <span className="text-[9px] md:text-[10px] font-display tracking-[0.3em] uppercase text-theme-bg/60 font-bold block mb-1">{topAd.sponsor} · Sponsored</span>
-                                        <h3 className="font-serif font-black text-base md:text-xl tracking-wide text-theme-bg leading-snug">{topAd.title}</h3>
-                                        <p className="text-xs md:text-sm text-theme-bg/70 font-light mt-1.5 hidden md:block max-w-xl">{topAd.description}</p>
-                                    </div>
-                                </div>
-                                <div className="relative shrink-0 w-full sm:w-auto">
-                                    <span className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-brand-red text-white font-display text-[10px] md:text-xs tracking-widest uppercase font-bold py-2.5 md:py-3 px-6 md:px-8 group-hover:bg-white group-hover:text-brand-red transition-colors duration-300 ring-1 ring-brand-red rounded-sm">
-                                        了解更多 <i className="fas fa-arrow-right text-[10px] group-hover:translate-x-1 transition-transform"></i>
-                                    </span>
-                                </div>
-                            </a>
-                        )}
-
                         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-theme-text/10 transition-colors">
                             {/* 1. Share 文字 */}
                             <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 transition-colors">
@@ -210,6 +188,36 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 {isSaved ? '已收藏' : '收藏'}
                             </button>
                         </div>
+
+                        {topAd && (
+                            <div className="mb-10 md:mb-14">
+                                <div className="mb-2 flex items-center gap-2 font-display text-[9px] font-bold uppercase tracking-[0.2em] text-theme-text/45 md:text-[10px]">
+                                    <span className="h-px w-6 bg-brand-red" />
+                                    <span>廣告</span>
+                                    <span className="text-theme-text/25">|</span>
+                                    <span>Advertisement</span>
+                                </div>
+                                <a
+                                    href={getSafeExternalUrl(topAd.link)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group relative flex h-28 items-end overflow-hidden rounded-sm border border-theme-text/10 bg-black px-4 py-4 text-white md:h-36 md:px-6 md:py-5"
+                                >
+                                    <img
+                                        src={topAd.imageUrl}
+                                        alt={topAd.title}
+                                        loading="lazy"
+                                        decoding="async"
+                                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/5" />
+                                    <div className="relative min-w-0 max-w-[72%]">
+                                        <span className="mb-1 block font-display text-[8px] font-bold uppercase tracking-[0.25em] text-white/60 md:text-[9px]">{topAd.sponsor} · Sponsored</span>
+                                        <h3 className="line-clamp-2 font-serif text-sm font-bold leading-snug tracking-wide text-white drop-shadow-lg md:text-lg">{topAd.title}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        )}
 
                         {article.content ? (
                             <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
