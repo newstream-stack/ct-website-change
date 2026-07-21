@@ -53,9 +53,10 @@ export default function Header({
 
           {/* Mobile compact CTAs (奉獻 pill + 信仰好物 icon) */}
           <div className="flex md:hidden items-center gap-2">
-            <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:bg-brand-red hover:text-white transition-all flex items-center gap-1 border border-brand-red px-2.5 py-1 rounded-full text-[10px] font-bold tracking-widest cursor-pointer">
-              奉獻 <i className="fas fa-arrow-right text-[8px]"></i>
+            <button onClick={() => goToCategory('奉獻')} title="奉獻" className="text-brand-red hover:text-theme-text transition flex items-center cursor-pointer">
+              <i className="fas fa-hand-holding-heart text-lg"></i>
             </button>
+            <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
             <button onClick={() => goToCategory('信仰好物')} title="信仰好物" className="hover:text-brand-red transition flex items-center cursor-pointer">
               <i className="fas fa-gift text-lg"></i>
             </button>
