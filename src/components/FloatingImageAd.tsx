@@ -14,7 +14,7 @@ export default function FloatingImageAd() {
       href={getSafeExternalUrl(ad.link)}
       target="_blank"
       rel="noopener noreferrer"
-      className="group fixed bottom-[76px] md:bottom-[94px] left-3 sm:left-5 z-40 block w-[240px] sm:w-[300px] overflow-hidden rounded-lg border border-theme-text/10 bg-theme-text shadow-[0_10px_40px_rgba(0,0,0,0.3)] animate-slide-up"
+      className="group fixed bottom-3 sm:bottom-5 left-3 sm:left-5 z-40 block w-[240px] sm:w-[300px] overflow-hidden rounded-lg border border-theme-text/10 bg-theme-text shadow-[0_10px_40px_rgba(0,0,0,0.3)] animate-slide-up"
     >
       <div className="relative h-[130px] sm:h-[160px] w-full overflow-hidden">
         <img

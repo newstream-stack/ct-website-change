@@ -4,7 +4,7 @@ interface FloatingDonateButtonProps {
 
 export default function FloatingDonateButton({ goToCategory }: FloatingDonateButtonProps) {
   return (
-    <div className="fixed bottom-[76px] md:bottom-[94px] right-3 sm:right-5 z-40">
+    <div className="fixed bottom-3 sm:bottom-5 right-3 sm:right-5 z-40">
       <span className="absolute inset-0 rounded-full bg-brand-red/50 animate-ping [animation-duration:2.5s]"></span>
       <button
         type="button"

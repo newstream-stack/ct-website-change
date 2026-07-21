@@ -4,7 +4,6 @@ import { NEWS_CATEGORIES } from './data/index';
 import Header from './components/Header';
 import HomeAccordion from './pages/HomeAccordion';
 import { CartItem, Product } from './types';
-import GlobalBottomAd from './components/GlobalBottomAd';
 import FloatingImageAd from './components/FloatingImageAd';
 import FloatingDonateButton from './components/FloatingDonateButton';
 import SplashAd from './components/SplashAd';
@@ -364,7 +363,6 @@ export default function App() {
 
       {!BOTTOM_AD_EXCLUDED_CATEGORIES.includes(currentCategory) && (
         <>
-          <GlobalBottomAd goToCategory={goToCategory} />
           <FloatingImageAd />
           <FloatingDonateButton goToCategory={goToCategory} />
         </>
