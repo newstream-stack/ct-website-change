@@ -3,6 +3,8 @@ import test from 'node:test';
 import {
   assertApiData,
   isCreateOrderResponse,
+  isEpaperIssue,
+  isEpaperIssueSummaries,
   isNewsItem,
   isPaymentStatusResponse,
 } from '../src/api/validators.ts';
@@ -62,4 +64,32 @@ test('payment validator only accepts known resource states', () => {
     () => assertApiData({ status: 'paid' }, isPaymentStatusResponse, '付款狀態'),
     /回應格式不正確/,
   );
+});
+
+test('epaper issue validator rejects empty page arrays and non-positive numbers', () => {
+  const validIssue = {
+    issueNumber: 4868,
+    dateLabel: '第 4868 期',
+    pages: [{ pageNumber: 1, imageUrl: 'https://example.com/page-1.jpg' }],
+  };
+
+  assert.equal(isEpaperIssue(validIssue), true);
+  assert.equal(isEpaperIssue({ ...validIssue, pages: [] }), false, 'an issue with no pages must be rejected');
+  assert.equal(isEpaperIssue({ ...validIssue, issueNumber: 0 }), false);
+  assert.equal(isEpaperIssue({ ...validIssue, issueNumber: -1 }), false);
+  assert.equal(
+    isEpaperIssue({ ...validIssue, pages: [{ pageNumber: 0, imageUrl: 'https://example.com/page-1.jpg' }] }),
+    false,
+    'page numbers must be positive',
+  );
+  assert.equal(
+    isEpaperIssue({ ...validIssue, pages: [{ pageNumber: -1, imageUrl: 'https://example.com/page-1.jpg' }] }),
+    false,
+  );
+});
+
+test('epaper issue summaries validator enforces positive issue numbers', () => {
+  assert.equal(isEpaperIssueSummaries([{ issueNumber: 4868, dateLabel: '第 4868 期' }]), true);
+  assert.equal(isEpaperIssueSummaries([{ issueNumber: 0, dateLabel: '第 0 期' }]), false);
+  assert.equal(isEpaperIssueSummaries([{ issueNumber: 4868 }]), false);
 });

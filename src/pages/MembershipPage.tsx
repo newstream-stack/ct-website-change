@@ -66,7 +66,7 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
         {/* Header Section */}
         <div className="text-center mb-16 md:mb-20">
           <span className="font-display text-brand-red tracking-[0.3em] uppercase text-xs md:text-sm mb-4 block font-bold">Membership</span>
-          <h1 className="text-4xl md:text-5xl lg:text-[70px] font-serif font-black tracking-tighter text-theme-text transition-colors leading-[1.1] mb-6">加入 IMPACT 會員</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-[70px] font-serif font-black tracking-tighter text-theme-text transition-colors leading-[1.1] mb-6">加入論壇報會員</h1>
           <p className="text-sm md:text-lg text-theme-text/70 max-w-2xl mx-auto leading-relaxed">
             成為影響力夥伴，一起支持美好的價值。選擇適合您的方案，獲得無廣告閱讀體驗與專屬會員福利。
           </p>

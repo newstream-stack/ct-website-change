@@ -97,6 +97,32 @@ Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
 - `GET /api/products/search?q={query}&limit={limit}`
 - `GET /api/subscriptions` → `SubscriptionPage`
 
+## Epaper (全版閱讀)
+
+以下兩個端點皆需 Bearer token，僅開放已登入且 `Member.subscription.status === "active"` 的使用者；未登入回 `401`，已登入但未訂閱回 `403`。這個權限檢查**必須在後端執行**——前端的登入/訂閱判斷只是 UI 層的顯示邏輯，不能作為存取控制的唯一防線。
+
+`imageUrl` 必須是短效、不可預測的簽名 URL（例如帶 expiry + signature query string 的 CDN 連結），**不可**是需要另外附加 `Authorization: Bearer` header 才能存取的端點——頁面用一般 `<img src>` 載入頁面圖片，瀏覽器不會、也無法附加 sessionStorage 裡的 token，若 `imageUrl` 要求 Bearer 驗證，圖片一律會 401。簽名 URL 的有效期應足夠涵蓋單次閱讀 session（例如數小時），並在 `issueNumber`/`pageNumber` 之外綁定使用者或訂閱狀態，避免簽名 URL 被分享後長期有效。
+
+- `GET /api/epaper/issues` → `EpaperIssueSummary[]`，依期數新到舊排序，回傳可供選擇的期數清單。
+
+```json
+[
+  { "issueNumber": 4868, "dateLabel": "2026 年 7 月 18 日 ~ 21 日（週六～二）" }
+]
+```
+
+- `GET /api/epaper/issues/{issueNumber}` → `EpaperIssue`，回傳單一期數的完整頁面資料。`pages` 至少要有 1 筆；找不到該期數回 `404`。
+
+```json
+{
+  "issueNumber": 4868,
+  "dateLabel": "2026 年 7 月 18 日 ~ 21 日（週六～二）",
+  "pages": [
+    { "pageNumber": 1, "imageUrl": "https://.../page-1.jpg" }
+  ]
+}
+```
+
 ## Product orders
 
 - `POST /api/orders`，建立訂單並取得付款 session

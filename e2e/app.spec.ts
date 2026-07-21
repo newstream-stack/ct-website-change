@@ -41,6 +41,19 @@ test('未登入不能直接進會員專區', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '會員登入' })).toBeVisible();
 });
 
+test('未登入不能直接進全版閱讀，也不會被要求先進 API', async ({ page }) => {
+  const blockedRequests: string[] = [];
+  page.on('request', (request) => {
+    const { pathname } = new URL(request.url());
+    if (/^\/api\/(me|epaper\/)/.test(pathname)) blockedRequests.push(pathname);
+  });
+
+  await page.goto('/?category=%E5%85%A8%E7%89%88%E9%96%B1%E8%AE%80');
+  await closeSplash(page);
+  await expect(page.getByRole('heading', { name: '請先登入會員' })).toBeVisible();
+  expect(blockedRequests).toEqual([]);
+});
+
 test('偽造付款回跳不會被視為成功', async ({ page }) => {
   await page.goto('/?payment=order&reference=FORGED-REFERENCE&status=paid&success=true');
   await closeSplash(page);
@@ -84,6 +97,7 @@ test('所有公開頁面都能載入且不發生執行錯誤', async ({ page }) 
     '會員中心',
     '會員招募',
     '活動報名',
+    '全版閱讀',
     '關於我們',
     '新聞連絡',
     '我要投稿',

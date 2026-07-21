@@ -39,11 +39,12 @@ const KnowledgeBasePage = lazy(() => import('./pages/KnowledgeBasePage'));
 const TagResultsPage = lazy(() => import('./pages/TagResultsPage'));
 const AuthorResultsPage = lazy(() => import('./pages/AuthorResultsPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
+const EpaperPage = lazy(() => import('./pages/EpaperPage'));
 
-const BOTTOM_AD_EXCLUDED_CATEGORIES = ['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'];
+const BOTTOM_AD_EXCLUDED_CATEGORIES = ['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'];
 
 const SPECIAL_CATEGORIES = new Set([
-  '首頁', '信仰好物', '訂報', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名',
+  '首頁', '信仰好物', '訂報', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀',
   '關於我們', '新聞連絡', '我要投稿', '版權隱私權聲明', '財務報表', '客戶服務',
   '申請合作', '論壇Line貼圖', '祝福卡申辦/捐款',
 ]);
@@ -308,6 +309,10 @@ export default function App() {
 
         {currentCategory === '活動報名' && (
           <EventRegistrationPage goToCategory={goToCategory} />
+        )}
+
+        {currentCategory === '全版閱讀' && (
+          <EpaperPage goToCategory={goToCategory} />
         )}
 
         {currentCategory === '關於我們' && (

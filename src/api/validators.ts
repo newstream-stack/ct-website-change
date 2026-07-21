@@ -9,6 +9,7 @@ import type { EventDetail, EventTicket } from '../types/event';
 import type { MembershipPlan } from '../types/membership';
 import type { Plan } from '../types/donation';
 import type { FeaturedAd, FeaturedVideo } from '../mocks/accordionPanels';
+import type { EpaperIssue, EpaperIssueSummary } from '../types/epaper';
 
 export const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 const isString = (value: unknown): value is string => typeof value === 'string';
@@ -134,3 +135,14 @@ export const isPaymentStatusResponse = (value: unknown): value is PaymentStatusR
   && isString(value.reference)
   && ['pending', 'payment_pending', 'paid', 'failed', 'cancelled', 'refunded', 'confirmed', 'active'].includes(String(value.status))
   && (value.message === undefined || isString(value.message));
+
+export const isEpaperIssueSummary = (value: unknown): value is EpaperIssueSummary => isRecord(value)
+  && Number.isInteger(value.issueNumber) && Number(value.issueNumber) > 0 && isString(value.dateLabel);
+
+export const isEpaperIssueSummaries = (value: unknown): value is EpaperIssueSummary[] =>
+  Array.isArray(value) && value.every(isEpaperIssueSummary);
+
+export const isEpaperIssue = (value: unknown): value is EpaperIssue => isRecord(value)
+  && Number.isInteger(value.issueNumber) && Number(value.issueNumber) > 0
+  && isString(value.dateLabel) && Array.isArray(value.pages) && value.pages.length > 0
+  && value.pages.every((page) => isRecord(page) && Number.isInteger(page.pageNumber) && Number(page.pageNumber) > 0 && isString(page.imageUrl));

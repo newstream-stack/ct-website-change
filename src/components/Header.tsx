@@ -47,6 +47,7 @@ export default function Header({
           {/* Desktop Right CTAs */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6 font-sans font-bold text-sm tracking-widest text-theme-text/90">
             <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:text-theme-text transition flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full">奉獻 <i className="fas fa-arrow-right text-[10px]"></i></button>
+            <button onClick={() => goToCategory('全版閱讀')} className="hover:text-brand-red transition">全版閱讀</button>
             <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
@@ -55,6 +56,10 @@ export default function Header({
           <div className="flex md:hidden items-center gap-2">
             <button onClick={() => goToCategory('奉獻')} title="奉獻" className="text-brand-red hover:text-theme-text transition flex items-center cursor-pointer">
               <i className="fas fa-hand-holding-heart text-lg"></i>
+            </button>
+            <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
+            <button onClick={() => goToCategory('全版閱讀')} title="全版閱讀" className="hover:text-brand-red transition flex items-center cursor-pointer">
+              <i className="fas fa-newspaper text-lg"></i>
             </button>
             <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
             <button onClick={() => goToCategory('信仰好物')} title="信仰好物" className="hover:text-brand-red transition flex items-center cursor-pointer">
