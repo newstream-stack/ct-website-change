@@ -29,7 +29,11 @@ const KNOWLEDGE_ARTICLES = [
 
 const ARCHIVE_YEARS = ['2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009', '2008', '2007'];
 
-export default function KnowledgeBasePage() {
+interface KnowledgeBasePageProps {
+  goToCategory: (cat: string, options?: { register?: boolean }) => void;
+}
+
+export default function KnowledgeBasePage({ goToCategory }: KnowledgeBasePageProps) {
   return (
     <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-6xl mx-auto px-5 md:px-10">
@@ -49,7 +53,7 @@ export default function KnowledgeBasePage() {
             <div className="flex flex-col border-t border-theme-text/10">
               {KNOWLEDGE_ARTICLES.map((article) => (
                 <a key={article.title} href={article.href} target="_blank" rel="noreferrer" className="group grid sm:grid-cols-[190px_1fr] gap-5 md:gap-7 py-6 md:py-8 border-b border-theme-text/10 hover:bg-theme-text/[0.03] transition-colors md:px-4 md:-mx-4">
-                  <div className="aspect-[16/10] overflow-hidden bg-theme-text/5">
+                  <div className="aspect-[832/470] overflow-hidden bg-theme-text/5">
                     <img src={article.image} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <div className="flex flex-col justify-center">
@@ -61,10 +65,10 @@ export default function KnowledgeBasePage() {
               ))}
             </div>
 
-            <a href="https://ct.org.tw/html/news/3-2-8-2.php?channel=43" target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-3 border border-theme-text/20 px-5 py-3 font-display text-xs font-bold tracking-[0.16em] hover:border-brand-red hover:text-brand-red transition-colors">
+            <button type="button" onClick={() => goToCategory('全版閱讀')} className="mt-8 inline-flex items-center gap-3 border border-theme-text/20 px-5 py-3 font-display text-xs font-bold tracking-[0.16em] hover:border-brand-red hover:text-brand-red transition-colors">
               全版閱讀
-              <i className="fas fa-arrow-up-right-from-square text-[10px]" />
-            </a>
+              <i className="fas fa-arrow-right text-[10px]" />
+            </button>
           </section>
 
           <aside className="lg:border-l lg:border-theme-text/10 lg:pl-8">

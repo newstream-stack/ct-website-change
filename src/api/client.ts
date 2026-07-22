@@ -1,4 +1,4 @@
-import { removeStorageItem } from '../utils/storage';
+import { getAuthToken, clearAllAuthStorage } from '../utils/authStorage';
 import { API_BASE_URL } from './config';
 
 const DEFAULT_TIMEOUT_MS = 15_000;
@@ -37,8 +37,7 @@ async function request<T>(
   else options.signal?.addEventListener('abort', abortFromCaller, { once: true });
 
   try {
-    let token: string | null = null;
-    try { token = sessionStorage.getItem('auth_token'); } catch { /* Storage may be unavailable. */ }
+    const token = getAuthToken();
     const headers: Record<string, string> = { Accept: 'application/json', ...options.headers };
     if (body !== undefined) headers['Content-Type'] = 'application/json';
     if (token) headers.Authorization = `Bearer ${token}`;
@@ -52,9 +51,7 @@ async function request<T>(
     });
 
     if (response.status === 401) {
-      removeStorageItem(sessionStorage, 'auth_token');
-      removeStorageItem(sessionStorage, 'auth_user');
-      removeStorageItem(sessionStorage, 'auth_refresh_token');
+      clearAllAuthStorage();
       window.dispatchEvent(new CustomEvent('auth:expired'));
     }
 

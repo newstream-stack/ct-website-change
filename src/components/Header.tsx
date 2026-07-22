@@ -1,11 +1,19 @@
+import { useEffect, useRef, useState } from 'react';
 import { NEWS_CATEGORIES } from '../api/news';
 import { getAd } from '../api/ads';
 import { CartItem } from '../types';
 import { useAsyncData } from '../hooks/useAsyncData';
+import { CT_FORUM_SUBCATEGORIES } from '../data/forumSubCategories';
+
+const CATEGORY_SUBMENUS: Record<string, string[]> = {
+  '基督教論壇報': CT_FORUM_SUBCATEGORIES,
+  '專欄': ['好牧人', '天路客', '國度之聲'],
+  '生活情報': ['找工作', '找服務', '找學習', '找活動', '論壇消息', '桌布'],
+};
 
 interface HeaderProps {
   user: { name: string; email: string } | null;
-  goToCategory: (cat: string, options?: { register?: boolean }) => void;
+  goToCategory: (cat: string, options?: { register?: boolean; subCategory?: string }) => void;
   showCategoryBar: boolean;
   cartItems: CartItem[];
   onOpenCart: () => void;
@@ -21,6 +29,33 @@ export default function Header({
   onOpenSearch
 }: HeaderProps) {
   const { data: headerAd } = useAsyncData('header-ad', (signal) => getAd('header', { signal }), undefined);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const categoryBarRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!openSubmenu) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (categoryBarRef.current && !categoryBarRef.current.contains(e.target as Node)) {
+        setOpenSubmenu(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openSubmenu]);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [mobileMenuOpen]);
+
   return (
     <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-auto bg-theme-bg/95 backdrop-blur-md border-b border-theme-text/10 transition-colors duration-500 pb-1">
       {headerAd && (
@@ -52,18 +87,10 @@ export default function Header({
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
 
-          {/* Mobile compact CTAs (奉獻 pill + 信仰好物 icon) */}
+          {/* Mobile compact CTA (奉獻) */}
           <div className="flex md:hidden items-center gap-2">
             <button onClick={() => goToCategory('奉獻')} title="奉獻" className="text-brand-red hover:text-theme-text transition flex items-center cursor-pointer">
               <i className="fas fa-hand-holding-heart text-lg"></i>
-            </button>
-            <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
-            <button onClick={() => goToCategory('全版閱讀')} title="全版閱讀" className="hover:text-brand-red transition flex items-center cursor-pointer">
-              <i className="fas fa-newspaper text-lg"></i>
-            </button>
-            <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
-            <button onClick={() => goToCategory('信仰好物')} title="信仰好物" className="hover:text-brand-red transition flex items-center cursor-pointer">
-              <i className="fas fa-gift text-lg"></i>
             </button>
           </div>
           <div className="w-px h-4 bg-theme-text/30 md:hidden transition-colors duration-500"></div>
@@ -118,23 +145,99 @@ export default function Header({
             <i className="fas fa-search md:hidden"></i>
             <span className="hidden md:block">搜尋</span>
           </button>
+
+          {/* Mobile Hamburger Menu (全版閱讀 / 信仰好物) */}
+          <div className="w-px h-4 bg-theme-text/30 md:hidden transition-colors duration-500"></div>
+          <div ref={mobileMenuRef} className="relative md:hidden">
+            <button
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              title="更多"
+              className="hover:text-brand-red transition flex items-center cursor-pointer"
+            >
+              <i className={`fas ${mobileMenuOpen ? 'fa-xmark' : 'fa-bars'} text-lg`}></i>
+            </button>
+
+            {mobileMenuOpen && (
+              <div className="absolute top-full right-0 mt-3 w-48 bg-theme-bg border border-theme-text/10 shadow-xl rounded-sm overflow-hidden transition-colors duration-500 z-50">
+                <button
+                  onClick={() => { goToCategory('全版閱讀'); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-left hover:bg-theme-text/5 hover:text-brand-red transition-colors"
+                >
+                  <i className="fas fa-newspaper w-4"></i>全版閱讀
+                </button>
+                <button
+                  onClick={() => { goToCategory('信仰好物'); setMobileMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-left border-t border-theme-text/10 hover:bg-theme-text/5 hover:text-brand-red transition-colors"
+                >
+                  <i className="fas fa-gift w-4"></i>信仰好物
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {showCategoryBar && (
-        <div className="w-full border-t border-theme-text/10 transition-colors duration-500">
+        <div
+          ref={categoryBarRef}
+          className="relative w-full border-t border-theme-text/10 transition-colors duration-500"
+          onMouseLeave={() => setOpenSubmenu((current) => (current ? null : current))}
+        >
           <div className="max-w-[100vw] px-4 md:px-6 py-2.5 md:py-3 flex items-center gap-5 md:gap-8 overflow-x-auto hide-scrollbar font-sans font-bold text-xs md:text-sm tracking-widest text-theme-text/70 whitespace-nowrap">
-            {NEWS_CATEGORIES.map(cat => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => goToCategory(cat)}
-                className="cursor-pointer hover:text-brand-red hover:text-theme-text transition-colors"
-              >
-                {cat}
-              </button>
-            ))}
+            {NEWS_CATEGORIES.map(cat => {
+              const submenuItems = CATEGORY_SUBMENUS[cat];
+              return (
+                <div
+                  key={cat}
+                  onMouseEnter={() => {
+                    if (submenuItems) setOpenSubmenu(cat);
+                  }}
+                  className={`flex items-center gap-1 shrink-0 transition-colors ${openSubmenu === cat ? 'text-brand-red' : ''}`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      goToCategory(cat);
+                      setOpenSubmenu(null);
+                    }}
+                    className="cursor-pointer transition-colors hover:text-brand-red"
+                  >
+                    {cat}
+                  </button>
+                  {submenuItems && (
+                    <button
+                      type="button"
+                      onClick={() => setOpenSubmenu((current) => (current === cat ? null : cat))}
+                      title={`展開${cat}子分類`}
+                      className="cursor-pointer p-1 -m-1 transition-colors hover:text-brand-red"
+                    >
+                      <i className={`fas fa-chevron-down text-[8px] transition-transform ${openSubmenu === cat ? 'rotate-180' : ''}`}></i>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
+
+          {openSubmenu && CATEGORY_SUBMENUS[openSubmenu] && (
+            <div className="absolute top-full left-0 w-full bg-theme-bg border-t border-b border-theme-text/10 shadow-xl transition-colors duration-500 z-50">
+              <div className="max-w-4xl mx-auto px-6 py-6 md:py-8 grid grid-cols-3 gap-x-6 gap-y-4 font-sans font-bold text-xs md:text-sm tracking-widest text-theme-text/70">
+                {CATEGORY_SUBMENUS[openSubmenu].map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      goToCategory(openSubmenu, { subCategory: item });
+                      setOpenSubmenu(null);
+                    }}
+                    className="cursor-pointer text-left hover:text-brand-red transition-colors whitespace-nowrap"
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </header>

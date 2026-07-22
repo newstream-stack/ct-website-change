@@ -7,11 +7,20 @@ import { useAsyncData } from '../hooks/useAsyncData';
 
 interface ColumnPageProps {
   openArticle: (id: number) => void;
+  initialSubCategory?: string | null;
 }
 
-export default function ColumnPage({ openArticle }: ColumnPageProps) {
+const COLUMN_TABS = ['好牧人', '天路客', '國度之聲'];
+
+export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPageProps) {
   const [activeTab, setActiveTab] = useState('好牧人');
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Header submenu links (專欄 → 天路客 etc.) land here with a specific tab
+  // pre-selected; sync it since switching tabs within 專欄 doesn't remount.
+  useEffect(() => {
+    setActiveTab(initialSubCategory && COLUMN_TABS.includes(initialSubCategory) ? initialSubCategory : '好牧人');
+  }, [initialSubCategory]);
 
   // Get featured articles
   const { data, error, isLoading, reload } = useAsyncData(

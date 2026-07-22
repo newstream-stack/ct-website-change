@@ -355,3 +355,38 @@ npm run preview   # 預覽 dist（需先 build）
 - 字體：heading 用 `font-serif`（Noto Serif TC）、UI label 用 `font-display`（Oswald）、內文用 `font-sans`（Noto Sans TC）
 - 色調：米白底黑字的單一主題，品牌紅（#C62828）作為 accent
 - 圖片盡量保持 `grayscale opacity-70`，hover/active 時轉全彩——這是整站的視覺語言
+
+
+# Review Rules
+
+Review ONLY the current git diff.
+
+Assume the author is a competent senior engineer.
+
+Do not optimize for the number of review comments.
+Optimize for correctness.
+
+Only request changes if the issue would block a production deployment.
+
+Ignore:
+- Formatting
+- Naming
+- Style
+- Optional refactoring
+
+Focus on:
+- Correctness
+- Security
+- Reliability
+- Performance
+- Edge cases
+- Error handling
+- Backward compatibility
+
+Rules:
+- Only report issues supported by evidence in the current diff.
+- Do not speculate about code you cannot see.
+- Prefer false negatives over false positives.
+- Never manufacture review comments.
+
+If there are no production-impacting issues, approve the change.

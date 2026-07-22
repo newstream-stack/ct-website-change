@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import DOMPurify from 'dompurify';
 import { getArticle, getArticleContent, getArticleTags, getRecommended } from '../api/news';
-import { getRandomAd, getAd } from '../api/ads';
-import InlineArticleBanner from '../components/InlineArticleBanner';
+import { getAd } from '../api/ads';
 import StickySidebarAd from '../components/StickySidebarAd';
 import AsyncPageState from '../components/AsyncPageState';
 import { useAsyncData } from '../hooks/useAsyncData';
@@ -27,18 +26,17 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
     const { data, error, isLoading, reload } = useAsyncData(
         `article:${articleId}:auth:${isLoggedIn}`,
         async (signal) => {
-            const [article, recommendedNews, popularNews, content, saved, randomAd, topAd, sidebarAd] = await Promise.all([
+            const [article, recommendedNews, popularNews, content, saved, topAd, sidebarAd] = await Promise.all([
                 getArticle(articleId, { signal }),
                 getRecommended(articleId, 4, { signal }),
                 getRecommended(articleId, 5, { signal }),
                 getArticleContent(articleId, { signal }),
                 getArticleSavedStatus(articleId, isLoggedIn, { signal }).catch(() => false),
-                getRandomAd({ signal }).catch(() => undefined),
                 getAd('infeed', { signal }).catch(() => undefined),
                 getAd('sidebar', { signal }).catch(() => undefined),
             ]);
             if (!article) throw new Error('找不到文章');
-            return { article, recommendedNews, popularNews, content, saved, randomAd, topAd, sidebarAd };
+            return { article, recommendedNews, popularNews, content, saved, topAd, sidebarAd };
         },
         null,
     );
@@ -61,7 +59,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
     if (error) return <AsyncPageState error={error} onRetry={reload} />;
     if (isLoading || !data) return <AsyncPageState />;
 
-    const { article, recommendedNews, popularNews, content, randomAd, topAd, sidebarAd } = data;
+    const { article, recommendedNews, popularNews, content, topAd, sidebarAd } = data;
     const articleTags = getArticleTags(article);
 
     const { part1: dummyContentPart1, part2: dummyContentPart2 } = content;
@@ -224,8 +222,6 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                         ) : (
                             <>
                                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(firstPart) }} />
-
-                                {randomAd && <InlineArticleBanner ad={randomAd} />}
 
                                 {secondPart && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(secondPart) }} />}
 

@@ -16,7 +16,7 @@ test('首頁可載入並顯示文章面板', async ({ page }) => {
   await closeSplash(page);
 
   await expect(page.locator('.accordion-panel').first()).toBeVisible();
-  await expect(page.getByText('從呼召辨識到AI時代神學院裝備：張宰金牧師談事奉者的關鍵能力').first()).toBeVisible();
+  await expect(page.getByText('城市綠洲：教會空間改造的社區影響力').first()).toBeVisible();
 });
 
 test('分類與文章網址可直接開啟', async ({ page }) => {

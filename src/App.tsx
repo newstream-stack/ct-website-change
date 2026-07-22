@@ -93,6 +93,7 @@ export default function App() {
     author: currentAuthor,
     planId: currentPlanId,
     productId: currentProductId,
+    subCategory: currentSubCategory,
     paymentType,
     paymentReference,
   } = route;
@@ -168,6 +169,7 @@ export default function App() {
   }, []);
 
   const [loginPageDefaultRegister, setLoginPageDefaultRegister] = useState(false);
+  const [preLoginRoute, setPreLoginRoute] = useState<AppRoute | null>(null);
   const { user, refreshUser } = useAuth();
 
   // Re-check auth state after navigation (e.g. after login redirects back)
@@ -175,7 +177,7 @@ export default function App() {
     refreshUser();
   }, [currentCategory, refreshUser]);
 
-  const goToCategory = (cat: string, options?: { register?: boolean }) => {
+  const goToCategory = (cat: string, options?: { register?: boolean; subCategory?: string }) => {
     // Update the route as part of the navigation event.  Relying solely on the
     // state-sync effect leaves a short interval where a header click can be
     // followed by the old (home) route being rendered again.
@@ -186,15 +188,33 @@ export default function App() {
       author: null,
       planId: null,
       productId: null,
+      subCategory: options?.subCategory ?? null,
     });
     if (nextUrl !== window.location.pathname + window.location.search) {
       window.history.pushState({}, '', nextUrl);
     }
 
-    setRoute({ category: cat, articleId: null, tag: null, author: null, planId: null, productId: null });
-    if (cat === '會員中心') {
+    if (cat === '會員中心' && route.category !== '會員中心') {
+      setPreLoginRoute(route);
       setLoginPageDefaultRegister(!!options?.register);
     }
+
+    setRoute({ category: cat, articleId: null, tag: null, author: null, planId: null, productId: null, subCategory: options?.subCategory ?? null });
+    window.scrollTo(0, 0);
+  };
+
+  const returnAfterLogin = () => {
+    const target: AppRoute = preLoginRoute && preLoginRoute.category !== '會員中心' && preLoginRoute.category !== '會員招募'
+      ? preLoginRoute
+      : { category: '會員專區', articleId: null, tag: null, author: null, planId: null, productId: null };
+
+    const nextUrl = buildRouteUrl(window.location.pathname, target);
+    if (nextUrl !== window.location.pathname + window.location.search) {
+      window.history.pushState({}, '', nextUrl);
+    }
+
+    setRoute(target);
+    setPreLoginRoute(null);
     window.scrollTo(0, 0);
   };
 
@@ -250,7 +270,7 @@ export default function App() {
         )}
 
         {currentCategory === '專欄' && !currentArticleId && !currentTag && !currentAuthor && (
-          <ColumnPage openArticle={openArticle} />
+          <ColumnPage openArticle={openArticle} initialSubCategory={currentSubCategory} />
         )}
 
         {currentCategory === '影響力聯盟' && !currentArticleId && !currentTag && !currentAuthor && (
@@ -258,11 +278,11 @@ export default function App() {
         )}
 
         {currentCategory === '信仰知識庫' && !currentArticleId && !currentTag && !currentAuthor && (
-          <KnowledgeBasePage />
+          <KnowledgeBasePage goToCategory={goToCategory} />
         )}
 
         {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && !currentTag && !currentAuthor && currentCategory !== '專欄' && currentCategory !== '影響力聯盟' && currentCategory !== '信仰知識庫' && (
-          <CategoryList category={currentCategory} openArticle={openArticle} />
+          <CategoryList category={currentCategory} openArticle={openArticle} initialSubCategory={currentSubCategory} />
         )}
 
         {currentArticleId && (
@@ -294,7 +314,7 @@ export default function App() {
         )}
 
         {currentCategory === '會員中心' && (
-          <LoginPage goToCategory={goToCategory} initialRegister={loginPageDefaultRegister} />
+          <LoginPage onLoginSuccess={returnAfterLogin} initialRegister={loginPageDefaultRegister} />
         )}
 
         {currentCategory === '會員招募' && (
@@ -304,7 +324,7 @@ export default function App() {
         {currentCategory === '會員專區' && (
           user
             ? <MemberDashboard goToCategory={goToCategory} />
-            : <LoginPage goToCategory={goToCategory} />
+            : <LoginPage onLoginSuccess={returnAfterLogin} />
         )}
 
         {currentCategory === '活動報名' && (

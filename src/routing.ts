@@ -5,6 +5,7 @@ export interface AppRoute {
   author: string | null;
   planId: number | null;
   productId: number | null;
+  subCategory?: string | null;
   paymentType?: 'order' | 'membership' | 'donation' | 'event' | null;
   paymentReference?: string | null;
 }
@@ -29,6 +30,7 @@ export function readRoute(search: string): AppRoute {
     author: paymentType ? null : params.get('author'),
     planId: paymentType ? null : toPositiveInteger(params.get('plan')),
     productId: paymentType ? null : toPositiveInteger(params.get('product')),
+    subCategory: paymentType ? null : params.get('sub'),
     paymentType,
     paymentReference: params.get('reference')?.slice(0, 200) ?? null,
   };
@@ -46,6 +48,7 @@ export function buildRouteUrl(pathname: string, route: AppRoute): string {
     if (route.author) params.set('author', route.author);
     if (route.planId !== null) params.set('plan', String(route.planId));
     if (route.productId !== null) params.set('product', String(route.productId));
+    if (route.subCategory) params.set('sub', route.subCategory);
   }
 
   const query = params.toString();

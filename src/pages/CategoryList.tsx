@@ -1,22 +1,40 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { getNewsByCategory } from '../api/news';
 import { getAd } from '../api/ads';
 
-import { useCarousel } from '../hooks/useCarousel';
 import NativeAdCard from '../components/NativeAdCard';
 import AsyncPageState from '../components/AsyncPageState';
 import SummitBanner from '../components/SummitBanner';
+import FeaturedCarousel from '../components/FeaturedCarousel';
 import { useAsyncData } from '../hooks/useAsyncData';
+import { CT_FORUM_SUBCATEGORIES } from '../data/forumSubCategories';
 
 interface CategoryListProps {
   category: string;
   openArticle: (id: number) => void;
+  initialSubCategory?: string | null;
 }
 
 const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '找活動'];
+const FORUM_SUB_CATEGORIES = ['全部', ...CT_FORUM_SUBCATEGORIES];
+const HERO_CAROUSEL_CATEGORIES = ['生活情報', '基督教論壇報', '人物見證'];
 
-export default function CategoryList({ category, openArticle }: CategoryListProps) {
+export default function CategoryList({ category, openArticle, initialSubCategory }: CategoryListProps) {
   const [selectedSubCategory, setSelectedSubCategory] = useState('全部');
+
+  // Header submenu links land here with a specific sub-category pre-selected
+  // (e.g. 生活情報 → 找工作). Sync it whenever it changes, since navigating
+  // between two sub-categories of the same category doesn't remount this page.
+  useEffect(() => {
+    const validSubCategories = category === '生活情報'
+      ? LIFE_SUB_CATEGORIES
+      : category === '基督教論壇報'
+      ? FORUM_SUB_CATEGORIES
+      : null;
+    setSelectedSubCategory(
+      initialSubCategory && validSubCategories?.includes(initialSubCategory) ? initialSubCategory : '全部'
+    );
+  }, [category, initialSubCategory]);
   const { data, error, isLoading, reload } = useAsyncData(
     `news-category:${category}`,
     async (signal) => {
@@ -32,14 +50,9 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
   const featuredArticles = allCategoryNews.slice(0, 4);
 
   let filteredNews = [...allCategoryNews];
-  if (category === '生活情報' && selectedSubCategory !== '全部') {
+  if ((category === '生活情報' || category === '基督教論壇報') && selectedSubCategory !== '全部') {
     filteredNews = filteredNews.filter(n => n.subCategory === selectedSubCategory);
   }
-
-  const { activeIndex, setActiveIndex, next: nextSlide, prev: prevSlide } = useCarousel(
-    featuredArticles.length,
-    { enabled: category === '生活情報' && featuredArticles.length > 0 }
-  );
 
   if (isLoading) return <AsyncPageState />;
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
@@ -67,80 +80,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
 
         {/* 2. Featured Carousel */}
         <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
-          <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[720px] sm:min-h-[650px] md:min-h-[500px]">
-            {featuredArticles.map((article, idx) => (
-              <div 
-                key={article.id}
-                className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-700 ease-in-out ${
-                  idx === activeIndex 
-                    ? 'opacity-100 translate-x-0 z-10' 
-                    : 'opacity-0 translate-x-12 -z-10'
-                }`}
-              >
-                <div className="w-full lg:w-[55%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center group/img">
-                  <img 
-                    src={article.imageUrl} 
-                    className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
-                    alt={article.title} 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30 pointer-events-none"></div>
-                  
-                  {/* Arrow Buttons */}
-                  <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-                      className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
-                    >
-                      <i className="fas fa-chevron-left text-sm md:text-base"></i>
-                    </button>
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-                      className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
-                    >
-                      <i className="fas fa-chevron-right text-sm md:text-base"></i>
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="w-full lg:w-[45%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10 transition-colors">
-                  <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
-                    <span>Featured Selection</span>
-                    <span className="w-1.5 h-px bg-brand-red"></span>
-                    <span>{article.subCategory || 'Life'}</span>
-                  </div>
-                  <h2 
-                    className="text-2xl md:text-3xl lg:text-4xl font-serif font-black mb-8 leading-tight cursor-pointer hover:text-brand-red transition-all"
-                    onClick={() => openArticle(article.id)}
-                  >
-                    {article.title}
-                  </h2>
-                  <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base">
-                    {article.excerpt}
-                  </p>
-                  <button 
-                    onClick={() => openArticle(article.id)}
-                    className="self-start text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase border-b-2 border-brand-red pb-1 hover:text-brand-red transition-all"
-                  >
-                    Read More <i className="fas fa-arrow-right ml-4"></i>
-                  </button>
-                </div>
-              </div>
-            ))}
-            
-            <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 flex items-center gap-4 z-30">
-              <div className="flex gap-2">
-                {featuredArticles.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveIndex(idx)}
-                    className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                      idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+          <FeaturedCarousel articles={featuredArticles} openArticle={openArticle} />
         </div>
 
         {/* 3. Sub-category Navigation - Optimized for Mobile Scrolling */}
@@ -180,7 +120,7 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                 className="group flex flex-col cursor-pointer"
                 onClick={() => openArticle(news.id)}
               >
-                <div className="relative aspect-[16/10] overflow-hidden rounded-sm mb-6 bg-theme-text/5 transition-colors">
+                <div className="relative aspect-[832/470] overflow-hidden rounded-sm mb-6 bg-theme-text/5 transition-colors">
                   <img 
                     src={news.imageUrl} 
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
@@ -239,6 +179,36 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
       
       <SummitBanner className="mb-12 md:mb-20" />
 
+      {HERO_CAROUSEL_CATEGORIES.includes(category) && featuredArticles.length > 0 && (
+        <div className="mb-12 md:mb-20">
+          <FeaturedCarousel articles={featuredArticles} openArticle={openArticle} categoryLabel={category} />
+        </div>
+      )}
+
+      {category === '基督教論壇報' && (
+        <div className="-mx-5 md:mx-0 mb-10 md:mb-16">
+          <div className="overflow-x-auto flex flex-nowrap gap-3 md:gap-4 border-b border-theme-text/10 pb-6 scrollbar-hide px-5 md:px-0 snap-x">
+            {FORUM_SUB_CATEGORIES.map(tab => (
+              <button
+                key={tab}
+                onClick={() => setSelectedSubCategory(tab)}
+                className={`shrink-0 py-2.5 px-5 text-xs md:text-sm font-bold tracking-widest transition-all rounded-full whitespace-nowrap snap-center ${
+                  selectedSubCategory === tab
+                    ? 'bg-theme-text text-theme-bg shadow-lg'
+                    : 'text-theme-text/40 border border-theme-text/15 hover:text-theme-text hover:bg-theme-text/5'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+          <style dangerouslySetInnerHTML={{ __html: `
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+          `}} />
+        </div>
+      )}
+
       <div className="flex flex-col border-t border-theme-text/10 transition-colors">
         {filteredNews.length > 0 ? (
           filteredNews.map((news, index) => (
@@ -248,8 +218,8 @@ export default function CategoryList({ category, openArticle }: CategoryListProp
                   <NativeAdCard ad={data.infeedAd} />
                 </div>
               )}
-              <button type="button" className="w-full text-left flex flex-col md:flex-row gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
-                <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm">
+              <button type="button" className="w-full text-left flex flex-col md:flex-row md:items-start gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
+                <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm shrink-0">
                   <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
                   <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
                     {news.subCategory || news.category}

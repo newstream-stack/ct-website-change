@@ -536,7 +536,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   </div>
                   <div className="flex flex-col gap-4">
                     {savedArticles.slice(0, 3).map((article) => (
-                      <div key={article.id} className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
+                      <div key={article.id} className="flex flex-col sm:flex-row sm:items-start gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
                         <div className="w-full sm:w-48 md:w-56 aspect-[832/470] flex-shrink-0 overflow-hidden rounded-lg bg-theme-text/10">
                           <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-500" />
                         </div>

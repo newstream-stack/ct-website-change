@@ -3,11 +3,11 @@ import { forgotPassword, login, register, socialLogin as apiSocialLogin, saveSes
 import { redirectToExternalUrl } from '../utils/navigation';
 
 interface LoginPageProps {
-  goToCategory: (cat: string, options?: { register?: boolean }) => void;
+  onLoginSuccess: () => void;
   initialRegister?: boolean;
 }
 
-export default function LoginPage({ goToCategory, initialRegister = false }: LoginPageProps) {
+export default function LoginPage({ onLoginSuccess, initialRegister = false }: LoginPageProps) {
   const [isRegister, setIsRegister] = useState(initialRegister);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [name, setName] = useState('');
@@ -18,6 +18,7 @@ export default function LoginPage({ goToCategory, initialRegister = false }: Log
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   useEffect(() => {
     setIsRegister(initialRegister);
@@ -29,8 +30,8 @@ export default function LoginPage({ goToCategory, initialRegister = false }: Log
     setIsLoading(true);
     try {
       const res = await login({ email: email.trim(), password });
-      saveSession(res);
-      goToCategory('會員專區');
+      saveSession(res, rememberMe);
+      onLoginSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : '登入失敗，請稍後再試');
     } finally {
@@ -56,8 +57,8 @@ export default function LoginPage({ goToCategory, initialRegister = false }: Log
     setIsLoading(true);
     try {
       const res = await register({ name: name.trim(), email: email.trim(), password, address: address.trim() });
-      saveSession(res);
-      goToCategory('會員專區');
+      saveSession(res, rememberMe);
+      onLoginSuccess();
     } catch (err) {
       setError(err instanceof Error ? err.message : '註冊失敗，請稍後再試');
     } finally {
@@ -73,8 +74,8 @@ export default function LoginPage({ goToCategory, initialRegister = false }: Log
       if ('authorizationUrl' in res) {
         redirectToExternalUrl(res.authorizationUrl);
       } else {
-        saveSession(res);
-        goToCategory('會員專區');
+        saveSession(res, rememberMe);
+        onLoginSuccess();
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '登入失敗，請稍後再試');
@@ -190,6 +191,17 @@ export default function LoginPage({ goToCategory, initialRegister = false }: Log
                   placeholder="••••••••"
                 />
               </div>
+              {!isRegister && (
+                <label className="flex items-center gap-2 mt-1 ml-1 text-xs text-theme-text/70 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded border-theme-text/30 text-brand-red focus:ring-brand-red/50 cursor-pointer"
+                  />
+                  記住我
+                </label>
+              )}
             </div>}
 
             {isRegister && (

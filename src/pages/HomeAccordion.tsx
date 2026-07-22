@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect, useRef, MouseEvent, TouchEvent } from 'react';
-import { getNewsList } from '../api/news';
+import { getNewsByCategory } from '../api/news';
 import { getFeaturedVideos, getAccordionAd, FeaturedVideo, FeaturedAd } from '../api/home';
 import { NewsItem } from '../types';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
@@ -38,26 +38,23 @@ type AccordionPanel = NewsPanel | VideoPanel | AdPanel;
 // ─── Panel builder ────────────────────────────────────────────────────────────
 
 const NEWS_GROUP_SIZE = 5;
-const NEWS_GROUPS_COUNT = 5;
 
-function buildPanels(news: NewsItem[], videos: FeaturedVideo[], accordionAd?: FeaturedAd): AccordionPanel[] {
+// Fixed panel order: 01-最新文章 02-基督教論壇報 03-專欄 04-人物見證 影片專區 AD 05-生活情報
+const HOME_ACCORDION_CATEGORIES = ['最新文章', '基督教論壇報', '專欄', '人物見證', '生活情報'];
+const VIDEO_AD_AFTER_INDEX = 3; // insert 影片專區 + AD right after 04-人物見證
+
+function buildPanels(newsByCategory: NewsItem[][], videos: FeaturedVideo[], accordionAd?: FeaturedAd): AccordionPanel[] {
   const panels: AccordionPanel[] = [];
-  let newsCount = 0;
 
-  for (let i = 0; i < NEWS_GROUPS_COUNT; i++) {
-    const group = news.slice(i * NEWS_GROUP_SIZE, (i + 1) * NEWS_GROUP_SIZE);
-    if (group.length === 0) break;
-    panels.push({ type: 'news', group, displayIndex: newsCount });
-    newsCount++;
+  newsByCategory.forEach((group, i) => {
+    if (group.length === 0) return;
+    panels.push({ type: 'news', group, displayIndex: i });
 
-    if (newsCount === 3 && videos.length > 0) {
-      panels.push({ type: 'video', id: 'video-feature', videos });
+    if (i === VIDEO_AD_AFTER_INDEX) {
+      if (videos.length > 0) panels.push({ type: 'video', id: 'video-feature', videos });
+      if (accordionAd) panels.push({ type: 'ad', ad: accordionAd });
     }
-
-    if (newsCount % 4 === 0 && accordionAd) {
-      panels.push({ type: 'ad', ad: accordionAd });
-    }
-  }
+  });
 
   return panels;
 }
@@ -82,16 +79,16 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const { data, error, isLoading, reload } = useAsyncData(
     'home-content',
     async (signal) => {
-      const [news, videos, accordionAd] = await Promise.all([
-        getNewsList({ signal }),
+      const [newsByCategory, videos, accordionAd] = await Promise.all([
+        Promise.all(HOME_ACCORDION_CATEGORIES.map((cat) => getNewsByCategory(cat, { signal }))),
         getFeaturedVideos({ signal }).catch(() => []),
         getAccordionAd({ signal }).catch(() => undefined),
       ]);
-      return { news, videos, accordionAd };
+      return { newsByCategory: newsByCategory.map((group) => group.slice(0, NEWS_GROUP_SIZE)), videos, accordionAd };
     },
     null,
   );
-  const panels: AccordionPanel[] = data ? buildPanels(data.news, data.videos, data.accordionAd) : [];
+  const panels: AccordionPanel[] = data ? buildPanels(data.newsByCategory, data.videos, data.accordionAd) : [];
 
   // Find the index of the video panel to know when it's active
   const videoPanelIndex = panels.findIndex((p) => p.type === 'video');
@@ -138,7 +135,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
   if (isLoading) return <AsyncPageState />;
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
-  if (data && data.news.length === 0) {
+  if (data && data.newsByCategory.every((group) => group.length === 0)) {
     return <div className="min-h-[100dvh] pt-[190px] flex items-center justify-center bg-theme-bg text-theme-text text-sm text-theme-text/55">目前沒有可顯示的文章</div>;
   }
 

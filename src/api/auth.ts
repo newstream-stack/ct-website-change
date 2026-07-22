@@ -1,7 +1,7 @@
 import type { AuthResponse, AuthUser, ChangePasswordRequest, ForgotPasswordRequest, ForgotPasswordResponse, LoginRequest, RegisterRequest, SocialLoginResponse, SocialProvider } from '../types/auth';
 import { apiPost, type ApiRequestOptions } from './client';
 import { USE_MOCK_API } from './config';
-import { readJsonStorage, removeStorageItem, writeJsonStorage, writeStringStorage } from '../utils/storage';
+import { saveAuthSession, getAuthUser, clearAllAuthStorage } from '../utils/authStorage';
 import { assertApiData, isAuthResponse, isRecord } from './validators';
 import { broadcastLogout } from '../utils/authEvents';
 
@@ -68,25 +68,18 @@ export async function logout(options?: ApiRequestOptions): Promise<void> {
   const request = USE_MOCK_API
     ? Promise.resolve()
     : apiPost<void>('/api/auth/logout', undefined, options).catch(() => undefined);
-  removeStorageItem(sessionStorage, 'auth_token');
-  removeStorageItem(sessionStorage, 'auth_user');
-  removeStorageItem(sessionStorage, 'auth_refresh_token');
+  clearAllAuthStorage();
   window.dispatchEvent(new CustomEvent('auth:expired'));
   broadcastLogout();
   await request;
 }
 
 export function getStoredUser(): AuthUser | null {
-  return readJsonStorage(sessionStorage, 'auth_user', null, (value): value is AuthUser => {
-    if (typeof value !== 'object' || value === null) return false;
-    const user = value as Partial<AuthUser>;
-    return typeof user.id === 'string' && typeof user.name === 'string' && typeof user.email === 'string';
-  });
+  return getAuthUser();
 }
 
-export function saveSession(response: AuthResponse): void {
-  writeStringStorage(sessionStorage, 'auth_token', response.token);
-  writeJsonStorage(sessionStorage, 'auth_user', response.user);
-  // Refresh tokens should be delivered through Secure, HttpOnly cookies rather than browser JavaScript.
-  removeStorageItem(sessionStorage, 'auth_refresh_token');
+// remember=true keeps the session across browser restarts; remember=false (default)
+// clears it once the tab/browser closes.
+export function saveSession(response: AuthResponse, remember = false): void {
+  saveAuthSession(response.token, response.user, remember);
 }

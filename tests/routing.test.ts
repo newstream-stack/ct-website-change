@@ -46,3 +46,18 @@ test('payment references are bounded before use', () => {
   const route = readRoute(`?payment=event&reference=${'a'.repeat(500)}`);
   assert.equal(route.paymentReference?.length, 200);
 });
+
+test('subCategory round-trips through the URL so header submenu links land pre-filtered', () => {
+  const url = buildRouteUrl('/', {
+    category: '基督教論壇報', articleId: null, tag: null, author: null, planId: null, productId: null,
+    subCategory: '人物報導',
+  });
+  assert.equal(url, '/?category=%E5%9F%BA%E7%9D%A3%E6%95%99%E8%AB%96%E5%A3%87%E5%A0%B1&sub=%E4%BA%BA%E7%89%A9%E5%A0%B1%E5%B0%8E');
+  const route = readRoute(new URL(url, 'https://example.com').search);
+  assert.equal(route.subCategory, '人物報導');
+});
+
+test('payment routes ignore a conflicting subCategory parameter', () => {
+  const route = readRoute('?payment=order&reference=ORDER-123&sub=%E4%BA%BA%E7%89%A9%E5%A0%B1%E5%B0%8E');
+  assert.equal(route.subCategory, null);
+});

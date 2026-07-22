@@ -422,3 +422,4 @@ npm run preview # 預覽 dist
 - 色調：米白底黑字（單一主題，無 dark mode），品牌紅（#C62828）作為 accent
 - 圖片盡量保持 `grayscale opacity-70`，hover/active 時轉全彩——這是整站的視覺語言
 - 廣告/贊助內容統一走「Premium Sponsorship」視覺語言（`bg-theme-text` 深底 + brand-red 直條 + serif 粗體標題 + 紅色 CTA），**不要**每個廣告位置各自發明新樣式（先前迭代過幾種「滿版圖片疊文字」的設計都被認為不好看，最後收斂到這個方案）
+
