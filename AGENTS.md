@@ -1,392 +1,131 @@
-# AGENTS.md — ct-website-change (IMPACT 論壇報)
-
-## 專案概述
-
-IMPACT 論壇報的前端重設計原型。SPA 架構，目前以 mock API 運作，並可透過環境設定切換 REST 後端。
-
----
-
-## Tech Stack
-
-| 層級 | 技術 |
-|------|------|
-| 框架 | React 19 + TypeScript |
-| 打包 | Vite |
-| 樣式 | **Tailwind CSS v4** + Vanilla CSS (`src/index.css`) |
-| 字體 | Google Fonts：Noto Sans TC、Noto Serif TC、Oswald、Playfair Display |
-| Icon | Font Awesome 6 (CDN，`index.html` 引入) |
-
-> ⚠️ 使用的是 **Tailwind v4**，不是 v3。`@theme` 取代舊版 `tailwind.config.js`，自訂 CSS 變數直接寫在 `index.css` 的 `@theme {}` block。
-
----
-
-## 路由 / 頁面架構
-
-路由是純前端 state，**沒有 React Router**。`src/routing.ts` 負責解析／產生 query string，`App.tsx` 負責畫面切換：
-
-```
-AppRoute
-├── category
-├── articleId / tag / author
-├── planId / productId
-└── paymentType / paymentReference
-    │
-    ├── '首頁' + no article → <HomeAccordion>
-    ├── 一般 NEWS_CATEGORIES → <CategoryList>
-    ├── '專欄' / '影響力聯盟' / '信仰知識庫' → 各自專用頁
-    ├── articleId / tag / author → 文章、標籤或作者結果頁
-    ├── '信仰好物' → <ProductGallery> / <ProductDetail>
-    ├── '訂報' → <ActionPage>
-    ├── '奉獻' → <DonationGallery> / <DonationPlanDetail>
-    ├── '會員中心' / '會員招募' / '會員專區' → 登入、招募或會員儀表板
-    ├── paymentType → <PaymentResultPage>
-    └── 其他特殊分類 → 活動與一般資訊頁
-```
-
-URL 透過 `window.history.pushState` 同步，支援 `category`、`article`、`tag`、`author`、`plan`、`product`、`payment`、`reference` 與瀏覽器上一頁。所有輸入都必須經過 `readRoute()` 驗證，不要直接信任 query string。
-
----
-
-## 目錄結構
-
-```
-src/
-├── App.tsx              # 頁面切換、購物車與全域 UI 狀態
-├── routing.ts           # Query route 解析、驗證與產生
-├── main.tsx
-├── index.css            # 全域 CSS：@theme、Accordion 動畫、RWD
-├── api/                 # Mock / REST 共用的非同步資料存取層
-├── components/
-│   ├── Header.tsx       # Fixed 頂部導覽，含 mobile actions bar + category bar
-│   ├── GlobalBottomAd.tsx
-│   └── 共用 UI、Modal、廣告與商品／奉獻詳情元件
-├── data/                # JSON mock 內容與 index.ts 匯出
-├── hooks/               # 非同步資料、登入、輪播與 YouTube hooks
-├── mocks/               # 非 JSON 的會員、活動、方案與首頁 mock
-├── pages/
-│   ├── HomeAccordion.tsx    # 首頁核心：手風琴 + carousel
-│   ├── CategoryList.tsx     # 分類文章列表
-│   ├── ArticleDetail.tsx    # 文章閱讀頁
-│   ├── ActionPage.tsx       # 訂報方案展示
-│   ├── ProductGallery.tsx   # 信仰好物頁（橫向 scroll gallery）
-│   └── 會員、奉獻、活動、付款結果與一般資訊頁
-├── types/               # 依領域拆分的共用型別；types.ts 為相容 barrel
-└── utils/               # 安全導頁、storage 與 auth event 工具
-```
-
-根目錄另有 `tests/`（單元測試）、`e2e/`（Playwright）、`docs/`（API／資安文件）及 `.github/workflows/`（CI）。
-
----
-
-## 主題系統
-
-目前只有單一淺色主題，沒有 dark mode 切換。`theme-*` 命名仍作為設計 token 使用，避免各元件硬寫顏色。
-
-### CSS 變數（`index.css` 的 `@layer base`）
-
-```css
-:root {
-  --bg-base: 253 252 250;
-  --text-base: 10 10 10;
-}
-```
-
-在 Tailwind 使用：`bg-theme-bg`、`text-theme-text`、`border-theme-text/10` 等。
-
-### 品牌色
-- `--color-brand-red: #C62828` → Tailwind class: `bg-brand-red`、`text-brand-red`
-
-## 固定 Header 高度（RWD 關鍵）
-
-Header 是 `position: fixed; z-index: 40`。各頁面的 **top padding 必須清過 header**。
-
-### Header 各行高度（iPhone 15 Pro / 393px 寬）
-
-| 行 | class | 估算高度 |
-|----|-------|---------|
-| 頂部廣告條 | `py-1.5` | ~26px |
-| Logo + 導覽列 | `p-3` | ~60px |
-| Mobile actions bar（信仰好物/訂閱/奉獻）| `pb-3.5` | ~34px |
-| Category bar（`showCategoryBar` 時）| `py-2.5` | ~39px |
-| Header `pb-1` | | ~4px |
-| **總計** | | **~163–175px** |
-
-### 各頁面 top padding 規範
-
-| Component | Mobile | Desktop |
-|-----------|--------|---------|
-| `HomeAccordion` | **動態**（ResizeObserver） | `md:pt-0`（圖片從頂部滿版） |
-| `CategoryList` | `pt-[190px]` | `md:pt-48` |
-| `ActionPage` | `pt-[190px]` | `md:pt-0` |
-| `ProductGallery` | `pt-[190px]` | `md:pt-32` |
-| `ArticleDetail` | 無（hero 圖片全螢幕，header 疊在上面是刻意設計） | — |
-
-> ⚠️ **不要用 `pt-16`（64px）或 `pt-24`（96px）當手機 header 清除值**，會跑版。安全值為 `pt-[190px]`。
-
----
-
-## HomeAccordion — 核心元件
-
-### 動態 Header 高度
-```tsx
-useLayoutEffect(() => {
-  const update = () => {
-    const header = document.querySelector('header');
-    if (header) setHeaderHeight(header.offsetHeight);
-    setIsMobileLayout(window.innerWidth < 768);
-  };
-  update();
-  window.addEventListener('resize', update);
-  const observer = new ResizeObserver(update);
-  const header = document.querySelector('header');
-  if (header) observer.observe(header);
-  return () => {
-    window.removeEventListener('resize', update);
-    observer.disconnect();
-  };
-}, []);
-```
-容器透過 `style={{ paddingTop: isMobileLayout ? `${headerHeight}px` : 0 }}` 套用量測值。**不要改回 `pt-[Npx]` 的靜態寫法**，也不要同時加 Tailwind `pt-*` 與 inline padding。
-
-### Accordion RWD 與動畫原理
-- 手機（<768px）：面板垂直堆疊，全部顯示 expanded content；每個面板至少 `62dvh`
-- 桌機（≥768px）：面板橫向排列，inactive `flex: 1`、active / hover `flex: 7`
-- 桌機以 `flex` 屬性變化驅動展開／收合，CSS `transition: flex 0.65s cubic-bezier(...)`
-- **不要用 `width:` 過渡，也不要在手機恢復收合式 flex 行為**
-
-### 圖片 Grayscale 邏輯
-- **Active panel** 的 carousel 圖片：`opacity-100`（全彩）
-- **Inactive panel** 圖片：`opacity-50 md:opacity-80 md:grayscale`
-  - 手機（<640px）：50% 不透明彩色（無 grayscale，因 CSS override: `filter: none !important`）
-  - 桌機/平板（md+）：80% 不透明 + 灰階
-- hover 後還原：`group-hover:opacity-100 group-hover:grayscale-0`
-
-### 漸層遮罩
-```css
-/* Active panel — 雙向漸層（上暗 + 下暗，中間透明）*/
-.accordion-vignette {
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 28%,
-    transparent 45%, transparent 52%,
-    rgba(0,0,0,0.65) 72%, rgba(0,0,0,0.92) 100%
-  );
-}
-/* Inactive panel */
-bg-black/50 sm:bg-black/35 md:bg-black/25
-```
-
-### Desktop Hover 行為（純 CSS）
-- `accordion-container:hover .accordion-panel.active:not(:hover)` → 收縮 + 隱藏 content-expanded
-- `.accordion-panel:hover` → 展開（`flex: 7 !important`）+ 顯示 content-expanded
-- **不要加 JS hover handler**，已全部用 CSS 處理
-
-### 內容固定高度（防止切換文章時版面位移）
-```tsx
-// Title — 固定最小高度
-<div className="min-h-[5.5rem] md:min-h-[10rem] lg:min-h-[12rem] overflow-hidden">
-
-// Excerpt — 手機自動高度，桌機固定高度
-<div className="h-auto md:h-[4.5rem] overflow-visible md:overflow-hidden">
-```
-
-### 底部 padding（清除 GlobalBottomAd）
-GlobalBottomAd 是 `fixed bottom-0`，高度：`md:py-4` 時約 **74px**。
-content-expanded 的底部 padding 必須大於這個值：
-```tsx
-// 手機: accordion-container 本身已有 padding-bottom: 136px
-// 平板: md:pb-20 (80px > 56px ad)
-// 桌機: lg:pb-24 (96px > 74px ad)
-```
-
----
-
-## GlobalBottomAd
-
-- `fixed bottom-0 z-50`，高度估算：手機 ~56px，桌機 ~74px
-- 顯示條件集中在 `App.tsx` 的 `<GlobalBottomAd>` render condition；商務、會員、活動與一般資訊頁目前都排除
-- 新增特殊頁面時，必須同步確認是否加入排除清單；不要依賴容易失效的固定行號
-- 其他頁面的內容底部必須留足夠 padding 避免被遮
-
----
-
-## 資料與 API 架構
-
-- `src/data/*.json`：新聞、廣告、商品、專欄作者、聯盟與訂報 mock 資料
-- `src/data/index.ts`：靜態資料的型別化匯出與 `NEWS_CATEGORIES`
-- `src/mocks/`：首頁影音／廣告、奉獻、活動、會員與會員方案 mock
-- `src/api/`：頁面唯一的資料存取入口；頁面不要直接 import mock JSON
-- `src/types/`：領域型別；舊引用可暫時透過 `src/types.ts` barrel
-
-### NewsItem
-```ts
-interface NewsItem {
-  id: number;
-  title: string;
-  excerpt: string;
-  category: string; // 對應 NEWS_CATEGORIES
-  author: string;
-  date: string;     // 'APR 11' 格式
-  imageUrl: string; // Unsplash URL 或 ct.org.tw 圖片
-  content?: string; // 顯示前必須經 DOMPurify sanitize
-  subCategory?: string;
-  tags?: string[];
-}
-```
-
-### HomeAccordion 面板組合
-- 每個 news panel 使用 5 筆文章，最多建立 5 組
-- 第 3 個 news panel 後插入 video panel（有影音資料時）
-- 第 4 個 news panel 後插入 accordion ad（有廣告資料時）
-- 因此完整 mock 通常為 **5 news + 1 video + 1 ad = 7 panels**
-- 面板由 `buildPanels()` 動態建立，不要在文件或 UI 寫死文章 ID
-
-### MOCK_ADS slots
-`infeed` | `inline` | `sidebar` | `accordion` | `header`
-
----
-
-## 分類系統
-
-```ts
-export const NEWS_CATEGORIES = [
-  '最新文章', '基督教論壇報', '人物見證', '專欄',
-  '影響力聯盟', '生活情報', '信仰知識庫'
-];
-```
-
-特殊分類（不走 CategoryList）：
-- `'首頁'` → HomeAccordion
-- `'專欄'` → ColumnPage
-- `'影響力聯盟'` → ImpactAlliancePage
-- `'信仰知識庫'` → KnowledgeBasePage
-- `'信仰好物'` → ProductGallery / ProductDetail
-- `'訂報'` → ActionPage
-- `'奉獻'` → DonationGallery / DonationPlanDetail
-- `'會員中心'` → LoginPage（登入／註冊）
-- `'會員招募'` → MembershipPage
-- `'會員專區'` → MemberDashboard；未登入時顯示 LoginPage
-- `'活動報名'` 與一般資訊分類 → 各自專用頁
-- 付款回跳由 `payment` + `reference` query 進入 PaymentResultPage，前端 query 不可直接判定付款成功
-
----
-
-## CSS 命名慣例
-
-| Class | 用途 |
-|-------|------|
-| `.accordion-container` | 全螢幕 accordion 外框 |
-| `.accordion-panel` | 單一面板，`.active` 表示展開 |
-| `.accordion-bg` | 面板背景圖片（absolute，100vw × 100dvh） |
-| `.accordion-vignette` | Active panel 雙向漸層遮罩 |
-| `.content-collapsed` | 面板收合時顯示的數字/分類 |
-| `.content-expanded` | 面板展開時顯示的完整內容 |
-| `.hide-scrollbar` | 隱藏滾動條 |
-| `.article-content` | 文章內文排版（`p`、`h2`、drop-cap） |
-| `.gallery-track` | ProductGallery 橫向卷軸 |
-
----
-
-## 常見地雷
-
-1. **`h-[calc(1.2em*3*2rem)]`** — invalid CSS（`em × rem` 不能相乘），會被瀏覽器忽略。改用 `min-h-[Nrem]`。
-
-2. **CSS mobile override 只移除 `filter: none !important`，不能加 `opacity: 1 !important`**——否則 accordion inactive 面板會強制全彩、看不出未展開狀態。
-
-3. **Desktop hover 行為是純 CSS**，不要在 `onMouseEnter`/`onMouseLeave` 加 React state，會打架。
-
-4. **不要用 `pt-16/24/32` 當手機 header 清除**，header 在顯示 mobile actions bar + category bar 時高達 ~175px。使用 `pt-[190px]` 或動態量測。
-
-5. **`bg-theme-bg/85` 在 inactive 面板會把圖片洗白**——現在改用 `bg-black/50`，使圖片暗但不失色彩。
-
-6. **`accordion-container` 的 padding-top 由 ResizeObserver → React state → inline style 套用**，覆蓋優先度高於 Tailwind class，不要在 className 同時加 `pt-[Npx]` 造成衝突。
-
-7. **正式 build 預設仍使用 mock API**。只有明確設定 `VITE_USE_MOCK_API=false` 才進 REST；此時必須同時提供有效且正式環境為 HTTPS 的 `VITE_API_BASE_URL`。
-
-8. **Vite `base: './'` 是部署必要設定**，讓 `/assets` 在網域子路徑也能載入。不要改回絕對 `/`，否則部分主機會白畫面。
-
-9. **付款成功只能由後端查詢／webhook 確認**。`payment`、`reference` 或第三方回跳 query 都是不可信輸入，不能單靠前端參數清空購物車或顯示成功。
-
-10. **外部 HTML 與 URL 必須走既有安全工具**。文章 HTML 使用 DOMPurify；外部導頁使用 `getSafeExternalUrl` / `redirectToExternalUrl`；local/session storage 使用 `utils/storage.ts` 的驗證函式。
-
----
-
-## API、部署與資安
-
-### 前端確認／mock 模式（目前預設）
-```env
-VITE_USE_MOCK_API=true
-VITE_API_BASE_URL=
-```
-
-### REST 模式
-```env
-VITE_USE_MOCK_API=false
-VITE_API_BASE_URL=https://api.example.com
-```
-
-- 頁面只能呼叫 `src/api/`，由 API 層依環境切換 mock / REST
-- `useAsyncData` 統一處理 loading、error、retry、AbortSignal 與 stale request
-- REST 回應必須經 `src/api/validators.ts` runtime validation，不能只靠 TypeScript assertion
-- 正式部署必須上傳最新 `dist/`，並保留相對 asset URL
-- CSP 目前寫在 `index.html`；正式主機應再以 HTTP response headers 設定 CSP、HSTS、`X-Content-Type-Options` 等
-- API 契約見 `docs/api-contract.md`，部署資安見 `docs/security.md`
-
----
-
-## Dev 指令
+# AGENTS.md — ct-website-change Code Review Guide
+
+## 用途
+
+本文件主要供 code review 使用。目標是確認變更能否安全上線，不是逐行解釋或挑出所有差異。審查範圍只限目前的 git diff；除非差異直接依賴既有程式，否則不要評論未修改的程式碼。
+
+專案是 IMPACT 論壇報的 React 19 + TypeScript SPA，使用 Vite、Tailwind CSS v4 與 Vanilla CSS。目前預設使用 mock API，可透過環境變數切換 REST 後端。
+
+## Review 原則
+
+- 先理解變更目的，再判斷差異是否違反目的或既有契約；「和舊程式不同」本身不是問題。
+- 審查深度應與風險成比例。認證、付款、資料寫入、路由與部署可深入檢查；純文案或局部視覺調整不需擴張審查範圍。
+- 假設作者是有經驗的工程師，只提出會阻擋正式部署的問題。
+- 優先檢查 correctness、security、reliability、performance、edge cases、error handling 與 backward compatibility。
+- 忽略格式、命名、個人風格與非必要重構。
+- 每個問題都必須能由目前 diff 與可見程式碼直接證明，不要推測未知實作。
+- 優先避免誤報；不要為了證明有做 review 而逐檔評論、窮舉假設情境或提出低價值意見。
+- 不要求保留已被本次需求刻意改變的舊行為；只有違反明確需求、契約或造成核心流程失效時才提出。
+- 確認問題是由目前差異引入、擴大或暴露；不要把既有問題當成本次變更的缺陷。
+- 取得足夠證據確認沒有部署阻擋後即可停止，不必為了找到 finding 繼續擴大搜索。
+- 找不到會阻擋正式部署的問題時，直接核准。
+
+### Review 輸出格式
+
+- Findings 優先，依嚴重度排序。
+- 每項 finding 說明觸發條件、實際影響，並附上修改行的檔案連結。
+- 嚴重度：
+  - `P0`：會造成大規模中斷、資料遺失或重大資安事故。
+  - `P1`：會阻擋部署，或讓核心流程在合理使用情境下失效。
+- 不要把測試缺口本身當成 bug；只有在差異造成既有必要檢查失敗，或缺少測試會掩蓋可證明的正式環境問題時才提出。
+- 若沒有 findings，回覆核准並簡述已執行的檢查。
+
+## 審查所需架構背景
+
+### 路由
+
+- 專案沒有 React Router。`src/routing.ts` 負責解析及產生 query string，`src/App.tsx` 負責頁面切換與 `pushState`。
+- 支援 `category`、`article`、`tag`、`author`、`plan`、`product`、`payment`、`reference` 與瀏覽器上一頁。
+- URL 輸入必須經過 `readRoute()` 驗證，不可直接信任 query string。
+- 修改導航時，檢查 URL、React state、上一頁/下一頁及登入後返回路徑是否一致。
+- 同一元件在不同 category 間重用時，檢查篩選、分頁、輪播等 local state 是否需要重設。
+
+### 資料與 API
+
+- 頁面應透過 `src/api/` 存取資料，不應直接 import mock JSON。
+- `VITE_USE_MOCK_API=false` 時必須提供有效的 `VITE_API_BASE_URL`；正式環境必須使用 HTTPS。
+- REST 回應必須經 `src/api/validators.ts` 做 runtime validation，不能只使用 TypeScript assertion。
+- 非同步頁面應維持 loading、error、retry、AbortSignal 與 stale request 防護；新增平行請求時要確認單一非關鍵請求失敗是否會拖垮整頁。
+- Mock 與 REST 模式的回傳語意必須一致，尤其是排序、篩選、空資料及錯誤狀態。
+
+### 認證與儲存
+
+- 認證狀態可能存於 sessionStorage 或 localStorage；讀取 token 與 user、登出及 401 清除流程必須使用一致來源。
+- Storage 操作應走 `src/utils/storage.ts` 或認證專用封裝，並處理 storage 不可用、資料損壞與跨分頁狀態。
+- 修改登入導頁時，確認登入成功後記憶體中的 user state 會立即刷新，不能只寫入 storage。
+- Refresh token 不可暴露給前端 JavaScript，應由 Secure、HttpOnly cookie 傳遞。
+
+### 付款與外部內容
+
+- `payment`、`reference` 與第三方回跳參數是不可信輸入；付款成功只能由後端查詢或 webhook 確認。
+- 不可只依前端 query 顯示付款成功、清空購物車或授予會員權限。
+- 外部 HTML 顯示前必須經 DOMPurify sanitize。
+- 外部導頁必須使用 `getSafeExternalUrl` 或 `redirectToExternalUrl`，不可直接信任 API 或 query 提供的 URL。
+
+### UI 與 RWD 高風險區域
+
+- Tailwind 使用 v4；自訂 token 位於 `src/index.css` 的 `@theme`，不是 `tailwind.config.js`。
+- Header 是 fixed。一般內容頁手機版需保留約 `pt-[190px]`；不要用 `pt-16`、`pt-24` 或 `pt-32` 清除完整手機 Header。
+- `HomeAccordion` 手機版 header 間距由 ResizeObserver 動態量測並以 inline `paddingTop` 套用，不應再疊加 Tailwind `pt-*`。
+- `HomeAccordion` 手機版面板垂直展開；桌面版以 CSS `flex` transition 與 hover 控制。不要加入 JS hover state 或改用 `width` transition。
+- `GlobalBottomAd` 為 fixed bottom 元件。新增或修改頁面時，確認內容 bottom padding 足夠，並檢查 `App.tsx` 的排除條件。
+- 改動 Header、選單或分類頁時，要驗證滑鼠、觸控、click-outside、選定項目與實際路由/篩選結果一致。
+
+### 部署不變條件
+
+- Vite `base: './'` 是子路徑部署需求，不可改回絕對 `/`。
+- 正式部署需使用最新 `dist/`，並保留相對 asset URL。
+- CSP 位於 `index.html`；新增外部字型、圖片、影片、iframe 或 API 網域時，確認 CSP 同步允許且範圍不過寬。
+- API 契約見 `docs/api-contract.md`，部署與安全要求見 `docs/security.md`。
+
+## 變更類型檢查表
+
+### 路由／導航
+
+- 直接開啟 URL、程式內導航、重新整理及瀏覽器上一頁結果是否一致？
+- 是否保留或清除不相容的 route fields？
+- 未知或惡意 query 是否被安全拒絕？
+
+### 列表／篩選／輪播
+
+- category 或資料集改變後，index、filter、pagination 是否仍在有效範圍？
+- 空陣列、少量資料、重複 ID 與請求失敗是否安全？
+- 選單顯示的選項是否真的傳入路由或篩選邏輯，而非全部導向同一結果？
+
+### 登入／會員
+
+- 登入、註冊、社群登入、登出及 401 是否同步更新 UI 與 storage？
+- 「記住我」是否正確切換持久與分頁 session，並清除另一份舊資料？
+- 未登入使用者是否無法進入受保護內容？登入後是否返回正確且可信的站內路由？
+
+### API／非同步
+
+- AbortError、逾時、非 JSON 回應、4xx/5xx 與 malformed payload 是否有明確處理？
+- 可選資料失敗時是否合理降級？必要資料失敗時是否顯示可重試錯誤？
+- 新增的多次 API 呼叫是否造成明顯的 N+1、重複請求或正式環境負載問題？
+
+### 視覺／互動
+
+- 手機與桌面是否都不被 fixed Header 或 Bottom Ad 遮住？
+- 新增 dropdown、modal、drawer 是否能關閉，且不會被 overflow 或 z-index 隱藏？
+- 可互動元素是否能以鍵盤操作，並具備必要的 label？
+
+## 驗證指令
+
+基本檢查：
 
 ```bash
-npm run dev       # 開發（Vite HMR，port 3000）
-npm run lint      # TypeScript type check
-npm test          # tsx + Node test runner 單元測試
-npm run test:e2e  # Playwright 桌機／手機 Chromium E2E
-npm run build     # 生產打包
-npm run preview   # 預覽 dist（需先 build）
+npm run lint
+npm test
+npm run build
 ```
 
-提交前至少執行 `npm run lint && npm test && npm run build`；路由、表單、Header、互動或部署相關修改需再跑 `npm run test:e2e`。CI 會在 push / pull request 重跑以上檢查與 `npm audit`。
+路由、表單、Header、登入、互動或部署相關差異，再執行：
 
----
+```bash
+npm run test:e2e
+```
 
-## 設計原則
-
-- **行動優先（Mobile First）**，但 HomeAccordion 的 hover 互動是桌機專屬
-- 字體：heading 用 `font-serif`（Noto Serif TC）、UI label 用 `font-display`（Oswald）、內文用 `font-sans`（Noto Sans TC）
-- 色調：米白底黑字的單一主題，品牌紅（#C62828）作為 accent
-- 圖片盡量保持 `grayscale opacity-70`，hover/active 時轉全彩——這是整站的視覺語言
-
-
-# Review Rules
-
-Review ONLY the current git diff.
-
-Assume the author is a competent senior engineer.
-
-Do not optimize for the number of review comments.
-Optimize for correctness.
-
-Only request changes if the issue would block a production deployment.
-
-Ignore:
-- Formatting
-- Naming
-- Style
-- Optional refactoring
-
-Focus on:
-- Correctness
-- Security
-- Reliability
-- Performance
-- Edge cases
-- Error handling
-- Backward compatibility
-
-Rules:
-- Only report issues supported by evidence in the current diff.
-- Do not speculate about code you cannot see.
-- Prefer false negatives over false positives.
-- Never manufacture review comments.
-
-If there are no production-impacting issues, approve the change.
+- 若檢查因 sandbox、瀏覽器或環境限制無法執行，需明確說明，不可宣稱通過。
+- 區分由本次差異造成的失敗、既有失敗及環境失敗。
+- CI 在 push / pull request 會重跑 lint、單元測試、build、E2E 與 `npm audit`；必要檢查失敗即視為部署阻擋。
