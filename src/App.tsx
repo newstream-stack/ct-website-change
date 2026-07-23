@@ -17,7 +17,6 @@ const ArticleDetail = lazy(() => import('./pages/ArticleDetail'));
 const CartDrawer = lazy(() => import('./components/CartDrawer'));
 const SearchModal = lazy(() => import('./components/SearchModal'));
 const ProductDetail = lazy(() => import('./components/ProductDetail'));
-const ActionPage = lazy(() => import('./pages/ActionPage'));
 const DonationGallery = lazy(() => import('./pages/DonationGallery'));
 const DonationPlanDetail = lazy(() => import('./components/DonationPlanDetail'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -40,10 +39,10 @@ const AuthorResultsPage = lazy(() => import('./pages/AuthorResultsPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
 const EpaperPage = lazy(() => import('./pages/EpaperPage'));
 
-const BOTTOM_AD_EXCLUDED_CATEGORIES = ['訂報', '奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'];
+const BOTTOM_AD_EXCLUDED_CATEGORIES = ['奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'];
 
 const SPECIAL_CATEGORIES = new Set([
-  '首頁', '信仰好物', '訂報', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀',
+  '首頁', '信仰好物', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀',
   '關於我們', '新聞連絡', '我要投稿', '版權隱私權聲明', '財務報表', '客戶服務',
   '申請合作', '論壇Line貼圖', '祝福卡申辦/捐款',
 ]);
@@ -298,10 +297,6 @@ export default function App() {
             onAddToCart={addToCart}
             onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); window.scrollTo(0, 0); }}
           />
-        )}
-
-        {(currentCategory === '訂報') && (
-          <ActionPage />
         )}
 
         {(currentCategory === '奉獻' && !currentPlanId) && (

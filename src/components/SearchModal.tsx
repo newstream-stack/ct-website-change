@@ -137,7 +137,7 @@ export default function SearchModal({
       onClose();
       return;
     }
-    goToCategory('訂報');
+    goToCategory('會員招募');
     setQuery('');
     onClose();
   };
@@ -203,25 +203,28 @@ export default function SearchModal({
           </div>
 
           {scope === 'knowledge' && (
-            <select
-              value={selectedYear ?? 'all'}
-              onChange={(e) => setSelectedYear(e.target.value === 'all' ? null : Number(e.target.value))}
-              className="bg-theme-text/5 border border-theme-text/15 rounded-full px-4 py-2 text-xs sm:text-sm font-bold text-theme-text focus:outline-none focus:border-brand-red/50 cursor-pointer"
-            >
-              <option value="all">全部年份</option>
-              {ARCHIVE_YEARS.map((year) => (
-                <option key={year} value={year}>
-                  {year}{!isSubscribed ? '（訂閱解鎖）' : ''}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                value={selectedYear ?? 'all'}
+                onChange={(e) => setSelectedYear(e.target.value === 'all' ? null : Number(e.target.value))}
+                className="appearance-none bg-theme-text/5 border border-theme-text/15 rounded-full pl-4 pr-9 py-2 text-xs sm:text-sm font-bold text-theme-text focus:outline-none focus:border-brand-red/50 cursor-pointer"
+              >
+                <option value="all">全部年份</option>
+                {ARCHIVE_YEARS.map((year) => (
+                  <option key={year} value={year}>
+                    {year}{!isSubscribed ? '（訂閱解鎖）' : ''}
+                  </option>
+                ))}
+              </select>
+              <i className="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-theme-text/50 pointer-events-none" />
+            </div>
           )}
         </div>
 
         {scope === 'knowledge' && !isSubscribed && (
           <p className="text-xs leading-relaxed text-theme-text/45 -mt-4">
             信仰知識庫收錄 {EARLIEST_ARCHIVE_YEAR}－{LATEST_ARCHIVE_YEAR} 年歷史報導，
-            <button type="button" onClick={() => { goToCategory('訂報'); onClose(); }} className="text-brand-red font-bold hover:underline">訂閱方案</button>
+            <button type="button" onClick={() => { goToCategory('會員招募'); onClose(); }} className="text-brand-red font-bold hover:underline">訂閱方案</button>
             後即可查看完整內容。
           </p>
         )}

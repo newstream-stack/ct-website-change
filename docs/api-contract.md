@@ -90,12 +90,11 @@ Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
 - `GET /api/alliance/members` → `AllianceMember[]`
 - `GET /api/alliance/articles?limit={limit}` → `NewsItem[]`
 
-## Products and newspaper subscription content
+## Products
 
 - `GET /api/products?limit={limit}`
 - `GET /api/products/{id}`
 - `GET /api/products/search?q={query}&limit={limit}`
-- `GET /api/subscriptions` → `SubscriptionPage`
 
 ## Knowledge base（信仰知識庫，2007–2018 付費封存）
 

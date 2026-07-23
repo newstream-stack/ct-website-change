@@ -45,8 +45,8 @@ function EpaperMemberGate({ goToCategory }: EpaperPageProps) {
       <GatePrompt
         title="訂閱後即可閱讀全版"
         description="全版閱讀是付費訂戶專屬功能，訂閱基督教論壇報後即可瀏覽每期完整報紙版面。"
-        ctaLabel="前往訂報"
-        onCta={() => goToCategory('訂報')}
+        ctaLabel="立即訂閱"
+        onCta={() => goToCategory('會員招募')}
       />
     );
   }

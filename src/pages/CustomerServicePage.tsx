@@ -33,7 +33,7 @@ export default function CustomerServicePage() {
           <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">Customer Service</p>
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">客戶服務</h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">
-            若您有訂報、奉獻或網站服務相關問題，歡迎於服務時間來電或來信與我們聯繫。
+            若您有奉獻或網站服務相關問題，歡迎於服務時間來電或來信與我們聯繫。
           </p>
         </div>
 

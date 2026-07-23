@@ -3,7 +3,7 @@ import type { Member, MemberStats } from '../types/member';
 import type { NewsItem } from '../types/news';
 import type { CreateOrderResponse, Order, Product } from '../types/product';
 import type { PaymentStatusResponse } from '../types/payment';
-import type { AdItem, ActionPlan, AllianceMember, Columnist } from '../types/news';
+import type { AdItem, AllianceMember, Columnist } from '../types/news';
 import type { DonationRecord, SubscriptionRecord } from '../types/member';
 import type { EventDetail, EventTicket } from '../types/event';
 import type { MembershipPlan } from '../types/membership';
@@ -112,19 +112,6 @@ export const isMembershipPlan = (value: unknown): value is MembershipPlan => isR
 export const isPlan = (value: unknown): value is Plan => isRecord(value)
   && Number.isInteger(value.id) && isString(value.title) && isString(value.imageUrl)
   && isString(value.description);
-
-const isActionPlan = (value: unknown): value is ActionPlan => isRecord(value)
-  && isString(value.id) && isString(value.title) && isString(value.description)
-  && (value.subtitle === undefined || isString(value.subtitle))
-  && (value.price === undefined || isString(value.price))
-  && (value.isPremium === undefined || typeof value.isPremium === 'boolean')
-  && (value.variant === 'subscription' || value.variant === 'donation');
-
-export const isSubscriptionPageData = (value: unknown): value is {
-  bgText: string; subtitle: string; titleLines: string[]; plans: ActionPlan[];
-} => isRecord(value) && isString(value.bgText) && isString(value.subtitle)
-  && Array.isArray(value.titleLines) && value.titleLines.every(isString)
-  && Array.isArray(value.plans) && value.plans.every(isActionPlan);
 
 export const isOrder = (value: unknown): value is Order => isRecord(value)
   && isString(value.orderNumber) && isString(value.date) && isString(value.name)
