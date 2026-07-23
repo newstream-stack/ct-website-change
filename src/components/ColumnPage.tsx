@@ -3,6 +3,7 @@ import { getNewsByCategory } from '../api/news';
 import { getColumnists } from '../api/columnists';
 import AsyncPageState from './AsyncPageState';
 import SummitBanner from './SummitBanner';
+import FeaturedCarousel from './FeaturedCarousel';
 import { useAsyncData } from '../hooks/useAsyncData';
 
 interface ColumnPageProps {
@@ -14,7 +15,6 @@ const COLUMN_TABS = ['好牧人', '天路客', '國度之聲'];
 
 export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPageProps) {
   const [activeTab, setActiveTab] = useState('好牧人');
-  const [activeIndex, setActiveIndex] = useState(0);
 
   // Header submenu links (專欄 → 天路客 etc.) land here with a specific tab
   // pre-selected; sync it since switching tabs within 專欄 doesn't remount.
@@ -34,20 +34,8 @@ export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPa
     },
     null,
   );
-  const featuredArticles = data?.columnNews.slice(0, 5) ?? [];
+  const featuredArticles = data?.columnNews.slice(0, 4) ?? [];
   const filteredColumnists = data?.columnists.filter((columnist) => columnist.subCategory === activeTab) ?? [];
-  
-  // Auto-slide effect
-  useEffect(() => {
-    if (featuredArticles.length <= 1) return;
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [featuredArticles.length]);
-
-  const nextSlide = () => featuredArticles.length > 0 && setActiveIndex((prev) => (prev + 1) % featuredArticles.length);
-  const prevSlide = () => featuredArticles.length > 0 && setActiveIndex((prev) => (prev - 1 + featuredArticles.length) % featuredArticles.length);
 
   if (isLoading) return <AsyncPageState />;
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
@@ -71,94 +59,15 @@ export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPa
         </div>
       </div>
 
-      {/* 2. Featured Columnist spotlight (Hero Style) */}
+      {/* 2. Featured Columnist spotlight */}
       <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl min-h-[720px] sm:min-h-[650px] md:min-h-[500px]">
-           {featuredArticles.map((article, idx) => (
-             <div 
-               key={article.id}
-               className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-700 ease-in-out ${
-                 idx === activeIndex 
-                   ? 'opacity-100 translate-x-0 z-10' 
-                   : 'opacity-0 translate-x-12 -z-10'
-               }`}
-             >
-                {/* Image Side */}
-                <div className="w-full lg:w-[55%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center group/img">
-                   <img 
-                      src={article.imageUrl} 
-                      className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
-                      alt={article.title} 
-                   />
-                   <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/30 pointer-events-none"></div>
-                   
-                   {/* Arrow Buttons */}
-                   <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-                        aria-label="上一篇精選專欄"
-                        className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
-                      >
-                         <i className="fas fa-chevron-left text-sm md:text-base"></i>
-                      </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-                        aria-label="下一篇精選專欄"
-                        className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
-                      >
-                         <i className="fas fa-chevron-right text-sm md:text-base"></i>
-                      </button>
-                   </div>
-                   
-                </div>
-                
-                {/* Content Side */}
-                <div className="w-full lg:w-[45%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10 transition-colors">
-                   <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
-                      <span>Editor's Choice</span>
-                      <span className="w-1.5 h-px bg-brand-red"></span>
-                      <span>Column</span>
-                   </div>
-                   <h2 
-                     className="text-2xl md:text-3xl lg:text-4xl font-serif font-black mb-8 leading-tight cursor-pointer hover:text-brand-red transition-all"
-                     onClick={() => openArticle(article.id)}
-                   >
-                     {article.title}
-                   </h2>
-                   <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base">
-                     {article.excerpt}
-                   </p>
-                   <button 
-                    onClick={() => openArticle(article.id)}
-                    className="self-start text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase border-b-2 border-brand-red pb-1 hover:text-brand-red transition-all"
-                   >
-                      Read Full Column <i className="fas fa-arrow-right ml-4"></i>
-                   </button>
-                </div>
-             </div>
-           ))}
-           
-           {/* Carousel Controls */}
-           <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 flex items-center gap-6 z-30 bg-theme-bg/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none px-4 py-2 rounded-full border border-theme-text/10 md:border-none">
-              <div className="flex gap-2">
-                 {featuredArticles.map((_, idx) => (
-                   <button
-                     key={idx}
-                     onClick={() => setActiveIndex(idx)}
-                     className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                       idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20 hover:bg-theme-text/40'
-                     }`}
-                     aria-label={`Go to slide ${idx + 1}`}
-                   />
-                 ))}
-              </div>
-              <div className="hidden md:grid grid-cols-4 gap-1.5 opacity-20 pointer-events-none">
-                 {[...Array(12)].map((_, i) => (
-                    <div key={i} className="w-1 h-1 rounded-full bg-theme-text"></div>
-                 ))}
-              </div>
-           </div>
-        </div>
+        <FeaturedCarousel
+          articles={featuredArticles}
+          openArticle={openArticle}
+          eyebrowLabel="Editor's Choice"
+          categoryLabel="Column"
+          readMoreLabel="Read Full Column"
+        />
       </div>
 
       {/* 3. Column Navigation/Tabs */}

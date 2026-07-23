@@ -54,8 +54,17 @@ export const isFeaturedAd = (value: unknown): value is FeaturedAd => isRecord(va
 export const isProduct = (value: unknown): value is Product => isRecord(value)
   && Number.isInteger(value.id) && isString(value.name) && isString(value.englishName)
   && isNumber(value.price) && value.price >= 0 && isString(value.imageUrl)
+  && (value.originalPrice === undefined || (isNumber(value.originalPrice) && value.originalPrice >= 0))
+  && Number.isInteger(value.stock) && Number(value.stock) >= 0
   && isString(value.description) && Array.isArray(value.specs) && value.specs.every(isString)
-  && isString(value.details) && Array.isArray(value.gallery) && value.gallery.every(isString);
+  && isString(value.details) && Array.isArray(value.gallery) && value.gallery.every(isString)
+  && (value.variants === undefined || (Array.isArray(value.variants) && value.variants.every(isString)))
+  && (value.infoTable === undefined || (Array.isArray(value.infoTable) && value.infoTable.every((row) =>
+    isRecord(row) && isString(row.label) && isString(row.value))))
+  && (value.story === undefined || (isRecord(value.story)
+    && Array.isArray(value.story.paragraphs) && value.story.paragraphs.every(isString)
+    && (value.story.highlight === undefined || isString(value.story.highlight))
+    && (value.story.image === undefined || isString(value.story.image))));
 
 export const isAuthResponse = (value: unknown): value is AuthResponse => isRecord(value)
   && isString(value.token) && isRecord(value.user) && isString(value.user.id)
@@ -120,7 +129,8 @@ export const isOrder = (value: unknown): value is Order => isRecord(value)
   && isString(value.orderNumber) && isString(value.date) && isString(value.name)
   && isString(value.phone) && isString(value.email) && isString(value.address)
   && (value.paymentMethod === 'credit-card' || value.paymentMethod === 'line-pay') && Array.isArray(value.items)
-  && value.items.every((item) => isRecord(item) && isProduct(item.product) && Number.isInteger(item.quantity) && Number(item.quantity) > 0)
+  && value.items.every((item) => isRecord(item) && isProduct(item.product) && Number.isInteger(item.quantity) && Number(item.quantity) > 0
+    && (item.variant === undefined || isString(item.variant)))
   && isNumber(value.subtotal) && isNumber(value.shippingFee) && isNumber(value.total)
   && value.subtotal >= 0 && value.shippingFee >= 0 && value.total >= 0
   && ['pending', 'payment_pending', 'paid', 'failed', 'cancelled', 'refunded'].includes(String(value.status));

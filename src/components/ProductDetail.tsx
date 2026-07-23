@@ -1,28 +1,47 @@
 import { useState, useEffect, useRef } from 'react';
 import { Product } from '../types';
-import { getProduct } from '../api/products';
+import { getProduct, getRelatedProducts } from '../api/products';
 import { useAsyncData } from '../hooks/useAsyncData';
 import AsyncPageState from './AsyncPageState';
+
+const RETURN_POLICY = '商品享有到貨後 7 天猶豫期（不含例假日），期間內可辦理退換貨，退回商品須保持全新狀態、吊牌及包裝完整。退貨運費由買家負擔（商品瑕疵或運送損壞除外）。退款將於收到退回商品並驗收無誤後 7 個工作天內原路退回；若商品有瑕疵或運送損壞，請於到貨 3 日內聯繫客服辦理免費換貨。';
+
+const BULK_ORDER_CONTACT = {
+  phone: '02-2396-1010 林姊妹',
+  email: 'shop@ct.org.tw',
+  hours: '週一至週五 08:30–17:30',
+};
 
 interface ProductDetailProps {
   productId: number;
   onBack: () => void;
-  onAddToCart: (product: Product, quantity: number) => void;
+  onAddToCart: (product: Product, quantity: number, variant?: string) => void;
+  onSelectProduct: (productId: number) => void;
 }
 
-export default function ProductDetail({ productId, onBack, onAddToCart }: ProductDetailProps) {
+export default function ProductDetail({ productId, onBack, onAddToCart, onSelectProduct }: ProductDetailProps) {
   const { data: product, error, isLoading, reload } = useAsyncData<Product | null>(
     `product:${productId}`,
     async (signal) => (await getProduct(productId, { signal })) ?? null,
     null,
   );
+  const { data: relatedProducts } = useAsyncData<Product[]>(
+    `related-products:${productId}`,
+    (signal) => getRelatedProducts(productId, 4, { signal }),
+    [],
+  );
   const [activeImage, setActiveImage] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
+  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
   const [addedSuccess, setAddedSuccess] = useState<boolean>(false);
   const successTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (product) setActiveImage(product.imageUrl);
+    if (product) {
+      setActiveImage(product.imageUrl);
+      setSelectedVariant(null);
+      setQuantity(1);
+    }
   }, [product]);
 
   useEffect(() => () => {
@@ -32,8 +51,15 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
   if (isLoading || !product) return <AsyncPageState />;
 
+  const isSoldOut = product.stock <= 0;
+  const isLowStock = !isSoldOut && product.stock <= 10;
+  const hasDiscount = typeof product.originalPrice === 'number' && product.originalPrice > product.price;
+  const needsVariant = Boolean(product.variants && product.variants.length > 0);
+  const canPurchase = !isSoldOut && (!needsVariant || Boolean(selectedVariant));
+
   const handleAddToCart = () => {
-    onAddToCart(product, quantity);
+    if (!canPurchase) return;
+    onAddToCart(product, quantity, selectedVariant ?? undefined);
     setAddedSuccess(true);
     if (successTimer.current) clearTimeout(successTimer.current);
     successTimer.current = setTimeout(() => setAddedSuccess(false), 2000);
@@ -42,12 +68,12 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
   return (
     <div className="w-full min-h-[100dvh] pt-[190px] md:pt-32 pb-24 bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20">
-        
+
         {/* Back Button */}
-        <button 
+        <button
           onClick={onBack}
           aria-label="返回好物畫廊"
-          className="group mb-8 flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-theme-text/60 hover:text-brand-red transition-colors"
+          className="group mt-6 md:mt-8 mb-8 flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-theme-text/60 hover:text-brand-red transition-colors"
         >
           <div className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center group-hover:border-brand-red transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,11 +136,33 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
             </h1>
             
             {/* Price */}
-            <div className="flex items-baseline gap-3 mb-6 pb-6 border-b border-theme-text/10">
-              <span className="font-display font-black text-3xl text-brand-red">
-                NT$ {product.price.toLocaleString()}
-              </span>
-              <span className="text-xs text-theme-text/40 tracking-wider">含稅與基本配送費</span>
+            <div className="mb-6 pb-6 border-b border-theme-text/10">
+              <div className="flex items-baseline gap-3 flex-wrap">
+                <span className="font-display font-black text-3xl text-brand-red">
+                  NT$ {product.price.toLocaleString()}
+                </span>
+                {hasDiscount && (
+                  <span className="font-display text-base text-theme-text/40 line-through">
+                    NT$ {product.originalPrice!.toLocaleString()}
+                  </span>
+                )}
+                <span className="text-xs text-theme-text/40 tracking-wider">含稅與基本配送費</span>
+              </div>
+              <div className="mt-3">
+                {isSoldOut ? (
+                  <span className="inline-block text-xs font-bold uppercase tracking-widest text-white bg-theme-text/60 px-3 py-1 rounded-sm">
+                    已售完
+                  </span>
+                ) : isLowStock ? (
+                  <span className="inline-block text-xs font-bold uppercase tracking-widest text-brand-red bg-brand-red/10 px-3 py-1 rounded-sm">
+                    僅剩 {product.stock} 件，售完為止
+                  </span>
+                ) : (
+                  <span className="inline-block text-xs font-medium text-theme-text/50">
+                    庫存 {product.stock} 件
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Description */}
@@ -135,18 +183,54 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
               </p>
             </div>
 
-            {/* Spec Options */}
+            {/* Product Info Table */}
             <div className="space-y-3 mb-6">
-              <label className="text-sm font-bold text-theme-text/80 block">商品規格與特點</label>
-              <div className="space-y-2 bg-theme-text/[0.02] border border-theme-text/10 rounded-sm p-4 text-sm text-theme-text/80 leading-relaxed">
-                {product.specs.map((spec, i) => (
-                  <div key={i} className="flex gap-2.5 items-start">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-red mt-2 flex-shrink-0" />
-                    <span>{spec}</span>
+              <label className="text-sm font-bold text-theme-text/80 block">商品資訊</label>
+              <div className="bg-theme-text/[0.02] border border-theme-text/10 rounded-sm divide-y divide-theme-text/10 text-sm">
+                {(product.infoTable ?? product.specs.map((spec) => {
+                  const [label, ...rest] = spec.split('：');
+                  return { label, value: rest.join('：') || label };
+                })).map((row, i) => (
+                  <div key={i} className="flex gap-4 px-4 py-3">
+                    <span className="w-20 md:w-24 flex-shrink-0 font-bold text-theme-text/60">{row.label}</span>
+                    <span className="text-theme-text/80">{row.value}</span>
                   </div>
                 ))}
               </div>
+              <p className="text-xs text-theme-text/50 leading-relaxed">
+                <span className="font-bold text-theme-text/70">團購洽詢：</span>
+                {BULK_ORDER_CONTACT.phone}／{BULK_ORDER_CONTACT.email}
+                <br />
+                <span className="font-bold text-theme-text/70">客服服務時間：</span>
+                {BULK_ORDER_CONTACT.hours}
+              </p>
             </div>
+
+            {/* Variant Selector */}
+            {needsVariant && (
+              <div className="space-y-3 mb-6">
+                <label className="text-sm font-bold text-theme-text/80 block">
+                  選擇規格{!selectedVariant && <span className="text-brand-red font-normal ml-1">（請選擇）</span>}
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {product.variants!.map((variant) => (
+                    <button
+                      key={variant}
+                      type="button"
+                      onClick={() => setSelectedVariant(variant)}
+                      aria-pressed={selectedVariant === variant}
+                      className={`px-4 py-2 text-sm rounded-sm border transition-all ${
+                        selectedVariant === variant
+                          ? 'border-brand-red bg-brand-red/10 text-brand-red font-bold'
+                          : 'border-theme-text/20 text-theme-text/70 hover:border-theme-text/50'
+                      }`}
+                    >
+                      {variant}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Quantity Selector */}
             <div className="flex items-center gap-6 mb-8 pt-4 border-t border-theme-text/10">
@@ -162,9 +246,9 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
                   </svg>
                 </button>
                 <span className="w-12 text-center font-display font-bold text-base">{quantity}</span>
-                <button 
-                  onClick={() => setQuantity(prev => Math.min(99, prev + 1))}
-                  disabled={quantity >= 99}
+                <button
+                  onClick={() => setQuantity(prev => Math.min(product.stock, prev + 1))}
+                  disabled={quantity >= product.stock}
                   aria-label="增加購買數量"
                   className="w-10 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
@@ -179,8 +263,8 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
             <div className="grid grid-cols-2 gap-4">
               <button
                 onClick={handleAddToCart}
-                disabled={addedSuccess}
-                className={`py-4 border font-display font-bold text-sm uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2 ${
+                disabled={addedSuccess || !canPurchase}
+                className={`py-4 border font-display font-bold text-sm uppercase tracking-widest transition-all rounded-sm flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed ${
                   addedSuccess
                     ? 'border-green-600 bg-green-600 text-white'
                     : 'border-theme-text/30 bg-transparent text-theme-text hover:bg-theme-text/10'
@@ -193,6 +277,8 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
                     </svg>
                     已加入購物車
                   </>
+                ) : isSoldOut ? (
+                  '已售完'
                 ) : (
                   <>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,18 +290,110 @@ export default function ProductDetail({ productId, onBack, onAddToCart }: Produc
               </button>
 
               <button
-                onClick={() => onAddToCart(product, quantity)}
-                className="py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-0.5 hover:shadow-lg rounded-sm"
+                onClick={() => canPurchase && onAddToCart(product, quantity, selectedVariant ?? undefined)}
+                disabled={!canPurchase}
+                className="py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-0.5 hover:shadow-lg rounded-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
-                立即購買
+                {isSoldOut ? '已售完' : '立即購買'}
               </button>
             </div>
-            
+
             <p className="text-center text-xs text-theme-text/40 mt-4">付款將導向金流託管頁面，本站不接收或儲存完整卡號與安全碼。</p>
+
+            {/* Return / Exchange Policy */}
+            <div className="mt-6 border border-theme-text/10 bg-theme-text/[0.02] rounded-sm p-5">
+              <h3 className="font-bold text-sm text-theme-text mb-2 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-brand-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                </svg>
+                退換貨資訊
+              </h3>
+              <p className="text-xs text-theme-text/70 leading-relaxed font-light">
+                {RETURN_POLICY}
+              </p>
+            </div>
 
           </div>
 
         </div>
+
+        {/* Product Story */}
+        {product.story && (
+          <div className="mt-20 pt-16 border-t border-theme-text/10 max-w-2xl mx-auto text-center">
+            <div className="space-y-8">
+              {product.story.paragraphs.map((paragraph, i) => (
+                <p key={i} className="text-theme-text/80 font-light leading-loose whitespace-pre-line">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-4 my-10">
+              <span className="flex-1 h-px bg-theme-text/15" />
+              <span className="text-brand-red text-sm">✝</span>
+              <span className="flex-1 h-px bg-theme-text/15" />
+            </div>
+
+            {product.story.highlight && (
+              <p className="text-brand-red font-bold leading-relaxed mb-10">
+                {product.story.highlight}
+              </p>
+            )}
+
+            <div className="flex items-center gap-4 mb-12">
+              <span className="flex-1 h-px bg-theme-text/15" />
+              <span className="text-brand-red text-sm">✝</span>
+              <span className="flex-1 h-px bg-theme-text/15" />
+            </div>
+
+            {product.story.image && (
+              <div className="aspect-[832/470] rounded-sm overflow-hidden border border-theme-text/10">
+                <img
+                  src={product.story.image}
+                  alt={product.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-20 pt-12 border-t border-theme-text/10">
+            <h2 className="text-2xl md:text-3xl font-serif font-black text-theme-text mb-8">
+              你可能也喜歡 <span className="text-sm font-display font-light text-theme-text/40 ml-3 tracking-widest uppercase">Related Items</span>
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {relatedProducts.map((related) => (
+                <button
+                  key={related.id}
+                  type="button"
+                  onClick={() => onSelectProduct(related.id)}
+                  className="group text-left"
+                >
+                  <div className="w-full aspect-[3/4] bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden mb-3">
+                    <img
+                      src={related.imageUrl}
+                      alt={related.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                    />
+                  </div>
+                  <h3 className="font-serif font-bold text-sm md:text-base text-theme-text group-hover:text-brand-red transition-colors">
+                    {related.englishName}
+                  </h3>
+                  <span className="font-display font-bold text-sm text-brand-red">
+                    NT$ {related.price.toLocaleString()}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

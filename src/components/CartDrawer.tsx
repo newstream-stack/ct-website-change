@@ -7,8 +7,8 @@ interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   cartItems: CartItem[];
-  onRemoveItem: (productId: number) => void;
-  onUpdateQuantity: (productId: number, qty: number) => void;
+  onRemoveItem: (productId: number, variant?: string) => void;
+  onUpdateQuantity: (productId: number, qty: number, variant?: string) => void;
   onClearCart: () => void;
 }
 
@@ -48,7 +48,7 @@ export default function CartDrawer({
         returnUrl: buildPaymentReturnUrl('order'),
         recipient: { name: name.trim(), phone: phone.trim(), email: email.trim(), address: address.trim() },
         paymentMethod,
-        items: cartItems.map(({ product, quantity }) => ({ productId: product.id, quantity })),
+        items: cartItems.map(({ product, quantity, variant }) => ({ productId: product.id, quantity, variant })),
       };
       const fingerprint = JSON.stringify(payload);
       if (idempotency.current?.fingerprint !== fingerprint) {
@@ -148,7 +148,7 @@ export default function CartDrawer({
               ) : (
                 <div className="space-y-6">
                   {cartItems.map((item) => (
-                    <div key={item.product.id} className="flex gap-4 pb-6 border-b border-theme-text/10 last:border-0">
+                    <div key={`${item.product.id}-${item.variant ?? ''}`} className="flex gap-4 pb-6 border-b border-theme-text/10 last:border-0">
                       <div className="w-20 h-24 bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden flex-shrink-0">
                         <img src={item.product.imageUrl} alt={item.product.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                       </div>
@@ -156,8 +156,8 @@ export default function CartDrawer({
                         <div>
                           <div className="flex justify-between items-start gap-2">
                             <h4 className="font-serif font-bold text-base leading-snug line-clamp-2">{item.product.name}</h4>
-                            <button 
-                              onClick={() => onRemoveItem(item.product.id)}
+                            <button
+                              onClick={() => onRemoveItem(item.product.id, item.variant)}
                               className="text-theme-text/35 hover:text-brand-red transition-colors cursor-pointer"
                               title="移除商品"
                             >
@@ -166,14 +166,17 @@ export default function CartDrawer({
                               </svg>
                             </button>
                           </div>
+                          {item.variant && (
+                            <span className="text-xs text-theme-text/50 block mt-0.5">規格：{item.variant}</span>
+                          )}
                           <span className="font-display text-brand-red text-sm font-bold block mt-1">NT$ {item.product.price.toLocaleString()}</span>
                         </div>
-                        
+
                         {/* Quantity controls */}
                         <div className="flex items-center justify-between mt-2">
                           <div className="flex items-center border border-theme-text/20 bg-theme-text/5 rounded-sm overflow-hidden h-8">
-                            <button 
-                              onClick={() => onUpdateQuantity(item.product.id, Math.max(1, item.quantity - 1))}
+                            <button
+                              onClick={() => onUpdateQuantity(item.product.id, Math.max(1, item.quantity - 1), item.variant)}
                               className="w-8 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -181,9 +184,10 @@ export default function CartDrawer({
                               </svg>
                             </button>
                             <span className="w-8 text-center font-display text-xs font-bold">{item.quantity}</span>
-                            <button 
-                              onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                              className="w-8 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors"
+                            <button
+                              onClick={() => onUpdateQuantity(item.product.id, Math.min(item.product.stock, item.quantity + 1), item.variant)}
+                              disabled={item.quantity >= item.product.stock}
+                              className="w-8 h-full flex items-center justify-center text-theme-text/60 hover:bg-theme-text/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

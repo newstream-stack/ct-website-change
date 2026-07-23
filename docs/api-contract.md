@@ -130,6 +130,8 @@ Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
 
 建立訂單時，前端會在 request header 傳送 `Idempotency-Key`。後端應以此避免重複建立訂單或重複扣款；商品價格、運費與總額必須由後端重新計算，不接受前端傳入的金額。
 
+`items[].variant` 對應商品的規格選項（例如 `Product.variants` 之一，如「信心」/「盼望」/「愛的旅程」），為選填字串；沒有規格可選的商品可省略此欄位。後端應驗證 `variant` 屬於該商品當下定義的規格清單（不在清單內應回 `400`），並原樣保存在訂單項目中供出貨辨識——**不能**因為不認得這個欄位就忽略或拒絕整筆請求。
+
 ```json
 {
   "recipient": {
@@ -141,7 +143,7 @@ Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
   "paymentMethod": "credit-card",
   "returnUrl": "https://frontend.example.com/?payment=order",
   "items": [
-    { "productId": 1, "quantity": 2 }
+    { "productId": 1, "quantity": 2, "variant": "信心" }
   ]
 }
 ```

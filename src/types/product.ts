@@ -3,16 +3,26 @@ export interface Product {
   name: string;
   englishName: string;
   price: number;
+  originalPrice?: number;
+  stock: number;
   imageUrl: string;
   description: string;
   specs: string[];
   details: string;
   gallery: string[];
+  variants?: string[];
+  infoTable?: { label: string; value: string }[];
+  story?: {
+    paragraphs: string[];
+    highlight?: string;
+    image?: string;
+  };
 }
 
 export interface CartItem {
   product: Product;
   quantity: number;
+  variant?: string;
 }
 
 export type PaymentMethod = 'credit-card' | 'line-pay';
@@ -45,6 +55,7 @@ export interface CreateOrderRequest {
   items: Array<{
     productId: number;
     quantity: number;
+    variant?: string;
   }>;
 }
 

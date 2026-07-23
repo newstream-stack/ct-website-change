@@ -9,7 +9,7 @@ import FloatingDonateButton from './components/FloatingDonateButton';
 import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 import { buildRouteUrl, readRoute, type AppRoute } from './routing';
-import { readJsonStorage, writeJsonStorage } from './utils/storage';
+import { backfillLegacyProductStock, readJsonStorage, writeJsonStorage } from './utils/storage';
 
 const ProductGallery = lazy(() => import('./pages/ProductGallery'));
 const CategoryList = lazy(() => import('./pages/CategoryList'));
@@ -54,11 +54,13 @@ const getBrowserRoute = () => readRoute(typeof window === 'undefined' ? '' : win
 const isCartItems = (value: unknown): value is CartItem[] => Array.isArray(value) && value.every((item) => {
   if (typeof item !== 'object' || item === null) return false;
   const candidate = item as Partial<CartItem>;
-  return Number.isInteger(candidate.quantity) && (candidate.quantity ?? 0) > 0 && (candidate.quantity ?? 0) <= 99
+  return Number.isInteger(candidate.quantity) && (candidate.quantity ?? 0) > 0 && (candidate.quantity ?? 0) <= 999
+    && (candidate.variant === undefined || typeof candidate.variant === 'string')
     && typeof candidate.product === 'object' && candidate.product !== null
     && Number.isInteger(candidate.product.id)
     && typeof candidate.product.name === 'string'
-    && typeof candidate.product.price === 'number';
+    && typeof candidate.product.price === 'number'
+    && Number.isInteger(candidate.product.stock) && (candidate.product.stock ?? -1) >= 0;
 });
 
 function RouteFallback() {
@@ -100,7 +102,7 @@ export default function App() {
   
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     if (typeof window !== 'undefined') {
-      return readJsonStorage(localStorage, 'impact_cart', [], isCartItems);
+      return readJsonStorage(localStorage, 'impact_cart', [], isCartItems, backfillLegacyProductStock);
     }
     return [];
   });
@@ -114,34 +116,35 @@ export default function App() {
     writeJsonStorage(localStorage, 'impact_cart', cartItems);
   }, [cartItems]);
 
-  const addToCart = (product: Product, quantity: number) => {
-    const safeQuantity = Math.max(1, Math.min(99, Math.trunc(quantity)));
+  const addToCart = (product: Product, quantity: number, variant?: string) => {
+    const safeQuantity = Math.max(1, Math.min(product.stock, Math.trunc(quantity)));
     setCartItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
+      const existing = prev.find((item) => item.product.id === product.id && item.variant === variant);
       if (existing) {
         return prev.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: Math.min(99, item.quantity + safeQuantity) }
+          item.product.id === product.id && item.variant === variant
+            ? { ...item, quantity: Math.min(product.stock, item.quantity + safeQuantity) }
             : item
         );
       }
-      return [...prev, { product, quantity: safeQuantity }];
+      return [...prev, { product, quantity: safeQuantity, variant }];
     });
     // Automatically open the cart drawer when a new item is added!
     setHasOpenedCart(true);
     setIsCartOpen(true);
   };
 
-  const removeFromCart = (productId: number) => {
-    setCartItems((prev) => prev.filter((item) => item.product.id !== productId));
+  const removeFromCart = (productId: number, variant?: string) => {
+    setCartItems((prev) => prev.filter((item) => !(item.product.id === productId && item.variant === variant)));
   };
 
-  const updateCartQuantity = (productId: number, qty: number) => {
-    const safeQuantity = Math.max(1, Math.min(99, Math.trunc(qty)));
+  const updateCartQuantity = (productId: number, qty: number, variant?: string) => {
     setCartItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity: safeQuantity } : item
-      )
+      prev.map((item) => {
+        if (item.product.id !== productId || item.variant !== variant) return item;
+        const safeQuantity = Math.max(1, Math.min(item.product.stock, Math.trunc(qty)));
+        return { ...item, quantity: safeQuantity };
+      })
     );
   };
 
@@ -290,14 +293,15 @@ export default function App() {
         )}
 
         {(currentCategory === '信仰好物' && !currentProductId) && (
-          <ProductGallery onSelectProduct={(productId) => setRoute((current) => ({ ...current, productId }))} goToCategory={goToCategory} />
+          <ProductGallery onSelectProduct={(productId) => setRoute((current) => ({ ...current, productId }))} />
         )}
 
         {(currentCategory === '信仰好物' && currentProductId) && (
-          <ProductDetail 
-            productId={currentProductId} 
+          <ProductDetail
+            productId={currentProductId}
             onBack={() => { setRoute((current) => ({ ...current, productId: null })); window.scrollTo(0, 0); }}
             onAddToCart={addToCart}
+            onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); window.scrollTo(0, 0); }}
           />
         )}
 

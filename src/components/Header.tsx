@@ -78,12 +78,12 @@ export default function Header({
           <img src="/S__86589483-original.png" alt="IMPACT 論壇報" decoding="async" fetchPriority="high" className="pointer-events-none hidden md:block h-10 w-auto object-contain origin-left scale-[5.2] translate-y-3" />
         </button>
 
-        <div className="flex items-center gap-3 md:gap-6 pointer-events-auto">
+        <div className="flex items-center gap-3 md:gap-6 pointer-events-auto whitespace-nowrap">
           {/* Desktop Right CTAs */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6 font-sans font-bold text-sm tracking-widest text-theme-text/90">
             <button onClick={() => goToCategory('奉獻')} className="text-brand-red hover:text-theme-text transition flex items-center gap-2 border border-brand-red px-4 py-1.5 rounded-full">奉獻 <i className="fas fa-arrow-right text-[10px]"></i></button>
-            <button onClick={() => goToCategory('全版閱讀')} className="hover:text-brand-red transition">全版閱讀</button>
             <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
+            <button onClick={() => goToCategory('全版閱讀')} className="hover:text-brand-red transition">全版閱讀</button>
           </div>
           <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
 
@@ -160,16 +160,16 @@ export default function Header({
             {mobileMenuOpen && (
               <div className="absolute top-full right-0 mt-3 w-48 bg-theme-bg border border-theme-text/10 shadow-xl rounded-sm overflow-hidden transition-colors duration-500 z-50">
                 <button
-                  onClick={() => { goToCategory('全版閱讀'); setMobileMenuOpen(false); }}
+                  onClick={() => { goToCategory('信仰好物'); setMobileMenuOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-left hover:bg-theme-text/5 hover:text-brand-red transition-colors"
                 >
-                  <i className="fas fa-newspaper w-4"></i>全版閱讀
+                  <i className="fas fa-gift w-4"></i>信仰好物
                 </button>
                 <button
-                  onClick={() => { goToCategory('信仰好物'); setMobileMenuOpen(false); }}
+                  onClick={() => { goToCategory('全版閱讀'); setMobileMenuOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-left border-t border-theme-text/10 hover:bg-theme-text/5 hover:text-brand-red transition-colors"
                 >
-                  <i className="fas fa-gift w-4"></i>信仰好物
+                  <i className="fas fa-newspaper w-4"></i>全版閱讀
                 </button>
               </div>
             )}

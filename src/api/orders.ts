@@ -3,13 +3,13 @@ import { apiGet, apiPost } from './client';
 import { USE_MOCK_API } from './config';
 import type { CreateOrderRequest, CreateOrderResponse, Order, OrderStatus, Product } from '../types/product';
 import { getProduct } from './products';
-import { readJsonStorage, writeJsonStorage } from '../utils/storage';
+import { backfillLegacyProductStock, readJsonStorage, writeJsonStorage } from '../utils/storage';
 import { assertApiData, isCreateOrderResponse, isOrders } from './validators';
 
 const MOCK_ORDERS_KEY = 'impact_orders';
 
 function readMockOrders(): Order[] {
-  return readJsonStorage(localStorage, MOCK_ORDERS_KEY, [], isOrders);
+  return readJsonStorage(localStorage, MOCK_ORDERS_KEY, [], isOrders, backfillLegacyProductStock);
 }
 
 function writeMockOrders(orders: Order[]) {
@@ -32,7 +32,8 @@ export async function createOrder(
 ): Promise<CreateOrderResponse> {
   if (payload.items.length === 0 || payload.items.length > 50
     || payload.items.some((item) => !Number.isSafeInteger(item.productId) || item.productId <= 0
-      || !Number.isSafeInteger(item.quantity) || item.quantity < 1 || item.quantity > 99)) {
+      || !Number.isSafeInteger(item.quantity) || item.quantity < 1 || item.quantity > 999
+      || (item.variant !== undefined && typeof item.variant !== 'string'))) {
     throw new Error('購物車商品數量不正確，請重新確認');
   }
   if (!USE_MOCK_API) {
@@ -51,7 +52,13 @@ export async function createOrder(
   const items = payload.items.map((item, index) => ({
     product: products[index] as Product,
     quantity: item.quantity,
+    variant: item.variant,
   }));
+
+  const stockShortage = items.find((item) => item.quantity > item.product.stock);
+  if (stockShortage) {
+    throw new Error(`「${stockShortage.product.name}」庫存不足，目前僅剩 ${stockShortage.product.stock} 件`);
+  }
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   const shippingFee = subtotal > 1000 ? 0 : 80;
   const now = new Date();

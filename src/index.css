@@ -304,3 +304,13 @@
 .animate-fade-in-up {
   animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ─── FeaturedCarousel progress segments ─── */
+@keyframes carouselProgress {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+.animate-carousel-progress {
+  transform-origin: left;
+  animation: carouselProgress 5s linear forwards;
+}

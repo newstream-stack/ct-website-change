@@ -1,8 +1,8 @@
 import { getAllianceMembers, getAllianceArticles } from '../api/alliance';
-import { useCarousel } from '../hooks/useCarousel';
 import { useAsyncData } from '../hooks/useAsyncData';
 import AsyncPageState from '../components/AsyncPageState';
 import SummitBanner from '../components/SummitBanner';
+import FeaturedCarousel from '../components/FeaturedCarousel';
 
 interface ImpactAlliancePageProps {
   openArticle: (id: number) => void;
@@ -13,7 +13,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
     'alliance-page',
     async (signal) => {
       const [sliderArticles, members] = await Promise.all([
-        getAllianceArticles(5, { signal }),
+        getAllianceArticles(4, { signal }),
         getAllianceMembers({ signal }),
       ]);
       return { sliderArticles, members };
@@ -21,8 +21,6 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
     null,
   );
   const sliderArticles = data?.sliderArticles ?? [];
-
-  const { activeIndex, setActiveIndex, next: nextSlide, prev: prevSlide } = useCarousel(sliderArticles.length);
 
   if (isLoading) return <AsyncPageState />;
   if (error || !data) return <AsyncPageState error={error ?? new Error('聯盟資料載入失敗')} onRetry={reload} />;
@@ -48,83 +46,13 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
 
       {/* 2. Featured Spotlight */}
       <div className="px-5 md:px-12 lg:px-20 mb-20 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm min-h-[720px] sm:min-h-[650px] md:min-h-[500px]">
-           {sliderArticles.map((article, idx) => (
-             <div 
-               key={article.id}
-               className={`absolute inset-0 flex flex-col lg:flex-row transition-all duration-700 ease-in-out ${
-                 idx === activeIndex 
-                   ? 'opacity-100 translate-x-0 z-10' 
-                   : 'opacity-0 translate-x-12 -z-10'
-               }`}
-             >
-                {/* Image Side */}
-                <div className="w-full lg:w-[60%] relative overflow-hidden h-[300px] lg:h-auto bg-black flex items-center justify-center group/img">
-                   <img 
-                      src={article.imageUrl} 
-                      className="w-full h-full object-cover transition-all duration-1000 hover:scale-105" 
-                      alt={article.title} 
-                   />
-                   <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-auto"></div>
-
-                   {/* Arrow Buttons */}
-                   <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-                        className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
-                      >
-                         <i className="fas fa-chevron-left text-sm md:text-base"></i>
-                      </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-                        className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
-                      >
-                         <i className="fas fa-chevron-right text-sm md:text-base"></i>
-                      </button>
-                   </div>
-                </div>
-                
-                {/* Content Side */}
-                <div className="w-full lg:w-[40%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10">
-                   <div className="flex items-center gap-3 text-brand-red font-display font-bold text-xs tracking-[0.4em] mb-4 uppercase">
-                      <span>{article.date}</span>
-                      <span className="w-1.5 h-px bg-brand-red"></span>
-                      <span>Spotlight</span>
-                   </div>
-                   <h2 
-                     className="text-2xl md:text-3xl lg:text-4xl font-serif font-black mb-6 leading-tight cursor-pointer hover:text-brand-red transition-colors"
-                     onClick={() => openArticle(article.id)}
-                   >
-                     {article.title}
-                   </h2>
-                   <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base line-clamp-3">
-                     {article.excerpt}
-                   </p>
-                   <div className="flex items-center gap-4 text-theme-text/40 text-[10px] md:text-xs mt-auto">
-                      <span className="font-display tracking-widest uppercase font-bold">{article.author}</span>
-                      <span className="w-px h-3 bg-theme-text/20"></span>
-                      <span className="font-serif">IMPACT ALLIANCE DEEP DIVE</span>
-                   </div>
-                </div>
-             </div>
-           ))}
-
-           {/* Carousel Controls */}
-           <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-8 flex items-center gap-6 z-30 bg-theme-bg/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none px-4 py-2 rounded-full border border-theme-text/10 md:border-none">
-              <div className="flex gap-2">
-                 {sliderArticles.map((_, idx) => (
-                   <button
-                     key={idx}
-                     onClick={() => setActiveIndex(idx)}
-                     className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                       idx === activeIndex ? 'bg-brand-red w-8' : 'bg-theme-text/20 hover:bg-theme-text/40'
-                     }`}
-                     aria-label={`Go to slide ${idx + 1}`}
-                   />
-                 ))}
-              </div>
-           </div>
-        </div>
+        <FeaturedCarousel
+          articles={sliderArticles}
+          openArticle={openArticle}
+          eyebrowLabel="Spotlight"
+          categoryLabel="Impact Alliance"
+          readMoreLabel="Read Deep Dive"
+        />
       </div>
 
       {/* 3. Alliance Mission / Quote Area */}

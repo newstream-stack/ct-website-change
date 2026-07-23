@@ -14,6 +14,7 @@ const product = {
   name: '商品',
   englishName: 'Product',
   price: 600,
+  stock: 10,
   imageUrl: 'https://example.com/product.jpg',
   description: '說明',
   specs: ['規格'],
@@ -55,6 +56,8 @@ test('order validator enforces nested data and status enums', () => {
   assert.equal(isCreateOrderResponse({ order, paymentUrl: 'https://payment.example/session' }), true);
   assert.equal(isCreateOrderResponse({ order: { ...order, status: 'admin_override' } }), false);
   assert.equal(isCreateOrderResponse({ order: { ...order, items: [{ product, quantity: -1 }] } }), false);
+  assert.equal(isCreateOrderResponse({ order: { ...order, items: [{ product, quantity: 1, variant: '信心' }] } }), true);
+  assert.equal(isCreateOrderResponse({ order: { ...order, items: [{ product, quantity: 1, variant: 42 }] } }), false);
 });
 
 test('payment validator only accepts known resource states', () => {

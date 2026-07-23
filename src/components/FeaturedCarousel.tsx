@@ -35,7 +35,38 @@ export default function FeaturedCarousel({
         ))}
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
 
-        <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
+        {/* Progress segments — signal auto-advancing carousel at a glance */}
+        {articles.length > 1 && (
+          <div className="absolute top-4 md:top-6 inset-x-4 md:inset-x-6 z-20 flex items-center gap-1.5">
+            {articles.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveIndex(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className="relative h-1 flex-1 rounded-full bg-white/25 overflow-hidden"
+              >
+                <span
+                  key={`${idx}-${idx === activeIndex ? activeIndex : 'static'}`}
+                  className={`absolute inset-y-0 left-0 bg-brand-red rounded-full ${
+                    idx < activeIndex
+                      ? 'w-full'
+                      : idx === activeIndex
+                      ? 'w-full animate-carousel-progress'
+                      : 'w-0'
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {articles.length > 1 && (
+          <div className="absolute top-8 md:top-11 left-4 md:left-6 z-20 font-display text-[10px] md:text-xs font-bold tracking-widest text-white/80 uppercase">
+            {String(activeIndex + 1).padStart(2, '0')} / {String(articles.length).padStart(2, '0')}
+          </div>
+        )}
+
+        <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex justify-between z-20 opacity-100 md:opacity-0 md:group-hover/img:opacity-100 transition-opacity duration-300">
           <button
             onClick={(e) => { e.stopPropagation(); prev(); }}
             aria-label="上一則精選文章"
@@ -50,19 +81,6 @@ export default function FeaturedCarousel({
           >
             <i className="fas fa-chevron-right text-sm md:text-base"></i>
           </button>
-        </div>
-
-        <div className="absolute bottom-4 md:bottom-6 right-4 md:right-6 z-20 flex items-center gap-2">
-          {articles.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveIndex(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                idx === activeIndex ? 'bg-brand-red w-8' : 'bg-white/40 hover:bg-white/70'
-              }`}
-            />
-          ))}
         </div>
       </div>
 

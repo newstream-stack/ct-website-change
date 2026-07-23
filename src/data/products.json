@@ -1,30 +1,50 @@
 [
   {
     "id": 1,
-    "name": "Devotion Classic 經典靈修手記",
-    "englishName": "Devotion Classic",
-    "price": 450,
+    "name": "【禱告卡片書】信心・盼望・愛的旅程卡",
+    "englishName": "Faith · Hope · Love",
+    "price": 1200,
+    "originalPrice": 2100,
+    "stock": 419,
     "imageUrl": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
-    "description": "精選優質皮質裝幀的每日靈修日誌，翻開每一頁都是與神對話的安靜時刻。內含精心挑選的聖經金句與反思空間，讓信仰融入您的日常生活節奏。",
+    "description": "當你不知道該怎麼禱告，就讓神的話語，陪你走下去。內含信心、盼望、愛的旅程三盒禱告卡片書，每盒精選 40 張卡片，陪你度過低潮、迎接轉變的每一天。",
     "specs": [
-      "尺寸：A5 規格 (148 x 210 mm)",
-      "裝幀：精裝仿皮封面，手工縫線與復古燙金工藝",
-      "內頁：100g 溫潤米白色無酸書寫紙，鋼筆書寫不透墨",
-      "頁數：365 頁，包含每日經文、默想筆記與祈禱紀錄空間",
-      "配件：附贈雙色精美絲質書籤帶及聖經金句皮革書籤"
+      "尺寸：9.6 x 12.2 cm，小巧盒裝方便隨身攜帶",
+      "每盒精選 40 張卡片，三盒共 120 張，可重複使用",
+      "使用方式：每天抽一張、情緒低落時翻閱、禱告前閱讀，或作為贈禮",
+      "適用對象：低潮中的朋友、面對壓力的家人、經歷轉變的人，適合個人或小組靈修"
     ],
-    "details": "這本《Devotion Classic 經典靈修手記》不僅僅是一本筆記本，更是一份陪伴您屬靈成長的珍貴禮物。在繁忙的現代生活中，每天早晨或深夜，留出十分鐘的安靜時光。精選的皮質封面帶有細緻的紋理，溫潤的紙張觸感，讓您在書寫每一次領受與禱告時，都能感受到平靜與專注。適合洗禮、生日或新年，送給自己或親友，開啟每日親近神的旅程。",
+    "details": "每一張卡片，都是一句神的應許。信心、盼望、愛的旅程，陪你在徬徨無措的日子裡，重新找回禱告的力量與方向。無論是自己使用，或是想鼓勵正在低潮中的朋友、面對壓力的家人、經歷轉變的人，這套卡片書都是溫柔而堅定的陪伴。",
     "gallery": [
       "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80&w=800"
-    ]
+    ],
+    "variants": ["信心", "盼望", "愛的旅程"],
+    "infoTable": [
+      { "label": "尺寸", "value": "9.6 x 12.2 cm" },
+      { "label": "卡片數量", "value": "每盒精選 40 張卡片" },
+      { "label": "使用方式", "value": "每天抽一張、情緒低落時翻閱、禱告前閱讀，或作為贈禮" },
+      { "label": "適用對象", "value": "低潮中的朋友、面對壓力的家人、經歷轉變的人" }
+    ],
+    "story": {
+      "paragraphs": [
+        "當你不知道該怎麼禱告，\n就讓神的話語，陪你走下去。",
+        "你可能...\n心裡很亂，說不出一句禱告；\n明明相信，卻仍被不安包圍；\n感到孤單，好像沒有人理解；\n渴望被安慰，\n卻同時充滿疑惑與疲憊。",
+        "如果你最近，剛好撐得有點累；\n或心裡想起一個需要被鼓勵的人...",
+        "信心・盼望・愛的旅程卡，\n陪你走過一段奇妙的旅程。",
+        "讓神的話語，一點一點，\n與你共譜生命中\n仍在發生的美好故事。"
+      ],
+      "highlight": "如今常存的有信、有望、有愛這三樣，其中最大的是愛。",
+      "image": "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&q=80&w=1200"
+    }
   },
   {
     "id": 2,
     "name": "Silver Cross 現代純銀十字架項鍊",
     "englishName": "Silver Cross",
     "price": 1280,
+    "stock": 6,
     "imageUrl": "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800",
     "description": "由資深工匠純手工打造的純銀十字架項鍊。簡約現代的幾何線條，完美融合了傳統信仰與現代美學，是日常配戴或恩典贈禮的精緻選擇。",
     "specs": [
@@ -39,13 +59,31 @@
       "https://images.unsplash.com/photo-1600697395543-ef3ee6e9af7b?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800"
-    ]
+    ],
+    "infoTable": [
+      { "label": "材質", "value": "S925 國際標準純銀" },
+      { "label": "墜子尺寸", "value": "高 30 mm x 寬 20 mm x 厚 2 mm" },
+      { "label": "鍊長", "value": "45 cm + 5 cm 可調節延長鍊" },
+      { "label": "工藝", "value": "微拉絲抗氧化拋光，霧面質感" },
+      { "label": "包裝內容", "value": "禮盒、拭銀布、防潮密封袋、保固卡" }
+    ],
+    "story": {
+      "paragraphs": [
+        "有些日子，恩典很難被看見，\n但只要低頭，就能感覺到它一直都在。",
+        "你可能也...\n經歷過黑暗，卻仍選擇往前走；\n受過傷，卻沒有放棄相信；\n覺得平凡，卻其實一路被祂緊緊牽著。",
+        "如果你也想找一個提醒，\n讓每天出門前，都想起自己被愛著...",
+        "《Silver Cross 現代純銀十字架項鍊》，\n不只是配飾，\n是隨身攜帶的一份應許。"
+      ],
+      "highlight": "祂為我們的過犯受害，為我們的罪孽壓傷。（以賽亞書 53:5）",
+      "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=1200"
+    }
   },
   {
     "id": 3,
     "name": "Grace Tote Bag 恩典環保帆布托特包",
     "englishName": "Grace Tote Bag",
     "price": 390,
+    "stock": 0,
     "imageUrl": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
     "description": "採用厚實環保帆布製作的托特包，印有「恩典夠用」設計英文字樣。大容量設計，不論是放聖經、筆記本、水瓶或是日常雜物都無比合適，隨身攜帶溫馨的信仰提醒。",
     "specs": [
@@ -60,6 +98,23 @@
       "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800"
-    ]
+    ],
+    "infoTable": [
+      { "label": "材質", "value": "12 盎司高密度環保純棉帆布" },
+      { "label": "尺寸", "value": "寬 35 cm x 高 40 cm，背帶垂直高度 28 cm" },
+      { "label": "內口袋", "value": "拉鍊式內口袋一個" },
+      { "label": "印刷工藝", "value": "精細絲網環保印製" },
+      { "label": "承重能力", "value": "最高 10 公斤" }
+    ],
+    "story": {
+      "paragraphs": [
+        "有時候，信仰不是驚天動地的宣告，\n而是願意每天背著它，走進人群裡。",
+        "你可能也...\n不擅長開口分享信仰，卻希望活出來讓人看見；\n上教會、讀書會、買菜、上班，都想活得像光；\n渴望簡單的日常，也能成為一種見證。",
+        "如果你想要的，\n是一個能陪你走進每個平凡場合的提醒...",
+        "《Grace Tote Bag 恩典環保帆布托特包》，\n把「恩典夠用」，\n輕輕背在肩上，也放進心裡。"
+      ],
+      "highlight": "我的恩典夠你用，因為我的能力是在人的軟弱上顯得完全。（哥林多後書 12:9）",
+      "image": "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=1200"
+    }
   }
 ]

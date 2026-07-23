@@ -16,6 +16,11 @@ export async function getProduct(id: number, options?: ApiRequestOptions): Promi
   return USE_MOCK_API ? MOCK_PRODUCTS.find((product) => product.id === id) : assertApiData(await apiGet<unknown>(`/api/products/${id}`, options), isProduct, '商品');
 }
 
+export async function getRelatedProducts(id: number, limit = 4, options?: ApiRequestOptions): Promise<Product[]> {
+  if (USE_MOCK_API) return MOCK_PRODUCTS.filter((product) => product.id !== id).slice(0, limit);
+  return assertApiData(await apiGet<unknown>(`/api/products/${id}/related?limit=${limit}`, options), isProducts, '相關商品');
+}
+
 export async function searchProducts(query: string, limit = 5, options?: ApiRequestOptions): Promise<Product[]> {
   const normalizedQuery = query.trim().toLocaleLowerCase('zh-TW');
   if (!normalizedQuery || limit <= 0) return [];

@@ -61,12 +61,31 @@ test('偽造付款回跳不會被視為成功', async ({ page }) => {
   await expect(page.getByRole('heading', { name: '交易已確認' })).toHaveCount(0);
 });
 
-test('商品可加入購物車', async ({ page }) => {
+test('未選擇規格前無法加入購物車', async ({ page }) => {
   await page.goto('/?category=%E4%BF%A1%E4%BB%B0%E5%A5%BD%E7%89%A9&product=1');
   await closeSplash(page);
-  await expect(page.getByRole('heading', { name: 'Devotion Classic 經典靈修手記' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '【禱告卡片書】信心・盼望・愛的旅程卡' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '加入購物車' })).toBeDisabled();
+});
+
+test('選擇規格後可加入購物車，且選擇的規格會顯示在購物車中', async ({ page }) => {
+  await page.goto('/?category=%E4%BF%A1%E4%BB%B0%E5%A5%BD%E7%89%A9&product=1');
+  await closeSplash(page);
+  await page.getByRole('button', { name: '信心', exact: true }).click();
   await page.getByRole('button', { name: '加入購物車' }).click();
   await expect(page.getByRole('heading', { name: '購物車 (1)' })).toBeVisible();
+  await expect(page.getByText('規格：信心')).toBeVisible();
+});
+
+test('購買數量上限依商品庫存而非固定 99', async ({ page }) => {
+  await page.goto('/?category=%E4%BF%A1%E4%BB%B0%E5%A5%BD%E7%89%A9&product=2');
+  await closeSplash(page);
+  const increment = page.getByRole('button', { name: '增加購買數量' });
+  for (let i = 0; i < 10; i += 1) {
+    if (await increment.isDisabled()) break;
+    await increment.click();
+  }
+  await expect(increment).toBeDisabled();
 });
 
 test('手機內容不會被固定 Header 遮住', async ({ page }) => {
