@@ -19,6 +19,12 @@ const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '�
 const FORUM_SUB_CATEGORIES = ['全部', ...CT_FORUM_SUBCATEGORIES];
 const HERO_CAROUSEL_CATEGORIES = ['生活情報', '基督教論壇報', '人物見證'];
 
+const CATEGORY_ENGLISH_LABELS: Record<string, string> = {
+  '最新文章': 'Latest News',
+  '基督教論壇報': 'Christian Tribune',
+  '人物見證': 'Testimonies',
+};
+
 export default function CategoryList({ category, openArticle, initialSubCategory }: CategoryListProps) {
   const [selectedSubCategory, setSelectedSubCategory] = useState('全部');
 
@@ -167,81 +173,82 @@ export default function CategoryList({ category, openArticle, initialSubCategory
   // Default Standard Layout for other categories
   return (
     <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
-      <div className="mb-12 md:mb-16 border-b border-theme-text/20 pb-6 md:pb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 transition-colors">
-        <div>
-          <span className="font-display text-brand-red tracking-[0.2em] uppercase text-xs md:text-sm mb-3 md:mb-4 block">Category</span>
-          <h1 className="text-5xl md:text-[80px] lg:text-[100px] font-serif font-black tracking-tighter leading-none text-theme-text transition-colors">{category}</h1>
+      <div className="max-w-[1400px] mx-auto">
+        <div className="mb-10 md:mb-16">
+          <h1 className="text-3xl md:text-5xl font-serif font-black tracking-widest text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors flex flex-col md:flex-row md:items-baseline">
+            {category}
+            {CATEGORY_ENGLISH_LABELS[category] && (
+              <span className="text-lg md:text-2xl font-display font-light text-theme-text/40 md:ml-4 tracking-widest uppercase mt-1 md:mt-0">{CATEGORY_ENGLISH_LABELS[category]}</span>
+            )}
+          </h1>
         </div>
-        <div className="text-sm font-display font-bold uppercase tracking-widest text-theme-text/60 border border-theme-text/20 px-4 py-2 rounded-full hidden md:block transition-colors">
-          {filteredNews.length} Articles
-        </div>
-      </div>
-      
-      <SummitBanner className="mb-12 md:mb-20" />
 
-      {HERO_CAROUSEL_CATEGORIES.includes(category) && featuredArticles.length > 0 && (
-        <div className="mb-12 md:mb-20">
-          <FeaturedCarousel articles={featuredArticles} openArticle={openArticle} categoryLabel={category} />
-        </div>
-      )}
+        <SummitBanner className="mb-12 md:mb-20" />
 
-      {category === '基督教論壇報' && (
-        <div className="-mx-5 md:mx-0 mb-10 md:mb-16">
-          <div className="overflow-x-auto flex flex-nowrap gap-3 md:gap-4 border-b border-theme-text/10 pb-6 scrollbar-hide px-5 md:px-0 snap-x">
-            {FORUM_SUB_CATEGORIES.map(tab => (
-              <button
-                key={tab}
-                onClick={() => setSelectedSubCategory(tab)}
-                className={`shrink-0 py-2.5 px-5 text-xs md:text-sm font-bold tracking-widest transition-all rounded-full whitespace-nowrap snap-center ${
-                  selectedSubCategory === tab
-                    ? 'bg-theme-text text-theme-bg shadow-lg'
-                    : 'text-theme-text/40 border border-theme-text/15 hover:text-theme-text hover:bg-theme-text/5'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-          <style dangerouslySetInnerHTML={{ __html: `
-            .scrollbar-hide::-webkit-scrollbar { display: none; }
-            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-          `}} />
-        </div>
-      )}
-
-      <div className="flex flex-col border-t border-theme-text/10 transition-colors">
-        {filteredNews.length > 0 ? (
-          filteredNews.map((news, index) => (
-            <Fragment key={news.id}>
-              {index === 2 && data?.infeedAd && (
-                <div className="py-6 md:py-8 border-b border-theme-text/10">
-                  <NativeAdCard ad={data.infeedAd} />
-                </div>
-              )}
-              <button type="button" className="w-full text-left flex flex-col md:flex-row md:items-start gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
-                <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm shrink-0">
-                  <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
-                  <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
-                    {news.subCategory || news.category}
-                  </div>
-                </div>
-                <div className="w-full md:w-[55%] lg:w-1/2 flex flex-col justify-center mt-2 md:mt-0">
-                  <h2 className="text-[22px] sm:text-3xl md:text-4xl lg:text-5xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
-                  <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
-                  <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
-                    <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
-                    <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
-                    <span>{news.date}, 2026</span>
-                  </div>
-                </div>
-              </button>
-            </Fragment>
-          ))
-        ) : (
-          <div className="py-20 text-center">
-            <p className="text-theme-text/40 font-display uppercase tracking-widest">No articles found in this category.</p>
+        {HERO_CAROUSEL_CATEGORIES.includes(category) && featuredArticles.length > 0 && (
+          <div className="mb-12 md:mb-20">
+            <FeaturedCarousel articles={featuredArticles} openArticle={openArticle} categoryLabel={category} />
           </div>
         )}
+
+        {category === '基督教論壇報' && (
+          <div className="-mx-5 md:mx-0 mb-10 md:mb-16">
+            <div className="overflow-x-auto flex flex-nowrap gap-3 md:gap-4 border-b border-theme-text/10 pb-6 scrollbar-hide px-5 md:px-0 snap-x">
+              {FORUM_SUB_CATEGORIES.map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setSelectedSubCategory(tab)}
+                  className={`shrink-0 py-2.5 px-5 text-xs md:text-sm font-bold tracking-widest transition-all rounded-full whitespace-nowrap snap-center ${
+                    selectedSubCategory === tab
+                      ? 'bg-theme-text text-theme-bg shadow-lg'
+                      : 'text-theme-text/40 border border-theme-text/15 hover:text-theme-text hover:bg-theme-text/5'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <style dangerouslySetInnerHTML={{ __html: `
+              .scrollbar-hide::-webkit-scrollbar { display: none; }
+              .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+            `}} />
+          </div>
+        )}
+
+        <div className="flex flex-col border-t border-theme-text/10 transition-colors">
+          {filteredNews.length > 0 ? (
+            filteredNews.map((news, index) => (
+              <Fragment key={news.id}>
+                {index === 2 && data?.infeedAd && (
+                  <div className="py-6 md:py-8 border-b border-theme-text/10">
+                    <NativeAdCard ad={data.infeedAd} />
+                  </div>
+                )}
+                <button type="button" className="w-full text-left flex flex-col md:flex-row md:items-start gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
+                  <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm shrink-0">
+                    <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
+                    <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
+                      {news.subCategory || news.category}
+                    </div>
+                  </div>
+                  <div className="w-full md:w-[55%] lg:w-1/2 flex flex-col justify-center mt-2 md:mt-0">
+                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
+                    <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
+                    <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
+                      <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
+                      <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
+                      <span>{news.date}, 2026</span>
+                    </div>
+                  </div>
+                </button>
+              </Fragment>
+            ))
+          ) : (
+            <div className="py-20 text-center">
+              <p className="text-theme-text/40 font-display uppercase tracking-widest">No articles found in this category.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

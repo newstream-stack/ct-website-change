@@ -113,7 +113,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                 </div>
             )}
 
-            <div className="pt-[190px] md:pt-32 px-5 sm:px-6 md:px-12 lg:px-20 bg-theme-bg transition-colors duration-500">
+            <div className="pt-[190px] md:pt-52 px-5 sm:px-6 md:px-12 lg:px-20 bg-theme-bg transition-colors duration-500">
                 <div className="max-w-[90rem] mx-auto w-full">
                     <div className="w-full aspect-[832/470] bg-theme-text/5 overflow-hidden border border-theme-text/10 rounded-sm mb-8 md:mb-10 transition-colors duration-500">
                         <img src={article.imageUrl} decoding="async" fetchPriority="high" className="w-full h-full object-cover transition-opacity duration-700" alt={article.title} />
