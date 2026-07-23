@@ -9,6 +9,7 @@ export interface DonationFormPayload {
   planId: number;
   returnUrl?: string;
   paymentType: 'one-time' | 'installment';
+  /** Total pledged amount (for installment, the sum across all periods — not the per-period charge). */
   amount: number;
   installmentPeriod: number;
   paymentMethod: 'credit-card' | 'line-pay';

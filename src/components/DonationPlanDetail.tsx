@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Plan, DonationFormPayload } from '../types/donation';
 import { getPlan, submitDonation } from '../api/plans';
 import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
+import { formatCheckoutAmountLabel } from '../utils/donationAmount';
 import AsyncPageState from './AsyncPageState';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
@@ -215,8 +216,8 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
       
       {/* ── Left: Plan Info ─────────────────────────────────────────────── */}
       <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
-        <div className="w-full md:min-h-[40vh] md:max-h-[55vh] relative flex-shrink-0 overflow-hidden flex items-center justify-center">
-          <img src={plan.imageUrl} alt={plan.title} decoding="async" fetchPriority="high" className="w-full h-auto md:h-full object-cover" />
+        <div className="w-full relative flex-shrink-0 overflow-hidden flex items-center justify-center">
+          <img src={plan.imageUrl} alt={plan.title} decoding="async" fetchPriority="high" className="w-full h-auto" />
         </div>
         <div className="p-8 md:p-12 lg:p-16 flex flex-col text-theme-text flex-grow">
           <span className="font-display text-brand-red text-xs md:text-sm tracking-[0.4em] uppercase mb-4 block font-bold">
@@ -443,10 +444,11 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
 
             {/* Submit */}
             {(() => {
-              const isInstallment = formData.paymentType === 'installment';
-              const perPeriod = isInstallment
-                ? Math.ceil(formData.amount / (formData.installmentPeriod ?? 6))
-                : null;
+              const checkoutLabel = formatCheckoutAmountLabel(
+                formData.amount,
+                formData.paymentType,
+                formData.installmentPeriod ?? 6,
+              );
               return (
                 <>
                   {submitMsg && (
@@ -457,11 +459,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
                   )}
                   <button type="submit" disabled={isSubmitting} className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-wait disabled:transform-none">
                     {isSubmitting ? '處理中…' : '前往結帳'}
-                    <span className="font-sans font-light text-sm opacity-80">
-                      {isInstallment
-                        ? `(NT$ ${perPeriod} × ${formData.installmentPeriod} 期)`
-                        : `(NT$ ${formData.amount})`}
-                    </span>
+                    <span className="font-sans font-light text-sm opacity-80">{checkoutLabel}</span>
                     <i className="fas fa-arrow-right ml-2" />
                   </button>
                 </>
