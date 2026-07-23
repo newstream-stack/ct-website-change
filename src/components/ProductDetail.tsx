@@ -66,7 +66,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
   };
 
   return (
-    <div className="w-full min-h-[100dvh] pt-[190px] md:pt-32 pb-24 bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="w-full min-h-[100dvh] pt-[140px] md:pt-32 pb-24 bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20">
 
         {/* Back Button */}
