@@ -35,7 +35,6 @@ const CustomerServicePage = lazy(() => import('./pages/CustomerServicePage'));
 const PartnershipPage = lazy(() => import('./pages/PartnershipPage'));
 const LineStickersPage = lazy(() => import('./pages/LineStickersPage'));
 const BlessingCardPage = lazy(() => import('./pages/BlessingCardPage'));
-const KnowledgeBasePage = lazy(() => import('./pages/KnowledgeBasePage'));
 const TagResultsPage = lazy(() => import('./pages/TagResultsPage'));
 const AuthorResultsPage = lazy(() => import('./pages/AuthorResultsPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
@@ -280,11 +279,7 @@ export default function App() {
           <ImpactAlliancePage openArticle={openArticle} />
         )}
 
-        {currentCategory === '信仰知識庫' && !currentArticleId && !currentTag && !currentAuthor && (
-          <KnowledgeBasePage goToCategory={goToCategory} />
-        )}
-
-        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && !currentTag && !currentAuthor && currentCategory !== '專欄' && currentCategory !== '影響力聯盟' && currentCategory !== '信仰知識庫' && (
+        {NEWS_CATEGORIES.includes(currentCategory) && !currentArticleId && !currentTag && !currentAuthor && currentCategory !== '專欄' && currentCategory !== '影響力聯盟' && (
           <CategoryList category={currentCategory} openArticle={openArticle} initialSubCategory={currentSubCategory} />
         )}
 
@@ -420,6 +415,7 @@ export default function App() {
               setRoute({ category: '信仰好物', articleId: null, tag: null, author: null, planId: null, productId: id });
               window.scrollTo(0, 0);
             }}
+            goToCategory={goToCategory}
           />
         )}
       </Suspense>

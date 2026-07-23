@@ -40,7 +40,6 @@ route (AppRoute)
     ├── '首頁'                              → <HomeAccordion>
     ├── '專欄'                              → <ColumnPage>
     ├── '影響力聯盟'                         → <ImpactAlliancePage>
-    ├── '信仰知識庫'                         → <KnowledgeBasePage>
     ├── NEWS_CATEGORIES（其餘分類）           → <CategoryList>
     ├── 任何分類 + articleId                 → <ArticleDetail>（優先權最高，會覆蓋上述分類頁）
     ├── '信仰好物' + 無 productId             → <ProductGallery>
@@ -90,7 +89,8 @@ src/
 │   ├── event.ts                  # 活動報名相關型別
 │   ├── membership.ts             # 會員招募方案型別
 │   ├── epaper.ts                  # 全版閱讀（電子報）型別
-│   └── payment.ts                  # 付款結果頁型別
+│   ├── payment.ts                  # 付款結果頁型別
+│   └── knowledgeBase.ts             # 信仰知識庫文章（KnowledgeArticle，含 year 欄位）
 ├── data/                        # 核心內容資料（JSON + index.ts 匯出）
 │   ├── index.ts                  # 匯出 NEWS_CATEGORIES / MOCK_NEWS / MOCK_ADS / ALLIANCE_MEMBERS / COLUMNISTS / MOCK_PRODUCTS
 │   ├── forumSubCategories.ts     # 「基督教論壇報」分類的子分類清單（Header 下拉選單用）
@@ -101,13 +101,15 @@ src/
 │   ├── member.ts                 # MOCK_MEMBER（會員中心用）
 │   ├── events.ts                 # 活動報名假資料
 │   ├── epaper.ts                 # 全版閱讀假資料
-│   └── membershipPlans.ts        # 會員招募方案假資料
+│   ├── membershipPlans.ts        # 會員招募方案假資料
+│   └── knowledgeBase.ts          # 信仰知識庫文章（2007-2018 歷史 archive，全部需訂閱）+ ARCHIVE_YEARS 常數
 ├── api/                          # 模擬 REST API 的呼叫層（見下方「API 層」）
 │   ├── client.ts                 # apiGet/apiPost/apiPut/apiDel，含 401 自動登出
 │   ├── config.ts                  # USE_MOCK_API（讀 VITE_USE_MOCK_API）
 │   ├── validators.ts              # assertApiData 與各型別的 type guard（isNewsItems 等）
 │   ├── auth.ts                    # login/register/socialLogin，內含 dev 測試帳號
 │   ├── savedArticles.ts           # 收藏文章：登入時打 API，訪客/mock 模式 fallback 到 localStorage
+│   ├── knowledgeBase.ts           # getKnowledgeArticles / searchKnowledgeBase（信仰知識庫，年份可篩選）
 │   └── news.ts / ads.ts / home.ts / alliance.ts / columnists.ts / plans.ts / member.ts
 │       / products.ts / subscriptions.ts / events.ts / membership.ts / epaper.ts
 │       / orders.ts / payments.ts
@@ -115,7 +117,8 @@ src/
 │   ├── useAuth.ts                # 讀 auth session、跨分頁同步（BroadcastChannel）
 │   ├── useAsyncData.ts           # 統一處理 loading/error/retry/AbortController
 │   ├── useCarousel.ts
-│   └── useYouTubePlayer.ts
+│   ├── useYouTubePlayer.ts
+│   └── useKnowledgeBaseAccess.ts # 信仰知識庫訂閱狀態（isLoggedIn 才打 getMe()，判斷 isSubscribed）
 ├── utils/
 │   ├── storage.ts                # readJsonStorage / writeJsonStorage（帶 type guard 驗證的 storage 存取）
 │   ├── authStorage.ts             # auth_token/auth_user 的 localStorage⇄sessionStorage 讀寫
@@ -146,7 +149,7 @@ src/
     ├── ProductGallery.tsx         # 信仰好物頁（橫向 scroll gallery）
     ├── DonationGallery.tsx        # 奉獻方案列表
     ├── LoginPage.tsx / MembershipPage.tsx / MemberDashboard.tsx
-    ├── EventRegistrationPage.tsx / ImpactAlliancePage.tsx / KnowledgeBasePage.tsx
+    ├── EventRegistrationPage.tsx / ImpactAlliancePage.tsx
     ├── EpaperPage.tsx             # 全版閱讀
     ├── PaymentResultPage.tsx      # 付款結果（訂單/會員/奉獻/活動共用）
     ├── CustomerServicePage.tsx / PartnershipPage.tsx / LineStickersPage.tsx / BlessingCardPage.tsx
@@ -355,7 +358,7 @@ interface AdItem {
 ```ts
 export const NEWS_CATEGORIES = [
   '最新文章', '基督教論壇報', '人物見證', '專欄',
-  '影響力聯盟', '生活情報', '信仰知識庫'
+  '影響力聯盟', '生活情報'
 ];
 ```
 
@@ -363,7 +366,6 @@ export const NEWS_CATEGORIES = [
 - `'首頁'` → HomeAccordion
 - `'專欄'` → ColumnPage
 - `'影響力聯盟'` → ImpactAlliancePage
-- `'信仰知識庫'` → KnowledgeBasePage
 - `'信仰好物'` → ProductGallery / ProductDetail
 - `'訂報'` → ActionPage
 - `'奉獻'` → DonationGallery / DonationPlanDetail
@@ -375,6 +377,8 @@ export const NEWS_CATEGORIES = [
 - `'客戶服務'` / `'申請合作'` / `'論壇Line貼圖'` / `'祝福卡申辦/捐款'` → 對應靜態頁
 - `'關於我們'` / `'新聞連絡'` / `'我要投稿'` / `'版權隱私權聲明'` / `'財務報表'` → 對應靜態頁
 - `'付款結果'`（透過 `?payment=` query param 進入，非 Header/Footer 導覽項目）→ PaymentResultPage
+
+> `'信仰知識庫'` 已不是 Header 導覽分類，也沒有專屬頁面或 `CategoryList` 分類頁（原本歸在此分類的 4 篇文章已改掛到 `'生活情報'`）。這個名稱現在只存在於 `SearchModal` 的「信仰知識庫」搜尋分頁裡，是獨立的歷史 archive 搜尋功能，跟 `NEWS_CATEGORIES`／新聞分類系統無關。**知識庫收錄 2007－2018 年的舊報導，全部需要訂閱才能查看**（跟一般新聞 2019 年至今免費瀏覽不同，沒有「近幾年免費」的分段）；未訂閱時搜尋結果一律顯示鎖頭圖示，點擊導去「訂報」頁。邏輯與資料集中在 `mocks/knowledgeBase.ts`（`EARLIEST_ARCHIVE_YEAR`／`LATEST_ARCHIVE_YEAR`／`ARCHIVE_YEARS`）、`api/knowledgeBase.ts`（`searchKnowledgeBase`）與 `hooks/useKnowledgeBaseAccess.ts`（訂閱狀態），寫相關功能時沿用這三個檔案。
 
 ---
 

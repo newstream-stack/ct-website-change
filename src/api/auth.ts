@@ -82,4 +82,5 @@ export function getStoredUser(): AuthUser | null {
 // clears it once the tab/browser closes.
 export function saveSession(response: AuthResponse, remember = false): void {
   saveAuthSession(response.token, response.user, remember);
+  window.dispatchEvent(new CustomEvent('auth:changed'));
 }

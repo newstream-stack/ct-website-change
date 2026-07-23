@@ -97,6 +97,15 @@ Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
 - `GET /api/products/search?q={query}&limit={limit}`
 - `GET /api/subscriptions` → `SubscriptionPage`
 
+## Knowledge base（信仰知識庫，2007–2018 付費封存）
+
+- `GET /api/knowledge-base?year={year}`
+- `GET /api/knowledge-base/search?q={query}&year={year}&limit={limit}`
+
+`src/api/knowledgeBase.ts` 在回傳給呼叫端前，會依 `getMe()` 的訂閱狀態把未訂閱結果的 `href` 清空（`utils/knowledgeBaseHref.ts` 的 `redactLockedHref`），mock 模式與打真實 REST 的分支都套用，不只靠前端 UI 鎖頭擋。**正式串接時後端也必須做同樣的把關**（未訂閱只回傳預覽欄位、`href` 留空或改回傳需要有效 session 才能兌換的短效閱讀網址），不要只靠前端這層 defense-in-depth。
+
+⚠️ 殘留限制：目前完全沒有真後端，`mocks/knowledgeBase.ts` 的完整原文網址仍會被打包進前端 JS bundle 本身（否則訂閱後的使用者也拿不到內容）——`redactLockedHref` 擋得住「透過 API 回應／SearchModal 正常操作路徑」取得網址，擋不住「直接看 bundle 原始碼」這條路徑。這是純前端 mock 架構的固有限制，唯一的徹底解法是換成真後端，未訂閱時後端根本不把網址放進資料庫查詢結果。
+
 ## Epaper (全版閱讀)
 
 以下兩個端點皆需 Bearer token，僅開放已登入且 `Member.subscription.status === "active"` 的使用者；未登入回 `401`，已登入但未訂閱回 `403`。這個權限檢查**必須在後端執行**——前端的登入/訂閱判斷只是 UI 層的顯示邏輯，不能作為存取控制的唯一防線。

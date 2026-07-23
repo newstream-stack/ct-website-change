@@ -33,5 +33,14 @@ export function useAuth(): UseAuthReturn {
     return () => window.removeEventListener('auth:expired', onAuthExpired);
   }, []);
 
+  // Every useAuth() instance holds its own state, so logins from a component
+  // that isn't this one (e.g. LoginPage) would otherwise leave long-lived
+  // instances like useKnowledgeBaseAccess's stuck on stale pre-login state.
+  useEffect(() => {
+    const onAuthChanged = () => setUser(getStoredUser());
+    window.addEventListener('auth:changed', onAuthChanged);
+    return () => window.removeEventListener('auth:changed', onAuthChanged);
+  }, []);
+
   return { user, isLoggedIn: user !== null, logout, refreshUser };
 }

@@ -1,26 +1,38 @@
 import { useState, useEffect, useRef } from 'react';
 import { searchNews } from '../api/news';
 import { getProducts, searchProducts } from '../api/products';
+import { searchKnowledgeBase } from '../api/knowledgeBase';
 import { NewsItem, Product } from '../types';
+import type { KnowledgeArticle } from '../types/knowledgeBase';
+import { ARCHIVE_YEARS, EARLIEST_ARCHIVE_YEAR, LATEST_ARCHIVE_YEAR } from '../mocks/knowledgeBase';
 import { useAsyncData } from '../hooks/useAsyncData';
+import { useKnowledgeBaseAccess } from '../hooks/useKnowledgeBaseAccess';
+import { getSafeExternalUrl } from '../utils/navigation';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectArticle: (id: number) => void;
   onSelectProduct: (id: number) => void;
+  goToCategory: (cat: string, options?: { register?: boolean }) => void;
 }
 
 const POPULAR_KEYWORDS = ['基督教', '十字架', '讀經', '奉獻', '論壇報', '杯', '手環'];
+
+type SearchScope = 'news' | 'knowledge';
 
 export default function SearchModal({
   isOpen,
   onClose,
   onSelectArticle,
-  onSelectProduct
+  onSelectProduct,
+  goToCategory,
 }: SearchModalProps) {
   const [query, setQuery] = useState('');
+  const [scope, setScope] = useState<SearchScope>('news');
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [articleResults, setArticleResults] = useState<NewsItem[]>([]);
+  const [knowledgeResults, setKnowledgeResults] = useState<KnowledgeArticle[]>([]);
   const [productResults, setProductResults] = useState<Product[]>([]);
   const [searchError, setSearchError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -30,6 +42,7 @@ export default function SearchModal({
     (signal) => isOpen ? getProducts(3, { signal }) : Promise.resolve([]),
     [],
   );
+  const { isSubscribed } = useKnowledgeBaseAccess();
 
   // Auto focus input when modal opens
   useEffect(() => {
@@ -62,6 +75,7 @@ export default function SearchModal({
   useEffect(() => {
     if (!query.trim()) {
       setArticleResults([]);
+      setKnowledgeResults([]);
       setProductResults([]);
       setSearchError(null);
       setIsSearching(false);
@@ -71,11 +85,22 @@ export default function SearchModal({
     const controller = new AbortController();
     setSearchError(null);
     setIsSearching(true);
+
+    const primaryResults = scope === 'news'
+      ? searchNews(query, 5, { signal: controller.signal })
+      : searchKnowledgeBase(query, selectedYear ?? undefined, 5, { signal: controller.signal });
+
     Promise.all([
-      searchNews(query, 5, { signal: controller.signal }),
+      primaryResults,
       searchProducts(query, 5, { signal: controller.signal }),
-    ]).then(([articles, products]) => {
-      setArticleResults(articles);
+    ]).then(([primary, products]) => {
+      if (scope === 'news') {
+        setArticleResults(primary as NewsItem[]);
+        setKnowledgeResults([]);
+      } else {
+        setKnowledgeResults(primary as KnowledgeArticle[]);
+        setArticleResults([]);
+      }
       setProductResults(products);
       setIsSearching(false);
     }).catch((error: unknown) => {
@@ -86,7 +111,7 @@ export default function SearchModal({
     });
 
     return () => controller.abort();
-  }, [query]);
+  }, [query, scope, selectedYear]);
 
   const handleKeywordClick = (keyword: string) => {
     setQuery(keyword);
@@ -100,6 +125,19 @@ export default function SearchModal({
 
   const handleProductClick = (id: number) => {
     onSelectProduct(id);
+    setQuery('');
+    onClose();
+  };
+
+  const handleKnowledgeArticleClick = (article: KnowledgeArticle) => {
+    if (isSubscribed) {
+      const safeHref = getSafeExternalUrl(article.href);
+      if (safeHref) window.open(safeHref, '_blank', 'noopener,noreferrer');
+      setQuery('');
+      onClose();
+      return;
+    }
+    goToCategory('訂報');
     setQuery('');
     onClose();
   };
@@ -127,7 +165,7 @@ export default function SearchModal({
           <input
             ref={inputRef}
             type="text"
-            placeholder="搜尋文章、新聞或信仰好物..."
+            placeholder={scope === 'news' ? '搜尋文章、新聞或信仰好物...' : '搜尋信仰知識庫或信仰好物...'}
             value={query}
             maxLength={200}
             onChange={(e) => setQuery(e.target.value)}
@@ -143,6 +181,50 @@ export default function SearchModal({
             </button>
           )}
         </div>
+
+        {/* Search Scope Tabs */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="inline-flex bg-theme-text/5 rounded-full p-1">
+            {([
+              { value: 'news' as const, label: '最新新聞' },
+              { value: 'knowledge' as const, label: '信仰知識庫' },
+            ]).map((tab) => (
+              <button
+                key={tab.value}
+                type="button"
+                onClick={() => { setScope(tab.value); setSelectedYear(null); }}
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold tracking-wide transition-colors cursor-pointer ${
+                  scope === tab.value ? 'bg-brand-red text-white' : 'text-theme-text/50 hover:text-theme-text'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {scope === 'knowledge' && (
+            <select
+              value={selectedYear ?? 'all'}
+              onChange={(e) => setSelectedYear(e.target.value === 'all' ? null : Number(e.target.value))}
+              className="bg-theme-text/5 border border-theme-text/15 rounded-full px-4 py-2 text-xs sm:text-sm font-bold text-theme-text focus:outline-none focus:border-brand-red/50 cursor-pointer"
+            >
+              <option value="all">全部年份</option>
+              {ARCHIVE_YEARS.map((year) => (
+                <option key={year} value={year}>
+                  {year}{!isSubscribed ? '（訂閱解鎖）' : ''}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
+        {scope === 'knowledge' && !isSubscribed && (
+          <p className="text-xs leading-relaxed text-theme-text/45 -mt-4">
+            信仰知識庫收錄 {EARLIEST_ARCHIVE_YEAR}－{LATEST_ARCHIVE_YEAR} 年歷史報導，
+            <button type="button" onClick={() => { goToCategory('訂報'); onClose(); }} className="text-brand-red font-bold hover:underline">訂閱方案</button>
+            後即可查看完整內容。
+          </p>
+        )}
 
         {/* Dynamic Content Area */}
         <div className="flex-1 min-h-[50vh] overflow-y-auto max-h-[65vh] scrollbar-hide pb-12">
@@ -203,7 +285,7 @@ export default function SearchModal({
                 </div>
               </div>
             </div>
-          ) : articleResults.length === 0 && productResults.length === 0 ? (
+          ) : articleResults.length === 0 && knowledgeResults.length === 0 && productResults.length === 0 ? (
             /* No Results Found */
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className="w-16 h-16 rounded-full bg-theme-text/5 flex items-center justify-center border border-theme-text/10 text-theme-text/30 mb-6 animate-pulse">
@@ -217,39 +299,79 @@ export default function SearchModal({
           ) : (
             /* Search Results Display Split Columns */
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mt-4 text-left">
-              {/* Articles (Left Column) */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b border-theme-text/10 pb-2.5">
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-theme-text/40">相關文章 Articles ({articleResults.length})</h4>
-                </div>
-                {articleResults.length === 0 ? (
-                  <p className="text-sm text-theme-text/40 py-4 italic">無相關文章</p>
-                ) : (
-                  <div className="flex flex-col gap-3.5">
-                    {articleResults.map((item) => (
-                      <button
-                        type="button"
-                        key={item.id}
-                        onClick={() => handleArticleClick(item.id)}
-                        className="w-full text-left p-3.5 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col gap-1.5"
-                      >
-                        <div className="flex justify-between items-center text-[10px] font-bold tracking-wider text-brand-red uppercase">
-                          <span>{item.category}</span>
-                          <span className="text-theme-text/40 font-normal font-sans">{item.date}</span>
-                        </div>
-                        <h5 className="font-bold text-sm sm:text-base text-theme-text group-hover:text-brand-red transition-colors line-clamp-2 leading-snug">
-                          {item.title}
-                        </h5>
-                        {item.excerpt && (
-                          <p className="text-xs text-theme-text/50 line-clamp-1 mt-0.5">
-                            {item.excerpt}
-                          </p>
-                        )}
-                      </button>
-                    ))}
+              {/* Articles / Knowledge Base (Left Column) */}
+              {scope === 'news' ? (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b border-theme-text/10 pb-2.5">
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-theme-text/40">相關文章 Articles ({articleResults.length})</h4>
                   </div>
-                )}
-              </div>
+                  {articleResults.length === 0 ? (
+                    <p className="text-sm text-theme-text/40 py-4 italic">無相關文章</p>
+                  ) : (
+                    <div className="flex flex-col gap-3.5">
+                      {articleResults.map((item) => (
+                        <button
+                          type="button"
+                          key={item.id}
+                          onClick={() => handleArticleClick(item.id)}
+                          className="w-full text-left p-3.5 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col gap-1.5"
+                        >
+                          <div className="flex justify-between items-center text-[10px] font-bold tracking-wider text-brand-red uppercase">
+                            <span>{item.category}</span>
+                            <span className="text-theme-text/40 font-normal font-sans">{item.date}</span>
+                          </div>
+                          <h5 className="font-bold text-sm sm:text-base text-theme-text group-hover:text-brand-red transition-colors line-clamp-2 leading-snug">
+                            {item.title}
+                          </h5>
+                          {item.excerpt && (
+                            <p className="text-xs text-theme-text/50 line-clamp-1 mt-0.5">
+                              {item.excerpt}
+                            </p>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center border-b border-theme-text/10 pb-2.5">
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-theme-text/40">信仰知識庫 Knowledge Base ({knowledgeResults.length})</h4>
+                  </div>
+                  {knowledgeResults.length === 0 ? (
+                    <p className="text-sm text-theme-text/40 py-4 italic">無相關收錄</p>
+                  ) : (
+                    <div className="flex flex-col gap-3.5">
+                      {knowledgeResults.map((item) => {
+                        const isLocked = !isSubscribed;
+                        return (
+                          <button
+                            type="button"
+                            key={item.id}
+                            onClick={() => handleKnowledgeArticleClick(item)}
+                            className="w-full text-left p-3.5 rounded-xl border border-theme-text/5 hover:border-brand-red/20 bg-theme-text/2 hover:bg-theme-text/5 transition-all duration-300 cursor-pointer group flex flex-col gap-1.5"
+                          >
+                            <div className="flex justify-between items-center text-[10px] font-bold tracking-wider text-brand-red uppercase">
+                              <span>{item.source}</span>
+                              <span className="text-theme-text/40 font-normal font-sans">{item.date}</span>
+                            </div>
+                            <h5 className="font-bold text-sm sm:text-base text-theme-text group-hover:text-brand-red transition-colors line-clamp-2 leading-snug">
+                              {item.title}
+                            </h5>
+                            <span className="text-xs text-theme-text/50 mt-0.5 flex items-center gap-1.5">
+                              {isLocked ? (
+                                <><i className="fas fa-lock text-[10px] text-brand-red" /> 訂閱後可解鎖</>
+                              ) : (
+                                <>{item.author}</>
+                              )}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Products (Right Column) */}
               <div className="space-y-4">

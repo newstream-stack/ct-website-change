@@ -10,6 +10,7 @@ import type { MembershipPlan } from '../types/membership';
 import type { Plan } from '../types/donation';
 import type { FeaturedAd, FeaturedVideo } from '../mocks/accordionPanels';
 import type { EpaperIssue, EpaperIssueSummary } from '../types/epaper';
+import type { KnowledgeArticle } from '../types/knowledgeBase';
 
 export const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null;
 const isString = (value: unknown): value is string => typeof value === 'string';
@@ -156,3 +157,11 @@ export const isEpaperIssue = (value: unknown): value is EpaperIssue => isRecord(
   && Number.isInteger(value.issueNumber) && Number(value.issueNumber) > 0
   && isString(value.dateLabel) && Array.isArray(value.pages) && value.pages.length > 0
   && value.pages.every((page) => isRecord(page) && Number.isInteger(page.pageNumber) && Number(page.pageNumber) > 0 && isString(page.imageUrl));
+
+export const isKnowledgeArticle = (value: unknown): value is KnowledgeArticle => isRecord(value)
+  && Number.isInteger(value.id) && Number.isInteger(value.year)
+  && isString(value.date) && isString(value.source) && isString(value.author)
+  && isString(value.title) && isString(value.href) && isString(value.image);
+
+export const isKnowledgeArticles = (value: unknown): value is KnowledgeArticle[] =>
+  Array.isArray(value) && value.every(isKnowledgeArticle);
