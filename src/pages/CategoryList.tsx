@@ -3,6 +3,7 @@ import { getNewsByCategory } from '../api/news';
 import { getAd } from '../api/ads';
 
 import NativeAdCard from '../components/NativeAdCard';
+import StickySidebarAd from '../components/StickySidebarAd';
 import AsyncPageState from '../components/AsyncPageState';
 import SummitBanner from '../components/SummitBanner';
 import FeaturedCarousel from '../components/FeaturedCarousel';
@@ -44,16 +45,18 @@ export default function CategoryList({ category, openArticle, initialSubCategory
   const { data, error, isLoading, reload } = useAsyncData(
     `news-category:${category}`,
     async (signal) => {
-      const [allCategoryNews, infeedAd] = await Promise.all([
+      const [allCategoryNews, infeedAd, sidebarAd] = await Promise.all([
         getNewsByCategory(category, { signal }),
         getAd('infeed', { signal }).catch(() => undefined),
+        getAd('sidebar', { signal }).catch(() => undefined),
       ]);
-      return { allCategoryNews, infeedAd };
+      return { allCategoryNews, infeedAd, sidebarAd };
     },
     null,
   );
   const allCategoryNews = data?.allCategoryNews ?? [];
   const featuredArticles = allCategoryNews.slice(0, 4);
+  const popularNews = allCategoryNews.slice(0, 5);
 
   let filteredNews = [...allCategoryNews];
   if ((category === '生活情報' || category === '基督教論壇報') && selectedSubCategory !== '全部') {
@@ -215,39 +218,62 @@ export default function CategoryList({ category, openArticle, initialSubCategory
           </div>
         )}
 
-        <div className="flex flex-col border-t border-theme-text/10 transition-colors">
-          {filteredNews.length > 0 ? (
-            filteredNews.map((news, index) => (
-              <Fragment key={news.id}>
-                {index === 2 && data?.infeedAd && (
-                  <div className="py-6 md:py-8 border-b border-theme-text/10">
-                    <NativeAdCard ad={data.infeedAd} />
-                  </div>
-                )}
-                <button type="button" className="w-full text-left flex flex-col md:flex-row md:items-start gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
-                  <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm shrink-0">
-                    <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
-                    <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
-                      {news.subCategory || news.category}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
+          <div className="lg:col-span-8 flex flex-col border-t border-theme-text/10 transition-colors">
+            {filteredNews.length > 0 ? (
+              filteredNews.map((news, index) => (
+                <Fragment key={news.id}>
+                  {index === 2 && data?.infeedAd && (
+                    <div className="py-6 md:py-8 border-b border-theme-text/10">
+                      <NativeAdCard ad={data.infeedAd} />
                     </div>
-                  </div>
-                  <div className="w-full md:w-[55%] lg:w-1/2 flex flex-col justify-center mt-2 md:mt-0">
-                    <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
-                    <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
-                    <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
-                      <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
-                      <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
-                      <span>{news.date}, 2026</span>
+                  )}
+                  <button type="button" className="w-full text-left flex flex-col md:flex-row md:items-start gap-4 md:gap-12 py-6 md:py-8 border-b border-theme-text/10 group cursor-pointer hover:bg-theme-text/5 transition-colors duration-500 md:px-6 md:-mx-6" onClick={() => openArticle(news.id)}>
+                    <div className="w-full md:w-[45%] lg:w-1/2 aspect-[832/470] bg-theme-text/10 overflow-hidden relative border border-theme-text/5 transition-colors rounded-sm shrink-0">
+                      <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-100 group-hover:scale-105 transition-all duration-700" alt={news.title} />
+                      <div className="absolute top-3 left-3 md:top-4 md:left-4 bg-brand-red text-white text-[10px] font-display uppercase tracking-widest px-2 py-1 shadow-md">
+                        {news.subCategory || news.category}
+                      </div>
                     </div>
-                  </div>
-                </button>
-              </Fragment>
-            ))
-          ) : (
-            <div className="py-20 text-center">
-              <p className="text-theme-text/40 font-display uppercase tracking-widest">No articles found in this category.</p>
-            </div>
-          )}
+                    <div className="w-full md:w-[55%] lg:w-1/2 flex flex-col justify-center mt-2 md:mt-0">
+                      <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
+                      <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
+                      <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
+                        <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
+                        <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
+                        <span>{news.date}, 2026</span>
+                      </div>
+                    </div>
+                  </button>
+                </Fragment>
+              ))
+            ) : (
+              <div className="py-20 text-center">
+                <p className="text-theme-text/40 font-display uppercase tracking-widest">No articles found in this category.</p>
+              </div>
+            )}
+          </div>
+
+          <div className="lg:col-span-4 space-y-10 md:space-y-12">
+            {popularNews.length > 0 && (
+              <div className="border border-theme-text/10 bg-theme-text/5 backdrop-blur-md rounded-sm p-6 md:p-8 transition-colors">
+                <h4 className="font-display text-xs md:text-sm font-black uppercase tracking-[0.2em] text-theme-text mb-6 pb-4 border-b border-theme-text/10 flex items-center gap-2 transition-colors">
+                  <span className="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
+                  熱門文章
+                </h4>
+                <div className="flex flex-col gap-5">
+                  {popularNews.map((n, i) => (
+                    <button type="button" key={n.id} className="w-full text-left flex items-start gap-4 cursor-pointer group" onClick={() => openArticle(n.id)}>
+                      <span className="font-serif font-black text-2xl md:text-3xl text-theme-text/15 group-hover:text-brand-red/40 transition-colors leading-none shrink-0 w-8">{String(i + 1).padStart(2, '0')}</span>
+                      <h5 className="font-serif font-bold text-sm md:text-base text-theme-text leading-snug group-hover:text-brand-red transition-colors line-clamp-3">{n.title}</h5>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {data?.sidebarAd && <StickySidebarAd ad={data.sidebarAd} />}
+          </div>
         </div>
       </div>
     </div>
