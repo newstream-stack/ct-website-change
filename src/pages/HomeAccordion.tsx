@@ -3,7 +3,6 @@ import { getNewsByCategory } from '../api/news';
 import { getFeaturedVideos, getAccordionAd, FeaturedVideo, FeaturedAd } from '../api/home';
 import { NewsItem } from '../types';
 import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
-import { useCarousel } from '../hooks/useCarousel';
 import { useAsyncData } from '../hooks/useAsyncData';
 import AsyncPageState from '../components/AsyncPageState';
 import { getSafeExternalUrl } from '../utils/navigation';
@@ -63,7 +62,10 @@ function buildPanels(newsByCategory: NewsItem[][], videos: FeaturedVideo[], acco
 
 export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const { activeIndex: carouselIndex, setActiveIndex: setCarouselIndex } = useCarousel(NEWS_GROUP_SIZE);
+  // Per-panel news carousel index, keyed by panel position — each news section
+  // cycles its own photos independently so swiping/scrolling one section
+  // doesn't yank the image out from under a different section on screen.
+  const [carouselIndices, setCarouselIndices] = useState<Record<number, number>>({});
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
@@ -132,6 +134,29 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       observer.disconnect();
     };
   }, []);
+
+  // ── News carousel auto-advance (per panel) ─────────────────────────────────
+  useLayoutEffect(() => {
+    if (panels.every((p) => p.type !== 'news')) return;
+    const timer = setInterval(() => {
+      setCarouselIndices((prev) => {
+        const next = { ...prev };
+        panels.forEach((panel, index) => {
+          if (panel.type !== 'news') return;
+          next[index] = ((prev[index] ?? 0) + 1) % panel.group.length;
+        });
+        return next;
+      });
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [panels.length]);
+
+  const stepCarousel = (index: number, groupLength: number, delta: number) => {
+    setCarouselIndices((prev) => ({
+      ...prev,
+      [index]: ((prev[index] ?? 0) + delta + groupLength) % groupLength,
+    }));
+  };
 
   if (isLoading) return <AsyncPageState />;
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
@@ -374,7 +399,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
         // ── News panel ────────────────────────────────────────────────────────
         const { group, displayIndex } = panel;
-        const itemIndex = carouselIndex % group.length;
+        const itemIndex = (carouselIndices[index] ?? 0) % group.length;
         const news = group[itemIndex];
         return (
           <div
@@ -395,9 +420,9 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 if (e.cancelable) e.preventDefault();
                 e.stopPropagation();
                 if (deltaX < 0) {
-                  setCarouselIndex((p) => (p + 1) % group.length);
+                  stepCarousel(index, group.length, 1);
                 } else {
-                  setCarouselIndex((p) => (p - 1 + group.length) % group.length);
+                  stepCarousel(index, group.length, -1);
                 }
                 return;
               }
@@ -456,14 +481,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                   </span>
                   <div className="hidden md:flex items-center gap-1.5 shrink-0">
                     <button
-                      onClick={(e) => { e.stopPropagation(); setCarouselIndex((p) => (p - 1 + group.length) % group.length); }}
+                      onClick={(e) => { e.stopPropagation(); stepCarousel(index, group.length, -1); }}
                       aria-label="上一篇文章"
                       className="w-7 h-7 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                     >
                       <i className="fas fa-angle-left text-[8px]" />
                     </button>
                     <button
-                      onClick={(e) => { e.stopPropagation(); setCarouselIndex((p) => (p + 1) % group.length); }}
+                      onClick={(e) => { e.stopPropagation(); stepCarousel(index, group.length, 1); }}
                       aria-label="下一篇文章"
                       className="w-7 h-7 rounded-full border border-white/25 flex items-center justify-center text-white/60 hover:text-white hover:bg-brand-red hover:border-brand-red transition-all"
                     >
