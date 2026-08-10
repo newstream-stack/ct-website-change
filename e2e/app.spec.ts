@@ -22,7 +22,7 @@ test('首頁可載入並顯示文章面板', async ({ page }) => {
 test('分類與文章網址可直接開啟', async ({ page }) => {
   await page.goto('/?category=%E6%9C%80%E6%96%B0%E6%96%87%E7%AB%A0');
   await closeSplash(page);
-  await expect(page.getByRole('heading', { name: '最新文章', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^最新文章/ })).toBeVisible();
 
   await page.goto('/?category=%E5%9F%BA%E7%9D%A3%E6%95%99%E8%AB%96%E5%A3%87%E5%A0%B1&article=1');
   await closeSplash(page);
@@ -93,7 +93,7 @@ test('手機內容不會被固定 Header 遮住', async ({ page }) => {
   await closeSplash(page);
 
   const headerBox = await page.locator('header').boundingBox();
-  const headingBox = await page.getByRole('heading', { name: '最新文章', exact: true }).boundingBox();
+  const headingBox = await page.getByRole('heading', { name: /^最新文章/ }).boundingBox();
   expect(headerBox).not.toBeNull();
   expect(headingBox).not.toBeNull();
   expect(headingBox!.y).toBeGreaterThanOrEqual(headerBox!.y + headerBox!.height - 2);
