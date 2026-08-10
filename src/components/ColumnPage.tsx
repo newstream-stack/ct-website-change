@@ -34,7 +34,7 @@ export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPa
     },
     null,
   );
-  const featuredArticles = data?.columnNews.slice(0, 4) ?? [];
+  const featuredArticles = data?.columnNews.slice(0, 3) ?? [];
   const filteredColumnists = data?.columnists.filter((columnist) => columnist.subCategory === activeTab) ?? [];
 
   if (isLoading) return <AsyncPageState />;

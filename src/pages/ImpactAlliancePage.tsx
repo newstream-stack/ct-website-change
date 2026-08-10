@@ -13,7 +13,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
     'alliance-page',
     async (signal) => {
       const [sliderArticles, members] = await Promise.all([
-        getAllianceArticles(4, { signal }),
+        getAllianceArticles(3, { signal }),
         getAllianceMembers({ signal }),
       ]);
       return { sliderArticles, members };

@@ -55,7 +55,7 @@ export default function CategoryList({ category, openArticle, initialSubCategory
     null,
   );
   const allCategoryNews = data?.allCategoryNews ?? [];
-  const featuredArticles = allCategoryNews.slice(0, 4);
+  const featuredArticles = allCategoryNews.slice(0, 3);
   const popularNews = allCategoryNews.slice(0, 5);
 
   let filteredNews = [...allCategoryNews];
