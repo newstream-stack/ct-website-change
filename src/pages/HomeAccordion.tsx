@@ -36,7 +36,7 @@ type AccordionPanel = NewsPanel | VideoPanel | AdPanel;
 
 // ─── Panel builder ────────────────────────────────────────────────────────────
 
-const NEWS_GROUP_SIZE = 5;
+const NEWS_GROUP_SIZE = 3;
 
 // Fixed panel order: 01-最新文章 02-基督教論壇報 03-專欄 04-人物見證 影片專區 AD 05-生活情報
 const HOME_ACCORDION_CATEGORIES = ['最新文章', '基督教論壇報', '專欄', '人物見證', '生活情報'];
@@ -244,7 +244,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               />
               <div
                 className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                  isMobileLayout || index === activeIndex ? '' : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
+                  isMobileLayout ? 'accordion-vignette' : index === activeIndex ? '' : 'bg-black/50 sm:bg-black/35 md:bg-black/25'
                 }`}
               />
               {/* Collapsed */}
@@ -324,7 +324,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               </div>
 
               <div className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                isMobileLayout || index === activeIndex ? '' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
+                isMobileLayout ? 'accordion-vignette' : index === activeIndex ? '' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
               }`} />
 
               {/* Collapsed */}
@@ -446,7 +446,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
             <div
               className={`absolute inset-0 transition-all duration-500 z-10 pointer-events-none ${
-                isMobileLayout || index === activeIndex ? '' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
+                isMobileLayout ? 'accordion-vignette' : index === activeIndex ? '' : 'bg-black/60 sm:bg-black/45 md:bg-black/35'
               }`}
             />
 
