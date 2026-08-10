@@ -428,7 +428,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               }
               handlePanelClick(e, index, 'news', news.id);
             }}
-            style={{ touchAction: 'manipulation' }}
+            style={{ touchAction: 'pan-y' }}
           >
             {group.map((item, i) => {
               const isCurrent = i === itemIndex;
