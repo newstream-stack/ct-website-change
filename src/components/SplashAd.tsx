@@ -121,7 +121,13 @@ export default function SplashAd({ linkUrl, onClose }: SplashAdProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {safeLinkUrl ? (
-          <a href={safeLinkUrl} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+          <a
+            href={safeLinkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="立即報名：2026 IMPACT 全球華人影響力高峰會"
+            className="block w-full h-full"
+          >
             {adContent}
           </a>
         ) : adContent}

@@ -200,7 +200,7 @@ export default function Header({
                       goToCategory(cat);
                       setOpenSubmenu(null);
                     }}
-                    className="cursor-pointer transition-colors hover:text-brand-red"
+                    className="cursor-pointer p-2 -m-2 transition-colors hover:text-brand-red"
                   >
                     {cat}
                   </button>
@@ -209,7 +209,7 @@ export default function Header({
                       type="button"
                       onClick={() => setOpenSubmenu((current) => (current === cat ? null : cat))}
                       title={`展開${cat}子分類`}
-                      className="cursor-pointer p-1 -m-1 transition-colors hover:text-brand-red"
+                      className="cursor-pointer p-2 -m-2 transition-colors hover:text-brand-red"
                     >
                       <i className={`fas fa-chevron-down text-[8px] transition-transform ${openSubmenu === cat ? 'rotate-180' : ''}`}></i>
                     </button>

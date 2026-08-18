@@ -6,6 +6,7 @@ import { useYouTubePlayer } from '../hooks/useYouTubePlayer';
 import { useAsyncData } from '../hooks/useAsyncData';
 import AsyncPageState from '../components/AsyncPageState';
 import { getSafeExternalUrl } from '../utils/navigation';
+import { buildUnsplashSrcSet } from '../utils/responsiveImage';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -226,6 +227,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     >
       {panels.map((panel, index) => {
         // ── Ad panel ──────────────────────────────────────────────────────────
+        // 版面維持滿版 object-cover（隨手風琴 flex 動態縮放），不做固定 px 尺寸；
+        // 客戶送圖建議來源解析度 1920×1080（16:9），裁切以此為準。
         if (panel.type === 'ad') {
           const { ad } = panel;
           return (
@@ -238,6 +241,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             >
               <img
                 src={ad.imageUrl}
+                srcSet={buildUnsplashSrcSet(ad.imageUrl)}
+                sizes="100vw"
+                loading={index === activeIndex ? undefined : 'lazy'}
+                fetchPriority={index === activeIndex ? 'high' : 'low'}
                 className="accordion-bg transition-all duration-1000 group-hover:!opacity-100"
                 alt=""
                 style={{ zIndex: 1, opacity: isMobileLayout || index === activeIndex ? 1 : 0.8 }}
@@ -319,7 +326,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     </button>
                   </div>
                 ) : (
-                  <img src={video.thumbnail} className="accordion-bg object-cover" alt={video.title} style={{ opacity: 1 }} />
+                  <img
+                    src={video.thumbnail}
+                    loading={index === activeIndex ? undefined : 'lazy'}
+                    fetchPriority={index === activeIndex ? 'high' : 'low'}
+                    className="accordion-bg object-cover"
+                    alt={video.title}
+                    style={{ opacity: 1 }}
+                  />
                 )}
               </div>
 
@@ -433,10 +447,15 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             {group.map((item, i) => {
               const isCurrent = i === itemIndex;
               const opacity = !isCurrent ? 0 : isMobileLayout || index === activeIndex ? 1 : 0.8;
+              const isLcpCandidate = isCurrent && index === activeIndex;
               return (
                 <img
                   key={item.id}
                   src={item.imageUrl}
+                  srcSet={buildUnsplashSrcSet(item.imageUrl)}
+                  sizes="100vw"
+                  loading={isLcpCandidate ? undefined : 'lazy'}
+                  fetchPriority={isLcpCandidate ? 'high' : 'low'}
                   className={`accordion-bg transition-all duration-1000 ${isCurrent ? 'group-hover:!opacity-100' : ''}`}
                   alt=""
                   style={{ zIndex: isCurrent ? 1 : 0, opacity }}

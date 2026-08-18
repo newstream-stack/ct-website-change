@@ -36,9 +36,9 @@ export default function Footer({ goToCategory }: FooterProps) {
               <div className="flex items-baseline gap-2 mb-2">
                 <span className="font-display text-2xl font-bold tracking-widest text-white">IMPACT</span>
                 <span className="w-px h-4 bg-brand-red inline-block mx-1"></span>
-                <span className="font-serif text-base text-brand-red tracking-wider">論壇報</span>
+                <span className="font-serif text-base text-white/90 tracking-wider">論壇報</span>
               </div>
-              <p className="text-white/40 text-xs leading-relaxed">
+              <p className="text-white/70 text-xs leading-relaxed">
                 基督教論壇報，以信仰的眼光看見世界，<br/>用文字陪伴每一個在路上的靈魂。
               </p>
             </div>
@@ -64,7 +64,7 @@ export default function Footer({ goToCategory }: FooterProps) {
           <div className="grid grid-cols-3 gap-8 md:gap-12">
             {LINK_GROUPS.map(({ title, links }) => (
               <div key={title}>
-                <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] mb-4 font-display">{title}</p>
+                <p className="text-white/60 text-[10px] uppercase tracking-[0.2em] mb-4 font-display">{title}</p>
                 <ul className="flex flex-col gap-2.5">
                   {links.map((link) => (
                     <li key={link}>
@@ -80,7 +80,7 @@ export default function Footer({ goToCategory }: FooterProps) {
                           else if (link === '版權隱私權聲明') goToCategory('版權隱私權聲明');
                           else if (link === '財務報表') goToCategory('財務報表');
                         }}
-                        className="text-white/55 text-xs hover:text-white transition-colors leading-none text-left"
+                        className="text-white/70 text-xs hover:text-white transition-colors leading-none text-left"
                       >
                         {link}
                       </button>
@@ -95,7 +95,7 @@ export default function Footer({ goToCategory }: FooterProps) {
 
       {/* 底部條 */}
       <div className="border-t border-white/8">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-[11px] text-white/25">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-[11px] text-white/50">
           <span>© 2026 基督教論壇報 All Rights Reserved. 版權所有 盜用必究</span>
           <span>財團法人基督教論壇基金會｜統一編號 00965377</span>
         </div>

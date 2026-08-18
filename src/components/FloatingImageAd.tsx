@@ -38,8 +38,8 @@ export default function FloatingImageAd() {
         </button>
       </div>
       <div className="px-3 py-2.5">
-        <span className="text-[9px] font-display uppercase tracking-[0.2em] text-brand-red block mb-1">{ad.sponsor}</span>
-        <h4 className="font-serif font-bold text-sm text-theme-bg leading-snug line-clamp-2">{ad.title}</h4>
+        <span className="text-[9px] font-display uppercase tracking-[0.2em] text-white/60 block mb-1">{ad.sponsor}</span>
+        <h3 className="font-serif font-bold text-sm text-theme-bg leading-snug line-clamp-2">{ad.title}</h3>
       </div>
     </a>
   );
