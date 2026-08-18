@@ -68,7 +68,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   // doesn't yank the image out from under a different section on screen.
   const [carouselIndices, setCarouselIndices] = useState<Record<number, number>>({});
   const [videoCarouselIndex, setVideoCarouselIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [videoStarted, setVideoStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [headerHeight, setHeaderHeight] = useState(170);
   const [isMobileLayout, setIsMobileLayout] = useState(() => window.innerWidth < 768);
@@ -95,7 +96,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
 
   // Find the index of the video panel to know when it's active
   const videoPanelIndex = panels.findIndex((p) => p.type === 'video');
-  const isVideoActive = isMobileLayout || activeIndex === videoPanelIndex;
+  const isVideoActive = videoStarted && (isMobileLayout || activeIndex === videoPanelIndex);
 
   // ── YouTube hook ────────────────────────────────────────────────────────────
   const { play, pause, mute } = useYouTubePlayer(
@@ -180,7 +181,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       }
 
       if (type === 'video') {
-        isPlaying ? pause() : play();
+        if (!videoStarted) setVideoStarted(true);
+        else isPlaying ? pause() : play();
       } else if (type === 'news' && newsId) {
         openArticle(newsId);
       }
@@ -191,6 +193,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       if (e.cancelable) e.preventDefault();
       e.stopPropagation();
       setActiveIndex(index);
+      if (type === 'video') setVideoStarted(true);
       return;
     }
 
@@ -200,7 +203,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }
 
     if (type === 'video') {
-      isPlaying ? pause() : play();
+      if (!videoStarted) setVideoStarted(true);
+      else isPlaying ? pause() : play();
     } else if (type === 'news' && newsId) {
       openArticle(newsId);
     }
@@ -303,7 +307,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               style={{ touchAction: 'manipulation' }}
             >
               <div className="absolute inset-0 w-full h-full overflow-hidden">
-                {isMobileLayout || index === activeIndex ? (
+                {videoStarted && (isMobileLayout || index === activeIndex) ? (
                   <div className="relative w-full h-full">
                     <iframe
                       id={`youtube-player-${index}`}
