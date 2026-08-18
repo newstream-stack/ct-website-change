@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <!-- CSP 改由 vercel.json 的 HTTP 標頭送出（meta 版 CSP 無法帶 frame-ancestors，PageSpeed 建議移到 HTTP header） -->
+    <!-- meta 版 CSP 帶不動 frame-ancestors，等正式決定 GCP 的 serving 方式（Cloud Run/Firebase Hosting/Load Balancer）
+         後，應該在該層再補一份等效的 HTTP header（含 frame-ancestors、X-Frame-Options、COOP），這裡先當通用保底 -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; connect-src 'self' http: https: ws: wss:; object-src 'none'; base-uri 'self'; form-action 'self' https:;" />
     <title>IMPACT 基督教論壇報 | The Accordion Edition</title>
     <meta name="description" content="IMPACT 基督教論壇報，以信仰的眼光看見世界，用文字陪伴每一個在路上的靈魂。提供即時新聞、專欄評論、生活情報與影響力聯盟報導。" />
     
