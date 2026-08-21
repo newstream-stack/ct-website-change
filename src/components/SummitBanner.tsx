@@ -6,7 +6,7 @@ export default function SummitBanner({ className = '' }: SummitBannerProps) {
   return (
     <aside
       aria-label="IMPACT 2026 SUMMIT 廣告"
-      className={`group relative flex h-32 w-full items-center justify-center overflow-hidden border border-theme-text/10 bg-theme-text/5 backdrop-blur-sm transition-colors md:h-48 ${className}`}
+      className={`group relative mx-auto flex h-[128px] w-[320px] items-center justify-center overflow-hidden border border-theme-text/10 bg-theme-text/5 backdrop-blur-sm transition-colors md:h-[192px] md:w-[800px] ${className}`}
     >
       <img
         src="./images/impact-summit-banner.png"

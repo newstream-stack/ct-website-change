@@ -13,8 +13,6 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
     { id: 6, title: '亞洲新核心', imageUrl: 'https://media.ct.org.tw/upload/dedication_article/2026/04/14/69ddb83f810ff.jpg', subtitle: '從亞洲開始，影響世界', description: '亞洲正站在全球轉變的中心。IAA 被呼召興起，成為亞洲教會的屬靈引擎。' }
   ];
 
-  const featuredPlan = plans[0];
-
   return (
     <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
@@ -22,45 +20,6 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
       <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-16">
         <div className="max-w-[1400px] mx-auto">
            <h1 className="text-4xl md:text-5xl font-serif font-black tracking-widest text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors">奉獻 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Giving</span></h1>
-        </div>
-      </div>
-
-      {/* 2. Featured Highlight */}
-      <div className="px-5 md:px-12 lg:px-20 mb-24 md:mb-32">
-        <div className="max-w-[1400px] mx-auto relative group overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm">
-           <div className="flex flex-col lg:flex-row min-h-[500px]">
-              {/* Image Side */}
-              <div className="w-full lg:w-[60%] relative overflow-hidden h-auto bg-theme-bg flex items-center justify-center">
-                 <img 
-                    src={featuredPlan.imageUrl} 
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105" 
-                    alt={featuredPlan.title} 
-                 />
-                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-transparent to-black/20 pointer-events-none"></div>
-              </div>
-              
-              {/* Content Side */}
-              <div className="w-full lg:w-[40%] p-8 md:p-12 lg:p-16 flex flex-col justify-center relative bg-theme-bg lg:border-l border-theme-text/10">
-                 <span className="text-brand-red font-display font-bold text-xs tracking-[0.4em] uppercase mb-4">Featured Support</span>
-                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-serif font-black mb-6 leading-tight">{featuredPlan.title}</h2>
-                 <p className="text-theme-text/60 font-light leading-relaxed mb-10 text-sm md:text-base">{featuredPlan.description}</p>
-                 <button 
-                    onClick={() => openPlan && openPlan(featuredPlan.id)}
-                    className="self-start px-10 py-4 bg-theme-text text-theme-bg font-display font-bold text-xs tracking-widest uppercase hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 shadow-lg"
-                 >
-                    立即奉獻支持 <i className="fas fa-arrow-right ml-4"></i>
-                 </button>
-              </div>
-           </div>
-           
-           {/* Background Ornament (Dotted overlay or lines) */}
-           <div className="absolute top-0 right-0 p-8 opacity-5">
-              <div className="grid grid-cols-5 gap-2">
-                 {[...Array(25)].map((_, i) => (
-                    <div key={i} className="w-1.5 h-1.5 rounded-full bg-theme-text"></div>
-                 ))}
-              </div>
-           </div>
         </div>
       </div>
 

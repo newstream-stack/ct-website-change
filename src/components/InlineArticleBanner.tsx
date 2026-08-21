@@ -14,7 +14,7 @@ export default function InlineArticleBanner({ ad, className = 'my-10 md:my-14' }
         <p className="mt-2 md:mt-3 text-sm md:text-base text-theme-text/70">{ad.description}</p>
       </div>
 
-      <div className="w-full md:w-[40%] aspect-video md:aspect-[16/10] relative overflow-hidden bg-theme-text/10 shrink-0 border border-theme-text/5 rounded-sm">
+      <div className="w-[320px] h-[180px] md:h-[200px] mx-auto md:mx-0 relative overflow-hidden bg-theme-text/10 shrink-0 border border-theme-text/5 rounded-sm">
         <img src={ad.imageUrl} alt={ad.title} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" />
       </div>
     </a>

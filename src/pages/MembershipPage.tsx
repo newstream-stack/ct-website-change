@@ -68,7 +68,7 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
           <span className="font-display text-brand-red tracking-[0.3em] uppercase text-xs md:text-sm mb-4 block font-bold">Membership</span>
           <h1 className="text-4xl md:text-5xl lg:text-[70px] font-serif font-black tracking-tighter text-theme-text transition-colors leading-[1.1] mb-6">加入論壇報會員</h1>
           <p className="text-sm md:text-lg text-theme-text/70 max-w-2xl mx-auto leading-relaxed">
-            成為影響力夥伴，一起支持美好的價值。選擇適合您的方案，獲得無廣告閱讀體驗與專屬會員福利。
+            成為影響力夥伴，一起支持美好的價值。選擇適合您的方案，獲得專屬會員福利。
           </p>
         </div>
 
@@ -113,15 +113,6 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Footer info */}
-        <div className="mt-20 text-center max-w-3xl mx-auto border-t border-theme-text/10 pt-10">
-          <h4 className="text-lg font-serif font-bold mb-4 text-theme-text">需要協助？</h4>
-          <p className="text-sm text-theme-text/60 mb-6">如果您對於會員方案有任何疑問，或需要企業大量訂閱報價，歡迎聯絡我們的客服團隊。</p>
-          <button type="button" onClick={() => goToCategory('客戶服務')} className="text-brand-red border-b border-brand-red pb-1 tracking-widest font-bold text-sm hover:opacity-70 transition-opacity">
-            聯絡我們 <i className="fas fa-arrow-right text-[10px] ml-1"></i>
-          </button>
         </div>
 
       </div>

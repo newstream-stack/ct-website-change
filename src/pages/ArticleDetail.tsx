@@ -199,7 +199,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                     href={getSafeExternalUrl(topAd.link)}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group relative flex h-28 items-end overflow-hidden rounded-sm border border-theme-text/10 bg-black px-4 py-4 text-white md:h-36 md:px-6 md:py-5"
+                                    className="group relative mx-auto flex h-[112px] w-[320px] items-end overflow-hidden rounded-sm border border-theme-text/10 bg-black px-4 py-4 text-white md:h-[144px] md:w-[720px] md:px-6 md:py-5"
                                 >
                                     <img
                                         src={topAd.imageUrl}

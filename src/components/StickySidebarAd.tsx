@@ -17,7 +17,7 @@ export default function StickySidebarAd({ ad }: Props) {
           href={getSafeExternalUrl(ad.link)}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative block aspect-[3/4] w-full overflow-hidden rounded-sm border border-theme-text/10 bg-theme-text/5"
+          className="group relative block w-[300px] h-[400px] mx-auto overflow-hidden rounded-sm border border-theme-text/10 bg-theme-text/5"
         >
           <img
             src={image.src}
