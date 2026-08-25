@@ -1,6 +1,7 @@
 import { getNewsByAuthor } from '../api/news';
 import AsyncPageState from '../components/AsyncPageState';
 import { useAsyncData } from '../hooks/useAsyncData';
+import { formatArticleDate } from '../utils/date';
 
 interface AuthorResultsPageProps {
   author: string;
@@ -35,7 +36,7 @@ export default function AuthorResultsPage({ author, openArticle }: AuthorResults
               <p className="font-display text-[10px] tracking-[0.16em] text-brand-red uppercase mb-3">{article.category}</p>
               <h2 className="font-serif text-xl md:text-2xl font-bold leading-snug group-hover:text-brand-red transition-colors">{article.title}</h2>
               <p className="mt-3 text-sm leading-relaxed text-theme-text/60 line-clamp-2">{article.excerpt}</p>
-              <p className="mt-5 pt-4 border-t border-theme-text/10 font-display text-[10px] tracking-[0.16em] text-theme-text/45">{article.date}</p>
+              <p className="mt-5 pt-4 border-t border-theme-text/10 font-display text-[10px] tracking-[0.16em] text-theme-text/45">{formatArticleDate(article.date)}</p>
             </button>
           ))}
         </div>

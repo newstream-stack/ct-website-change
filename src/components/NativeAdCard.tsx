@@ -10,7 +10,7 @@ export default function NativeAdCard({ ad }: NativeAdCardProps) {
     <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className="group relative flex flex-col overflow-hidden bg-theme-text/5 hover:bg-theme-text/10 transition-colors border border-brand-red/20 shadow-sm cursor-pointer col-span-1">
       <div className="w-full aspect-[832/470] relative overflow-hidden bg-theme-text/10">
         <img src={ad.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={ad.title} />
-        <div className="absolute top-3 left-3 bg-brand-red text-white text-[10px] uppercase tracking-widest px-2 py-0.5 font-bold animate-pulse">Sponsored</div>
+        <div className="absolute top-3 left-3 bg-brand-red text-white text-[10px] tracking-widest px-2 py-0.5 font-bold">贊助</div>
       </div>
       <div className="p-5 flex flex-col justify-between flex-grow">
         <div>
@@ -23,7 +23,7 @@ export default function NativeAdCard({ ad }: NativeAdCardProps) {
           </p>
         </div>
         <div className="mt-4 flex items-center justify-between text-[11px] uppercase tracking-widest text-theme-text/50 font-display">
-          <span>Promoted Content</span>
+          <span>贊助內容</span>
           <i className="fas fa-arrow-right group-hover:text-brand-red group-hover:translate-x-1 transition-all"></i>
         </div>
       </div>

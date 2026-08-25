@@ -8,6 +8,7 @@ import { ARCHIVE_YEARS, EARLIEST_ARCHIVE_YEAR, LATEST_ARCHIVE_YEAR } from '../mo
 import { useAsyncData } from '../hooks/useAsyncData';
 import { useKnowledgeBaseAccess } from '../hooks/useKnowledgeBaseAccess';
 import { getSafeExternalUrl } from '../utils/navigation';
+import { formatArticleDate } from '../utils/date';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -321,7 +322,7 @@ export default function SearchModal({
                         >
                           <div className="flex justify-between items-center text-[10px] font-bold tracking-wider text-brand-red uppercase">
                             <span>{item.category}</span>
-                            <span className="text-theme-text/40 font-normal font-sans">{item.date}</span>
+                            <span className="text-theme-text/40 font-normal font-sans">{formatArticleDate(item.date)}</span>
                           </div>
                           <h5 className="font-bold text-sm sm:text-base text-theme-text group-hover:text-brand-red transition-colors line-clamp-2 leading-snug">
                             {item.title}
@@ -356,7 +357,7 @@ export default function SearchModal({
                           >
                             <div className="flex justify-between items-center text-[10px] font-bold tracking-wider text-brand-red uppercase">
                               <span>{item.source}</span>
-                              <span className="text-theme-text/40 font-normal font-sans">{item.date}</span>
+                              <span className="text-theme-text/40 font-normal font-sans">{formatArticleDate(item.date)}</span>
                             </div>
                             <h5 className="font-bold text-sm sm:text-base text-theme-text group-hover:text-brand-red transition-colors line-clamp-2 leading-snug">
                               {item.title}

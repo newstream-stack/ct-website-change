@@ -268,14 +268,14 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 </div>
                 <div className="hidden md:block w-5 h-px bg-brand-red/80 mx-auto" />
                 <div className="md:h-24 md:flex md:items-center md:justify-center">
-                  <span className="font-display tracking-[0.25em] uppercase text-[10px] md:text-xs md:[writing-mode:vertical-rl] text-brand-red font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">SPONSOR</span>
+                  <span className="tracking-[0.25em] text-[10px] md:text-xs md:[writing-mode:vertical-rl] text-brand-red font-bold drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">贊助</span>
                 </div>
               </div>
               {/* Expanded */}
               <div className="content-expanded absolute inset-0 flex flex-col justify-end px-5 pb-4 pt-0 md:px-10 md:pb-20 lg:px-14 lg:pb-24 z-20">
                 <div className="max-w-xl">
                   <div className="flex items-center gap-3 mb-3 md:mb-5">
-                    <span className="bg-brand-red text-white font-display font-bold text-[10px] tracking-[0.2em] uppercase px-2.5 py-1">SPONSORED</span>
+                    <span className="bg-brand-red text-white font-bold text-[10px] tracking-[0.2em] px-2.5 py-1">贊助</span>
                     <span className="font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">{ad.sponsor}</span>
                   </div>
                   <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-[3.2rem] font-serif font-black text-white leading-[1.2] tracking-tight mb-2 md:mb-4 line-clamp-3 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
@@ -372,7 +372,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 )}
                 <div className="max-w-xl pointer-events-auto cursor-default" onClick={(e) => e.stopPropagation()} onTouchEnd={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-3 mb-2 md:mb-5">
-                    <span className="bg-white/10 backdrop-blur-md text-white font-display font-bold text-[9px] md:text-[10px] tracking-[0.2em] uppercase px-2 py-0.5 md:px-2.5 md:py-1">FEATURED VIDEO</span>
+                    <span className="bg-white/10 backdrop-blur-md text-white font-bold text-[10px] md:text-[11px] tracking-[0.2em] px-2 py-0.5 md:px-2.5 md:py-1">影片專區</span>
                     <span className="hidden md:inline font-display text-[10px] text-white/60 tracking-[0.2em] uppercase">{video.category}</span>
                     <div className="flex items-center gap-1.5 ml-auto md:ml-2">
                       <button

@@ -8,6 +8,7 @@ import { useAsyncData } from '../hooks/useAsyncData';
 import { getArticleSavedStatus, removeSavedArticle, saveArticle } from '../api/savedArticles';
 import { useAuth } from '../hooks/useAuth';
 import { getSafeExternalUrl } from '../utils/navigation';
+import { formatArticleDate } from '../utils/date';
 
 interface ArticleDetailProps {
     articleId: number;
@@ -126,10 +127,10 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                     <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-serif font-black text-theme-text leading-[1.28] md:leading-[1.16] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-6xl transition-colors duration-500">
                         {article.title}
                     </h1>
-                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 font-display uppercase tracking-widest text-[9px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
-                        <span>Words by <button onClick={() => goToAuthor(article.author)} className="text-brand-red hover:underline underline-offset-2">{article.author}</button></span>
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 tracking-widest text-[10px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
+                        <span>文｜<button onClick={() => goToAuthor(article.author)} className="text-brand-red hover:underline underline-offset-2">{article.author}</button></span>
                         <span className="text-theme-text/30 transition-colors">|</span>
-                        <span>Published {article.date}, 2026</span>
+                        <span>{formatArticleDate(article.date, { withYear: true })}</span>
                     </div>
                 </div>
             </div>
@@ -139,9 +140,9 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
 
                     <div className="lg:col-span-8 article-content">
                         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-theme-text/10 transition-colors">
-                            {/* 1. Share 文字 */}
-                            <span className="font-display text-[10px] tracking-widest uppercase text-theme-text/60 transition-colors">
-                                Share
+                            {/* 1. 分享文字 */}
+                            <span className="text-[11px] tracking-widest text-theme-text/60 transition-colors">
+                                分享
                             </span>
 
                             {/* 2. 圖示容器：刪除了多餘的層級與 mt-6 */}
@@ -177,7 +178,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 type="button"
                                 onClick={handleToggleSave}
                                 disabled={isSaving}
-                                className={`flex items-center gap-2 px-3 h-8 rounded-full border transition cursor-pointer disabled:opacity-50 disabled:cursor-wait font-display text-[10px] font-bold uppercase tracking-widest ${isSaved
+                                className={`flex items-center gap-2 px-3 h-8 rounded-full border transition cursor-pointer disabled:opacity-50 disabled:cursor-wait text-[11px] font-bold tracking-widest ${isSaved
                                     ? 'bg-brand-red border-brand-red text-white'
                                     : 'border-theme-text/20 bg-theme-text/5 text-theme-text/80 hover:bg-brand-red hover:text-white hover:border-brand-red'
                                     }`}
@@ -192,14 +193,12 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 <div className="mb-2 flex items-center gap-2 font-display text-[9px] font-bold uppercase tracking-[0.2em] text-theme-text/45 md:text-[10px]">
                                     <span className="h-px w-6 bg-brand-red" />
                                     <span>廣告</span>
-                                    <span className="text-theme-text/25">|</span>
-                                    <span>Advertisement</span>
                                 </div>
                                 <a
                                     href={getSafeExternalUrl(topAd.link)}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group relative mx-auto flex h-[112px] w-[320px] items-end overflow-hidden rounded-sm border border-theme-text/10 bg-black px-4 py-4 text-white md:h-[144px] md:w-[720px] md:px-6 md:py-5"
+                                    className="group relative mx-auto flex h-[112px] w-full max-w-[320px] items-end overflow-hidden rounded-sm border border-theme-text/10 bg-black px-4 py-4 text-white md:h-[144px] md:max-w-[720px] md:px-6 md:py-5"
                                 >
                                     <img
                                         src={topAd.imageUrl}
@@ -210,7 +209,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/5" />
                                     <div className="relative min-w-0 max-w-[72%]">
-                                        <span className="mb-1 block font-display text-[8px] font-bold uppercase tracking-[0.25em] text-white/60 md:text-[9px]">{topAd.sponsor} · Sponsored</span>
+                                        <span className="mb-1 block font-display text-[8px] font-bold uppercase tracking-[0.25em] text-white/60 md:text-[9px]">{topAd.sponsor} · 贊助</span>
                                         <h3 className="line-clamp-2 font-serif text-sm font-bold leading-snug tracking-wide text-white drop-shadow-lg md:text-lg">{topAd.title}</h3>
                                     </div>
                                 </a>
@@ -283,7 +282,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 <span className="text-brand-red font-display font-bold text-[10px] uppercase tracking-widest mb-2">{n.category}</span>
                                 <h4 className="text-lg md:text-xl font-serif font-black text-theme-text leading-[1.4] md:leading-snug group-hover:text-brand-red transition-colors line-clamp-2 mb-3 tracking-wide md:tracking-normal">{n.title}</h4>
                                 <div className="mt-auto font-display text-[9px] uppercase tracking-widest text-theme-text/60 pt-4 border-t border-theme-text/10 transition-colors">
-                                    By {n.author} &nbsp;|&nbsp; {n.date}
+                                    文｜{n.author} &nbsp;|&nbsp; {formatArticleDate(n.date)}
                                 </div>
                             </button>
                         ))}

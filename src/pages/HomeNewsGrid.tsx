@@ -7,6 +7,7 @@ import SummitBanner from '../components/SummitBanner';
 import AsyncPageState from '../components/AsyncPageState';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { NewsItem, Columnist } from '../types';
+import { formatArticleDate } from '../utils/date';
 
 interface HomeNewsGridProps {
   openArticle: (id: number) => void;
@@ -202,7 +203,7 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
             <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 flex items-center gap-3">
               <span>By <span className="text-theme-text/80">{leadStory.author}</span></span>
               <span className="w-1 h-1 bg-theme-text/20 rounded-full" />
-              <span>{leadStory.date}, 2026</span>
+              <span>{formatArticleDate(leadStory.date, { withYear: true })}</span>
               <span className="ml-auto text-brand-red opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
                 閱讀全文 <i className="fas fa-arrow-right text-[9px] group-hover:translate-x-1 transition-transform" />
               </span>

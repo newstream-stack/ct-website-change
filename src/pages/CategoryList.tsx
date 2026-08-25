@@ -9,6 +9,7 @@ import SummitBanner from '../components/SummitBanner';
 import FeaturedCarousel from '../components/FeaturedCarousel';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { CT_FORUM_SUBCATEGORIES } from '../data/forumSubCategories';
+import { formatArticleDate } from '../utils/date';
 
 interface CategoryListProps {
   category: string;
@@ -240,7 +241,7 @@ export default function CategoryList({ category, openArticle, initialSubCategory
                       <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
                         <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
                         <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
-                        <span>{news.date}, 2026</span>
+                        <span>{formatArticleDate(news.date, { withYear: true })}</span>
                       </div>
                     </div>
                   </button>

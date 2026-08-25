@@ -6,7 +6,7 @@ interface Props { ad: AdItem; className?: string; }
 export default function InlineArticleBanner({ ad, className = 'my-10 md:my-14' }: Props) {
   return (
     <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className={`w-full border border-theme-text/10 py-6 md:py-10 flex flex-col md:flex-row items-center justify-between bg-theme-text/5 hover:bg-theme-text/10 backdrop-blur-sm relative group cursor-pointer transition-colors duration-500 gap-6 px-6 md:px-10 ${className}`}>
-      <span className="absolute top-2 right-3 md:top-3 md:right-4 text-[8px] md:text-[9px] font-display tracking-widest uppercase border border-theme-text/20 text-theme-text/50 px-2 py-0.5 group-hover:text-theme-text/90 transition-colors">SPONSORED</span>
+      <span className="absolute top-2 right-3 md:top-3 md:right-4 text-[9px] md:text-[10px] tracking-widest border border-theme-text/20 text-theme-text/50 px-2 py-0.5 group-hover:text-theme-text/90 transition-colors">贊助</span>
       
       <div className="flex-1 w-full flex flex-col justify-center mt-6 md:mt-0">
         <span className="text-[10px] font-display uppercase tracking-widest text-brand-red mb-2">{ad.sponsor}</span>

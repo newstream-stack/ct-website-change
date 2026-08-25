@@ -27,7 +27,7 @@ export default function StickySidebarAd({ ad }: Props) {
             alt={image.alt}
           />
           <span className="absolute right-3 top-3 z-10 border border-theme-text/20 bg-theme-bg/85 px-2 py-0.5 font-display text-[9px] uppercase tracking-widest text-theme-text/70 backdrop-blur-sm transition-colors group-hover:text-theme-text md:right-4 md:top-4 md:text-[10px]">
-            SPONSORED
+            贊助
           </span>
         </a>
       ))}
