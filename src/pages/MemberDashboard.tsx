@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, type FormEvent } from 'react';
 import { changePassword, logout } from '../api/auth';
 import { createPortal } from 'react-dom';
-import ReceiptModal from '../components/ReceiptModal';
 import { createPaymentMethodSession, getMe, getMemberStats, getDonations, getBillingHistory, updateMe } from '../api/member';
 import { getOrders } from '../api/orders';
 import { getSavedArticles, removeSavedArticle } from '../api/savedArticles';
@@ -288,7 +287,6 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
 
 export default function MemberDashboard({ goToCategory }: MemberDashboardProps) {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
-  const [selectedReceipt, setSelectedReceipt] = useState<DonationRecord | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrderReceipt, setSelectedOrderReceipt] = useState<Order | null>(null);
@@ -371,18 +369,17 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
     const formData = new FormData(event.currentTarget);
     const updatedName = String(formData.get('name') ?? '').trim();
     const updatedAddress = String(formData.get('address') ?? '').trim();
-    const currentPassword = String(formData.get('currentPassword') ?? '');
     const newPassword = String(formData.get('newPassword') ?? '');
     const confirmPassword = String(formData.get('confirmPassword') ?? '');
-    const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
+    const wantsPasswordChange = Boolean(newPassword || confirmPassword);
     const profileChanged = updatedName !== member?.name || updatedAddress !== member?.address;
 
     if (!updatedName || !updatedAddress) {
       setSettingsMsg({ type: 'error', text: '姓名與地址不可為空' });
       return;
     }
-    if (wantsPasswordChange && (!currentPassword || !newPassword || !confirmPassword)) {
-      setSettingsMsg({ type: 'error', text: '變更密碼時請完整填寫三個密碼欄位' });
+    if (wantsPasswordChange && (!newPassword || !confirmPassword)) {
+      setSettingsMsg({ type: 'error', text: '變更密碼時請完整填寫兩個密碼欄位' });
       return;
     }
     if (wantsPasswordChange && newPassword.length < 8) {
@@ -405,7 +402,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
     try {
       setIsSavingSettings(true);
       if (wantsPasswordChange) {
-        await changePassword({ currentPassword, newPassword });
+        await changePassword({ newPassword });
       } else {
         const updatedMember = await updateMe({ name: updatedName, displayName: updatedName, address: updatedAddress });
         setMember(updatedMember);
@@ -428,7 +425,6 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
   const { subscription } = member;
   const dashboardStats: DashboardStat[] = [
     { value: savedArticles.length, label: '收藏文章', tab: 'saved' },
-    { value: stats.attendedEvents, label: '參加活動', tab: 'overview' },
     { value: stats.donationCount, label: '奉獻紀錄', tab: 'donations' },
     { value: orders.reduce((acc, o) => acc + o.items.reduce((sum, item) => sum + item.quantity, 0), 0), label: '已購商品', tab: 'orders' },
   ];
@@ -680,7 +676,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     <table className="w-full text-sm text-left whitespace-nowrap font-sans">
                       <thead className="text-xs text-theme-text/60 uppercase bg-theme-bg border-y border-theme-text/10">
                         <tr>
-                          {['奉獻日期', '奉獻專案', '奉獻方式', '金額', '收據'].map((h) => (
+                          {['奉獻日期', '奉獻專案', '奉獻方式', '金額'].map((h) => (
                             <th key={h} className="px-4 py-3.5 font-bold">{h}</th>
                           ))}
                         </tr>
@@ -694,11 +690,6 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                             </td>
                             <td className="px-4 py-4 text-theme-text/60">{rec.method}</td>
                             <td className="px-4 py-4 font-bold">{rec.amount}</td>
-                            <td className="px-4 py-4">
-                              <button onClick={() => setSelectedReceipt(rec)} className="text-brand-red hover:underline text-xs font-bold underline-offset-4">
-                                下載收據
-                              </button>
-                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -749,7 +740,6 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
 
                     <div className="flex flex-col gap-3">
                       <label className="text-xs font-bold tracking-widest text-theme-text/70">變更密碼 Change Password</label>
-                      <input name="currentPassword" type="password" maxLength={128} autoComplete="current-password" placeholder="輸入舊密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                       <input name="newPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="設定新密碼（至少 8 個字元）" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                       <input name="confirmPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="再次輸入新密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                     </div>
@@ -876,10 +866,6 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
           </div>
         </div>
       </div>
-
-      {selectedReceipt && (
-        <ReceiptModal receipt={selectedReceipt} onClose={() => setSelectedReceipt(null)} />
-      )}
 
       {isPaymentModalOpen && <PaymentModal onClose={() => setIsPaymentModalOpen(false)} />}
 

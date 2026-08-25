@@ -61,7 +61,7 @@ export async function forgotPassword(params: ForgotPasswordRequest, options?: Ap
 export async function changePassword(params: ChangePasswordRequest, options?: ApiRequestOptions): Promise<void> {
   if (!USE_MOCK_API) return apiPost<void>('/api/me/password', params, options);
   await devDelay();
-  if (!params.currentPassword || params.newPassword.length < 8) throw new Error('新密碼至少需要 8 個字元');
+  if (params.newPassword.length < 8) throw new Error('新密碼至少需要 8 個字元');
 }
 
 export async function logout(options?: ApiRequestOptions): Promise<void> {
