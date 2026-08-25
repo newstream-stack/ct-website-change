@@ -39,11 +39,6 @@
   -webkit-text-stroke: 1px rgb(var(--text-base) / 0.5);
   transition: -webkit-text-stroke 0.5s ease;
 }
-.text-outline-inverse {
-  color: transparent;
-  -webkit-text-stroke: 1px rgb(var(--bg-base) / 0.8);
-  transition: -webkit-text-stroke 0.5s ease;
-}
 
 /* 標題過渡動畫 */
 .page-transition {

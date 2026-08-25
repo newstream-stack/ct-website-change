@@ -293,7 +293,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
 
             <button type="button" className="w-full bg-theme-text text-theme-bg py-24 md:py-40 px-6 text-center group cursor-pointer border-t border-theme-text/10 transition-colors duration-500" onClick={() => goToCategory('首頁')}>
                 <span className="font-display text-brand-red font-bold text-xs md:text-sm tracking-[0.2em] uppercase block mb-6 md:mb-10">Return to Cover</span>
-                <h2 className="text-4xl sm:text-6xl md:text-[100px] font-serif font-black text-outline-inverse group-hover:text-theme-bg transition-all duration-500 leading-none">
+                <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-black text-theme-bg group-hover:text-brand-red transition-colors duration-500 leading-none">
                     Back to Index <i className="fas fa-long-arrow-alt-right ml-2 md:ml-4 inline-block transform md:group-hover:translate-x-12 transition-transform duration-500 text-brand-red"></i>
                 </h2>
             </button>
