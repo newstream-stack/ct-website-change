@@ -128,7 +128,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                         {article.title}
                     </h1>
                     <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 tracking-widest text-[10px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
-                        <span>文｜<button onClick={() => goToAuthor(article.author)} className="text-brand-red hover:underline underline-offset-2">{article.author}</button></span>
+                        <button onClick={() => goToAuthor(article.author)} className="text-brand-red hover:underline underline-offset-2">{article.author}</button>
                         <span className="text-theme-text/30 transition-colors">|</span>
                         <span>{formatArticleDate(article.date, { withYear: true })}</span>
                     </div>
@@ -282,7 +282,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 <span className="text-brand-red font-display font-bold text-[10px] uppercase tracking-widest mb-2">{n.category}</span>
                                 <h4 className="text-lg md:text-xl font-serif font-black text-theme-text leading-[1.4] md:leading-snug group-hover:text-brand-red transition-colors line-clamp-2 mb-3 tracking-wide md:tracking-normal">{n.title}</h4>
                                 <div className="mt-auto font-display text-[9px] uppercase tracking-widest text-theme-text/60 pt-4 border-t border-theme-text/10 transition-colors">
-                                    文｜{n.author} &nbsp;|&nbsp; {formatArticleDate(n.date)}
+                                    {n.author} &nbsp;|&nbsp; {formatArticleDate(n.date)}
                                 </div>
                             </button>
                         ))}

@@ -69,7 +69,7 @@ function NewsSectionBlock({
               {news.title}
             </h4>
             <div className="mt-auto pt-3 border-t border-theme-text/5 flex items-center justify-between">
-              <span className="font-display text-[10px] font-bold uppercase tracking-widest text-theme-text/40">By {news.author}</span>
+              <span className="text-[11px] font-bold tracking-widest text-theme-text/40">{news.author}</span>
               <i className="fas fa-arrow-right text-[9px] text-brand-red transform -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all" />
             </div>
           </button>
@@ -201,7 +201,7 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
               {leadStory.excerpt}
             </p>
             <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 flex items-center gap-3">
-              <span>By <span className="text-theme-text/80">{leadStory.author}</span></span>
+              <span className="text-theme-text/80">{leadStory.author}</span>
               <span className="w-1 h-1 bg-theme-text/20 rounded-full" />
               <span>{formatArticleDate(leadStory.date, { withYear: true })}</span>
               <span className="ml-auto text-brand-red opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">

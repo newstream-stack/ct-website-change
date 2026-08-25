@@ -148,7 +148,7 @@ export default function CategoryList({ category, openArticle, initialSubCategory
                 </p>
                 <div className="mt-auto pt-4 border-t border-theme-text/5 flex items-center justify-between transition-colors">
                   <span className="text-[10px] font-bold text-theme-text/40 tracking-widest uppercase">
-                    By {news.author}
+                    {news.author}
                   </span>
                   <i className="fas fa-arrow-right text-[10px] text-brand-red transform -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all"></i>
                 </div>
@@ -239,7 +239,7 @@ export default function CategoryList({ category, openArticle, initialSubCategory
                       <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-serif font-black mb-3 text-theme-text group-hover:text-brand-red transition-colors leading-[1.4] md:leading-tight tracking-wide md:tracking-normal">{news.title}</h2>
                       <p className="text-sm md:text-lg font-light text-theme-text/70 mb-4 line-clamp-2 md:line-clamp-3 transition-colors leading-relaxed">{news.excerpt}</p>
                       <div className="font-display text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/50 mt-auto flex items-center gap-3 transition-colors">
-                        <span>By <span className="text-theme-text/80 transition-colors">{news.author}</span></span>
+                        <span className="text-theme-text/80 transition-colors">{news.author}</span>
                         <span className="w-1 h-1 bg-theme-text/20 rounded-full transition-colors"></span>
                         <span>{formatArticleDate(news.date, { withYear: true })}</span>
                       </div>
