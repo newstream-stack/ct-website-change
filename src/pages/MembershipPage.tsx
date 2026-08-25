@@ -4,9 +4,33 @@ import { createMembershipSubscription, getMembershipPlans } from '../api/members
 import { useAsyncData } from '../hooks/useAsyncData';
 import AsyncPageState from '../components/AsyncPageState';
 import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
+import type { MembershipPlan } from '../types/membership';
 
 interface MembershipPageProps {
   goToCategory: (cat: string, options?: { register?: boolean }) => void;
+}
+
+const PERIOD_LABEL: Record<MembershipPlan['billingPeriod'], string> = {
+  month: '月',
+  year: '年',
+};
+
+/** 權益欄位取所有方案的聯集，依首次出現順序排列，換真實 API 資料也不必改版面。 */
+function collectFeatures(plans: MembershipPlan[]): string[] {
+  const rows = new Set<string>();
+  plans.forEach((plan) => plan.features.forEach((feature) => rows.add(feature)));
+  return [...rows];
+}
+
+function PriceTag({ plan, size }: { plan: MembershipPlan; size: 'sm' | 'lg' }) {
+  return (
+    <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
+      <span className={`font-serif font-black tabular-nums leading-none ${size === 'lg' ? 'text-3xl md:text-4xl' : 'text-2xl'}`}>
+        {plan.price.toLocaleString()}
+      </span>
+      <span className="text-xs text-theme-text/55">元 / {PERIOD_LABEL[plan.billingPeriod]}</span>
+    </span>
+  );
 }
 
 export default function MembershipPage({ goToCategory }: MembershipPageProps) {
@@ -53,67 +77,196 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
   if (isLoading) return <AsyncPageState />;
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
+  const featureRows = collectFeatures(plans);
+  const isSubmitting = submittingPlanId !== null;
+
+  const subscribeLabel = (plan: MembershipPlan) =>
+    submittingPlanId === plan.id ? '建立訂閱中…' : '立即訂閱';
+
+  const buttonClass = (plan: MembershipPlan) =>
+    `w-full py-3.5 px-4 text-sm font-bold tracking-widest transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-wait ${
+      plan.isPopular
+        ? 'bg-brand-red text-white hover:bg-[#7d151c]'
+        : 'border border-theme-text text-theme-text hover:bg-theme-text hover:text-theme-bg'
+    }`;
+
   return (
     <div className="pt-[190px] md:pt-[190px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
-      <div className="max-w-[1200px] mx-auto relative z-10 animate-fade-in-up">
-        
+      <div className="max-w-[1080px] mx-auto animate-fade-in-up">
+
         {subscribeMsg && (
-          <div className={`fixed top-24 left-1/2 -translate-x-1/2 z-50 text-white text-xs font-bold tracking-widest px-6 py-3 rounded-full shadow-lg animate-fade-in-up ${subscribeMsg.type === 'error' ? 'bg-red-600' : 'bg-amber-600'}`}>
+          <div
+            role="status"
+            className={`fixed top-24 left-1/2 -translate-x-1/2 z-50 px-6 py-3 text-xs font-bold tracking-widest border-l-4 bg-theme-bg text-theme-text shadow-[0_2px_16px_rgba(0,0,0,0.12)] ${
+              subscribeMsg.type === 'error' ? 'border-brand-red' : 'border-theme-text'
+            }`}
+          >
             {subscribeMsg.text}
           </div>
         )}
 
-        {/* Header Section */}
-        <div className="text-center mb-16 md:mb-20">
-          <span className="font-display text-brand-red tracking-[0.3em] uppercase text-xs md:text-sm mb-4 block font-bold">Membership</span>
-          <h1 className="text-4xl md:text-5xl lg:text-[70px] font-serif font-black tracking-tighter text-theme-text transition-colors leading-[1.1] mb-6">加入論壇報會員</h1>
-          <p className="text-sm md:text-lg text-theme-text/70 max-w-2xl mx-auto leading-relaxed">
-            成為影響力夥伴，一起支持美好的價值。選擇適合您的方案，獲得專屬會員福利。
-          </p>
-        </div>
+        {/* 報頭：粗細雙線夾住標題，沿用報紙 masthead 的作法 */}
+        <header className="border-t-4 border-theme-text pt-1 mb-14 md:mb-20">
+          <div className="border-t border-theme-text pt-9 md:pt-12 pb-8 md:pb-10 border-b border-theme-text text-center">
+            <p className="text-[11px] md:text-xs tracking-[0.35em] text-theme-text/45 mb-5">
+              財團法人基督教論壇基金會
+            </p>
+            <h1 className="font-serif text-4xl md:text-6xl font-black tracking-[0.12em] leading-tight mb-6">
+              訂閱論壇報
+            </h1>
+            <p className="text-sm md:text-base text-theme-text/60 leading-relaxed max-w-xl mx-auto">
+              自 1965 年創刊，論壇報以文字記錄華人教會的腳蹤。
+              您的訂閱，是這份記錄得以繼續的憑藉。
+            </p>
+          </div>
+        </header>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-8">
-          {plans.map((plan) => (
-            <div 
-              key={plan.id}
-              className={`relative bg-theme-bg/60 backdrop-blur-xl border border-theme-text/10 rounded-2xl flex flex-col transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl shadow-theme-text/5 ${plan.isPopular ? 'md:-translate-y-4 md:shadow-2xl md:border-brand-red/50' : ''}`}
-            >
-              {plan.isPopular && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-brand-red text-white px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-bold tracking-widest uppercase z-10 shadow-md">
-                  熱門推薦
-                </div>
-              )}
-              
-              <div className="p-8 md:p-10 flex flex-col h-full">
-                <h3 className="text-xl md:text-2xl font-serif font-bold text-theme-text mb-2">{plan.name}</h3>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-3xl lg:text-4xl font-display font-black text-brand-red">NT$ {plan.price.toLocaleString()}</span>
-                  <span className="text-sm font-sans text-theme-text/60">/ {plan.billingPeriod === 'month' ? '月' : '年'}</span>
-                </div>
-                <p className="text-xs sm:text-sm text-theme-text/60 mb-8 md:flex-1">{plan.description}</p>
-                
-                <div className="w-full h-px bg-theme-text/10 mb-8"></div>
-                
-                <ul className="flex flex-col gap-4 mb-10">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex flex-start gap-4 text-sm font-bold text-theme-text/80 items-start">
-                      <i className="fas fa-check text-brand-red mt-1 text-xs"></i>
-                      <span className="leading-snug">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => void handleSubscribe(plan.id)}
-                  disabled={submittingPlanId !== null}
-                  className={`mt-auto w-full py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 transform active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-wait ${plan.isPopular ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20 hover:bg-[#b31b1b]' : 'bg-theme-text/5 border border-theme-text/10 text-theme-text hover:bg-theme-text/10'}`}
+        {/* 桌機：訂閱方案對照表 */}
+        <table className="hidden md:table w-full border-collapse text-left">
+          <caption className="sr-only">會員訂閱方案權益對照表</caption>
+          <colgroup>
+            <col className="w-[34%]" />
+            {plans.map((plan) => (
+              <col key={plan.id} />
+            ))}
+          </colgroup>
+
+          <thead>
+            <tr className="border-b-2 border-theme-text align-bottom">
+              <th scope="col" className="py-5 pr-6 text-xs tracking-[0.2em] text-theme-text/45 font-normal">
+                方案內容
+              </th>
+              {plans.map((plan) => (
+                <th
+                  key={plan.id}
+                  scope="col"
+                  className={`py-5 px-5 align-bottom ${plan.isPopular ? 'bg-theme-text/[0.04]' : ''}`}
                 >
-                  {submittingPlanId === plan.id ? '建立訂閱中…' : '立即訂閱'}
-                </button>
+                  <span className="block h-5 mb-2">
+                    {plan.isPopular && (
+                      <span className="text-[10px] font-bold tracking-[0.2em] text-brand-red border border-brand-red px-2 py-0.5">
+                        編輯推薦
+                      </span>
+                    )}
+                  </span>
+                  <span className="block font-serif text-xl lg:text-2xl font-bold tracking-wider mb-3 leading-snug">
+                    {plan.name}
+                  </span>
+                  <PriceTag plan={plan} size="lg" />
+                </th>
+              ))}
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr className="border-b border-theme-text/15">
+              <th scope="row" className="py-5 pr-6 align-top text-xs tracking-[0.2em] text-theme-text/45 font-normal">
+                方案說明
+              </th>
+              {plans.map((plan) => (
+                <td
+                  key={plan.id}
+                  className={`py-5 px-5 align-top text-sm text-theme-text/65 leading-relaxed ${plan.isPopular ? 'bg-theme-text/[0.04]' : ''}`}
+                >
+                  {plan.description}
+                </td>
+              ))}
+            </tr>
+
+            {featureRows.map((feature) => (
+              <tr key={feature} className="border-b border-theme-text/15">
+                <th scope="row" className="py-4 pr-6 text-sm font-normal text-theme-text/85">
+                  {feature}
+                </th>
+                {plans.map((plan) => {
+                  const included = plan.features.includes(feature);
+                  return (
+                    <td
+                      key={plan.id}
+                      className={`py-4 px-5 text-center ${plan.isPopular ? 'bg-theme-text/[0.04]' : ''}`}
+                    >
+                      <span className={included ? 'text-brand-red' : 'text-theme-text/20'} aria-hidden="true">
+                        {included ? '●' : '—'}
+                      </span>
+                      <span className="sr-only">{included ? '包含' : '不包含'}</span>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td className="py-7 pr-6" />
+              {plans.map((plan) => (
+                <td key={plan.id} className={`py-7 px-5 ${plan.isPopular ? 'bg-theme-text/[0.04]' : ''}`}>
+                  <button
+                    type="button"
+                    onClick={() => void handleSubscribe(plan.id)}
+                    disabled={isSubmitting}
+                    className={buttonClass(plan)}
+                  >
+                    {subscribeLabel(plan)}
+                  </button>
+                </td>
+              ))}
+            </tr>
+          </tfoot>
+        </table>
+
+        {/* 手機：逐一列出的訂閱單 */}
+        <div className="md:hidden border-t-2 border-theme-text">
+          {plans.map((plan) => (
+            <section key={plan.id} className="border-b border-theme-text/20 py-8">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <h2 className="font-serif text-2xl font-bold tracking-wider leading-snug">{plan.name}</h2>
+                {plan.isPopular && (
+                  <span className="shrink-0 mt-1 text-[10px] font-bold tracking-[0.2em] text-brand-red border border-brand-red px-2 py-0.5">
+                    編輯推薦
+                  </span>
+                )}
               </div>
-            </div>
+
+              <div className="pb-4 mb-4 border-b border-theme-text/15">
+                <PriceTag plan={plan} size="sm" />
+              </div>
+
+              <p className="text-sm text-theme-text/60 leading-relaxed mb-5">{plan.description}</p>
+
+              <ul className="flex flex-col gap-2.5 mb-7">
+                {featureRows.map((feature) => {
+                  const included = plan.features.includes(feature);
+                  return (
+                    <li
+                      key={feature}
+                      className={`flex items-baseline gap-3 text-sm ${included ? 'text-theme-text/85' : 'text-theme-text/30'}`}
+                    >
+                      <span className={included ? 'text-brand-red text-[8px]' : 'text-[8px]'} aria-hidden="true">
+                        {included ? '●' : '—'}
+                      </span>
+                      <span className="sr-only">{included ? '包含' : '不包含'}</span>
+                      <span className={included ? '' : 'line-through decoration-theme-text/20'}>{feature}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <button
+                type="button"
+                onClick={() => void handleSubscribe(plan.id)}
+                disabled={isSubmitting}
+                className={buttonClass(plan)}
+              >
+                {subscribeLabel(plan)}
+              </button>
+            </section>
           ))}
         </div>
+
+        <p className="mt-10 md:mt-12 text-xs text-theme-text/40 leading-loose">
+          訂閱費用含郵資，紙本報僅寄送台灣本島與離島地區。訂閱後可於會員專區查詢配送與續訂狀態。
+        </p>
 
       </div>
     </div>

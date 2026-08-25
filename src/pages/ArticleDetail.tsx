@@ -243,7 +243,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 ))}
                             </div>
                             <div className="flex lg:hidden">
-                                <button onClick={() => window.scrollTo(0, 0)} className="text-[10px] font-display tracking-widest uppercase text-theme-text/60 hover:text-theme-text transition-colors"><i className="fas fa-arrow-up mr-2"></i>Back to top</button>
+                                <button onClick={() => window.scrollTo(0, 0)} className="text-[10px] font-display tracking-widest uppercase text-theme-text/60 hover:text-theme-text transition-colors"><i className="fas fa-arrow-up mr-2"></i>回到頂端</button>
                             </div>
                         </div>
                     </div>
@@ -292,7 +292,6 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
             </div>
 
             <button type="button" className="w-full bg-theme-text text-theme-bg py-24 md:py-40 px-6 text-center group cursor-pointer border-t border-theme-text/10 transition-colors duration-500" onClick={() => goToCategory('首頁')}>
-                <span className="font-display text-brand-red font-bold text-xs md:text-sm tracking-[0.2em] uppercase block mb-6 md:mb-10">Return to Cover</span>
                 <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-black text-theme-bg group-hover:text-brand-red transition-colors duration-500 leading-none">
                     Back to Index <i className="fas fa-long-arrow-alt-right ml-2 md:ml-4 inline-block transform md:group-hover:translate-x-12 transition-transform duration-500 text-brand-red"></i>
                 </h2>

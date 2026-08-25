@@ -166,7 +166,6 @@ export default function CategoryList({ category, openArticle, initialSubCategory
               「生活即是事奉，美學即是禮拜。在日常的瑣碎中，尋見上帝隱藏的溫暖與真理。」
             </h2>
             <div className="w-16 h-1 bg-brand-red mx-auto mt-12 mb-6"></div>
-            <p className="text-theme-text/40 font-display text-xs md:text-sm tracking-[0.4em] uppercase">The Art of Faithful Living</p>
           </div>
         </div>
       </div>
@@ -249,7 +248,7 @@ export default function CategoryList({ category, openArticle, initialSubCategory
               ))
             ) : (
               <div className="py-20 text-center">
-                <p className="text-theme-text/40 font-display uppercase tracking-widest">No articles found in this category.</p>
+                <p className="text-theme-text/40 font-display uppercase tracking-widest">此分類目前沒有文章。</p>
               </div>
             )}
           </div>

@@ -28,8 +28,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center gap-4 mb-12 md:mb-16 border-b border-theme-text/10 pb-6">
              <h3 className="text-xl md:text-2xl font-bold tracking-widest uppercase">奉獻方案與支持</h3>
-             <span className="w-12 h-px bg-brand-red"></span>
-             <span className="text-[10px] md:text-xs text-theme-text/40 font-display tracking-widest uppercase">Impact Portfolios</span>
+             <span className="flex-1 h-px bg-brand-red/40"></span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 lg:gap-x-16">
@@ -49,7 +48,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
                    
                    {/* Reveal on hover overlay */}
                    <div className="absolute inset-x-0 bottom-0 p-8 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                      <span className="inline-block px-3 py-1 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase mb-4">View Detail</span>
+                      <span className="inline-block px-3 py-1 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase mb-4">查看方案</span>
                    </div>
                 </div>
                 

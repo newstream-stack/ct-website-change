@@ -31,7 +31,6 @@ export default function LineStickersPage() {
     <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-6xl mx-auto px-5 md:px-10">
         <div className="mb-12 md:mb-16">
-          <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">IMPACT Stickers</p>
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">論壇LINE貼圖</h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">
             把祝福、鼓勵與日常的可愛帶進每一段對話。
@@ -57,7 +56,6 @@ export default function LineStickersPage() {
         </div>
 
         <section className="mt-16 md:mt-24 pt-10 border-t border-theme-text/10">
-          <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">WhatsApp Stickers</p>
           <h2 className="font-serif text-2xl md:text-3xl font-bold tracking-wider mb-7">《IMPACT》WhatsApp 貼圖</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {WHATSAPP_STICKERS.map(([title, href]) => (

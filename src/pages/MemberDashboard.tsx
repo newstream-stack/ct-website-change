@@ -438,7 +438,6 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-theme-text/10 pb-8">
           <div>
             <h1 className="text-3xl md:text-5xl font-serif font-black tracking-widest text-theme-text mb-2">會員專區</h1>
-            <p className="text-sm font-sans tracking-widest text-theme-text/60 uppercase">Member Dashboard</p>
           </div>
           <div className="flex items-center gap-4 bg-theme-text/5 p-4 rounded-xl border border-theme-text/10">
             <div className="w-12 h-12 bg-brand-red/20 rounded-full flex items-center justify-center text-brand-red text-xl font-bold">
@@ -493,7 +492,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   <h3 className="text-xl font-serif font-bold mb-6">目前訂閱方案</h3>
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                     <div>
-                      <div className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest rounded-full mb-3">Active Plan</div>
+                      <div className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest rounded-full mb-3">目前方案</div>
                       <h4 className="text-2xl font-black font-display text-theme-text">{subscription.plan}</h4>
                       <p className="text-sm text-theme-text/60 mt-2">下一次扣款日：{subscription.nextBillingDate} (NT$ {subscription.price})</p>
                     </div>

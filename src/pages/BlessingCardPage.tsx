@@ -7,7 +7,6 @@ export default function BlessingCardPage() {
     <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-5xl mx-auto px-5 md:px-10">
         <div className="mb-12 md:mb-16">
-          <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">Blessing Card</p>
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">祝福卡申辦／捐款</h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">
             使用祝福卡，讓每一次日常消費都成為支持信仰媒體與公益推展的力量。
@@ -20,7 +19,6 @@ export default function BlessingCardPage() {
           </div>
 
           <div>
-            <p className="font-display text-xs tracking-[0.22em] text-brand-red uppercase mb-4">Bank of Taiwan</p>
             <h2 className="font-serif text-3xl md:text-4xl font-bold tracking-wider leading-tight mb-6">臺灣銀行<br />詩篇23篇祝福卡</h2>
             <p className="text-theme-text/65 text-sm md:text-base leading-loose mb-6">
               基督教論壇基金會與臺灣銀行合作，共同發行全國第一張「詩篇23篇祝福卡」。凡使用祝福卡刷卡消費，臺灣銀行將自每一筆消費中提撥 0.3% 回饋金予基督教論壇基金會，作為公益推展使用。

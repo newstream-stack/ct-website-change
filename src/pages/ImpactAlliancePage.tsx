@@ -65,7 +65,6 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
               「我們是一群看見影響力的同行者，透過連結與分享，讓屬靈的資源在亞洲這塊土地上自由流動。」
             </h2>
             <div className="w-16 h-1 bg-brand-red mx-auto mt-12 mb-6"></div>
-            <p className="text-theme-text/40 font-display text-xs md:text-sm tracking-[0.4em] uppercase">Impact Alliance Vision Statement</p>
          </div>
       </div>
 
@@ -74,8 +73,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center gap-4 mb-16 md:mb-24 border-b border-theme-text/10 pb-6">
              <h3 className="text-xl md:text-2xl font-bold tracking-widest uppercase">合作夥伴與聯盟成員</h3>
-             <span className="w-12 h-px bg-brand-red"></span>
-             <span className="text-[10px] md:text-xs text-theme-text/40 font-display tracking-widest uppercase">Members Directory</span>
+             <span className="flex-1 h-px bg-brand-red/40"></span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20 lg:gap-x-16">
@@ -89,7 +87,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
                    <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden flex items-center justify-center bg-white">
                       <img src={member.logoUrl} loading="lazy" decoding="async" className="w-[70%] h-[70%] object-contain transition-all duration-700 group-hover:scale-110" alt={member.name} />
                    </div>
-                   <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">Verified Member</div>
+                   <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">認證成員</div>
                 </div>
                 
                 {/* Info Center Aligned */}

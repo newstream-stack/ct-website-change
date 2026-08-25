@@ -364,7 +364,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
         {relatedProducts.length > 0 && (
           <div className="mt-20 pt-12 border-t border-theme-text/10">
             <h2 className="text-2xl md:text-3xl font-serif font-black text-theme-text mb-8">
-              你可能也喜歡 <span className="text-sm font-display font-light text-theme-text/40 ml-3 tracking-widest uppercase">Related Items</span>
+              你可能也喜歡
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               {relatedProducts.map((related) => (

@@ -95,7 +95,7 @@ export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPa
                  <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden">
                     <img src={author.avatarUrl} loading="lazy" decoding="async" className="w-full h-full object-cover rounded-full transition-all duration-700 group-hover:scale-110" alt={author.name} />
                  </div>
-                 <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">Verified Author</div>
+                 <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">認證作家</div>
               </div>
               
               {/* Info */}
@@ -104,7 +104,7 @@ export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPa
                  <div className="flex items-center justify-center gap-2 mb-6">
                     <span className="text-[10px] font-display text-theme-text/40 tracking-wider uppercase font-bold">{author.latestArticleDate}</span>
                     <span className="w-1 h-1 bg-brand-red/30 rounded-full"></span>
-                    <span className="text-[10px] font-display text-theme-text/40 tracking-wider uppercase font-bold">Latest Entry</span>
+                    <span className="text-[10px] font-display text-theme-text/40 tracking-wider uppercase font-bold">最新</span>
                  </div>
                  <h5 
                    className="font-bold text-sm md:text-base leading-relaxed text-theme-text/80 line-clamp-2 px-4 cursor-pointer hover:text-brand-red hover:underline underline-offset-4 decoration-1 transition-all"
@@ -129,7 +129,6 @@ export default function ColumnPage({ openArticle, initialSubCategory }: ColumnPa
               「文字是靈魂的迴響，專欄是思想的祭壇。讓我們用最真誠的筆觸，紀錄這個時代的信仰深度。」
             </h2>
             <div className="w-16 h-1 bg-brand-red mx-auto mt-12 mb-6"></div>
-            <p className="text-theme-text/40 font-display text-xs md:text-sm tracking-[0.4em] uppercase">The Mission of Columnists</p>
          </div>
       </div>
 

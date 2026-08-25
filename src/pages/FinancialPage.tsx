@@ -167,7 +167,6 @@ export default function FinancialPage() {
 
         {/* Hero */}
         <div className="mb-14 md:mb-20">
-          <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">Transparency</p>
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">
             財務報表
           </h1>
