@@ -38,11 +38,12 @@ const TagResultsPage = lazy(() => import('./pages/TagResultsPage'));
 const AuthorResultsPage = lazy(() => import('./pages/AuthorResultsPage'));
 const PaymentResultPage = lazy(() => import('./pages/PaymentResultPage'));
 const EpaperPage = lazy(() => import('./pages/EpaperPage'));
+const HomeNewsGrid = lazy(() => import('./pages/HomeNewsGrid'));
 
 const BOTTOM_AD_EXCLUDED_CATEGORIES = ['奉獻', '信仰好物', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀', '關於我們', '新聞連絡', '我要投稿', '申請合作', '客戶服務', '論壇Line貼圖', '祝福卡申辦/捐款', '版權隱私權聲明', '財務報表'];
 
 const SPECIAL_CATEGORIES = new Set([
-  '首頁', '信仰好物', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀',
+  '首頁', '首頁2', '信仰好物', '奉獻', '會員中心', '會員招募', '會員專區', '活動報名', '全版閱讀',
   '關於我們', '新聞連絡', '我要投稿', '版權隱私權聲明', '財務報表', '客戶服務',
   '申請合作', '論壇Line貼圖', '祝福卡申辦/捐款',
 ]);
@@ -239,7 +240,7 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
-  const showCategoryBar = (currentCategory === '首頁' || NEWS_CATEGORIES.includes(currentCategory) || !!currentArticleId);
+  const showCategoryBar = (currentCategory === '首頁' || currentCategory === '首頁2' || NEWS_CATEGORIES.includes(currentCategory) || !!currentArticleId);
   const isUnknownRoute = !currentArticleId && !currentTag && !currentAuthor
     && !paymentType && !NEWS_CATEGORIES.includes(currentCategory) && !SPECIAL_CATEGORIES.has(currentCategory);
 
@@ -268,6 +269,10 @@ export default function App() {
 
         {currentCategory === '首頁' && !currentArticleId && !currentTag && !currentAuthor && (
           <HomeAccordion openArticle={openArticle} />
+        )}
+
+        {currentCategory === '首頁2' && !currentArticleId && !currentTag && !currentAuthor && (
+          <HomeNewsGrid openArticle={openArticle} goToCategory={goToCategory} />
         )}
 
         {currentCategory === '專欄' && !currentArticleId && !currentTag && !currentAuthor && (

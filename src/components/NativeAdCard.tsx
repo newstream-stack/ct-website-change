@@ -7,8 +7,8 @@ interface NativeAdCardProps {
 
 export default function NativeAdCard({ ad }: NativeAdCardProps) {
   return (
-    <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className="group relative flex flex-col sm:flex-row md:flex-col overflow-hidden bg-theme-text/5 hover:bg-theme-text/10 transition-colors border border-brand-red/20 shadow-sm cursor-pointer col-span-1">
-      <div className="w-[160px] h-[192px] sm:w-[160px] sm:h-[192px] md:w-[480px] md:h-[256px] mx-auto sm:mx-0 md:mx-auto flex-shrink-0 relative overflow-hidden bg-theme-text/10">
+    <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className="group relative flex flex-col overflow-hidden bg-theme-text/5 hover:bg-theme-text/10 transition-colors border border-brand-red/20 shadow-sm cursor-pointer col-span-1">
+      <div className="w-full aspect-[832/470] relative overflow-hidden bg-theme-text/10">
         <img src={ad.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt={ad.title} />
         <div className="absolute top-3 left-3 bg-brand-red text-white text-[10px] uppercase tracking-widest px-2 py-0.5 font-bold animate-pulse">Sponsored</div>
       </div>

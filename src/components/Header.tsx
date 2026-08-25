@@ -216,6 +216,19 @@ export default function Header({
                 </div>
               );
             })}
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  goToCategory('首頁2');
+                  setOpenSubmenu(null);
+                }}
+                className="cursor-pointer p-2 -m-2 transition-colors hover:text-brand-red flex items-center gap-1.5"
+              >
+                首頁（新版）
+                <span className="text-[9px] font-display text-brand-red border border-brand-red/40 rounded-full px-1.5 py-0.5">TEST</span>
+              </button>
+            </div>
           </div>
 
           {openSubmenu && CATEGORY_SUBMENUS[openSubmenu] && (
