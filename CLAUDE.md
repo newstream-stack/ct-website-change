@@ -146,7 +146,7 @@ src/
     ├── ArticleDetail.tsx          # 文章閱讀頁（詳見下方專節）
     ├── TagResultsPage.tsx / AuthorResultsPage.tsx  # 標籤／作者搜尋結果頁
     ├── ActionPage.tsx             # 訂報頁
-    ├── ProductGallery.tsx         # 信仰好物頁（橫向 scroll gallery）
+    ├── ProductGallery.tsx         # 信仰好物頁（格狀商品目錄）
     ├── DonationGallery.tsx        # 奉獻方案列表
     ├── LoginPage.tsx / MembershipPage.tsx / MemberDashboard.tsx
     ├── EventRegistrationPage.tsx / ImpactAlliancePage.tsx
@@ -394,7 +394,6 @@ export const NEWS_CATEGORIES = [
 | `.content-expanded` | 面板展開時顯示的完整內容 |
 | `.hide-scrollbar` | 隱藏滾動條 |
 | `.article-content` | 文章內文排版（`p`、`h2`、drop-cap） |
-| `.gallery-track` | ProductGallery 橫向卷軸 |
 
 ---
 

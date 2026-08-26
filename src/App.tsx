@@ -297,7 +297,10 @@ export default function App() {
         )}
 
         {!currentArticleId && (currentCategory === '信仰好物' && !currentProductId) && (
-          <ProductGallery onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); scrollToTop(); }} />
+          <ProductGallery
+            onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); scrollToTop(); }}
+            onAddToCart={addToCart}
+          />
         )}
 
         {!currentArticleId && (currentCategory === '信仰好物' && currentProductId) && (
