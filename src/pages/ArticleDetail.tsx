@@ -135,8 +135,8 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                 </div>
             </div>
 
-            <div className="bg-theme-bg py-8 md:py-24 pb-20 md:pb-24 text-theme-text transition-colors duration-500">
-                <div className="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16 relative">
+            <div className="bg-theme-bg py-8 md:py-20 pb-20 md:pb-24 text-theme-text transition-colors duration-500">
+                <div className="max-w-[90rem] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 relative">
 
                     <div className="lg:col-span-8 article-content">
                         <div className="flex items-center gap-4 mb-8 pb-6 border-b border-theme-text/10 transition-colors">
@@ -289,7 +289,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                 </div>
             </div>
 
-            <button type="button" className="w-full bg-theme-text text-theme-bg py-24 md:py-40 px-6 text-center group cursor-pointer border-t border-theme-text/10 transition-colors duration-500" onClick={() => goToCategory('首頁')}>
+            <button type="button" className="w-full bg-theme-text text-theme-bg py-16 md:py-40 px-6 text-center group cursor-pointer border-t border-theme-text/10 transition-colors duration-500" onClick={() => goToCategory('首頁')}>
                 <h2 className="text-4xl sm:text-6xl md:text-8xl font-serif font-black text-theme-bg group-hover:text-brand-red transition-colors duration-500 leading-none">
                     Back to Index <i className="fas fa-long-arrow-alt-right ml-2 md:ml-4 inline-block transform md:group-hover:translate-x-12 transition-transform duration-500 text-brand-red"></i>
                 </h2>

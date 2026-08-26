@@ -39,7 +39,7 @@ export default function SubmitPage() {
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero */}
-        <div className="mb-14 md:mb-20">
+        <div className="mb-14 md:mb-16">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             我要投稿
           </h1>
@@ -49,7 +49,7 @@ export default function SubmitPage() {
         </div>
 
         {/* How to submit */}
-        <div className="mb-14 md:mb-20 p-6 md:p-8 border border-brand-red/30 bg-brand-red/5">
+        <div className="mb-14 md:mb-16 p-6 md:p-8 border border-brand-red/30 bg-brand-red/5">
           <p className="font-display text-[10px] tracking-[0.25em] text-brand-red uppercase mb-4">投稿方式</p>
           <div className="flex flex-col gap-3">
             <div className="flex items-start gap-3">

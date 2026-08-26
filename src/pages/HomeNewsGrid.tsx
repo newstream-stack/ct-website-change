@@ -178,7 +178,7 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
         </div>
 
         {/* Hero: lead story + headline list */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-16 md:mb-24 border border-theme-text/10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-12 md:mb-20 border border-theme-text/10">
           <button
             type="button"
             className="lg:col-span-7 w-full text-left group cursor-pointer p-6 md:p-10"
@@ -236,12 +236,12 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
           </div>
         </div>
 
-        <div className="mb-16 md:mb-24">
+        <div className="mb-12 md:mb-20">
           <SummitBanner />
         </div>
 
         {/* Sections — 專欄作家跟最後一個分類（生活情報）對調順序 */}
-        <div className="flex flex-col gap-16 md:gap-20">
+        <div className="flex flex-col gap-12 md:gap-20">
           {leadingSections.map((section, sIndex) => (
             <Fragment key={section.category}>
               <NewsSectionBlock section={section} number={sIndex + 1} openArticle={openArticle} goToCategory={goToCategory} />

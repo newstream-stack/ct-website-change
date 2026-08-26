@@ -49,7 +49,7 @@ export default function ContactPage() {
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero header */}
-        <div className="mb-16 md:mb-20">
+        <div className="mb-12 md:mb-16">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             新聞連絡
           </h1>
@@ -59,7 +59,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact methods */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-16 md:mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12 md:mb-16">
           {CONTACT_METHODS.map((m) => (
             <a
               key={m.label}

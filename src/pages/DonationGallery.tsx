@@ -17,16 +17,16 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
     <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Header Section */}
-      <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-16">
+      <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-12">
         <div className="max-w-[1400px] mx-auto">
            <h1 className="text-4xl md:text-5xl font-serif font-black tracking-tight text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors">奉獻 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Giving</span></h1>
         </div>
       </div>
 
       {/* 3. The Giving List - Premium Grid */}
-      <div className="px-5 md:px-12 lg:px-20 mb-32">
+      <div className="px-5 md:px-12 lg:px-20 mb-20">
         <div className="max-w-[1400px] mx-auto">
-          <div className="flex items-center gap-4 mb-12 md:mb-16 border-b border-theme-text/10 pb-6">
+          <div className="flex items-center gap-4 mb-12 md:mb-12 border-b border-theme-text/10 pb-6">
              <h3 className="text-xl md:text-2xl font-bold tracking-widest uppercase">奉獻方案與支持</h3>
              <span className="flex-1 h-px bg-brand-red/40"></span>
           </div>
@@ -68,7 +68,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
       </div>
 
       {/* 4. Vision Quote Area */}
-      <div className="w-full py-24 md:py-32 bg-theme-text/5 border-y border-theme-text/10 relative overflow-hidden transition-colors">
+      <div className="w-full py-16 md:py-24 bg-theme-text/5 border-y border-theme-text/10 relative overflow-hidden transition-colors">
          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] md:text-[250px] font-serif text-theme-text/5 leading-none pointer-events-none select-none">
             GIVING
          </div>

@@ -106,7 +106,7 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
         )}
 
         {/* 報頭：粗細雙線夾住標題，沿用報紙 masthead 的作法 */}
-        <header className="border-t-4 border-theme-text pt-1 mb-14 md:mb-20">
+        <header className="border-t-4 border-theme-text pt-1 mb-14 md:mb-16">
           <div className="border-t border-theme-text pt-9 md:pt-12 pb-8 md:pb-10 border-b border-theme-text text-center">
             <p className="text-[11px] md:text-xs tracking-[0.35em] text-theme-text/45 mb-5">
               財團法人基督教論壇基金會

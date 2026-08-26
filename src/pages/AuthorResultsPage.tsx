@@ -21,7 +21,7 @@ export default function AuthorResultsPage({ author, openArticle }: AuthorResults
   return (
     <div className="pt-[190px] md:pt-48 pb-32 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12 md:mb-16 border-b border-theme-text/15 pb-7 md:pb-9">
+        <div className="mb-12 md:mb-12 border-b border-theme-text/15 pb-7 md:pb-9">
           <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">作者</p>
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight">{author}</h1>
           <p className="mt-5 text-sm text-theme-text/55">共 {articles.length} 篇文章</p>

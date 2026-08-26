@@ -166,7 +166,7 @@ export default function FinancialPage() {
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero */}
-        <div className="mb-14 md:mb-20">
+        <div className="mb-14 md:mb-16">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             財務報表
           </h1>
@@ -183,7 +183,7 @@ export default function FinancialPage() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-16 md:mt-24 pt-8 border-t border-theme-text/10 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs text-theme-text/30">
+        <div className="mt-16 md:mt-20 pt-8 border-t border-theme-text/10 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs text-theme-text/30">
           <span>財團法人基督教論壇基金會｜統一編號 00965377</span>
           <span className="font-display tracking-widest uppercase">Christian Tribune Foundation</span>
         </div>

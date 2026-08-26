@@ -21,7 +21,7 @@ export default function TagResultsPage({ tag, openArticle }: TagResultsPageProps
   return (
     <div className="pt-[190px] md:pt-48 pb-32 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12 md:mb-16 border-b border-theme-text/15 pb-7 md:pb-9">
+        <div className="mb-12 md:mb-12 border-b border-theme-text/15 pb-7 md:pb-9">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight">#{tag.toUpperCase()}</h1>
           <p className="mt-5 text-sm text-theme-text/55">共 {articles.length} 篇相關文章</p>
         </div>

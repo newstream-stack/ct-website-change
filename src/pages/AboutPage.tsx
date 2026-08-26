@@ -150,7 +150,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero header */}
-        <div className="mb-16 md:mb-24">
+        <div className="mb-12 md:mb-20">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             關於我們
           </h1>
@@ -163,7 +163,7 @@ export default function AboutPage() {
         </div>
 
         {/* Sections */}
-        <div className="flex flex-col gap-16 md:gap-20">
+        <div className="flex flex-col gap-12 md:gap-20">
           {SECTIONS.map((s) => (
             <div key={s.num} className="grid md:grid-cols-[80px_1fr] gap-4 md:gap-10 items-start">
               <div className="flex md:flex-col items-center md:items-start gap-3 md:gap-1">
@@ -185,7 +185,7 @@ export default function AboutPage() {
         </div>
 
         {/* Timeline section */}
-        <div className="mt-24 md:mt-32">
+        <div className="mt-16 md:mt-32">
           <div className="mb-12">
             <h2 className="font-serif text-3xl md:text-4xl font-black tracking-tight">論壇大事紀</h2>
           </div>

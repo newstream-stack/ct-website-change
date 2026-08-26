@@ -80,7 +80,7 @@ export default function PrivacyPage() {
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero */}
-        <div className="mb-14 md:mb-20">
+        <div className="mb-14 md:mb-16">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             版權隱私權聲明
           </h1>
@@ -90,7 +90,7 @@ export default function PrivacyPage() {
         </div>
 
         {/* Copyright section */}
-        <div className="mb-16 md:mb-24">
+        <div className="mb-12 md:mb-20">
           <div className="flex items-center gap-4 mb-10">
             <h2 className="font-serif text-2xl md:text-3xl font-bold tracking-wider">版權聲明</h2>
             <div className="flex-1 h-px bg-theme-text/10" />

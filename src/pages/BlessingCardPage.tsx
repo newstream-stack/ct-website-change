@@ -6,7 +6,7 @@ export default function BlessingCardPage() {
   return (
     <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-5xl mx-auto px-5 md:px-10">
-        <div className="mb-12 md:mb-16">
+        <div className="mb-12 md:mb-12">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">祝福卡申辦／捐款</h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">
             使用祝福卡，讓每一次日常消費都成為支持信仰媒體與公益推展的力量。
