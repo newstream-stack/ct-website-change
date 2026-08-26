@@ -17,7 +17,7 @@ interface CategoryListProps {
   initialSubCategory?: string | null;
 }
 
-const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '找活動'];
+const LIFE_SUB_CATEGORIES = ['全部', '找工作', '找服務', '找學習', '找活動', '論壇消息', '桌布'];
 const FORUM_SUB_CATEGORIES = ['全部', ...CT_FORUM_SUBCATEGORIES];
 const HERO_CAROUSEL_CATEGORIES = ['生活情報', '基督教論壇報', '人物見證'];
 
