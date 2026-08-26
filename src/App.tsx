@@ -10,6 +10,7 @@ import SplashAd from './components/SplashAd';
 import Footer from './components/Footer';
 import { buildRouteUrl, readRoute, type AppRoute } from './routing';
 import { backfillLegacyProductStock, readJsonStorage, writeJsonStorage } from './utils/storage';
+import { scrollToTop } from './utils/scroll';
 
 const ProductGallery = lazy(() => import('./pages/ProductGallery'));
 const CategoryList = lazy(() => import('./pages/CategoryList'));
@@ -206,7 +207,7 @@ export default function App() {
     }
 
     setRoute({ category: cat, articleId: null, tag: null, author: null, planId: null, productId: null, subCategory: options?.subCategory ?? null });
-    window.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const returnAfterLogin = () => {
@@ -221,27 +222,27 @@ export default function App() {
 
     setRoute(target);
     setPreLoginRoute(null);
-    window.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const openArticle = (id: number) => {
     setRoute((current) => ({ ...current, articleId: id, tag: null, author: null, planId: null, productId: null }));
-    window.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const goToTag = (tag: string) => {
     setRoute({ category: '最新文章', articleId: null, tag, author: null, planId: null, productId: null });
-    window.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const goToAuthor = (author: string) => {
     setRoute({ category: '最新文章', articleId: null, tag: null, author, planId: null, productId: null });
-    window.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const openPlan = (id: number) => {
     setRoute((current) => ({ ...current, planId: id }));
-    window.scrollTo(0, 0);
+    scrollToTop();
   };
 
   const showCategoryBar = (currentCategory === '首頁' || currentCategory === '首頁2' || NEWS_CATEGORIES.includes(currentCategory) || !!currentArticleId);
@@ -296,15 +297,15 @@ export default function App() {
         )}
 
         {!currentArticleId && (currentCategory === '信仰好物' && !currentProductId) && (
-          <ProductGallery onSelectProduct={(productId) => setRoute((current) => ({ ...current, productId }))} />
+          <ProductGallery onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); scrollToTop(); }} />
         )}
 
         {!currentArticleId && (currentCategory === '信仰好物' && currentProductId) && (
           <ProductDetail
             productId={currentProductId}
-            onBack={() => { setRoute((current) => ({ ...current, productId: null })); window.scrollTo(0, 0); }}
+            onBack={() => { setRoute((current) => ({ ...current, productId: null })); scrollToTop(); }}
             onAddToCart={addToCart}
-            onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); window.scrollTo(0, 0); }}
+            onSelectProduct={(productId) => { setRoute((current) => ({ ...current, productId })); scrollToTop(); }}
           />
         )}
 
@@ -417,7 +418,7 @@ export default function App() {
             }}
             onSelectProduct={(id) => {
               setRoute({ category: '信仰好物', articleId: null, tag: null, author: null, planId: null, productId: id });
-              window.scrollTo(0, 0);
+              scrollToTop();
             }}
             goToCategory={goToCategory}
           />

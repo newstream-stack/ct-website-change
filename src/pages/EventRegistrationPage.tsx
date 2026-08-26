@@ -4,6 +4,7 @@ import AsyncPageState from '../components/AsyncPageState';
 import { useAsyncData } from '../hooks/useAsyncData';
 import type { EventRegistrationResponse } from '../types/event';
 import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
+import { scrollToTop } from '../utils/scroll';
 
 interface EventRegistrationPageProps {
   goToCategory: (category: string) => void;
@@ -60,7 +61,7 @@ export default function EventRegistrationPage({ goToCategory }: EventRegistratio
         redirectToExternalUrl(response.paymentUrl);
         return;
       }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     } catch (submitFailure) {
       setSubmitError(submitFailure instanceof Error ? submitFailure.message : '報名送出失敗，請稍後再試');
     } finally {

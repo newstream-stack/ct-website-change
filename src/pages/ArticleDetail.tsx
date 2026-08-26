@@ -242,7 +242,7 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 ))}
                             </div>
                             <div className="flex lg:hidden">
-                                <button onClick={() => window.scrollTo(0, 0)} className="text-[10px] font-display tracking-widest uppercase text-theme-text/60 hover:text-theme-text transition-colors"><i className="fas fa-arrow-up mr-2"></i>回到頂端</button>
+                                <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="text-[10px] font-display tracking-widest uppercase text-theme-text/60 hover:text-theme-text transition-colors"><i className="fas fa-arrow-up mr-2"></i>回到頂端</button>
                             </div>
                         </div>
                     </div>
