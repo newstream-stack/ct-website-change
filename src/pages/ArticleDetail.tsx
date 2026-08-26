@@ -12,6 +12,16 @@ import { useAuth } from '../hooks/useAuth';
 import { getSafeExternalUrl } from '../utils/navigation';
 import { formatArticleDate } from '../utils/date';
 
+/**
+ * 把文章 HTML 從中間的 <h2> 切成兩半，供內文中段插播廣告使用。
+ * 小於兩個 <h2> 的文章不切，廣告改放在內文之後。
+ */
+function splitAtMiddleHeading(html: string): [string, string] {
+    const positions = Array.from(html.matchAll(/<h2[\s>]/g), (match) => match.index ?? -1).filter((index) => index > 0);
+    if (positions.length < 2) return [html, ''];
+    return [html.slice(0, positions[Math.floor(positions.length / 2)]), html.slice(positions[Math.floor(positions.length / 2)])];
+}
+
 interface ArticleDetailProps {
     articleId: number;
     openArticle: (id: number) => void;
@@ -234,7 +244,16 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                         )}
 
                         {article.content ? (
-                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article.content) }} />
+                            (() => {
+                                const [before, after] = splitAtMiddleHeading(DOMPurify.sanitize(article.content));
+                                return (
+                                    <>
+                                        <div dangerouslySetInnerHTML={{ __html: before }} />
+                                        {inlineAd && <InlineArticleBanner ad={inlineAd} />}
+                                        {after && <div dangerouslySetInnerHTML={{ __html: after }} />}
+                                    </>
+                                );
+                            })()
                         ) : (
                             <>
                                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(firstPart) }} />
