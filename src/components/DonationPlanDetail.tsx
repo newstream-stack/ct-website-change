@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { Plan, DonationFormPayload } from '../types/donation';
+import { OFFLINE_PAYMENT_METHODS, DONATION_CONTACT, REMITTANCE_NOTES } from '../data/donationChannels';
 import { getPlan, submitDonation } from '../api/plans';
 import { buildPaymentReturnUrl, redirectToExternalUrl } from '../utils/navigation';
 import { formatCheckoutAmountLabel } from '../utils/donationAmount';
@@ -13,7 +14,7 @@ interface DonationPlanDetailProps {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const PRESET_AMOUNTS = [1000, 3000, 5000, 10000, 50000];
+const DEFAULT_PRESET_AMOUNTS = [1000, 3000, 5000, 10000, 50000];
 const INSTALLMENT_PERIODS = [6, 12, 18];
 const RECEIPT_OPTIONS = ['年度彙開', '按月寄送', '不需收據'] as const;
 
@@ -204,25 +205,42 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
     }
   };
 
+  // 手機版表單在長篇故事之後（實測要捲約 2000px），沒看到表單時就在底部固定一條捷徑。
+  const [isFormInView, setIsFormInView] = useState(false);
+  useEffect(() => {
+    const form = document.getElementById('donation-form');
+    if (!form) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsFormInView(entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+    observer.observe(form);
+    return () => observer.disconnect();
+  }, [plan?.id]);
+
+  const scrollToForm = () => {
+    document.getElementById('donation-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   if (isLoading) return <LoadingScreen />;
   if (loadError || !plan) return <AsyncPageState error={loadError ?? new Error('找不到奉獻專案')} onRetry={() => setReloadToken((value) => value + 1)} />;
+
+  // 方案文案常寫明門檻（例如「奉獻 2000 元贈 1 組」），金額鈕要跟著方案走。
+  const presetAmounts = plan.suggestedAmounts?.length ? plan.suggestedAmounts : DEFAULT_PRESET_AMOUNTS;
 
   const inputCls =
     'w-full bg-theme-text/5 border border-theme-text/20 rounded-sm py-3 px-4 text-base text-theme-text focus:outline-none focus:border-brand-red focus:bg-transparent transition-colors placeholder-theme-text/30';
 
   // ── View ─────────────────────────────────────────────────────────────────
   return (
-    <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[150px] md:pt-0 bg-theme-bg transition-colors duration-500">
+    <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[150px] md:pt-0 bg-theme-bg">
       
       {/* ── Left: Plan Info ─────────────────────────────────────────────── */}
-      <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
+      <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto hide-scrollbar md:pt-[130px]">
         <div className="w-full relative flex-shrink-0 overflow-hidden flex items-center justify-center">
           <img src={plan.imageUrl} alt={plan.title} decoding="async" fetchPriority="high" className="w-full h-auto" />
         </div>
         <div className="p-8 md:p-12 lg:p-16 flex flex-col text-theme-text flex-grow">
-          <span className="font-display text-brand-red text-xs md:text-sm tracking-[0.4em] uppercase mb-4 block font-bold">
-            Support Plan
-          </span>
           <h1 className="text-3xl md:text-4xl lg:text-[40px] font-serif font-black leading-[1.2] text-theme-text mb-8">
             {plan.title.split('——').map((part, i) => (
               <React.Fragment key={i}>
@@ -232,6 +250,13 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               </React.Fragment>
             ))}
           </h1>
+          <button
+            type="button"
+            onClick={scrollToForm}
+            className="md:hidden mb-8 w-full py-3.5 text-sm font-bold tracking-widest bg-brand-red text-white hover:bg-brand-red/90 transition-colors cursor-pointer"
+          >
+            選擇金額並奉獻
+          </button>
           <div className="text-theme-text/80 font-light text-base md:text-lg leading-relaxed md:leading-loose space-y-6 max-w-2xl">
             {plan.description.split('\n').map((line, idx) =>
               line.trim() ? <p key={idx}>{line}</p> : null
@@ -240,8 +265,25 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
         </div>
       </div>
 
+      {/* 手機底部捷徑：奉獻頁不顯示浮動廣告與奉獻鈕，這裡不會互相疊到 */}
+      {!isFormInView && (
+        <div className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-theme-text/15 bg-theme-bg/95 px-5 py-3 flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="font-display text-[10px] tracking-widest uppercase text-theme-text/45">支持這個方案</p>
+            <p className="truncate font-serif text-sm font-bold text-theme-text">{plan.title}</p>
+          </div>
+          <button
+            type="button"
+            onClick={scrollToForm}
+            className="shrink-0 px-5 py-2.5 text-sm font-bold tracking-widest bg-brand-red text-white hover:bg-brand-red/90 transition-colors cursor-pointer"
+          >
+            我要奉獻
+          </button>
+        </div>
+      )}
+
       {/* ── Right: Donation Form ─────────────────────────────────────────── */}
-      <div className="w-full md:w-[55%] h-auto md:h-full flex flex-col p-6 pb-24 md:px-16 md:pb-16 md:pt-[130px] lg:px-24 lg:pb-24 overflow-y-auto overflow-x-hidden scrollbar-hide">
+      <div id="donation-form" className="w-full md:w-[55%] h-auto md:h-full flex flex-col p-6 pb-24 md:px-16 md:pb-16 md:pt-[130px] lg:px-24 lg:pb-24 overflow-y-auto overflow-x-hidden hide-scrollbar">
         <div className="w-full max-w-xl mx-auto md:mx-0 xl:mr-auto space-y-10 md:space-y-12 pb-10">
           <div>
             <h2 className="text-3xl md:text-4xl font-serif font-black text-theme-text mb-2">奉獻方案支持</h2>
@@ -267,7 +309,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
             <div className="space-y-4">
               <StepLabel step="2" label="選擇金額" />
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 md:gap-4">
-                {PRESET_AMOUNTS.map((amt) => (
+                {presetAmounts.map((amt) => (
                   <SelectButton
                     key={amt}
                     active={formData.amount === amt && !customAmountStr}
@@ -468,44 +510,45 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
             <p className="text-center text-xs text-theme-text/40 mt-4">點擊結帳即表示您同意我們的服務條款與隱私權政策。</p>
 
             {/* Alternative Payment Methods */}
-            <div className="mt-16 pt-12 border-t border-theme-text/10 space-y-10">
+            <div className="mt-16 pt-12 border-t border-theme-text/10 space-y-8">
               <h3 className="text-2xl md:text-3xl font-serif font-black text-theme-text/90">其他付款方式</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-6 bg-brand-red/30 rounded-full" />
-                    <h4 className="text-lg font-bold text-theme-text">郵政劃撥</h4>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-8">
+                {OFFLINE_PAYMENT_METHODS.map((method) => (
+                  <div key={method.title} className="border-t border-theme-text/15 pt-4">
+                    <h4 className="font-serif text-lg font-bold text-theme-text mb-3">{method.title}</h4>
+                    {/* 固定寬度的 label 欄：欄位窄的時候 label 才不會被壓成直排 */}
+                    <dl className="space-y-2">
+                      {method.rows.map((row) => (
+                        <div key={row.label} className="grid grid-cols-[3rem_1fr] gap-x-3 items-baseline">
+                          <dt className="font-display text-xs font-bold tracking-widest text-theme-text/40 whitespace-nowrap">{row.label}</dt>
+                          <dd className="text-base text-theme-text/80 break-words">{row.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
-                  <div className="text-theme-text/70 space-y-2 text-base md:text-lg pl-4">
-                    <p className="flex items-center gap-2"><span className="text-theme-text/40 text-sm font-display font-bold">帳號</span> 00064331</p>
-                    <p className="flex items-start gap-2"><span className="text-theme-text/40 text-sm font-display font-bold whitespace-nowrap mt-1">戶名</span> 財團法人基督教論壇基金會</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-1 h-6 bg-brand-red/30 rounded-full" />
-                    <h4 className="text-lg font-bold text-theme-text">ATM轉帳</h4>
-                  </div>
-                  <div className="text-theme-text/70 space-y-2 text-base md:text-lg pl-4">
-                    <p className="flex items-center gap-x-3"><span className="text-theme-text/40 text-sm font-display font-bold">銀行代碼</span> <span className="font-bold">008</span> <span className="text-theme-text/50 text-sm">華南商業銀行新生分行</span></p>
-                    <p className="flex items-center gap-2"><span className="text-theme-text/40 text-sm font-display font-bold">帳號</span> 113-20-0391766</p>
-                    <p className="flex items-start gap-2"><span className="text-theme-text/40 text-sm font-display font-bold whitespace-nowrap mt-1">戶名</span> 財團法人基督教論壇基金會</p>
-                  </div>
-                </div>
+                ))}
               </div>
-              <div className="bg-brand-red/[0.03] border border-brand-red/10 p-8 rounded-sm space-y-4">
-                <p className="text-brand-red font-black text-lg flex items-center gap-2"><i className="fas fa-exclamation-circle text-base" />匯款後請來電告知帳號末五碼</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-brand-red/80 text-base md:text-lg font-medium">
-                  <div className="flex items-center gap-3"><i className="fas fa-phone-alt text-sm opacity-60" /><p>Tel: (02) 2396-1010</p></div>
-                  <div className="flex items-center gap-3"><i className="fas fa-fax text-sm opacity-60" /><p>Fax: (02) 2396-1309</p></div>
-                </div>
-                <p className="text-brand-red/80 text-base md:text-lg font-medium flex items-center gap-3">
-                  <i className="fas fa-envelope text-sm opacity-60" />
-                  <span>或來信告知後五碼：<a href="mailto:service@ct.org.tw" className="underline hover:text-brand-red font-bold">service@ct.org.tw</a></span>
-                </p>
-                <div className="pt-4 mt-4 border-t border-brand-red/10">
-                  <p className="text-brand-red font-black text-xl flex items-center gap-2"><i className="fas fa-check-circle text-base" />並請註明奉獻方案</p>
-                </div>
+
+              <div className="border border-brand-red/20 bg-brand-red/[0.03] rounded-sm p-5 md:p-6 space-y-3">
+                <p className="font-serif text-base font-bold text-brand-red">匯款後請告知帳號末五碼</p>
+                <ul className="text-sm text-theme-text/70 leading-relaxed space-y-1">
+                  {REMITTANCE_NOTES.map((note) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+                <dl className="grid grid-cols-[3rem_1fr] gap-x-3 gap-y-2 items-baseline pt-1">
+                  <dt className="font-display text-xs font-bold tracking-widest text-theme-text/40">Tel</dt>
+                  <dd className="text-base text-theme-text/80">{DONATION_CONTACT.tel}</dd>
+                  <dt className="font-display text-xs font-bold tracking-widest text-theme-text/40">Fax</dt>
+                  <dd className="text-base text-theme-text/80">{DONATION_CONTACT.fax}</dd>
+                  <dt className="font-display text-xs font-bold tracking-widest text-theme-text/40">Mail</dt>
+                  <dd className="text-base break-all">
+                    <a href={`mailto:${DONATION_CONTACT.email}`} className="text-brand-red font-bold underline underline-offset-4 hover:text-theme-text transition-colors">
+                      {DONATION_CONTACT.email}
+                    </a>
+                  </dd>
+                </dl>
               </div>
             </div>
 

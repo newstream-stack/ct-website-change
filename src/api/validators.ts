@@ -111,7 +111,13 @@ export const isMembershipPlan = (value: unknown): value is MembershipPlan => isR
 
 export const isPlan = (value: unknown): value is Plan => isRecord(value)
   && Number.isInteger(value.id) && isString(value.title) && isString(value.imageUrl)
-  && isString(value.description);
+  && isString(value.description)
+  && (value.subtitle === undefined || isString(value.subtitle))
+  && (value.summary === undefined || isString(value.summary))
+  && (value.suggestedAmounts === undefined
+    || (Array.isArray(value.suggestedAmounts) && value.suggestedAmounts.every((amount) => typeof amount === 'number' && amount > 0)));
+
+export const isPlans = (value: unknown): value is Plan[] => Array.isArray(value) && value.every(isPlan);
 
 export const isOrder = (value: unknown): value is Order => isRecord(value)
   && isString(value.orderNumber) && isString(value.date) && isString(value.name)

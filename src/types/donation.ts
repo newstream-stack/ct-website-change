@@ -3,6 +3,11 @@ export interface Plan {
   title: string;
   imageUrl: string;
   description: string;
+  /** 列表頁卡片用的短標與摘要（詳情頁的 description 是完整長文）。 */
+  subtitle?: string;
+  summary?: string;
+  /** 依方案帶入的建議金額；沒設定時詳情頁沿用預設級距。 */
+  suggestedAmounts?: number[];
 }
 
 export interface DonationFormPayload {
