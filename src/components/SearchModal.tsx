@@ -238,7 +238,7 @@ export default function SearchModal({
         )}
 
         {/* Dynamic Content Area */}
-        <div className="flex-1 min-h-[50vh] overflow-y-auto max-h-[65vh] scrollbar-hide pb-12">
+        <div className="flex-1 min-h-[50vh] overflow-y-auto max-h-[65vh] hide-scrollbar pb-12">
           {isSearching ? (
             <div className="flex items-center justify-center py-20 gap-3 font-display text-xs font-bold uppercase tracking-widest text-theme-text/50">
               <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" /> 搜尋中

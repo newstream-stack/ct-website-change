@@ -101,7 +101,7 @@ export default function CartDrawer({
         }`}
       >
         {/* Header */}
-        <div className="px-6 py-5 border-b border-theme-text/10 flex justify-between items-center bg-theme-text/2 flex-shrink-0 transition-colors">
+        <div className="px-6 py-5 border-b border-theme-text/10 flex justify-between items-center bg-theme-text/2 flex-shrink-0">
           <div className="flex items-center gap-3">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-brand-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -124,7 +124,7 @@ export default function CartDrawer({
         </div>
 
         {/* Dynamic Content */}
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto p-6 hide-scrollbar">
           
           {/* STEP 1: CART LISTING */}
           {step === 1 && (
@@ -287,7 +287,7 @@ export default function CartDrawer({
                         : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'
                     }`}
                   >
-                    <i className="fab fa-line text-xl text-green-500 group-hover:text-white" style={{ color: paymentMethod === 'line-pay' ? 'white' : '#00B900' }} />
+                    <i className="fab fa-line text-xl text-green-500 group-hover:text-white transition-colors" style={{ color: paymentMethod === 'line-pay' ? 'white' : '#00B900' }} />
                     <span className="text-xs">Line Pay</span>
                   </button>
                 </div>
@@ -336,7 +336,7 @@ export default function CartDrawer({
 
         {/* Footer Sum & Checkout Button */}
         {cartItems.length > 0 && (
-          <div className="p-6 border-t border-theme-text/10 bg-theme-text/2 flex-shrink-0 transition-colors">
+          <div className="p-6 border-t border-theme-text/10 bg-theme-text/2 flex-shrink-0">
             {step === 1 && (
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm text-theme-text/60 font-light">
