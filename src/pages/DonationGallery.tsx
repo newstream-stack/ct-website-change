@@ -19,7 +19,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
       {/* 1. Header Section */}
       <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-16">
         <div className="max-w-[1400px] mx-auto">
-           <h1 className="text-4xl md:text-5xl font-serif font-black tracking-widest text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors">奉獻 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Giving</span></h1>
+           <h1 className="text-4xl md:text-5xl font-serif font-black tracking-tight text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors">奉獻 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Giving</span></h1>
         </div>
       </div>
 
@@ -38,10 +38,10 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
                 className="group cursor-pointer"
                 onClick={() => openPlan && openPlan(plan.id)}
               >
-                <div className="relative aspect-video bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-6 group-hover:border-brand-red/30 transition-all duration-500 shadow-sm flex items-center justify-center">
+                <div className="relative aspect-video bg-theme-text/5 overflow-hidden border border-theme-text/10 mb-6 group-hover:border-brand-red/30 transition-all duration-500 flex items-center justify-center">
                    <img 
                       src={plan.imageUrl} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" 
+                      className="w-full h-full object-cover transition-all duration-1000" 
                       alt={plan.title} 
                    />
                    <div className="absolute inset-0 bg-gradient-to-t from-theme-bg via-transparent to-transparent opacity-0 group-hover:opacity-60 transition-opacity"></div>

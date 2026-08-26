@@ -27,7 +27,7 @@ function ProductCard({ product, index, onSelect }: ProductCardProps) {
       <div className="w-full aspect-[3/4] bg-theme-text/5 relative overflow-hidden mb-6 border border-theme-text/10 rounded-sm transition-colors">
         <img
           src={product.imageUrl}
-          className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ${isSoldOut ? 'grayscale opacity-60' : ''}`}
+          className={`w-full h-full object-cover transition-all duration-700 ${isSoldOut ? 'grayscale opacity-60' : ''}`}
           alt={product.name}
           loading={index === 0 ? 'eager' : 'lazy'}
           decoding="async"
@@ -79,7 +79,7 @@ export default function ProductGallery({ onSelectProduct }: ProductGalleryProps)
     <div className="pt-[190px] md:pt-[190px] pb-24 min-h-screen flex flex-col bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20 mb-8 md:mb-12 flex justify-between items-end border-b border-theme-text/20 pb-6 md:pb-10 transition-colors">
         <div>
-          <h1 className="text-4xl md:text-5xl font-serif font-black tracking-widest text-theme-text transition-colors">信仰好物 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Product</span></h1>
+          <h1 className="text-4xl md:text-5xl font-serif font-black tracking-tight text-theme-text transition-colors">信仰好物 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Product</span></h1>
         </div>
         <div className="hidden md:flex gap-4">
           <button type="button" onClick={() => galleryRef.current?.scrollBy({ left: -440, behavior: 'smooth' })} aria-label="Previous products" className="w-12 h-12 rounded-full border border-theme-text/30 flex items-center justify-center text-theme-text/60 hover:bg-theme-text hover:text-theme-bg hover:border-theme-text transition"><i className="fas fa-arrow-left" /></button>

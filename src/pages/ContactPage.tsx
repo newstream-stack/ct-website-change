@@ -50,7 +50,7 @@ export default function ContactPage() {
 
         {/* Hero header */}
         <div className="mb-16 md:mb-20">
-          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">
+          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             新聞連絡
           </h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">

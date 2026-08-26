@@ -56,12 +56,12 @@ function NewsSectionBlock({
           <button
             type="button"
             key={news.id}
-            className="w-full text-left flex flex-col group cursor-pointer border border-transparent hover:border-theme-text/10 hover:shadow-lg transition-all duration-300 p-3 -m-3 rounded-sm"
+            className="w-full text-left flex flex-col group cursor-pointer border border-transparent hover:border-theme-text/10 transition-all duration-300 p-3 -m-3 rounded-sm"
             onClick={() => openArticle(news.id)}
           >
             <div className="relative aspect-[832/470] overflow-hidden rounded-sm mb-4 bg-theme-text/5 border border-theme-text/10">
-              <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt={news.title} />
-              <div className="absolute top-3 left-3 bg-theme-bg/90 backdrop-blur-sm text-brand-red text-[9px] font-display font-bold uppercase tracking-widest px-2 py-1">
+              <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-700" alt={news.title} />
+              <div className="absolute top-3 left-3 bg-theme-bg/90 text-brand-red text-[9px] font-display font-bold uppercase tracking-widest px-2 py-1">
                 {news.subCategory || news.category}
               </div>
             </div>
@@ -91,7 +91,7 @@ function ColumnistRow({ columnists, openArticle }: { columnists: Columnist[]; op
             type="button"
             key={c.id}
             onClick={() => openArticle(c.latestArticleId)}
-            className="shrink-0 w-[200px] md:w-[220px] snap-start text-left group/card border border-theme-text/10 hover:border-brand-red/30 hover:shadow-lg transition-all duration-300 rounded-sm p-5 bg-theme-bg"
+            className="shrink-0 w-[200px] md:w-[220px] snap-start text-left group/card border border-theme-text/10 hover:border-brand-red/30 transition-all duration-300 rounded-sm p-5 bg-theme-bg"
           >
             <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border border-theme-text/10 mb-4 bg-theme-text/5">
               <img src={c.avatarUrl} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700" alt={c.name} />
@@ -108,7 +108,7 @@ function ColumnistRow({ columnists, openArticle }: { columnists: Columnist[]; op
             type="button"
             onClick={() => scrollBy(-240)}
             aria-label="往前看更多專欄作家"
-            className="hidden md:flex absolute -left-4 top-[52px] w-9 h-9 rounded-full bg-theme-bg border border-theme-text/15 shadow-md items-center justify-center text-theme-text/60 hover:text-brand-red hover:border-brand-red transition-all opacity-0 group-hover/row:opacity-100"
+            className="hidden md:flex absolute -left-4 top-[52px] w-9 h-9 rounded-full bg-theme-bg border border-theme-text/15 items-center justify-center text-theme-text/60 hover:text-brand-red hover:border-brand-red transition-all opacity-0 group-hover/row:opacity-100"
           >
             <i className="fas fa-chevron-left text-xs" />
           </button>
@@ -116,7 +116,7 @@ function ColumnistRow({ columnists, openArticle }: { columnists: Columnist[]; op
             type="button"
             onClick={() => scrollBy(240)}
             aria-label="往後看更多專欄作家"
-            className="hidden md:flex absolute -right-4 top-[52px] w-9 h-9 rounded-full bg-theme-bg border border-theme-text/15 shadow-md items-center justify-center text-theme-text/60 hover:text-brand-red hover:border-brand-red transition-all opacity-0 group-hover/row:opacity-100"
+            className="hidden md:flex absolute -right-4 top-[52px] w-9 h-9 rounded-full bg-theme-bg border border-theme-text/15 items-center justify-center text-theme-text/60 hover:text-brand-red hover:border-brand-red transition-all opacity-0 group-hover/row:opacity-100"
           >
             <i className="fas fa-chevron-right text-xs" />
           </button>
@@ -178,18 +178,18 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
         </div>
 
         {/* Hero: lead story + headline list */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-16 md:mb-24 border border-theme-text/10 shadow-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 mb-16 md:mb-24 border border-theme-text/10">
           <button
             type="button"
             className="lg:col-span-7 w-full text-left group cursor-pointer p-6 md:p-10"
             onClick={() => openArticle(leadStory.id)}
           >
             <div className="relative aspect-[832/470] overflow-hidden rounded-sm mb-5 bg-theme-text/5 border border-theme-text/10">
-              <img src={leadStory.imageUrl} loading="eager" decoding="async" className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" alt={leadStory.title} />
+              <img src={leadStory.imageUrl} loading="eager" decoding="async" className="w-full h-full object-cover transition-all duration-700" alt={leadStory.title} />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
               <div className="absolute top-4 left-4 flex items-center gap-2">
-                <span className="bg-brand-red text-white text-[10px] font-display font-bold uppercase tracking-widest px-2.5 py-1 shadow-md">頭條</span>
-                <span className="bg-black/50 backdrop-blur-sm text-white text-[10px] font-display uppercase tracking-widest px-2.5 py-1">
+                <span className="bg-brand-red text-white text-[10px] font-display font-bold uppercase tracking-widest px-2.5 py-1">頭條</span>
+                <span className="bg-black/50 text-white text-[10px] font-display uppercase tracking-widest px-2.5 py-1">
                   {leadStory.subCategory || leadStory.category}
                 </span>
               </div>
@@ -223,7 +223,7 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
               >
                 <span className="font-serif font-black text-xl text-theme-text/15 group-hover:text-brand-red/50 transition-colors leading-none shrink-0 w-6 pt-1">{String(i + 1).padStart(2, '0')}</span>
                 <div className="w-20 h-14 md:w-24 md:h-16 shrink-0 overflow-hidden rounded-sm border border-theme-text/10 bg-theme-text/5">
-                  <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" alt={news.title} />
+                  <img src={news.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-700" alt={news.title} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <span className="text-[9px] font-display uppercase tracking-widest text-brand-red block mb-1.5">{news.subCategory || news.category}</span>

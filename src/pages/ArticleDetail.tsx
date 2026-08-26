@@ -120,14 +120,14 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                         <img src={article.imageUrl} decoding="async" fetchPriority="high" className="w-full h-full object-cover transition-opacity duration-700" alt={article.title} />
                     </div>
 
-                    <button onClick={() => goToCategory(article.category)} className="inline-flex items-center gap-2 bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.16em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 shadow-lg shadow-brand-red/20 rounded-sm hover:bg-brand-red/85 transition-colors">
+                    <button onClick={() => goToCategory(article.category)} className="inline-flex items-center gap-2 bg-brand-red text-white font-display font-bold text-[10px] md:text-sm tracking-[0.16em] uppercase mb-4 px-2 md:px-4 py-1 md:py-1.5 rounded-sm hover:bg-brand-red/85 transition-colors">
                         {article.category}
                         {article.subCategory && <><span className="h-3 w-px bg-white/50" />{article.subCategory}</>}
                     </button>
                     <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-serif font-black text-theme-text leading-[1.28] md:leading-[1.16] tracking-wide md:tracking-tight mb-4 md:mb-6 max-w-6xl transition-colors duration-500">
                         {article.title}
                     </h1>
-                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 tracking-widest text-[10px] md:text-sm font-bold bg-theme-text/5 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
+                    <div className="flex flex-wrap items-center gap-2 md:gap-4 text-theme-text/80 tracking-widest text-[10px] md:text-sm font-bold bg-theme-text/5 px-3 md:px-4 py-1.5 md:py-2 w-fit border border-theme-text/10 rounded-sm transition-colors duration-500">
                         <button onClick={() => goToAuthor(article.author)} className="text-brand-red hover:underline underline-offset-2">{article.author}</button>
                         <span className="text-theme-text/30 transition-colors">|</span>
                         <span>{formatArticleDate(article.date, { withYear: true })}</span>
@@ -205,12 +205,12 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                         alt={topAd.title}
                                         loading="lazy"
                                         decoding="async"
-                                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/55 to-black/5" />
                                     <div className="relative min-w-0 max-w-[72%]">
                                         <span className="mb-1 block font-display text-[8px] font-bold uppercase tracking-[0.25em] text-white/60 md:text-[9px]">{topAd.sponsor} · 贊助</span>
-                                        <h3 className="line-clamp-2 font-serif text-sm font-bold leading-snug tracking-wide text-white drop-shadow-lg md:text-lg">{topAd.title}</h3>
+                                        <h3 className="line-clamp-2 font-serif text-sm font-bold leading-snug tracking-wide text-white md:text-lg">{topAd.title}</h3>
                                     </div>
                                 </a>
                             </div>
@@ -225,8 +225,8 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                                 {secondPart && <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(secondPart) }} />}
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16">
-                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" loading="lazy" decoding="async" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="文章內容圖片一" /></div>
-                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" loading="lazy" decoding="async" className="w-full h-full object-cover hover:scale-105 transition-all duration-700" alt="文章內容圖片二" /></div>
+                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors"><img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=800" loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-700" alt="文章內容圖片一" /></div>
+                                    <div className="w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors"><img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800" loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-700" alt="文章內容圖片二" /></div>
                                 </div>
 
                                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dummyContentPart2) }} />
@@ -248,9 +248,8 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                     </div>
 
                     <div className="lg:col-span-4 space-y-10 md:space-y-12 mt-8 lg:mt-0">
-                        <div className="border border-theme-text/10 bg-theme-text/5 backdrop-blur-md rounded-sm p-6 md:p-8 transition-colors">
-                            <h4 className="font-display text-xs md:text-sm font-black uppercase tracking-[0.2em] text-theme-text mb-6 pb-4 border-b border-theme-text/10 flex items-center gap-2 transition-colors">
-                                <span className="w-1.5 h-1.5 bg-brand-red rounded-full"></span>
+                        <div className="border-t-2 border-theme-text pt-4 transition-colors">
+                            <h4 className="font-serif text-base md:text-lg font-bold text-theme-text mb-5 pb-3 border-b border-theme-text/10 transition-colors">
                                 熱門文章
                             </h4>
                             <div className="flex flex-col gap-5">
@@ -277,10 +276,10 @@ export default function ArticleDetail({ articleId, openArticle, goToCategory, go
                         {recommendedNews.map(n => (
                             <button type="button" key={n.id} className="group cursor-pointer flex flex-col h-full text-left" onClick={() => openArticle(n.id)}>
                                 <div className="w-full aspect-[832/470] bg-theme-text/10 overflow-hidden mb-4 border border-theme-text/5 transition-colors rounded-sm">
-                                    <img src={n.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500" alt={n.title} />
+                                    <img src={n.imageUrl} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-500" alt={n.title} />
                                 </div>
                                 <span className="text-brand-red font-display font-bold text-[10px] uppercase tracking-widest mb-2">{n.category}</span>
-                                <h4 className="text-lg md:text-xl font-serif font-black text-theme-text leading-[1.4] md:leading-snug group-hover:text-brand-red transition-colors line-clamp-2 mb-3 tracking-wide md:tracking-normal">{n.title}</h4>
+                                <h4 className="text-lg md:text-xl font-serif font-bold text-theme-text leading-[1.4] md:leading-snug group-hover:text-brand-red transition-colors line-clamp-2 mb-3 tracking-wide md:tracking-normal">{n.title}</h4>
                                 <div className="mt-auto font-display text-[9px] uppercase tracking-widest text-theme-text/60 pt-4 border-t border-theme-text/10 transition-colors">
                                     {n.author} &nbsp;|&nbsp; {formatArticleDate(n.date)}
                                 </div>

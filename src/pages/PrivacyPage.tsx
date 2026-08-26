@@ -81,7 +81,7 @@ export default function PrivacyPage() {
 
         {/* Hero */}
         <div className="mb-14 md:mb-20">
-          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">
+          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             版權隱私權聲明
           </h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">

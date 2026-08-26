@@ -23,7 +23,7 @@ export default function AuthorResultsPage({ author, openArticle }: AuthorResults
       <div className="max-w-6xl mx-auto">
         <div className="mb-12 md:mb-16 border-b border-theme-text/15 pb-7 md:pb-9">
           <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">作者</p>
-          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight">{author}</h1>
+          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight">{author}</h1>
           <p className="mt-5 text-sm text-theme-text/55">共 {articles.length} 篇文章</p>
         </div>
 
@@ -31,7 +31,7 @@ export default function AuthorResultsPage({ author, openArticle }: AuthorResults
           {articles.map((article) => (
             <button key={article.id} onClick={() => openArticle(article.id)} className="group text-left">
               <div className="aspect-[832/470] overflow-hidden bg-theme-text/5 mb-5 border border-theme-text/10">
-                <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500" />
               </div>
               <p className="font-display text-[10px] tracking-[0.16em] text-brand-red uppercase mb-3">{article.category}</p>
               <h2 className="font-serif text-xl md:text-2xl font-bold leading-snug group-hover:text-brand-red transition-colors">{article.title}</h2>

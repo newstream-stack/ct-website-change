@@ -129,7 +129,7 @@ function EpaperReader() {
             </button>
 
             {isIssuePickerOpen && (
-              <div className="absolute top-full left-0 mt-2 w-56 bg-theme-bg text-theme-text border border-theme-text/10 shadow-xl rounded-sm overflow-hidden z-20 normal-case tracking-normal">
+              <div className="absolute top-full left-0 mt-2 w-56 bg-theme-bg text-theme-text border border-theme-text/10 rounded-sm overflow-hidden z-20 normal-case tracking-normal">
                 <div className="p-2 border-b border-theme-text/10">
                   <input
                     type="number"
@@ -207,7 +207,7 @@ function EpaperReader() {
                   type="button"
                   onClick={() => setPageIndex((i) => Math.max(0, i - 1))}
                   aria-label="上一頁"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-white text-theme-text shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-brand-red hover:text-white cursor-pointer"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-11 h-11 rounded-full bg-white text-theme-text flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-brand-red hover:text-white cursor-pointer"
                 >
                   <i className="fas fa-chevron-left"></i>
                 </button>
@@ -217,7 +217,7 @@ function EpaperReader() {
                   type="button"
                   onClick={() => setPageIndex((i) => Math.min(issue.pages.length - 1, i + 1))}
                   aria-label="下一頁"
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-11 h-11 rounded-full bg-white text-theme-text shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-brand-red hover:text-white cursor-pointer"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-11 h-11 rounded-full bg-white text-theme-text flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-brand-red hover:text-white cursor-pointer"
                 >
                   <i className="fas fa-chevron-right"></i>
                 </button>

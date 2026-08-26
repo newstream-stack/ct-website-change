@@ -31,7 +31,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
       {/* 1. Page Header */}
       <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-16">
         <div className="max-w-[1400px] mx-auto">
-           <h1 className="text-3xl md:text-5xl font-serif font-black tracking-widest text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors flex flex-col md:flex-row md:items-baseline">
+           <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tight text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors flex flex-col md:flex-row md:items-baseline">
              影響力聯盟 
              <span className="text-lg md:text-2xl font-display font-light text-theme-text/40 md:ml-4 tracking-widest uppercase mt-1 md:mt-0">Alliance Network</span>
            </h1>
@@ -84,10 +84,10 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
               >
                 {/* Round Logo Frame */}
                 <div className="relative mb-8 flex justify-center">
-                   <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 shadow-xl overflow-hidden flex items-center justify-center bg-white">
-                      <img src={member.logoUrl} loading="lazy" decoding="async" className="w-[70%] h-[70%] object-contain transition-all duration-700 group-hover:scale-110" alt={member.name} />
+                   <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-full bg-theme-text/5 p-1.5 border border-theme-text/10 group-hover:border-brand-red/40 transition-all duration-700 overflow-hidden flex items-center justify-center bg-white">
+                      <img src={member.logoUrl} loading="lazy" decoding="async" className="w-[70%] h-[70%] object-contain transition-all duration-700" alt={member.name} />
                    </div>
-                   <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase shadow-lg rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">認證成員</div>
+                   <div className="absolute -bottom-2 px-4 py-1.5 bg-brand-red text-white text-[9px] font-bold tracking-widest uppercase rounded-sm transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">認證成員</div>
                 </div>
                 
                 {/* Info Center Aligned */}

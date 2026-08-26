@@ -31,7 +31,7 @@ export default function LineStickersPage() {
     <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-6xl mx-auto px-5 md:px-10">
         <div className="mb-12 md:mb-16">
-          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">論壇LINE貼圖</h1>
+          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">論壇LINE貼圖</h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">
             把祝福、鼓勵與日常的可愛帶進每一段對話。
           </p>

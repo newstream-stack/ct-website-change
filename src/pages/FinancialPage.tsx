@@ -121,7 +121,7 @@ function ReportBlock({ report }: { report: ReportSection }) {
                   alt={`${report.year} ${report.label} 第 ${i + 1} 頁`}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                   <i className="fas fa-expand text-white text-lg opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -151,7 +151,7 @@ function ReportBlock({ report }: { report: ReportSection }) {
             src={lightbox}
             alt=""
             decoding="async"
-            className="max-w-full max-h-[90dvh] object-contain shadow-2xl"
+            className="max-w-full max-h-[90dvh] object-contain"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
@@ -167,7 +167,7 @@ export default function FinancialPage() {
 
         {/* Hero */}
         <div className="mb-14 md:mb-20">
-          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">
+          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             財務報表
           </h1>
           <p className="text-theme-text/55 text-sm md:text-base leading-relaxed max-w-2xl border-l-2 border-brand-red pl-5">

@@ -68,15 +68,15 @@ function PaymentModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-theme-bg/80 backdrop-blur-md" onClick={onClose} />
-      <div className="bg-theme-bg border border-theme-text/10 rounded-2xl w-full max-w-md p-8 relative z-10 shadow-2xl animate-fade-in-up">
+      <div className="absolute inset-0 bg-theme-bg/80" onClick={onClose} />
+      <div className="bg-theme-bg border border-theme-text/10 rounded-sm w-full max-w-md p-8 relative z-10 animate-fade-in-up">
         <button onClick={onClose} className="absolute top-4 right-4 text-theme-text/40 hover:text-theme-text transition-colors">
           <i className="fas fa-times text-xl" />
         </button>
         <h3 className="text-2xl font-serif font-black mb-2">更新付款資訊</h3>
         <p className="text-xs text-theme-text/50 tracking-wide mb-6">Payment method management</p>
 
-        <div className="flex flex-col items-center gap-4 py-10 border border-dashed border-theme-text/20 rounded-xl bg-theme-text/3">
+        <div className="flex flex-col items-center gap-4 py-10 border border-dashed border-theme-text/20 rounded-sm bg-theme-text/3">
           <div className="w-14 h-14 rounded-full bg-brand-red/10 flex items-center justify-center">
             <i className="far fa-credit-card text-2xl text-brand-red/60" />
           </div>
@@ -93,7 +93,7 @@ function PaymentModal({ onClose }: { onClose: () => void }) {
         <button
           onClick={() => void handleManagePayment()}
           disabled={isLoading}
-          className="mt-6 w-full bg-brand-red text-white font-bold tracking-widest py-3.5 rounded-xl hover:bg-brand-red/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-wait"
+          className="mt-6 w-full bg-brand-red text-white font-bold tracking-widest py-3.5 rounded-sm hover:bg-brand-red/90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-wait"
         >
           {isLoading ? '建立安全連線中…' : '前往管理付款方式'}
         </button>
@@ -108,13 +108,13 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
   };
 
   const modal = (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-fade-in text-black">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden p-4 sm:p-6 bg-black/60 animate-fade-in text-black">
       <div 
         className="absolute inset-0 cursor-pointer" 
         onClick={onClose}
       ></div>
       
-      <div className="relative w-full max-w-4xl h-[calc(100dvh-2rem)] sm:h-[calc(100dvh-3rem)] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col z-10">
+      <div className="relative w-full max-w-4xl h-[calc(100dvh-2rem)] sm:h-[calc(100dvh-3rem)] bg-white rounded-sm overflow-hidden flex flex-col z-10">
         
         {/* Action Bar (Not printed) */}
         <div className="sticky top-0 bg-gray-50 px-4 md:px-6 py-3 md:py-4 border-b border-gray-200 print:hidden flex-none w-full z-30 flex justify-between items-center gap-3">
@@ -122,7 +122,7 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
           <div className="flex gap-2 md:gap-3 items-center shrink-0">
             <button 
               onClick={handlePrint}
-              className="bg-brand-red text-white h-9 md:h-10 px-4 md:px-5 rounded-lg text-xs md:text-sm font-bold tracking-widest hover:bg-[#b31b1b] transition-all flex items-center gap-2 shadow-md active:scale-95 cursor-pointer whitespace-nowrap"
+              className="bg-brand-red text-white h-9 md:h-10 px-4 md:px-5 rounded-sm text-xs md:text-sm font-bold tracking-widest hover:bg-[#b31b1b] transition-all flex items-center gap-2 cursor-pointer whitespace-nowrap"
             >
               <i className="fas fa-download"></i> <span>下載 / 列印</span>
             </button>
@@ -141,7 +141,7 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
           {/* Header */}
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] items-start lg:items-center border-b-2 border-brand-red pb-4 mb-6 gap-4 lg:gap-6">
             <div className="min-w-0 flex flex-col sm:flex-row sm:items-center gap-3">
-              <div className="h-10 px-3 bg-brand-red text-white font-black font-serif flex items-center justify-center text-base rounded-lg tracking-widest">
+              <div className="h-10 px-3 bg-brand-red text-white font-black font-serif flex items-center justify-center text-base rounded-sm tracking-widest">
                 IMPACT
               </div>
               <div className="text-left min-w-0">
@@ -164,7 +164,7 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
           <h1 className="text-center font-serif text-2xl font-bold tracking-[0.2em] mb-8">電子購物收據</h1>
 
           {/* Customer & Shipping Info */}
-          <div className="bg-gray-50 border border-gray-100 rounded-xl p-5 mb-6 text-xs sm:text-sm text-left">
+          <div className="bg-gray-50 border border-gray-100 rounded-sm p-5 mb-6 text-xs sm:text-sm text-left">
             <h3 className="font-serif font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">購買與收件資訊</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
               <div>
@@ -191,7 +191,7 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
           </div>
 
           {/* Product Items Table */}
-          <div className="border border-gray-200 rounded-xl overflow-x-auto mb-6 text-xs sm:text-sm">
+          <div className="border border-gray-200 rounded-sm overflow-x-auto mb-6 text-xs sm:text-sm">
             <table className="w-full min-w-[560px] text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200 text-[10px] sm:text-xs text-gray-400 font-bold uppercase">
@@ -245,7 +245,7 @@ function OrderReceiptModal({ order, onClose }: { order: Order; onClose: () => vo
               </ol>
             </div>
             <div className="self-end pointer-events-none z-0">
-              <div className="w-24 h-24 rounded-full border-4 border-red-600/30 flex items-center justify-center transform rotate-12 bg-white">
+              <div className="w-24 h-24 rounded-full border-4 border-red-600/30 flex items-center justify-center  rotate-12 bg-white">
                 <div className="w-20 h-20 rounded-full border border-red-600/30 flex flex-col items-center justify-center text-red-600/50">
                   <span className="font-serif font-black tracking-widest text-xs">IMPACT</span>
                   <span className="text-[6px] font-bold tracking-widest leading-tight text-center scale-90">基督教論壇基金會</span>
@@ -437,9 +437,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-theme-text/10 pb-8">
           <div>
-            <h1 className="text-3xl md:text-5xl font-serif font-black tracking-widest text-theme-text mb-2">會員專區</h1>
+            <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tight text-theme-text mb-2">會員專區</h1>
           </div>
-          <div className="flex items-center gap-4 bg-theme-text/5 p-4 rounded-xl border border-theme-text/10">
+          <div className="flex items-center gap-4 bg-theme-text/5 p-4 rounded-sm border border-theme-text/10">
             <div className="w-12 h-12 bg-brand-red/20 rounded-full flex items-center justify-center text-brand-red text-xl font-bold">
               <i className="far fa-user" />
             </div>
@@ -458,9 +458,9 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm transition-all duration-300 ${
+                className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-sm font-bold tracking-widest text-[10px] md:text-sm transition-all duration-300 ${
                   activeTab === tab.id
-                    ? 'bg-brand-red text-white shadow-md shadow-brand-red/20'
+                    ? 'bg-brand-red text-white'
                     : 'text-theme-text/70 bg-theme-text/5 md:bg-transparent hover:bg-theme-text/10 hover:text-theme-text'
                 }`}
               >
@@ -473,7 +473,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 logout();
                 goToCategory('首頁');
               }}
-              className="md:mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-xl font-bold tracking-widest text-[10px] md:text-sm text-brand-red bg-brand-red/5 md:bg-transparent hover:bg-brand-red/10 transition-colors cursor-pointer"
+              className="md:mt-8 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3 px-2 py-3 md:px-5 md:py-4 rounded-sm font-bold tracking-widest text-[10px] md:text-sm text-brand-red bg-brand-red/5 md:bg-transparent hover:bg-brand-red/10 transition-colors cursor-pointer"
             >
               <i className="fas fa-sign-out-alt text-sm md:text-base w-5 text-center mb-1 md:mb-0" />
               <span className="text-center">登出 Logout</span>
@@ -487,16 +487,15 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             {activeTab === 'overview' && (
               <div className="flex flex-col gap-8 animate-fade-in-up">
                 {/* Subscription card */}
-                <div className="bg-gradient-to-br from-theme-text/5 to-transparent border border-theme-text/10 rounded-2xl p-8 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-brand-red/5 rounded-full mix-blend-multiply blur-3xl translate-x-1/2 -translate-y-1/2" />
+                <div className="bg-theme-text/5 border border-theme-text/10 p-8 relative overflow-hidden">
                   <h3 className="text-xl font-serif font-bold mb-6">目前訂閱方案</h3>
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                     <div>
-                      <div className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest rounded-full mb-3">目前方案</div>
+                      <div className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest mb-3">目前方案</div>
                       <h4 className="text-2xl font-black font-display text-theme-text">{subscription.plan}</h4>
                       <p className="text-sm text-theme-text/60 mt-2">下一次扣款日：{subscription.nextBillingDate} (NT$ {subscription.price})</p>
                     </div>
-                    <button onClick={() => goToCategory('會員招募')} className="bg-theme-text text-theme-bg px-6 py-2.5 rounded-lg font-bold text-sm tracking-widest hover:opacity-80 transition-opacity">
+                    <button onClick={() => goToCategory('會員招募')} className="bg-theme-text text-theme-bg px-6 py-2.5 rounded-sm font-bold text-sm tracking-widest hover:opacity-80 transition-opacity">
                       管理訂閱
                     </button>
                   </div>
@@ -511,8 +510,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                       onClick={() => {
                         if (tab !== 'overview') setActiveTab(tab);
                       }}
-                      className={`bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 flex flex-col justify-center items-center text-center transition-all ${
-                        tab === 'overview' ? 'cursor-default' : 'hover:bg-theme-text/10 hover:border-brand-red/30 cursor-pointer active:scale-95'
+                      className={`bg-theme-text/5 border border-theme-text/10 rounded-sm p-6 flex flex-col justify-center items-center text-center transition-all ${
+                        tab === 'overview' ? 'cursor-default' : 'hover:bg-theme-text/10 hover:border-brand-red/30 cursor-pointer'
                       }`}
                     >
                       <span className="text-3xl font-display font-black text-brand-red mb-2">{value}</span>
@@ -531,8 +530,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   </div>
                   <div className="flex flex-col gap-4">
                     {savedArticles.slice(0, 3).map((article) => (
-                      <div key={article.id} className="flex flex-col sm:flex-row sm:items-start gap-4 p-4 rounded-xl border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
-                        <div className="w-full sm:w-48 md:w-56 aspect-[832/470] flex-shrink-0 overflow-hidden rounded-lg bg-theme-text/10">
+                      <div key={article.id} className="flex flex-col sm:flex-row sm:items-start gap-4 p-4 rounded-sm border border-theme-text/5 hover:bg-theme-text/5 transition-colors cursor-pointer group">
+                        <div className="w-full sm:w-48 md:w-56 aspect-[832/470] flex-shrink-0 overflow-hidden rounded-sm bg-theme-text/10">
                           <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-all duration-500" />
                         </div>
                         <div className="flex flex-col justify-center">
@@ -550,21 +549,21 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             {/* ── Subscription ── */}
             {activeTab === 'subscription' && (
               <div className="flex flex-col gap-8 animate-fade-in-up">
-                <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-8">
+                <div className="bg-theme-text/5 border border-theme-text/10 rounded-sm p-8">
                   <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
                     <div>
                       <h3 className="text-xl font-serif font-bold mb-1">我的訂閱方案</h3>
                       <p className="text-sm text-theme-text/60">管理您的 IMPACT 會員資格與付款方式</p>
                     </div>
-                    <button onClick={() => goToCategory('會員招募')} className="bg-brand-red text-white px-6 py-2 rounded-lg font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
+                    <button onClick={() => goToCategory('會員招募')} className="bg-brand-red text-white px-6 py-2 rounded-sm font-bold text-sm tracking-widest hover:opacity-90 transition-opacity whitespace-nowrap">
                       升級方案
                     </button>
                   </div>
 
-                  <div className="bg-theme-bg border border-theme-text/10 rounded-xl p-6 mb-8">
+                  <div className="bg-theme-bg border border-theme-text/10 rounded-sm p-6 mb-8">
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-4">
                       <div>
-                        <span className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest rounded-full mb-2">使用中</span>
+                        <span className="inline-block px-3 py-1 bg-brand-red/10 text-brand-red text-xs font-bold uppercase tracking-widest mb-2">使用中</span>
                         <h4 className="text-2xl font-black font-display text-theme-text">{subscription.plan}</h4>
                       </div>
                       <span className="text-2xl font-display font-black text-brand-red">NT$ {subscription.price} <span className="text-sm text-theme-text/60 font-sans">/ 月</span></span>
@@ -576,7 +575,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                         <li key={benefit}><i className="fas fa-check text-brand-red mr-2" />{benefit}</li>
                       ))}
                     </ul>
-                    <div className="bg-theme-text/5 p-4 rounded-lg flex flex-col sm:flex-row justify-between sm:items-center text-sm gap-2">
+                    <div className="bg-theme-text/5 p-4 rounded-sm flex flex-col sm:flex-row justify-between sm:items-center text-sm gap-2">
                       <span className="text-theme-text/70">下次扣款日期：<span className="font-bold text-theme-text">{subscription.nextBillingDate}</span></span>
                       <button onClick={() => setIsPaymentModalOpen(true)} className="font-bold text-brand-red hover:underline underline-offset-4 self-start sm:self-auto">
                         更新付款資訊
@@ -623,20 +622,20 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 </div>
                 {savedArticlesError && <p role="alert" className="text-sm font-bold text-red-500">{savedArticlesError}</p>}
                 {savedArticles.length === 0 && !savedArticlesError && (
-                  <div className="min-h-64 rounded-2xl border border-theme-text/10 bg-theme-text/5 flex items-center justify-center text-sm text-theme-text/50">
+                  <div className="min-h-64 rounded-sm border border-theme-text/10 bg-theme-text/5 flex items-center justify-center text-sm text-theme-text/50">
                     尚無收藏文章
                   </div>
                 )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                   {displayedSavedArticles.map((article) => (
-                    <div key={article.id} className="bg-theme-text/5 border border-theme-text/10 rounded-xl overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-xl hover:shadow-theme-text/5 transition-all">
+                    <div key={article.id} className="bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden group flex flex-col h-full cursor-pointer hover:shadow-theme-text/5 transition-all">
                       <div className="aspect-[832/470] overflow-hidden relative">
-                        <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <img src={article.imageUrl} alt={article.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500" />
                         <button
                           type="button"
                           aria-label="取消收藏"
                           disabled={removingSavedId !== null}
-                          className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 backdrop-blur rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10 disabled:opacity-50 disabled:cursor-wait"
+                          className="absolute top-3 right-3 w-8 h-8 bg-theme-bg/90 rounded-full flex items-center justify-center text-brand-red hover:bg-brand-red hover:text-white transition-colors z-10 disabled:opacity-50 disabled:cursor-wait"
                           onClick={(event) => { event.stopPropagation(); void handleRemoveSavedArticle(article.id); }}
                         >
                           <i className="fas fa-bookmark text-sm" />
@@ -659,13 +658,13 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             {/* ── Donations ── */}
             {activeTab === 'donations' && (
               <div className="flex flex-col gap-6 animate-fade-in-up">
-                <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
+                <div className="bg-theme-text/5 border border-theme-text/10 rounded-sm p-6 md:p-8">
                   <div className="flex flex-col md:flex-row justify-between mb-8 gap-6 md:gap-4">
                     <div>
                       <h3 className="text-xl font-serif font-bold mb-1">我的奉獻紀錄</h3>
                       <p className="text-sm text-theme-text/60">感謝您用行動支持我們的看見與影響力。</p>
                     </div>
-                    <div className="bg-brand-red/10 p-5 rounded-xl border border-brand-red/20 flex flex-col items-start md:items-end justify-center min-w-[200px]">
+                    <div className="bg-brand-red/10 p-5 rounded-sm border border-brand-red/20 flex flex-col items-start md:items-end justify-center min-w-[200px]">
                       <span className="text-xs text-brand-red/70 font-bold tracking-widest uppercase mb-1">2026 年度累積奉獻</span>
                       <span className="text-3xl font-display font-black text-brand-red">NT$ {stats.totalDonated.toLocaleString()}</span>
                     </div>
@@ -696,8 +695,8 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                   </div>
 
                   <div className="mt-8 pt-6 border-t border-theme-text/10 flex justify-center">
-                    <button onClick={() => goToCategory('奉獻')} className="border border-brand-red text-brand-red px-8 py-3 rounded-xl font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group">
-                      探索更多奉獻專案 <i className="fas fa-heart ml-2 group-hover:scale-110 transition-transform" />
+                    <button onClick={() => goToCategory('奉獻')} className="border border-brand-red text-brand-red px-8 py-3 rounded-sm font-bold tracking-widest hover:bg-brand-red hover:text-white transition-colors group">
+                      探索更多奉獻專案 <i className="fas fa-heart ml-2 transition-transform" />
                     </button>
                   </div>
                 </div>
@@ -707,7 +706,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
             {/* ── Settings ── */}
             {activeTab === 'settings' && (
               <div className="flex flex-col gap-6 animate-fade-in-up">
-                <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-6 md:p-8">
+                <div className="bg-theme-text/5 border border-theme-text/10 rounded-sm p-6 md:p-8">
                   <h3 className="text-xl font-serif font-bold mb-6">帳號設定</h3>
                   <form
                     key={settingsFormVersion}
@@ -729,7 +728,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                           required={!readOnly}
                           maxLength={nameAttr === 'address' ? 300 : nameAttr === 'email' ? 254 : 100}
                           autoComplete={nameAttr === 'address' ? 'street-address' : nameAttr === 'email' ? 'email' : 'name'}
-                          className={`bg-theme-bg border rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text ${readOnly ? 'border-theme-text/10 opacity-60 cursor-not-allowed' : 'border-theme-text/20'}`}
+                          className={`bg-theme-bg border rounded-sm px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text ${readOnly ? 'border-theme-text/10 opacity-60 cursor-not-allowed' : 'border-theme-text/20'}`}
                         />
                         {readOnly && <span className="text-[10px] text-theme-text/40 mt-1"><i className="fas fa-info-circle mr-1" />信箱作為登入帳號，如需修改請聯繫客服。</span>}
                       </div>
@@ -739,20 +738,20 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
 
                     <div className="flex flex-col gap-3">
                       <label className="text-xs font-bold tracking-widest text-theme-text/70">變更密碼 Change Password</label>
-                      <input name="newPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="設定新密碼（至少 8 個字元）" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
-                      <input name="confirmPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="再次輸入新密碼" className="bg-theme-bg border border-theme-text/20 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                      <input name="newPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="設定新密碼（至少 8 個字元）" className="bg-theme-bg border border-theme-text/20 rounded-sm px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
+                      <input name="confirmPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="再次輸入新密碼" className="bg-theme-bg border border-theme-text/20 rounded-sm px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                     </div>
 
                     {settingsMsg && (
-                      <div className={`flex items-center gap-2 text-xs font-bold tracking-wide px-4 py-3 rounded-xl ${settingsMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
+                      <div className={`flex items-center gap-2 text-xs font-bold tracking-wide px-4 py-3 rounded-sm ${settingsMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
                         <i className={`fas ${settingsMsg.type === 'success' ? 'fa-circle-check' : 'fa-exclamation-circle'} shrink-0`} />
                         {settingsMsg.text}
                       </div>
                     )}
 
                     <div className="mt-6 flex flex-col sm:flex-row gap-4">
-                      <button type="submit" disabled={isSavingSettings} className="bg-brand-red text-white font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-[#b31b1b] hover:-translate-y-0.5 transition-all shadow-lg shadow-brand-red/20 disabled:opacity-50 disabled:cursor-wait">{isSavingSettings ? '儲存中…' : '儲存變更 Save'}</button>
-                      <button type="button" disabled={isSavingSettings} onClick={() => { setSettingsFormVersion((version) => version + 1); setSettingsMsg(null); }} className="border border-theme-text/20 text-theme-text/70 font-bold py-3.5 px-8 rounded-xl tracking-widest text-sm hover:bg-theme-text/10 transition-colors">取消 Cancel</button>
+                      <button type="submit" disabled={isSavingSettings} className="bg-brand-red text-white font-bold py-3.5 px-8 rounded-sm tracking-widest text-sm hover:bg-[#b31b1b] transition-all disabled:opacity-50 disabled:cursor-wait">{isSavingSettings ? '儲存中…' : '儲存變更 Save'}</button>
+                      <button type="button" disabled={isSavingSettings} onClick={() => { setSettingsFormVersion((version) => version + 1); setSettingsMsg(null); }} className="border border-theme-text/20 text-theme-text/70 font-bold py-3.5 px-8 rounded-sm tracking-widest text-sm hover:bg-theme-text/10 transition-colors">取消 Cancel</button>
                     </div>
                   </form>
                 </div>
@@ -770,7 +769,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 </div>
 
                 {orders.length === 0 ? (
-                  <div className="bg-theme-text/5 border border-theme-text/10 rounded-2xl p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
+                  <div className="bg-theme-text/5 border border-theme-text/10 rounded-sm p-12 text-center flex flex-col items-center justify-center min-h-[400px]">
                     <div className="w-16 h-16 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red flex items-center justify-center mb-6">
                       <i className="fas fa-shopping-bag text-2xl" />
                     </div>
@@ -780,7 +779,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                     </p>
                     <button 
                       onClick={() => goToCategory('信仰好物')}
-                      className="bg-brand-red text-white px-8 py-3 rounded-xl font-bold tracking-widest text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-lg shadow-brand-red/20 cursor-pointer"
+                      className="bg-brand-red text-white px-8 py-3 rounded-sm font-bold tracking-widest text-sm hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer"
                     >
                       前往信仰好物選購
                     </button>
@@ -788,13 +787,13 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                 ) : (
                   <div className="flex flex-col gap-6">
                     {orders.map((order) => (
-                      <div key={order.orderNumber} className="bg-theme-text/5 border border-theme-text/10 rounded-2xl overflow-hidden transition-all duration-300">
+                      <div key={order.orderNumber} className="bg-theme-text/5 border border-theme-text/10 rounded-sm overflow-hidden transition-all duration-300">
                         {/* Order Header */}
                         <div className="bg-theme-text/3 px-6 py-4 border-b border-theme-text/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm font-sans">
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                             <span className="font-bold text-theme-text/50 uppercase">訂單編號</span>
                             <span className="font-display font-black text-theme-text text-sm sm:text-base">{order.orderNumber}</span>
-                            <span className="px-2 py-0.5 bg-[#00C300]/10 text-[#00C300] text-[10px] font-bold rounded-full">
+                            <span className="px-2 py-0.5 bg-[#00C300]/10 text-[#00C300] text-[10px] font-bold">
                               {ORDER_STATUS_LABEL[order.status] ?? order.status}
                             </span>
                           </div>
@@ -849,7 +848,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
                             </div>
                             <button 
                               onClick={() => setSelectedOrderReceipt(order)}
-                              className="border border-brand-red text-brand-red px-5 py-2.5 rounded-lg text-xs font-bold tracking-widest hover:bg-brand-red hover:text-white transition-all duration-300 cursor-pointer w-full sm:w-auto"
+                              className="border border-brand-red text-brand-red px-5 py-2.5 rounded-sm text-xs font-bold tracking-widest hover:bg-brand-red hover:text-white transition-all duration-300 cursor-pointer w-full sm:w-auto"
                             >
                               {order.status === 'paid' ? '下載收據 / 出貨單' : '查看訂單'}
                             </button>

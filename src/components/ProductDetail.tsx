@@ -76,7 +76,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
           className="group mt-6 md:mt-8 mb-8 flex items-center gap-3 text-sm font-bold uppercase tracking-widest text-theme-text/60 hover:text-brand-red transition-colors"
         >
           <div className="w-8 h-8 rounded-full border border-theme-text/20 flex items-center justify-center group-hover:border-brand-red transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4  group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </div>
@@ -96,9 +96,9 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
                 alt={product.name} 
                 decoding="async"
                 fetchPriority="high"
-                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+                className="w-full h-full object-cover transition-all duration-700"
               />
-              <div className="absolute top-6 left-6 font-display text-2xl font-black text-theme-text/30 bg-theme-bg/60 backdrop-blur-md px-3 py-1 rounded-sm border border-theme-text/10">
+              <div className="absolute top-6 left-6 font-display text-2xl font-black text-theme-text/30 bg-theme-bg/60 px-3 py-1 rounded-sm border border-theme-text/10">
                 0{product.id}
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
                     aria-label={`查看商品圖片 ${idx + 1}`}
                     className={`w-20 md:w-28 aspect-[4/3] flex-shrink-0 border-2 rounded-sm overflow-hidden transition-all duration-300 ${
                       activeImage === imgUrl 
-                        ? 'border-brand-red scale-95 shadow-lg' 
+                        ? 'border-brand-red scale-95' 
                         : 'border-theme-text/10 hover:border-theme-text/40 opacity-70 hover:opacity-100'
                     }`}
                   >
@@ -292,7 +292,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
               <button
                 onClick={() => canPurchase && onAddToCart(product, quantity, selectedVariant ?? undefined)}
                 disabled={!canPurchase}
-                className="py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-0.5 hover:shadow-lg rounded-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                className="py-4 bg-theme-text text-theme-bg font-display font-black text-sm uppercase tracking-widest hover:bg-brand-red hover:text-white transition-all  rounded-sm disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
               >
                 {isSoldOut ? '已售完' : '立即購買'}
               </button>
@@ -380,7 +380,7 @@ export default function ProductDetail({ productId, onBack, onAddToCart, onSelect
                       alt={related.name}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                      className="w-full h-full object-cover transition-all duration-700"
                     />
                   </div>
                   <h3 className="font-serif font-bold text-sm md:text-base text-theme-text group-hover:text-brand-red transition-colors">

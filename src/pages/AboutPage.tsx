@@ -151,7 +151,7 @@ export default function AboutPage() {
 
         {/* Hero header */}
         <div className="mb-16 md:mb-24">
-          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-widest leading-tight mb-5">
+          <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
             關於我們
           </h1>
           <p className="font-display text-base md:text-lg tracking-[0.15em] text-theme-text/40 uppercase mb-8">
@@ -187,7 +187,7 @@ export default function AboutPage() {
         {/* Timeline section */}
         <div className="mt-24 md:mt-32">
           <div className="mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl font-black tracking-widest">論壇大事紀</h2>
+            <h2 className="font-serif text-3xl md:text-4xl font-black tracking-tight">論壇大事紀</h2>
           </div>
 
           <div className="flex flex-col gap-12">

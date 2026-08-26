@@ -65,7 +65,7 @@ function SelectButton({
       onClick={onClick}
       className={`border rounded-sm font-bold transition-all duration-300 ${
         active
-          ? 'border-brand-red bg-brand-red text-white shadow-md -translate-y-0.5'
+          ? 'border-brand-red bg-brand-red text-white -translate-y-0.5'
           : 'border-theme-text/20 bg-theme-text/5 text-theme-text hover:bg-theme-text hover:text-theme-bg'
       } ${className}`}
     >
@@ -92,7 +92,7 @@ function PaymentMethodCard({
       onClick={onClick}
       className={`border p-4 cursor-pointer rounded-sm flex items-center gap-4 transition-all duration-300 ${
         active
-          ? 'border-brand-red bg-brand-red text-white shadow-md -translate-y-0.5'
+          ? 'border-brand-red bg-brand-red text-white -translate-y-0.5'
           : 'border-theme-text/20 bg-theme-text/5 hover:bg-theme-text/10'
       }`}
     >
@@ -452,12 +452,12 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
               return (
                 <>
                   {submitMsg && (
-                    <div className={`flex items-center gap-2 text-sm font-bold tracking-wide px-4 py-3 rounded-xl mt-6 ${submitMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
+                    <div className={`flex items-center gap-2 text-sm font-bold tracking-wide px-4 py-3 rounded-sm mt-6 ${submitMsg.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-600' : 'bg-red-500/10 border border-red-500/20 text-red-500'}`}>
                       <i className={`fas ${submitMsg.type === 'success' ? 'fa-circle-check' : 'fa-exclamation-circle'} shrink-0`} />
                       {submitMsg.text}
                     </div>
                   )}
-                  <button type="submit" disabled={isSubmitting} className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform hover:-translate-y-1 hover:shadow-xl mt-8 rounded-sm flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-wait disabled:transform-none">
+                  <button type="submit" disabled={isSubmitting} className="w-full py-5 md:py-6 bg-theme-text text-theme-bg font-display font-black text-xl uppercase tracking-[0.2em] hover:bg-brand-red hover:text-white transition-all transform mt-8 rounded-sm flex items-center justify-center gap-3 disabled:opacity-60 disabled:cursor-wait disabled:transform-none">
                     {isSubmitting ? '處理中…' : '前往結帳'}
                     <span className="font-sans font-light text-sm opacity-80">{checkoutLabel}</span>
                     <i className="fas fa-arrow-right ml-2" />

@@ -21,7 +21,7 @@ export default function FeaturedCarousel({
   if (articles.length === 0) return null;
 
   return (
-    <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10 rounded-sm shadow-xl">
+    <div className="max-w-[1400px] mx-auto relative overflow-hidden bg-theme-text/5 border border-theme-text/10">
       <div className="relative w-full aspect-[832/470] bg-black overflow-hidden group/img">
         {articles.map((article, idx) => (
           <img
@@ -70,14 +70,14 @@ export default function FeaturedCarousel({
           <button
             onClick={(e) => { e.stopPropagation(); prev(); }}
             aria-label="上一則精選文章"
-            className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
+            className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-colors"
           >
             <i className="fas fa-chevron-left text-sm md:text-base"></i>
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); next(); }}
             aria-label="下一則精選文章"
-            className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-all transform hover:scale-110 active:scale-95 shadow-xl"
+            className="w-10 h-10 md:w-12 md:h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-brand-red hover:border-brand-red transition-colors"
           >
             <i className="fas fa-chevron-right text-sm md:text-base"></i>
           </button>
