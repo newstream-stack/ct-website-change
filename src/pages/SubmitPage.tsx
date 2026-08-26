@@ -35,7 +35,7 @@ const WELCOME = '歡迎個人信主見證、生命更新見證，以及宣教經
 
 export default function SubmitPage() {
   return (
-    <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero */}

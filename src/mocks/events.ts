@@ -4,7 +4,7 @@ export const MOCK_EVENTS: EventDetail[] = [
   {
     id: 'impact-2026',
     name: 'IMPACT 2026 全球華人影響力高峰會',
-    eyebrow: 'Premium Sponsorship / Annual Summit',
+    eyebrow: '2026 年度高峰會',
     description: '結合理性與靈性的視野，邀請重量級講員獨家探討未來的企業倫理。在急遽變化的世代中，尋找不變的真理與前進的動力。',
     imageUrl: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=2000',
     dateLabel: '2026/10/20 (二)\n至 10/22 (四)',

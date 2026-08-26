@@ -188,7 +188,7 @@ src/
 ```css
 :root {
   --bg-base: 253 252 250;   /* 米白 */
-  --text-base: 10 10 10;
+  --ink-base: 10 10 10;     /* 不可叫 --text-base，會蓋掉 Tailwind 的字級變數 */
 }
 ```
 
@@ -207,16 +207,18 @@ Header 由三段組成：頂部廣告條（`getAd('header')`，可能不顯示�
 
 ### 各頁面 top padding 規範
 
-| Component | Mobile | Desktop |
-|-----------|--------|---------|
-| `HomeAccordion` | **動態**（ResizeObserver 量測 header 高度） | `md:pt-0`（圖片從頂部滿版） |
-| `CategoryList`（標準版型） | `pt-[190px]` | `md:pt-48` |
-| `CategoryList`（首頁精選版型） | `pt-[190px]` | `md:pt-[190px]` |
-| `ActionPage` | `pt-[190px]` | `md:pt-0` |
-| `ProductGallery` | `pt-[190px]` | `md:pt-32` |
-| `ArticleDetail` | `pt-[190px]` | `md:pt-32`（見下方專節） |
+Header 高度取決於有沒有 category bar（`showCategoryBar`：首頁／首頁2／`NEWS_CATEGORIES`／文章頁才有），
+所以 top padding 分兩組（實測手機留 55px、桌機留 20–33px 呼吸）：
 
-> ⚠️ **不要用 `pt-16`（64px）或 `pt-24`（96px）當手機 header 清除值**，會跑版。安全值為 `pt-[190px]`。這個 class 在 `pages/` 底下幾乎每個靜態頁都能看到，新頁面直接沿用即可。
+| 頁面 | Mobile | Desktop |
+|------|--------|---------|
+| 有 category bar（`CategoryList`、`ArticleDetail`、`ColumnPage`、`ImpactAlliancePage`、Tag／Author、`HomeNewsGrid`） | `pt-[190px]`（header 134px） | `md:pt-48`／`md:pt-52` |
+| 沒有 category bar（信仰好物、奉獻、會員相關、活動報名、全版閱讀、所有靜態頁、404） | `pt-[150px]`（header 95px） | `md:pt-40` |
+| `HomeAccordion` | **動態**（ResizeObserver 量測 header 高度） | `md:pt-0`（圖片從頂部滿版） |
+
+`RouteFallback`／`AsyncPageState` 兩種頁面都會用到，維持 `pt-[190px]`。
+
+> ⚠️ **不要用 `pt-16`（64px）或 `pt-24`（96px）當手機 header 清除值**，會跑版。新頁面直接照上表挑一組沿用，不要自己重新加總估算。
 
 ---
 
@@ -290,18 +292,14 @@ bg-black/50 sm:bg-black/35 md:bg-black/25
 ```
 
 ### 底部 padding（清除 FloatingImageAd / FloatingDonateButton）
-底部兩個 fixed 元件疊加後，桌機約 **74px**。content-expanded 的底部 padding 必須大於這個值：
-```tsx
-// 手機: pb-6 (accordion-container 本身已有 pb-[136px])
-// 平板: md:pb-20 (80px > 56px ad)
-// 桌機: lg:pb-24 (96px > 74px ad)
-```
+`FloatingImageAd` 實測 **340×194px**（手機桌機同尺寸），`FloatingDonateButton` 64px。
+content-expanded 目前用 `pb-6 / md:pb-20 / lg:pb-24`，`accordion-container` 另有 `pb-[136px]`。
 
 ---
 
 ## 底部浮動元件（FloatingImageAd / FloatingDonateButton）
 
-- 兩者皆 `fixed bottom-0`，取代舊版單一 `GlobalBottomAd`；`FloatingImageAd` 吃 `getAd('floating')`。
+- 兩者皆 `fixed bottom-0`，取代舊版單一 `GlobalBottomAd`；`FloatingImageAd` 吃 `getAd('floating')`（實測 340×194px，手機上占約 1/4 螢幕高）。
 - 排除清單見上方「路由 / 頁面架構」一節。
 - 其他頁面的內容底部必須留足夠 padding 避免被遮。
 - 在 Playwright 等工具做**全頁（fullPage）截圖**時，`position: fixed` 元素常會被畫在錯誤的絕對位置、疊在頁面中段內容上——**這是截圖工具的已知瑕疵，不是真的版面 bug**。要驗證 fixed 元素要用一般 viewport 截圖 + 手動 `scrollTo`，不要看 fullPage 截圖。
@@ -378,6 +376,8 @@ export const NEWS_CATEGORIES = [
 - `'關於我們'` / `'新聞連絡'` / `'我要投稿'` / `'版權隱私權聲明'` / `'財務報表'` → 對應靜態頁
 - `'付款結果'`（透過 `?payment=` query param 進入，非 Header/Footer 導覽項目）→ PaymentResultPage
 
+> `生活情報` 的子分類：找工作／找服務／找學習／找活動／論壇消息／桌布（`CategoryList` 的 `LIFE_SUB_CATEGORIES` 與 `Header` 的 `CATEGORY_SUBMENUS` 必須一致，否則點了選單會靜默落回「全部」）。
+
 > `'信仰知識庫'` 已不是 Header 導覽分類，也沒有專屬頁面或 `CategoryList` 分類頁（原本歸在此分類的 4 篇文章已改掛到 `'生活情報'`）。這個名稱現在只存在於 `SearchModal` 的「信仰知識庫」搜尋分頁裡，是獨立的歷史 archive 搜尋功能，跟 `NEWS_CATEGORIES`／新聞分類系統無關。**知識庫收錄 2007－2018 年的舊報導，全部需要訂閱才能查看**（跟一般新聞 2019 年至今免費瀏覽不同，沒有「近幾年免費」的分段）；未訂閱時搜尋結果一律顯示鎖頭圖示，點擊導去「訂報」頁。邏輯與資料集中在 `mocks/knowledgeBase.ts`（`EARLIEST_ARCHIVE_YEAR`／`LATEST_ARCHIVE_YEAR`／`ARCHIVE_YEARS`）、`api/knowledgeBase.ts`（`searchKnowledgeBase`）與 `hooks/useKnowledgeBaseAccess.ts`（訂閱狀態），寫相關功能時沿用這三個檔案。
 
 ---
@@ -406,19 +406,21 @@ export const NEWS_CATEGORIES = [
 
 3. **Desktop hover 行為是純 CSS**，不要在 `onMouseEnter`/`onMouseLeave` 加 React state，會打架。
 
-4. **不要用 `pt-16/24/32` 當手機 header 清除**，手機版 header（含 category bar）實測約需 190px。使用 `pt-[190px]` 或動態量測。
+4. **不要用 `pt-16/24/32` 當手機 header 清除**，手機 header 含 category bar 為 134px、不含為 95px，照「各頁面 top padding 規範」挑 `pt-[190px]` 或 `pt-[150px]`。
 
 5. **`bg-theme-bg/85` 在 inactive 面板會把圖片洗白**——現在改用 `bg-black/50`，使圖片暗但不失色彩。
 
 6. **`accordion-container` 的 padding-top 是 inline style（ResizeObserver 寫入）**，覆蓋優先度高於 Tailwind class，不要在 className 同時加 `pt-[Npx]` 造成衝突。
 
-7. **Tailwind v4 沒有 `xs:` breakpoint**——寫了不會報錯但永遠不生效，等於一直 `hidden`。改用 `sm:` 或在 `@theme` 自訂。
+7. **`@layer base` 的自訂變數不可用 Tailwind 的命名空間**（`--text-*`／`--font-*`／`--color-*`／`--spacing-*`）。之前 `--text-base: 10 10 10`（主題文字色）蓋掉 Tailwind v4 的 `--text-base: 1rem`，全站 88 處 `text-base` 靜默失效、改成繼承父層字級（分類頁 H1 的英文副標因此在桌機變成 60px）。現已改名 `--ink-base`。
 
-8. **同一個區塊不要拆成多層各自宣告 padding/max-width 的 div**——容易造成間距疊加、版面「看起來怪怪的」，且改一次要改好幾處。優先合併成單一容器。
+8. **Tailwind v4 沒有 `xs:` breakpoint**——寫了不會報錯但永遠不生效，等於一直 `hidden`。改用 `sm:` 或在 `@theme` 自訂。
 
-9. **驗證 `position: fixed` 元素（Header、FloatingImageAd、FloatingDonateButton）時不要用 Playwright fullPage 截圖**，會被畫在錯誤位置疊在內容上；改用一般 viewport 截圖 + `scrollTo` 驗證。
+9. **同一個區塊不要拆成多層各自宣告 padding/max-width 的 div**——容易造成間距疊加、版面「看起來怪怪的」，且改一次要改好幾處。優先合併成單一容器。
 
-10. **不要繞過 `utils/authStorage.ts` 直接讀寫 `auth_token`/`auth_user`**——登入 session 依「記住我」勾選會落在 localStorage 或 sessionStorage 其中之一，兩者互斥；直接裸寫容易漏掉清除另一邊，造成殘留 session。
+10. **驗證 `position: fixed` 元素（Header、FloatingImageAd、FloatingDonateButton）時不要用 Playwright fullPage 截圖**，會被畫在錯誤位置疊在內容上；改用一般 viewport 截圖 + `scrollTo` 驗證。
+
+11. **不要繞過 `utils/authStorage.ts` 直接讀寫 `auth_token`/`auth_user`**——登入 session 依「記住我」勾選會落在 localStorage 或 sessionStorage 其中之一，兩者互斥；直接裸寫容易漏掉清除另一邊，造成殘留 session。
 
 ---
 
@@ -438,4 +440,5 @@ npm run preview # 預覽 dist
 - 字體：heading 用 `font-serif`（Noto Serif TC）、UI label 用 `font-display`（Oswald）、內文用 `font-sans`（Noto Sans TC）
 - 色調：米白底黑字（單一主題，無 dark mode），品牌紅（#9C1B23）作為 accent
 - 圖片盡量保持 `grayscale opacity-70`，hover/active 時轉全彩——這是整站的視覺語言
+- **裝飾密度刻意壓低**（2026-08 改造）：頁面流內元素不用 `shadow-*`／`backdrop-blur`／`hover:scale`／`hover:-translate-y`，圓角一律 `rounded-sm`，hover 只換顏色；陰影與圓角只留給 modal、fixed 浮動元件與真圓形元素。層級靠字級落差（頁面 H1 `text-4xl md:text-6xl` + `tracking-tight`，卡片標題降為 `font-bold`），不要再靠陰影與 `tracking-widest`。
 - 廣告/贊助內容統一走「Premium Sponsorship」視覺語言（`bg-theme-text` 深底 + brand-red 直條 + serif 粗體標題 + 紅色 CTA），**不要**每個廣告位置各自發明新樣式（先前迭代過幾種「滿版圖片疊文字」的設計都被認為不好看，最後收斂到這個方案）

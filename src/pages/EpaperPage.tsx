@@ -15,7 +15,7 @@ const ZOOM_STEP = 0.25;
 
 function GatePrompt({ title, description, ctaLabel, onCta }: { title: string; description: string; ctaLabel: string; onCta: () => void }) {
   return (
-    <div className="min-h-[100dvh] pt-[190px] md:pt-32 pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
+    <div className="min-h-[100dvh] pt-[150px] md:pt-40 pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
       <div className="text-center max-w-md">
         <span className="inline-block font-display text-brand-red tracking-[0.3em] uppercase text-xs font-bold mb-4">全版閱讀</span>
         <h1 className="font-serif text-3xl font-black mb-4">{title}</h1>
@@ -115,7 +115,7 @@ function EpaperReader() {
   const canZoomIn = zoom < MAX_ZOOM;
 
   return (
-    <div className="min-h-[100dvh] pt-[190px] md:pt-32 pb-20 bg-theme-text text-theme-bg">
+    <div className="min-h-[100dvh] pt-[150px] md:pt-40 pb-20 bg-theme-text text-theme-bg">
       <div className="sticky top-[190px] md:top-32 z-30 bg-brand-red text-white">
         <div className="max-w-[1400px] mx-auto px-4 md:px-6 py-2.5 flex items-center justify-between gap-3 text-xs md:text-sm font-display tracking-widest">
           <div className="relative">

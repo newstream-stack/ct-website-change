@@ -35,7 +35,7 @@ export default function PaymentResultPage({ type, reference, onOrderPaid, goToCa
   if (error || !data) return <AsyncPageState error={error ?? new Error('無法取得交易狀態')} onRetry={reload} />;
 
   return (
-    <div className="min-h-[100dvh] pt-[190px] pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
+    <div className="min-h-[100dvh] pt-[150px] md:pt-40 pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
       <div className="max-w-lg w-full text-center border border-theme-text/10 bg-theme-text/5 rounded-sm p-8 md:p-12">
         <div className={`w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center ${isSuccess ? 'bg-green-500/10 text-green-600' : isFailure ? 'bg-red-500/10 text-red-500' : 'bg-amber-500/10 text-amber-600'}`}>
           <i className={`fas ${isSuccess ? 'fa-check' : isFailure ? 'fa-times' : 'fa-clock'} text-2xl`} />

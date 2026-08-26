@@ -76,7 +76,7 @@ export default function EventRegistrationPage({ goToCategory }: EventRegistratio
   if (registration) {
     const isConfirmed = registration.status === 'confirmed';
     return (
-      <div className="pt-[190px] md:pt-[180px] pb-24 px-5 min-h-[100dvh] flex items-center justify-center bg-theme-bg text-theme-text transition-colors duration-500">
+      <div className="pt-[150px] md:pt-[180px] pb-24 px-5 min-h-[100dvh] flex items-center justify-center bg-theme-bg text-theme-text transition-colors duration-500">
         <div className="max-w-xl w-full text-center p-12 border border-theme-text/10 rounded-sm bg-theme-text/5 animate-fade-in-up">
           <div className="w-20 h-20 bg-brand-red rounded-full flex items-center justify-center text-white text-3xl mx-auto mb-6">
             <i className="fas fa-check"></i>
@@ -96,7 +96,7 @@ export default function EventRegistrationPage({ goToCategory }: EventRegistratio
   }
 
   return (
-    <div className="pt-[190px] md:pt-[140px] pb-24 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500 relative">
+    <div className="pt-[150px] md:pt-[140px] pb-24 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500 relative">
       
       {/* Hero Section */}
       <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden mb-12">

@@ -76,7 +76,7 @@ export default function ProductGallery({ onSelectProduct }: ProductGalleryProps)
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
   return (
-    <div className="pt-[190px] md:pt-[190px] pb-24 min-h-screen flex flex-col bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-24 min-h-screen flex flex-col bg-theme-bg text-theme-text transition-colors duration-500">
       <div className="px-6 md:px-12 lg:px-20 mb-8 md:mb-12 flex justify-between items-end border-b border-theme-text/20 pb-6 md:pb-10 transition-colors">
         <div>
           <h1 className="text-4xl md:text-5xl font-serif font-black tracking-tight text-theme-text transition-colors">信仰好物 <span className="text-xl md:text-2xl font-display font-light text-theme-text/40 ml-4 tracking-widest uppercase">Product</span></h1>

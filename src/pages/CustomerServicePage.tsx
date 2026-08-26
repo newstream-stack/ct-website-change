@@ -27,7 +27,7 @@ const SERVICE_DETAILS = [
 
 export default function CustomerServicePage() {
   return (
-    <div className="pt-[190px] md:pt-48 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
       <div className="max-w-4xl mx-auto px-5 md:px-10">
         <div className="mb-14 md:mb-16">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">客戶服務</h1>

@@ -2,7 +2,7 @@
 
 @theme {
   --color-theme-bg: rgb(var(--bg-base));
-  --color-theme-text: rgb(var(--text-base));
+  --color-theme-text: rgb(var(--ink-base));
   --color-brand-red: #9C1B23;
   --color-brand-teal: #0F8B8D;
   --color-brand-gold: #D4A64A;
@@ -15,12 +15,12 @@
 @layer base {
   :root {
     --bg-base: 253 252 250;
-    --text-base: 10 10 10;
+    --ink-base: 10 10 10;
   }
   
   body {
     background-color: rgb(var(--bg-base));
-    color: rgb(var(--text-base));
+    color: rgb(var(--ink-base));
     transition: background-color 0.5s ease, color 0.5s ease;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -36,7 +36,7 @@
 /* 動態文字描邊 */
 .text-outline-theme {
   color: transparent;
-  -webkit-text-stroke: 1px rgb(var(--text-base) / 0.5);
+  -webkit-text-stroke: 1px rgb(var(--ink-base) / 0.5);
   transition: -webkit-text-stroke 0.5s ease;
 }
 
@@ -68,12 +68,12 @@
   cursor: pointer;
   transition: flex 0.65s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: flex;
-  border-bottom: 1px solid rgb(var(--text-base) / 0.12);
+  border-bottom: 1px solid rgb(var(--ink-base) / 0.12);
 }
 @media (min-width: 768px) {
   .accordion-panel {
     border-bottom: none;
-    border-right: 1px solid rgb(var(--text-base) / 0.12);
+    border-right: 1px solid rgb(var(--ink-base) / 0.12);
   }
 }
 
@@ -243,7 +243,7 @@
   line-height: 1.8;
   margin-bottom: 1.5rem;
   font-weight: 400;
-  color: rgb(var(--text-base) / 0.9);
+  color: rgb(var(--ink-base) / 0.9);
   text-align: justify;
   transition: color 0.5s;
 }
@@ -260,7 +260,7 @@
   font-family: 'Noto Serif TC', serif;
   font-weight: 900;
   margin: 2.5rem 0 1rem 0;
-  color: rgb(var(--text-base));
+  color: rgb(var(--ink-base));
   border-left: 4px solid #9C1B23;
   padding-left: 0.75rem;
   transition: color 0.5s;

@@ -14,7 +14,7 @@ export default function DonationGallery({ openPlan }: DonationGalleryProps) {
   ];
 
   return (
-    <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[150px] md:pt-40 pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
       
       {/* 1. Header Section */}
       <div className="px-5 md:px-12 lg:px-20 mb-12 md:mb-12">

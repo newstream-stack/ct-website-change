@@ -212,7 +212,7 @@ export default function DonationPlanDetail({ planId }: DonationPlanDetailProps) 
 
   // ── View ─────────────────────────────────────────────────────────────────
   return (
-    <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[190px] md:pt-0 bg-theme-bg transition-colors duration-500">
+    <div className="w-full min-h-[100dvh] md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row pt-[150px] md:pt-0 bg-theme-bg transition-colors duration-500">
       
       {/* ── Left: Plan Info ─────────────────────────────────────────────── */}
       <div className="w-full md:w-[45%] h-auto md:h-full flex flex-col bg-theme-bg md:border-r border-theme-text/10 overflow-y-auto scrollbar-hide md:pt-[130px]">
