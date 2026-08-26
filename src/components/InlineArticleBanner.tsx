@@ -10,7 +10,7 @@ export default function InlineArticleBanner({ ad, className = 'my-10 md:my-14' }
       
       <div className="flex-1 w-full flex flex-col justify-center mt-6 md:mt-0">
         <span className="text-[10px] font-display uppercase tracking-widest text-brand-red mb-2">{ad.sponsor}</span>
-        <h4 className="font-serif font-black text-xl md:text-3xl text-theme-text group-hover:text-brand-red transition-colors leading-snug">{ad.title}</h4>
+        <p className="font-serif font-black text-xl md:text-3xl text-theme-text group-hover:text-brand-red transition-colors leading-snug">{ad.title}</p>
         <p className="mt-2 md:mt-3 text-sm md:text-base text-theme-text/70">{ad.description}</p>
       </div>
 
