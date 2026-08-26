@@ -8,48 +8,516 @@
     "author": "陳秀雯",
     "date": "APR 11",
     "imageUrl": "https://media.ct.org.tw/upload/news_article/2026/04/10/69d897e430ea7.jpg?wm=LB",
-    "content": "\n      <p class=\"drop-cap\">中台神學院副院長張宰金牧師指出，在 AI 快速崛起的背景下，未來事奉者除了扎實的神學裝備，更需具備屬靈深度與跨領域能力。他提出「三重印證」作為辨識呼召的原則，並建議將 AI 視為工具而非依賴。</p>\n\n      <h2>呼召是逐步清晰的過程</h2>\n      <p>張副院長提出「三重印證」原則：1. 內在負擔（長期對特定族群或議題的關注）；2. 恩賜能力（上帝的呼召伴隨相應能力）；3. 外在印證（教會牧者、屬靈長輩的觀察與肯定）。</p>\n\n      <h2>五大事奉類型</h2>\n      <p>歸納為：牧會型、宣教型、輔導關懷型、教導學術型、機構事奉型。事奉者可跨足不同領域，但應有一個主要方向。</p>\n\n      <div class=\"grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 my-10 md:my-16\">\n          <div class=\"w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden transition-colors\">\n            <img src=\"https://ct.org.tw/upload/news_article_cms/2026/04/10/10368_4840_%E5%BC%B5%E5%AE%B0%E9%87%91%E7%89%A7%E5%B8%AB_2.jpg\" onerror=\"this.src='https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800'\" class=\"w-full h-full object-cover hover:scale-105 transition-all duration-700\" alt=\"張宰金牧師授課\" />\n          </div>\n          <div class=\"w-full aspect-[4/5] bg-theme-text/5 border border-theme-text/10 overflow-hidden md:mt-12 transition-colors\">\n            <img src=\"https://ct.org.tw/upload/news_article_cms/2026/04/10/25585_4840_%E5%BC%B5%E5%AE%B0%E9%87%91%E7%89%A7%E5%B8%AB_3.jpg\" onerror=\"this.src='https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800'\" class=\"w-full h-full object-cover hover:scale-105 transition-all duration-700\" alt=\"會心園諮商\" />\n          </div>\n      </div>\n      <p class=\"text-xs md:text-sm opacity-60 text-center -mt-6 md:-mt-10 mb-10 font-bold tracking-widest text-theme-text\">圖：張宰金牧師授課時情景 / 會心園諮商中心 (神學院提供)</p>\n\n      <div class=\"w-full my-12 md:my-24 py-12 md:py-24 border-y border-theme-text/10 bg-theme-text/5 relative flex justify-center overflow-hidden transition-colors\">\n          <div class=\"absolute -top-10 md:-top-16 text-[120px] md:text-[200px] font-serif text-theme-text/5 leading-none pointer-events-none\">“</div>\n          <h2 class=\"font-serif text-2xl sm:text-3xl md:text-4xl text-theme-text text-center max-w-4xl leading-[1.4] md:leading-[1.3] font-black px-4 md:px-6 z-10 mx-auto transition-colors\" style=\"border: none; padding-left: 0; margin: 0;\">\n              AI 不會取代真正的牧者，<span class=\"text-brand-red\">但會淘汰缺乏屬靈深度與思考能力的人</span>。\n          </h2>\n      </div>\n\n      <h2>選擇神學院的評估標準</h2>\n      <p>包含：課程取向（實務 or 學術）、實習制度（如中台神學院的週末實習）、神學立場、地域語言以及與教會的連結。</p>\n\n      <h2>AI 浪潮下的轉型：淺層知識將被淘汰</h2>\n      <p>AI 不會取代真正的牧者，但會淘汰缺乏屬靈深度與思考能力的人。張牧師強調不可直接複製 AI 生成的講章，也不可用 AI 取代靈修與默想。</p>\n\n      <h2>未來事奉者的四大關鍵能力</h2>\n      <p>1. 屬靈深度（力量來源）；2. 神學判斷力（資訊辨別）；3. 人際關係與陪伴能力（AI 難以取代）；4. 跨領域能力（涵蓋心理學、社會學與媒體科技）。</p>\n\n      <p class=\"mt-8 text-sm text-theme-text/80 font-bold bg-theme-text/5 p-4 border-l-4 border-brand-red\">聯絡資訊：中台神學院「會心園」諮商資源：04-23780510 #18 曾姊妹。</p>\n    "
+    "content": "\n      <p class=\"drop-cap\">中台神學院副院長張宰金牧師指出，在 AI 快速崛起的背景下，未來事奉者除了扎實的神學裝備，更需具備屬靈深度與跨領域能力。他提出「三重印證」作為辨識呼召的原則，並建議將 AI 視為工具而非依賴。</p>\n\n      <h2>呼召是逐步清晰的過程</h2>\n      <p>張副院長提出「三重印證」原則：1. 內在負擔（長期對特定族群或議題的關注）；2. 恩賜能力（上帝的呼召伴隨相應能力）；3. 外在印證（教會牧者、屬靈長輩的觀察與肯定）。</p>\n\n      <h2>五大事奉類型</h2>\n      <p>歸納為：牧會型、宣教型、輔導關懷型、教導學術型、機構事奉型。事奉者可跨足不同領域，但應有一個主要方向。</p>\n\n      <div class=\"my-10 md:my-16 flex flex-col gap-4 md:gap-6\">\n          <div class=\"w-full aspect-[832/470] bg-theme-text/5 border border-theme-text/10 overflow-hidden rounded-sm\">\n            <img src=\"https://ct.org.tw/upload/news_article_cms/2026/04/10/10368_4840_%E5%BC%B5%E5%AE%B0%E9%87%91%E7%89%A7%E5%B8%AB_2.jpg\" onerror=\"this.src='https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=800'\" class=\"w-full h-full object-cover\" alt=\"張宰金牧師授課\" />\n          </div>\n          <div class=\"w-full aspect-[832/470] bg-theme-text/5 border border-theme-text/10 overflow-hidden rounded-sm\">\n            <img src=\"https://ct.org.tw/upload/news_article_cms/2026/04/10/25585_4840_%E5%BC%B5%E5%AE%B0%E9%87%91%E7%89%A7%E5%B8%AB_3.jpg\" onerror=\"this.src='https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=800'\" class=\"w-full h-full object-cover\" alt=\"會心園諮商\" />\n          </div>\n      </div>\n      <p class=\"text-xs md:text-sm opacity-60 text-center -mt-6 md:-mt-10 mb-10 font-bold tracking-widest text-theme-text\">圖：張宰金牧師授課時情景 / 會心園諮商中心 (神學院提供)</p>\n\n      <div class=\"w-full my-12 md:my-24 py-12 md:py-24 border-y border-theme-text/10 bg-theme-text/5 relative flex justify-center overflow-hidden transition-colors\">\n          <div class=\"absolute -top-10 md:-top-16 text-[120px] md:text-[200px] font-serif text-theme-text/5 leading-none pointer-events-none\">“</div>\n          <h2 class=\"font-serif text-2xl sm:text-3xl md:text-4xl text-theme-text text-center max-w-4xl leading-[1.4] md:leading-[1.3] font-black px-4 md:px-6 z-10 mx-auto transition-colors\" style=\"border: none; padding-left: 0; margin: 0;\">\n              AI 不會取代真正的牧者，<span class=\"text-brand-red\">但會淘汰缺乏屬靈深度與思考能力的人</span>。\n          </h2>\n      </div>\n\n      <h2>選擇神學院的評估標準</h2>\n      <p>包含：課程取向（實務 or 學術）、實習制度（如中台神學院的週末實習）、神學立場、地域語言以及與教會的連結。</p>\n\n      <h2>AI 浪潮下的轉型：淺層知識將被淘汰</h2>\n      <p>AI 不會取代真正的牧者，但會淘汰缺乏屬靈深度與思考能力的人。張牧師強調不可直接複製 AI 生成的講章，也不可用 AI 取代靈修與默想。</p>\n\n      <h2>未來事奉者的四大關鍵能力</h2>\n      <p>1. 屬靈深度（力量來源）；2. 神學判斷力（資訊辨別）；3. 人際關係與陪伴能力（AI 難以取代）；4. 跨領域能力（涵蓋心理學、社會學與媒體科技）。</p>\n\n      <p class=\"mt-8 text-sm text-theme-text/80 font-bold bg-theme-text/5 p-4 border-l-4 border-brand-red\">聯絡資訊：中台神學院「會心園」諮商資源：04-23780510 #18 曾姊妹。</p>\n    "
   },
-  { "id": 7, "title": "青年世代的信仰覺醒：從數位原住民到真理追尋者", "excerpt": "在充滿雜訊的網路世界中，新一代年輕人如何透過社群媒體找到心靈的歸屬與信仰的真實。", "category": "基督教論壇報", "subCategory": "專題報導", "author": "青年事工", "date": "APR 10", "imageUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 8, "title": "跨越國界的愛：醫療宣教團的非洲紀實", "excerpt": "深入偏鄉，這群醫療人員不僅帶來了醫學的療癒，更帶來了超越語言與文化的愛與盼望。", "category": "基督教論壇報", "subCategory": "見證宣教", "author": "國際新聞", "date": "APR 11", "imageUrl": "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 97, "title": "社論：在紛擾世代中重新定義委身的意義", "excerpt": "當價值觀快速更迭，教會與信徒如何在變動中持守對信仰、對群體不變的委身？", "category": "基督教論壇報", "subCategory": "社論言論", "author": "論壇報主筆", "date": "APR 09", "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 98, "title": "全球教會回應氣候議題　呼籲信徒實踐環境託管", "excerpt": "越來越多教會團體將環境關懷納入牧養範疇，鼓勵會友從日常生活實踐對受造界的責任。", "category": "基督教論壇報", "subCategory": "新聞時事", "author": "論壇報編採", "date": "APR 08", "imageUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 99, "title": "台灣多間教會攜手推動社區關懷網絡", "excerpt": "跨堂會合作的社區服務網絡逐漸成形，盼望讓資源更有效地送到需要幫助的家庭手中。", "category": "基督教論壇報", "subCategory": "台灣教會", "author": "論壇報編採", "date": "APR 07", "imageUrl": "https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 100, "title": "從呼召到職場：基督徒專業人士的信仰實踐之路", "excerpt": "在競爭激烈的職場中，如何一邊追求專業表現，一邊活出信仰的價值觀？幾位職場信徒分享心路歷程。", "category": "基督教論壇報", "subCategory": "職場生涯", "author": "職場事工", "date": "APR 06", "imageUrl": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 101, "title": "在忙碌步調中重建每日靈修的節奏", "excerpt": "面對排山倒海的行程與訊息，如何為自己保留與神獨處的固定時間？幾個簡單可行的操練方式。", "category": "基督教論壇報", "subCategory": "靈修禱告", "author": "論壇報副刊", "date": "APR 05", "imageUrl": "https://images.unsplash.com/photo-1476611317561-60117649dd94?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 102, "title": "身心靈整合照護：教會如何成為醫療關懷的夥伴", "excerpt": "從探訪關懷到專業轉介，教會在會友的醫療照護歷程中，能扮演怎樣不可取代的支持角色？", "category": "基督教論壇報", "subCategory": "醫療健康", "author": "論壇報編採", "date": "APR 04", "imageUrl": "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 9, "title": "城市綠洲：教會空間改造的社區影響力", "excerpt": "打破高牆，現代教會如何透過空間設計與開放態度，成為社區居民日常交流與心靈休憩的中心。", "category": "最新文章", "author": "社區發展", "date": "APR 12", "imageUrl": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 103, "title": "教會志工日常：那些默默付出的服事身影", "excerpt": "從招待、司琴到兒童主日學，一群不求掌聲的志工，用穩定的委身撐起了教會日常運作。", "category": "最新文章", "author": "論壇報編採", "date": "MAY 08", "imageUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 104, "title": "當代敬拜音樂的轉變：從詩班到敬拜團隊", "excerpt": "音樂型態隨世代改變，教會如何在傳承與創新之間，持續用歌聲傳遞信仰的核心？", "category": "最新文章", "author": "論壇報編採", "date": "MAY 07", "imageUrl": "https://images.unsplash.com/photo-1483058712412-4245e9b90334?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 105, "title": "小組教會的凝聚力：從陌生到家人的旅程", "excerpt": "在人與人日漸疏離的城市裡，小組聚會成為許多會友重新學習彼此陪伴、彼此代禱的起點。", "category": "最新文章", "author": "論壇報編採", "date": "MAY 07", "imageUrl": "https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 10, "title": "AI 時代的牧養職人：從李麥克與「夥計」談起", "excerpt": "當生成式 AI 進入牧養現場，真正不可取代的不是標準答案，而是走進人獨特處境、以生命陪伴生命的真實關係。", "category": "最新文章", "subCategory": "華神專欄", "author": "論壇報副刊", "date": "MAY 06", "imageUrl": "https://media.ct.org.tw/upload/news_article/2026/05/06/69fadb701aa33.jpg?wm=LB", "content": "<p>◎劉幸枝（華神推廣教育處處長）</p><p>從科幻影集裡能對話、能協助決策的智慧車，到今天隨手可用的生成式 AI，工具正快速進入每個人的生活，也正在改變教會面對知識、講道與關懷的方式。</p><h2>AI 能回應，卻不能取代牧養</h2><p>AI 可以整理資料、協助潤飾表達，甚至提出看似完整的查經或處境建議；但牧養不只是提供正確資訊。它需要看見一個人的傷痛、恩賜與生命歷程，並在真實關係中陪伴對方辨識上帝的帶領。</p><h2>從標準答案走向生命的差異化</h2><p>當知識越容易取得，教會更需要避免把關顧簡化成公式。人的價值並不在於能否給出最快的答案，而在於每個人都帶著無法複製的經驗、呼召與成長軌跡；這正是群體彼此同行的意義。</p><h2>牧養是一門職人的藝術</h2><p>科技可以成為服事的助手，卻不該掌握方向。牧者與信徒的角色，是以耐心與真實走進他人處境，在軟弱中互相扶持，讓信仰不只停留在螢幕上的資訊，而成為可以被活出來的生命。</p><h2>回到有溫度的群體</h2><p>AI 讓我們走得更快，但教會的核心仍是道成肉身般的陪伴。當人們在關係中分享傷痕、盼望與恩典，並一起回應基督的呼召，這份真實連結便是科技無法取代的見證。</p><p class=\"mt-8 text-sm text-theme-text/70\">本文為重述摘要；<a href=\"https://ct.org.tw/html/news/3-3.php?article=1403674&amp;cat=9\" target=\"_blank\" rel=\"noreferrer\" class=\"text-brand-red hover:underline\">閱讀原文</a>。</p>" },
-  { "id": 2, "title": "科技與人性的失衡：社群媒體成癮案的反思", "excerpt": "法官的判決不僅是法律裁定，更是一記警鐘，提醒我們在演算法的時代中，如何奪回靈魂的自主權。", "category": "專欄", "author": "主筆室", "date": "APR 08", "imageUrl": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 11, "title": "孤獨經濟下的心靈解藥", "excerpt": "在看似擁擠卻無比孤獨的現代社會，我們需要的不是更多的娛樂，而是真實而深刻的關係連結。", "category": "專欄", "author": "社會觀察", "date": "APR 07", "imageUrl": "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 12, "title": "職場如戰場？重塑工作神學的新視角", "excerpt": "工作不只是為了糊口，更是實踐呼召的場域。探討如何在競爭激烈的職場中活出信仰的價值。", "category": "專欄", "author": "職場論壇", "date": "APR 06", "imageUrl": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 13, "title": "後疫情時代的家庭重塑", "excerpt": "疫情改變了我們的工作與生活型態，也迫使我們重新檢視家庭關係的脆弱與堅韌。", "category": "專欄", "author": "家庭事工", "date": "APR 05", "imageUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 14, "title": "氣候變遷與管家職分：基督徒的環保責任", "excerpt": "面對日益嚴峻的生態危機，我們不能再置身事外。探討信仰如何驅動我們成為地球更好的管家。", "category": "專欄", "author": "生態神學", "date": "APR 04", "imageUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 3, "title": "從科技菁英到全職傳道：林牧師的翻轉人生", "excerpt": "曾經是高階主管，經歷人生重大挫折後重新認識信仰，最終回應呼召的真實故事。", "category": "人物見證", "author": "人物誌", "date": "APR 07", "imageUrl": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 15, "title": "破繭而出：一位前幫派份子的重生之路", "excerpt": "在黑暗中徘徊多年，直到遇見那道不可思議的光，他的人生從此不再一樣。", "category": "人物見證", "author": "生命故事", "date": "APR 06", "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 16, "title": "音符中的醫治：盲人鋼琴家的奇異恩典", "excerpt": "失去視力卻獲得了更敏銳的聽覺與心靈，她用音樂撫慰了無數受傷的靈魂。", "category": "人物見證", "author": "藝術與信仰", "date": "APR 05", "imageUrl": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 17, "title": "商場上的光與鹽：企業家的誠信考驗", "excerpt": "在利益與道德的十字路口，他選擇了看似吃虧卻滿有平安的道路，最終贏得了真正的尊重。", "category": "人物見證", "author": "職場見證", "date": "APR 04", "imageUrl": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 18, "title": "走過死蔭幽谷：抗癌鬥士的盼望之歌", "excerpt": "面對疾病的無情打擊，她沒有選擇放棄，而是用堅定的信仰譜寫出生命的奇蹟。", "category": "人物見證", "author": "醫療見證", "date": "APR 03", "imageUrl": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 4, "title": "快節奏都市裡的「慢靈修」生活美學", "excerpt": "在喧囂的城市中，我們如何為自己的心靈保留一片安靜的綠洲？這是一種需要刻意練習的生活方式。", "category": "生活情報", "subCategory": "找學習", "author": "副刊編輯", "date": "APR 04", "imageUrl": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 19, "title": "週末提案：走訪五間隱身巷弄的特色書房", "excerpt": "放下手機，走進這些充滿書香與咖啡香的空間，享受一個與文字 and 心靈對話的悠閒午後。", "category": "生活情報", "subCategory": "找活動", "author": "藝文生活", "date": "APR 03", "imageUrl": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 20, "title": "餐桌上的信仰：用料理傳遞愛與溫暖", "excerpt": "分享幾道簡單卻充滿故事的家常菜食譜，讓每一次的共餐都成為凝聚家人情感的美好時刻。", "category": "生活情報", "subCategory": "找服務", "author": "家庭生活", "date": "APR 02", "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 21, "title": "親子共讀指南：挑選優質的兒童信仰繪本", "excerpt": "透過生動的故事與精美的插畫，將信仰的種子悄悄種在孩子的心田，陪伴他們健康成長。", "category": "生活情報", "subCategory": "找學習", "author": "親子教育", "date": "APR 01", "imageUrl": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 22, "title": "極簡生活實踐：從斷捨離到心靈的自由", "excerpt": "減少物質的羈絆，不僅能讓生活空間更清爽，更能讓我們將焦點轉向真正重要的人事物。", "category": "生活情報", "subCategory": "找工作", "author": "生活風格", "date": "MAR 31", "imageUrl": "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 5, "title": "當代藝術與古老信仰符號的跨界對話", "excerpt": "專訪知名策展人，深入了解他們如何透過極簡的現代藝術手法，重新詮釋千年的信仰圖騰。", "category": "生活情報", "author": "視覺藝術", "date": "APR 02", "imageUrl": "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 23, "title": "聖經考古新發現：重塑我們對歷史的理解", "excerpt": "最新的考古挖掘成果，為聖經記載的歷史事件提供了更豐富的背景與佐證，令人振奮。", "category": "生活情報", "author": "歷史研究", "date": "APR 01", "imageUrl": "https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 24, "title": "神學入門：理解恩典與真理的平衡", "excerpt": "以淺顯易懂的方式，探討基督教信仰中兩個最核心卻也最常被誤解的概念，幫助信徒建立穩固的根基。", "category": "生活情報", "author": "神學教育", "date": "MAR 31", "imageUrl": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 25, "title": "早期教會的敬拜模式：從家庭聚會到大教堂", "excerpt": "追溯基督教敬拜形式的演變，從初代教會的簡單樸素，到後來發展出的豐富儀式與傳統。", "category": "生活情報", "author": "教會歷史", "date": "MAR 30", "imageUrl": "https://images.unsplash.com/photo-1548625361-f6dbcd00fa9e?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 106, "title": "論壇報讀者問卷調查開跑，邀您一起形塑下一個十年", "excerpt": "紙本、電子報還是社群？三分鐘問卷告訴我們您習慣的閱讀方式，我們會據此調整版面與發行節奏。", "category": "生活情報", "subCategory": "論壇消息", "author": "論壇報編輯室", "date": "APR 09", "imageUrl": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 107, "title": "誠徵特約記者與文字志工：與我們一起記錄教會現場", "excerpt": "若您對採訪寫作有負擔，歡迎加入報導行列。無論是週間跑線或假日活動側寫，都有適合的參與方式。", "category": "生活情報", "subCategory": "論壇消息", "author": "論壇報編輯室", "date": "APR 07", "imageUrl": "https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 108, "title": "四月起紙本配送時程調整公告", "excerpt": "為配合物流作業，中南部地區的到報時間將提前一日。訂戶如未於期限內收到報紙，請與客服聯繫補寄。", "category": "生活情報", "subCategory": "論壇消息", "author": "發行部", "date": "APR 05", "imageUrl": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 109, "title": "四月經文桌布下載：詩篇二十三篇", "excerpt": "「耶和華是我的牧者，我必不致缺乏。」提供桌機與手機兩種尺寸，讓經文在每次開機時陪伴您。", "category": "生活情報", "subCategory": "桌布", "author": "美術設計組", "date": "APR 04", "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 110, "title": "復活節特別版桌布：空墳墓前的清晨", "excerpt": "以晨光與石墓為題的攝影桌布，收錄四款配色，適合在受難週與復活節期間更換使用。", "category": "生活情報", "subCategory": "桌布", "author": "美術設計組", "date": "APR 02", "imageUrl": "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 111, "title": "手機桌布｜每日晨禱提醒版", "excerpt": "把一天的第一個念頭留給禱告。桌布上留有 App 圖示的安全區，經文不會被圖示遮住。", "category": "生活情報", "subCategory": "桌布", "author": "數位編輯", "date": "MAR 29", "imageUrl": "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 93, "title": "影響力聯盟 2026 年度高峰會盛大展開", "excerpt": "匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。", "category": "影響力聯盟", "author": "活動中心", "date": "MAR 28", "imageUrl": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 94, "title": "《好撒馬利亞人行動》 為焦慮恐懼的青少年舉辦的希望營會 - 波爾塔瓦最新消息", "excerpt": "在動盪局勢中，為烏克蘭波爾塔瓦地區的流離失所青年提供心靈關懷與支持。", "category": "影響力聯盟", "author": "影響力聯盟", "date": "2026-04-15", "imageUrl": "https://media.ct.org.tw/upload/news_article/2026/04/10/69d897e430ea7.jpg?wm=LB" },
-  { "id": 95, "title": "導彈與奇蹟：連番遭炸後但人民卻心懷感激", "excerpt": "見證在烽火連天的戰區中，如何因著堅定的信仰與救援物資的即時抵達而重現生機。", "category": "影響力聯盟", "author": "聖域資訊報", "date": "2026-04-13", "imageUrl": "https://images.unsplash.com/photo-1469488836641-77dfd0af2821?auto=format&fit=crop&q=80&w=1600" },
-  { "id": 96, "title": "【未來教會篇】 當AI無不在，門訓還能給什麼？ 黃偉仁牧師：知識可被取代，實踐不會", "excerpt": "探討在人工智慧大舉入侵的時代，教會如何調整門徒訓練的核心，強調真理實踐而非單純知識灌輸。", "category": "影響力聯盟", "author": "IMPACT x Malaysia", "date": "2026-03-18", "imageUrl": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1600" }
+  {
+    "id": 7,
+    "title": "青年世代的信仰覺醒：從數位原住民到真理追尋者",
+    "excerpt": "在充滿雜訊的網路世界中，新一代年輕人如何透過社群媒體找到心靈的歸屬與信仰的真實。",
+    "category": "基督教論壇報",
+    "subCategory": "專題報導",
+    "author": "青年事工",
+    "date": "APR 10",
+    "imageUrl": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 8,
+    "title": "跨越國界的愛：醫療宣教團的非洲紀實",
+    "excerpt": "深入偏鄉，這群醫療人員不僅帶來了醫學的療癒，更帶來了超越語言與文化的愛與盼望。",
+    "category": "基督教論壇報",
+    "subCategory": "見證宣教",
+    "author": "國際新聞",
+    "date": "APR 11",
+    "imageUrl": "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 97,
+    "title": "社論：在紛擾世代中重新定義委身的意義",
+    "excerpt": "當價值觀快速更迭，教會與信徒如何在變動中持守對信仰、對群體不變的委身？",
+    "category": "基督教論壇報",
+    "subCategory": "社論言論",
+    "author": "論壇報主筆",
+    "date": "APR 09",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 98,
+    "title": "全球教會回應氣候議題　呼籲信徒實踐環境託管",
+    "excerpt": "越來越多教會團體將環境關懷納入牧養範疇，鼓勵會友從日常生活實踐對受造界的責任。",
+    "category": "基督教論壇報",
+    "subCategory": "新聞時事",
+    "author": "論壇報編採",
+    "date": "APR 08",
+    "imageUrl": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 99,
+    "title": "台灣多間教會攜手推動社區關懷網絡",
+    "excerpt": "跨堂會合作的社區服務網絡逐漸成形，盼望讓資源更有效地送到需要幫助的家庭手中。",
+    "category": "基督教論壇報",
+    "subCategory": "台灣教會",
+    "author": "論壇報編採",
+    "date": "APR 07",
+    "imageUrl": "https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 100,
+    "title": "從呼召到職場：基督徒專業人士的信仰實踐之路",
+    "excerpt": "在競爭激烈的職場中，如何一邊追求專業表現，一邊活出信仰的價值觀？幾位職場信徒分享心路歷程。",
+    "category": "基督教論壇報",
+    "subCategory": "職場生涯",
+    "author": "職場事工",
+    "date": "APR 06",
+    "imageUrl": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 101,
+    "title": "在忙碌步調中重建每日靈修的節奏",
+    "excerpt": "面對排山倒海的行程與訊息，如何為自己保留與神獨處的固定時間？幾個簡單可行的操練方式。",
+    "category": "基督教論壇報",
+    "subCategory": "靈修禱告",
+    "author": "論壇報副刊",
+    "date": "APR 05",
+    "imageUrl": "https://images.unsplash.com/photo-1476611317561-60117649dd94?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 102,
+    "title": "身心靈整合照護：教會如何成為醫療關懷的夥伴",
+    "excerpt": "從探訪關懷到專業轉介，教會在會友的醫療照護歷程中，能扮演怎樣不可取代的支持角色？",
+    "category": "基督教論壇報",
+    "subCategory": "醫療健康",
+    "author": "論壇報編採",
+    "date": "APR 04",
+    "imageUrl": "https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 9,
+    "title": "城市綠洲：教會空間改造的社區影響力",
+    "excerpt": "打破高牆，現代教會如何透過空間設計與開放態度，成為社區居民日常交流與心靈休憩的中心。",
+    "category": "最新文章",
+    "author": "社區發展",
+    "date": "APR 12",
+    "imageUrl": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 103,
+    "title": "教會志工日常：那些默默付出的服事身影",
+    "excerpt": "從招待、司琴到兒童主日學，一群不求掌聲的志工，用穩定的委身撐起了教會日常運作。",
+    "category": "最新文章",
+    "author": "論壇報編採",
+    "date": "MAY 08",
+    "imageUrl": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 104,
+    "title": "當代敬拜音樂的轉變：從詩班到敬拜團隊",
+    "excerpt": "音樂型態隨世代改變，教會如何在傳承與創新之間，持續用歌聲傳遞信仰的核心？",
+    "category": "最新文章",
+    "author": "論壇報編採",
+    "date": "MAY 07",
+    "imageUrl": "https://images.unsplash.com/photo-1483058712412-4245e9b90334?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 105,
+    "title": "小組教會的凝聚力：從陌生到家人的旅程",
+    "excerpt": "在人與人日漸疏離的城市裡，小組聚會成為許多會友重新學習彼此陪伴、彼此代禱的起點。",
+    "category": "最新文章",
+    "author": "論壇報編採",
+    "date": "MAY 07",
+    "imageUrl": "https://images.unsplash.com/photo-1519452575417-564c1401ecc0?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 10,
+    "title": "AI 時代的牧養職人：從李麥克與「夥計」談起",
+    "excerpt": "當生成式 AI 進入牧養現場，真正不可取代的不是標準答案，而是走進人獨特處境、以生命陪伴生命的真實關係。",
+    "category": "最新文章",
+    "subCategory": "華神專欄",
+    "author": "論壇報副刊",
+    "date": "MAY 06",
+    "imageUrl": "https://media.ct.org.tw/upload/news_article/2026/05/06/69fadb701aa33.jpg?wm=LB",
+    "content": "<p>◎劉幸枝（華神推廣教育處處長）</p><p>從科幻影集裡能對話、能協助決策的智慧車，到今天隨手可用的生成式 AI，工具正快速進入每個人的生活，也正在改變教會面對知識、講道與關懷的方式。</p><h2>AI 能回應，卻不能取代牧養</h2><p>AI 可以整理資料、協助潤飾表達，甚至提出看似完整的查經或處境建議；但牧養不只是提供正確資訊。它需要看見一個人的傷痛、恩賜與生命歷程，並在真實關係中陪伴對方辨識上帝的帶領。</p><h2>從標準答案走向生命的差異化</h2><p>當知識越容易取得，教會更需要避免把關顧簡化成公式。人的價值並不在於能否給出最快的答案，而在於每個人都帶著無法複製的經驗、呼召與成長軌跡；這正是群體彼此同行的意義。</p><h2>牧養是一門職人的藝術</h2><p>科技可以成為服事的助手，卻不該掌握方向。牧者與信徒的角色，是以耐心與真實走進他人處境，在軟弱中互相扶持，讓信仰不只停留在螢幕上的資訊，而成為可以被活出來的生命。</p><h2>回到有溫度的群體</h2><p>AI 讓我們走得更快，但教會的核心仍是道成肉身般的陪伴。當人們在關係中分享傷痕、盼望與恩典，並一起回應基督的呼召，這份真實連結便是科技無法取代的見證。</p><p class=\"mt-8 text-sm text-theme-text/70\">本文為重述摘要；<a href=\"https://ct.org.tw/html/news/3-3.php?article=1403674&amp;cat=9\" target=\"_blank\" rel=\"noreferrer\" class=\"text-brand-red hover:underline\">閱讀原文</a>。</p>"
+  },
+  {
+    "id": 2,
+    "title": "科技與人性的失衡：社群媒體成癮案的反思",
+    "excerpt": "法官的判決不僅是法律裁定，更是一記警鐘，提醒我們在演算法的時代中，如何奪回靈魂的自主權。",
+    "category": "專欄",
+    "author": "主筆室",
+    "date": "APR 08",
+    "imageUrl": "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 11,
+    "title": "孤獨經濟下的心靈解藥",
+    "excerpt": "在看似擁擠卻無比孤獨的現代社會，我們需要的不是更多的娛樂，而是真實而深刻的關係連結。",
+    "category": "專欄",
+    "author": "社會觀察",
+    "date": "APR 07",
+    "imageUrl": "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 12,
+    "title": "職場如戰場？重塑工作神學的新視角",
+    "excerpt": "工作不只是為了糊口，更是實踐呼召的場域。探討如何在競爭激烈的職場中活出信仰的價值。",
+    "category": "專欄",
+    "author": "職場論壇",
+    "date": "APR 06",
+    "imageUrl": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 13,
+    "title": "後疫情時代的家庭重塑",
+    "excerpt": "疫情改變了我們的工作與生活型態，也迫使我們重新檢視家庭關係的脆弱與堅韌。",
+    "category": "專欄",
+    "author": "家庭事工",
+    "date": "APR 05",
+    "imageUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 14,
+    "title": "氣候變遷與管家職分：基督徒的環保責任",
+    "excerpt": "面對日益嚴峻的生態危機，我們不能再置身事外。探討信仰如何驅動我們成為地球更好的管家。",
+    "category": "專欄",
+    "author": "生態神學",
+    "date": "APR 04",
+    "imageUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 3,
+    "title": "從科技菁英到全職傳道：林牧師的翻轉人生",
+    "excerpt": "曾經是高階主管，經歷人生重大挫折後重新認識信仰，最終回應呼召的真實故事。",
+    "category": "人物見證",
+    "author": "人物誌",
+    "date": "APR 07",
+    "imageUrl": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 15,
+    "title": "破繭而出：一位前幫派份子的重生之路",
+    "excerpt": "在黑暗中徘徊多年，直到遇見那道不可思議的光，他的人生從此不再一樣。",
+    "category": "人物見證",
+    "author": "生命故事",
+    "date": "APR 06",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 16,
+    "title": "音符中的醫治：盲人鋼琴家的奇異恩典",
+    "excerpt": "失去視力卻獲得了更敏銳的聽覺與心靈，她用音樂撫慰了無數受傷的靈魂。",
+    "category": "人物見證",
+    "author": "藝術與信仰",
+    "date": "APR 05",
+    "imageUrl": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 17,
+    "title": "商場上的光與鹽：企業家的誠信考驗",
+    "excerpt": "在利益與道德的十字路口，他選擇了看似吃虧卻滿有平安的道路，最終贏得了真正的尊重。",
+    "category": "人物見證",
+    "author": "職場見證",
+    "date": "APR 04",
+    "imageUrl": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 18,
+    "title": "走過死蔭幽谷：抗癌鬥士的盼望之歌",
+    "excerpt": "面對疾病的無情打擊，她沒有選擇放棄，而是用堅定的信仰譜寫出生命的奇蹟。",
+    "category": "人物見證",
+    "author": "醫療見證",
+    "date": "APR 03",
+    "imageUrl": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 4,
+    "title": "快節奏都市裡的「慢靈修」生活美學",
+    "excerpt": "在喧囂的城市中，我們如何為自己的心靈保留一片安靜的綠洲？這是一種需要刻意練習的生活方式。",
+    "category": "生活情報",
+    "subCategory": "找學習",
+    "author": "副刊編輯",
+    "date": "APR 04",
+    "imageUrl": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 19,
+    "title": "週末提案：走訪五間隱身巷弄的特色書房",
+    "excerpt": "放下手機，走進這些充滿書香與咖啡香的空間，享受一個與文字 and 心靈對話的悠閒午後。",
+    "category": "生活情報",
+    "subCategory": "找活動",
+    "author": "藝文生活",
+    "date": "APR 03",
+    "imageUrl": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 20,
+    "title": "餐桌上的信仰：用料理傳遞愛與溫暖",
+    "excerpt": "分享幾道簡單卻充滿故事的家常菜食譜，讓每一次的共餐都成為凝聚家人情感的美好時刻。",
+    "category": "生活情報",
+    "subCategory": "找服務",
+    "author": "家庭生活",
+    "date": "APR 02",
+    "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 21,
+    "title": "親子共讀指南：挑選優質的兒童信仰繪本",
+    "excerpt": "透過生動的故事與精美的插畫，將信仰的種子悄悄種在孩子的心田，陪伴他們健康成長。",
+    "category": "生活情報",
+    "subCategory": "找學習",
+    "author": "親子教育",
+    "date": "APR 01",
+    "imageUrl": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 22,
+    "title": "極簡生活實踐：從斷捨離到心靈的自由",
+    "excerpt": "減少物質的羈絆，不僅能讓生活空間更清爽，更能讓我們將焦點轉向真正重要的人事物。",
+    "category": "生活情報",
+    "subCategory": "找工作",
+    "author": "生活風格",
+    "date": "MAR 31",
+    "imageUrl": "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 5,
+    "title": "當代藝術與古老信仰符號的跨界對話",
+    "excerpt": "專訪知名策展人，深入了解他們如何透過極簡的現代藝術手法，重新詮釋千年的信仰圖騰。",
+    "category": "生活情報",
+    "author": "視覺藝術",
+    "date": "APR 02",
+    "imageUrl": "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 23,
+    "title": "聖經考古新發現：重塑我們對歷史的理解",
+    "excerpt": "最新的考古挖掘成果，為聖經記載的歷史事件提供了更豐富的背景與佐證，令人振奮。",
+    "category": "生活情報",
+    "author": "歷史研究",
+    "date": "APR 01",
+    "imageUrl": "https://images.unsplash.com/photo-1535905557558-afc4877a26fc?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 24,
+    "title": "神學入門：理解恩典與真理的平衡",
+    "excerpt": "以淺顯易懂的方式，探討基督教信仰中兩個最核心卻也最常被誤解的概念，幫助信徒建立穩固的根基。",
+    "category": "生活情報",
+    "author": "神學教育",
+    "date": "MAR 31",
+    "imageUrl": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 25,
+    "title": "早期教會的敬拜模式：從家庭聚會到大教堂",
+    "excerpt": "追溯基督教敬拜形式的演變，從初代教會的簡單樸素，到後來發展出的豐富儀式與傳統。",
+    "category": "生活情報",
+    "author": "教會歷史",
+    "date": "MAR 30",
+    "imageUrl": "https://images.unsplash.com/photo-1548625361-f6dbcd00fa9e?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 106,
+    "title": "論壇報讀者問卷調查開跑，邀您一起形塑下一個十年",
+    "excerpt": "紙本、電子報還是社群？三分鐘問卷告訴我們您習慣的閱讀方式，我們會據此調整版面與發行節奏。",
+    "category": "生活情報",
+    "subCategory": "論壇消息",
+    "author": "論壇報編輯室",
+    "date": "APR 09",
+    "imageUrl": "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 107,
+    "title": "誠徵特約記者與文字志工：與我們一起記錄教會現場",
+    "excerpt": "若您對採訪寫作有負擔，歡迎加入報導行列。無論是週間跑線或假日活動側寫，都有適合的參與方式。",
+    "category": "生活情報",
+    "subCategory": "論壇消息",
+    "author": "論壇報編輯室",
+    "date": "APR 07",
+    "imageUrl": "https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 108,
+    "title": "四月起紙本配送時程調整公告",
+    "excerpt": "為配合物流作業，中南部地區的到報時間將提前一日。訂戶如未於期限內收到報紙，請與客服聯繫補寄。",
+    "category": "生活情報",
+    "subCategory": "論壇消息",
+    "author": "發行部",
+    "date": "APR 05",
+    "imageUrl": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 109,
+    "title": "四月經文桌布下載：詩篇二十三篇",
+    "excerpt": "「耶和華是我的牧者，我必不致缺乏。」提供桌機與手機兩種尺寸，讓經文在每次開機時陪伴您。",
+    "category": "生活情報",
+    "subCategory": "桌布",
+    "author": "美術設計組",
+    "date": "APR 04",
+    "imageUrl": "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 110,
+    "title": "復活節特別版桌布：空墳墓前的清晨",
+    "excerpt": "以晨光與石墓為題的攝影桌布，收錄四款配色，適合在受難週與復活節期間更換使用。",
+    "category": "生活情報",
+    "subCategory": "桌布",
+    "author": "美術設計組",
+    "date": "APR 02",
+    "imageUrl": "https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 111,
+    "title": "手機桌布｜每日晨禱提醒版",
+    "excerpt": "把一天的第一個念頭留給禱告。桌布上留有 App 圖示的安全區，經文不會被圖示遮住。",
+    "category": "生活情報",
+    "subCategory": "桌布",
+    "author": "數位編輯",
+    "date": "MAR 29",
+    "imageUrl": "https://images.unsplash.com/photo-1512389142860-9c449e58a543?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 93,
+    "title": "影響力聯盟 2026 年度高峰會盛大展開",
+    "excerpt": "匯聚全球百位講員，共同探討未來社會、商業與信仰的深度結合。",
+    "category": "影響力聯盟",
+    "author": "活動中心",
+    "date": "MAR 28",
+    "imageUrl": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 94,
+    "title": "《好撒馬利亞人行動》 為焦慮恐懼的青少年舉辦的希望營會 - 波爾塔瓦最新消息",
+    "excerpt": "在動盪局勢中，為烏克蘭波爾塔瓦地區的流離失所青年提供心靈關懷與支持。",
+    "category": "影響力聯盟",
+    "author": "影響力聯盟",
+    "date": "2026-04-15",
+    "imageUrl": "https://media.ct.org.tw/upload/news_article/2026/04/10/69d897e430ea7.jpg?wm=LB"
+  },
+  {
+    "id": 95,
+    "title": "導彈與奇蹟：連番遭炸後但人民卻心懷感激",
+    "excerpt": "見證在烽火連天的戰區中，如何因著堅定的信仰與救援物資的即時抵達而重現生機。",
+    "category": "影響力聯盟",
+    "author": "聖域資訊報",
+    "date": "2026-04-13",
+    "imageUrl": "https://images.unsplash.com/photo-1469488836641-77dfd0af2821?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 96,
+    "title": "【未來教會篇】 當AI無不在，門訓還能給什麼？ 黃偉仁牧師：知識可被取代，實踐不會",
+    "excerpt": "探討在人工智慧大舉入侵的時代，教會如何調整門徒訓練的核心，強調真理實踐而非單純知識灌輸。",
+    "category": "影響力聯盟",
+    "author": "IMPACT x Malaysia",
+    "date": "2026-03-18",
+    "imageUrl": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 112,
+    "title": "部落教會的青年返鄉：把信仰帶回成長的土地",
+    "excerpt": "越來越多原鄉青年在都市求學工作後選擇返鄉，把專業與信仰一起帶回部落，成為教會與社區之間的橋樑。",
+    "category": "最新文章",
+    "author": "論壇報編採",
+    "date": "MAY 05",
+    "imageUrl": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 113,
+    "title": "當教會開始談財務透明：奉獻背後的信任功課",
+    "excerpt": "多間教會近年主動公開年度財務報表，牧者坦言過程並不輕鬆，卻讓會友的參與感明顯提升。",
+    "category": "最新文章",
+    "author": "論壇報編採",
+    "date": "MAY 04",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 114,
+    "title": "銀髮團契的第二人生：退休後才開始的服事",
+    "excerpt": "從長照關懷到社區共餐，一群平均年齡超過六十五歲的志工，用退休後的時間重新定義服事的樣貌。",
+    "category": "最新文章",
+    "author": "社區發展",
+    "date": "MAY 03",
+    "imageUrl": "https://images.unsplash.com/photo-1516307365426-bea591f05011?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 115,
+    "title": "演算法時代的鄰舍：我們還認得身邊的人嗎",
+    "excerpt": "當推薦系統決定我們看見誰、聽見什麼，「愛鄰如己」的鄰舍究竟是誰？這是數位世代必須重新回答的問題。",
+    "category": "專欄",
+    "author": "社會觀察",
+    "date": "APR 03",
+    "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 116,
+    "title": "安息不是效率的獎賞：重讀第四誡的現代意義",
+    "excerpt": "把安息日當成充電日，其實仍是生產力的邏輯。安息的本質是承認世界不靠我們運轉。",
+    "category": "專欄",
+    "author": "主筆室",
+    "date": "APR 02",
+    "imageUrl": "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 117,
+    "title": "從急診室到禱告室：一位護理師的十年",
+    "excerpt": "在生死交界工作十年，她說最難的不是技術，而是學會在無能為力時仍然陪伴。",
+    "category": "人物見證",
+    "author": "醫療見證",
+    "date": "APR 02",
+    "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 118,
+    "title": "修琴四十年：老師傅手中的敬拜聲音",
+    "excerpt": "教會裡那台老鋼琴的聲音，背後是一位安靜服事四十年的調音師傅。",
+    "category": "人物見證",
+    "author": "藝術與信仰",
+    "date": "APR 01",
+    "imageUrl": "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 119,
+    "title": "東南亞青年領袖培育計畫啟動　首屆招收四十名學員",
+    "excerpt": "影響力聯盟與馬來西亞、印尼合作夥伴共同推動跨國青年領袖培育，聚焦職場倫理與社會參與。",
+    "category": "影響力聯盟",
+    "author": "影響力聯盟",
+    "date": "MAR 26",
+    "imageUrl": "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 120,
+    "title": "從募款到共創：非營利組織的下一個十年",
+    "excerpt": "聯盟夥伴分享如何從單向募款轉向與企業、社區共創，讓資源流動不再只有一個方向。",
+    "category": "影響力聯盟",
+    "author": "活動中心",
+    "date": "MAR 24",
+    "imageUrl": "https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 121,
+    "title": "偏鄉教會的網路課輔：一條連線撐起的陪伴",
+    "excerpt": "疫情期間開始的線上課輔沒有隨疫情結束，反而成為偏鄉孩子固定的陪伴。",
+    "category": "基督教論壇報",
+    "subCategory": "台灣教會",
+    "author": "論壇報編採",
+    "date": "APR 03",
+    "imageUrl": "https://images.unsplash.com/photo-1497486751825-1233686d5d80?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 122,
+    "title": "短宣隊出發前的三堂課：文化、界線與長期陪伴",
+    "excerpt": "宣教士提醒，短宣真正的挑戰不在出發，而在回來之後如何延續關係。",
+    "category": "基督教論壇報",
+    "subCategory": "見證宣教",
+    "author": "國際新聞",
+    "date": "APR 02",
+    "imageUrl": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&q=80&w=1600"
+  },
+  {
+    "id": 123,
+    "title": "當青年不再回教會　牧者：先聽懂他們的離開",
+    "excerpt": "研究指出，多數離開教會的青年並非失去信仰，而是找不到能誠實提問的空間。",
+    "category": "基督教論壇報",
+    "subCategory": "專題報導",
+    "author": "青年事工",
+    "date": "APR 01",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1600"
+  }
 ]

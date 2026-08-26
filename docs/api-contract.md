@@ -79,6 +79,7 @@ Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
 - `GET /api/news/{id}`
 - `GET /api/news/{id}/content`
 - `GET /api/news/{id}/recommended?limit={limit}`
+- `GET /api/news/popular?category={category}&limit={limit}` → `NewsItem[]`（分類頁側欄「熱門文章」；需真實點閱排行，mock 目前以 id 反序替代）
 
 ## Home, ads and editorial directories
 
