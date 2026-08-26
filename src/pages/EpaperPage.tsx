@@ -198,7 +198,7 @@ function EpaperReader() {
                 key={page.pageNumber}
                 className="relative bg-white rounded-sm overflow-hidden aspect-[1000/1675] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.7)] ring-1 ring-white/10 animate-fade-in-up"
               >
-                <img src={page.imageUrl} alt={`第 ${page.pageNumber} 頁`} className="w-full h-full object-contain" />
+                <img loading="lazy" decoding="async" src={page.imageUrl} alt={`第 ${page.pageNumber} 頁`} className="w-full h-full object-contain" />
               </div>
 
               {/* Hover navigation arrows */}

@@ -25,6 +25,10 @@ export default function FeaturedCarousel({
       <div className="relative w-full aspect-[832/470] bg-black overflow-hidden group/img">
         {articles.map((article, idx) => (
           <img
+            // 三張輪播圖都疊在同一個位置、都算在視窗內，統一 lazy 沒有意義且會拖慢
+            // 首屏；只讓第一張（LCP 候選）維持 eager，其餘交給瀏覽器延後。
+            loading={idx === 0 ? 'eager' : 'lazy'}
+            decoding="async"
             key={article.id}
             src={article.imageUrl}
             className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-in-out ${

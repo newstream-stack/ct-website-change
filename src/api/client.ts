@@ -31,7 +31,11 @@ async function request<T>(
     throw new ApiError('REST API 模式尚未設定有效的 VITE_API_BASE_URL', 0);
   }
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
+  let timedOut = false;
+  const timeout = window.setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, options.timeoutMs ?? DEFAULT_TIMEOUT_MS);
   const abortFromCaller = () => controller.abort();
   if (options.signal?.aborted) controller.abort();
   else options.signal?.addEventListener('abort', abortFromCaller, { once: true });
@@ -73,6 +77,15 @@ async function request<T>(
     }
 
     return responseBody as T;
+  } catch (error) {
+    // fetch 失敗與逾時拋的是 TypeError / AbortError，不是 ApiError，直接往上丟的話
+    // 畫面會顯示瀏覽器的英文 DOMException 訊息。呼叫端主動取消（換頁、元件卸載）
+    // 仍要原樣往上拋，useAsyncData 靠它判斷要不要寫入 state。
+    if (error instanceof ApiError) throw error;
+    if (options.signal?.aborted) throw error;
+    if (timedOut) throw new ApiError('連線逾時，請檢查網路後再試一次', 408);
+    if (error instanceof TypeError) throw new ApiError('無法連線到伺服器，請稍後再試', 0);
+    throw error;
   } finally {
     window.clearTimeout(timeout);
     options.signal?.removeEventListener('abort', abortFromCaller);

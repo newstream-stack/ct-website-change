@@ -101,7 +101,7 @@ export default function EventRegistrationPage({ goToCategory }: EventRegistratio
       
       {/* Hero Section */}
       <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden mb-12">
-        <img 
+        <img loading="lazy" decoding="async" 
           src={event.imageUrl}
           alt={event.name}
           className="w-full h-full object-cover object-center scale-105  origin-center"

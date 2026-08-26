@@ -3,7 +3,7 @@
  *
  * `NewsItem.date` 目前有兩種形態（見 data/news.json）：
  *   - 'APR 12'      三字母英文月份 + 日，沒有年份
- *   - '2026-03-18'  ISO 日期
+ *   - '2026-03-18'  ISO 日期（可帶 T 或空白分隔的時間，時間部分會被忽略）
  * 兩者都轉成中文的「M 月 D 日」，ISO 會另外帶出自己的年份。
  * 認不得的字串原樣回傳，避免資料換格式時整頁爆掉。
  */
@@ -24,7 +24,9 @@ interface FormatOptions {
 export function formatArticleDate(date: string, { withYear = false }: FormatOptions = {}): string {
   const raw = date.trim();
 
-  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(raw);
+  // 允許 ISO datetime（2026-03-18T10:30:00Z）與空白分隔的時間；真後端多半回這種格式，
+  // 只比對日期部分，時間忽略。原本要求純日期，datetime 會整串原樣印在畫面上。
+  const iso = /^(\d{4})-(\d{1,2})-(\d{1,2})(?:[T ][\d:.+\-Z]*)?$/.exec(raw);
   if (iso) {
     const [, year, month, day] = iso;
     const md = `${Number(month)} 月 ${Number(day)} 日`;
