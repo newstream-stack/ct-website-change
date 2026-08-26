@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect, useRef, MouseEvent, TouchEvent } from 'react';
+import { useState, useLayoutEffect, useRef, MouseEvent, TouchEvent, KeyboardEvent } from 'react';
 import { getNewsByCategory } from '../api/news';
 import { getFeaturedVideos, getAccordionAd, FeaturedVideo, FeaturedAd } from '../api/home';
 import { NewsItem } from '../types';
@@ -71,6 +71,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   const [videoStarted, setVideoStarted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  // 滑鼠停留、鍵盤聚焦或手動切換後就停掉自動輪播，避免讀到一半標題被抽走。
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(170);
   const [isMobileLayout, setIsMobileLayout] = useState(() => window.innerWidth < 768);
   const [pinnedHeight, setPinnedHeight] = useState(() => window.innerHeight);
@@ -140,6 +142,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
   // ── News carousel auto-advance (per panel) ─────────────────────────────────
   useLayoutEffect(() => {
     if (panels.every((p) => p.type !== 'news')) return;
+    if (isCarouselPaused) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const timer = setInterval(() => {
       setCarouselIndices((prev) => {
         const next = { ...prev };
@@ -151,9 +155,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
       });
     }, 5000);
     return () => clearInterval(timer);
-  }, [panels.length]);
+  }, [panels.length, isCarouselPaused]);
 
   const stepCarousel = (index: number, groupLength: number, delta: number) => {
+    setIsCarouselPaused(true);
     setCarouselIndices((prev) => ({
       ...prev,
       [index]: ((prev[index] ?? 0) + delta + groupLength) % groupLength,
@@ -210,6 +215,32 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     }
   };
 
+  // 面板本身是 div（要當 flex 子元素做手風琴動畫），所以手動補上按鈕語意與鍵盤操作。
+  const panelA11yProps = (index: number, label: string, activate: () => void) => ({
+    role: 'button',
+    tabIndex: 0,
+    'aria-label': label,
+    onFocus: () => {
+      setIsCarouselPaused(true);
+      if (!isMobileLayout) setActiveIndex(index);
+    },
+    onKeyDown: (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activate();
+        return;
+      }
+      if (isMobileLayout) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const delta = e.key === 'ArrowRight' ? 1 : -1;
+        const next = (index + delta + panels.length) % panels.length;
+        setActiveIndex(next);
+        (containerRef.current?.children[next] as HTMLElement | undefined)?.focus();
+      }
+    },
+  });
+
   const toggleMute = (e: MouseEvent | TouchEvent) => {
     if (e.cancelable) e.preventDefault();
     e.stopPropagation();
@@ -223,6 +254,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
     <div
       ref={containerRef}
       className="accordion-container relative md:pt-0"
+      onMouseEnter={() => setIsCarouselPaused(true)}
+      onMouseLeave={() => setIsCarouselPaused(false)}
       style={{
         paddingTop: isMobileLayout ? `${headerHeight}px` : 0,
         height: '100dvh',
@@ -241,6 +274,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
               onClick={(e) => handlePanelClick(e, index, 'ad')}
               onTouchEnd={(e) => handlePanelClick(e, index, 'ad')}
+              {...panelA11yProps(index, `贊助內容：${ad.title}`, () => setActiveIndex(index))}
               style={{ touchAction: 'manipulation' }}
             >
               <img
@@ -304,6 +338,10 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
               onClick={(e) => handlePanelClick(e, index, 'video')}
               onTouchEnd={(e) => handlePanelClick(e, index, 'video')}
+              {...panelA11yProps(index, `影片專區：${video.title}`, () => {
+                if (!videoStarted) setVideoStarted(true);
+                else isPlaying ? pause() : play();
+              })}
               style={{ touchAction: 'manipulation' }}
             >
               <div className="absolute inset-0 w-full h-full overflow-hidden">
@@ -424,6 +462,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
             key={`news-${index}`}
             className={`accordion-panel group ${index === activeIndex ? 'active' : ''}`}
             onClick={(e) => handlePanelClick(e, index, 'news', news.id)}
+            {...panelA11yProps(index, `${news.category}：${news.title}`, () => openArticle(news.id))}
             onTouchStart={(e) => {
               touchStartX.current = e.touches[0].clientX;
               touchStartY.current = e.touches[0].clientY;
@@ -433,7 +472,8 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
               const deltaY = e.changedTouches[0].clientY - touchStartY.current;
               // 只有明顯偏水平的滑動才算左右切換，避免跟垂直滾動衝突
               const isHorizontalSwipe = Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5;
-              if (!isHorizontalSwipe && Math.abs(deltaY) > 12) return;
+              // 只要手指有明顯位移就不當成點擊，避免「想滑卻滑不夠」直接跳進文章
+              if (!isHorizontalSwipe && (Math.abs(deltaY) > 12 || Math.abs(deltaX) > 10)) return;
               if ((window.innerWidth < 768 || index === activeIndex) && isHorizontalSwipe) {
                 if (e.cancelable) e.preventDefault();
                 e.stopPropagation();
@@ -502,6 +542,23 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     <span className="text-white/60 mr-1">文章</span>
                     0{itemIndex + 1}<span className="text-white/55 mx-1">/</span>0{group.length}
                   </span>
+                  {/* 手機沒有左右箭頭，用可點的圓點讓「這裡有三則」看得出來 */}
+                  <div className="flex md:hidden items-center gap-1.5 shrink-0">
+                    {group.map((item, i) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        aria-label={`切換到第 ${i + 1} 篇：${item.title}`}
+                        aria-current={i === itemIndex}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsCarouselPaused(true);
+                          setCarouselIndices((prev) => ({ ...prev, [index]: i }));
+                        }}
+                        className={`h-1.5 rounded-full transition-all ${i === itemIndex ? 'w-5 bg-brand-red' : 'w-1.5 bg-white/45'}`}
+                      />
+                    ))}
+                  </div>
                   <div className="hidden md:flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={(e) => { e.stopPropagation(); stepCarousel(index, group.length, -1); }}

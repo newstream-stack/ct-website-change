@@ -141,6 +141,12 @@
 
   /* Hovered panel expands */
   .accordion-panel:hover { flex: 7 !important; }
+
+/* 面板是 div + role="button"，鍵盤聚焦時要看得出來焦點在哪一格 */
+.accordion-panel:focus-visible {
+  outline: 3px solid rgb(var(--ink-base));
+  outline-offset: -3px;
+}
   .accordion-panel:hover .accordion-bg {
     opacity: 1 !important;
     transform: translate(-50%, -50%) scale(1) !important;
