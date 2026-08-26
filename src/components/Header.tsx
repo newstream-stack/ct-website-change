@@ -57,7 +57,7 @@ export default function Header({
   }, [mobileMenuOpen]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-auto bg-theme-bg/95 backdrop-blur-md border-b border-theme-text/10 transition-colors duration-500 pb-1">
+    <header className="fixed top-0 left-0 w-full z-40 flex flex-col pointer-events-auto bg-theme-bg/95 backdrop-blur-md border-b border-theme-text/10 pb-1">
       {headerAd && (
         <button onClick={() => goToCategory('會員招募')} className="w-full bg-brand-red text-white py-1.5 md:py-2 px-4 text-center text-[10px] md:text-xs font-display tracking-widest uppercase hover:bg-theme-text transition-colors duration-300 pointer-events-auto flex items-center justify-center gap-2 md:gap-4 relative group border-none outline-none appearance-none cursor-pointer">
           <span className="font-bold opacity-80 border border-white/30 px-1.5 py-0.5 text-[8px] md:text-[9px] rounded-sm">{headerAd.sponsor}</span>
@@ -66,7 +66,7 @@ export default function Header({
         </button>
       )}
       
-      <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full transition-colors duration-500">
+      <div className="p-3 px-5 md:p-6 flex justify-between items-center text-theme-text w-full">
         <button
           type="button"
           aria-label="回到首頁"
@@ -84,7 +84,7 @@ export default function Header({
             <button onClick={() => goToCategory('信仰好物')} className="hover:text-brand-red transition">信仰好物</button>
             <button onClick={() => goToCategory('全版閱讀')} className="hover:text-brand-red transition">全版閱讀</button>
           </div>
-          <div className="w-px h-5 bg-theme-text/30 hidden md:block transition-colors duration-500"></div>
+          <div className="w-px h-5 bg-theme-text/30 hidden md:block"></div>
 
           {/* Mobile compact CTA (奉獻) */}
           <div className="flex md:hidden items-center gap-2">
@@ -92,7 +92,7 @@ export default function Header({
               <i className="fas fa-hand-holding-heart text-lg"></i>
             </button>
           </div>
-          <div className="w-px h-4 bg-theme-text/30 md:hidden transition-colors duration-500"></div>
+          <div className="w-px h-4 bg-theme-text/30 md:hidden"></div>
 
           {/* Login / Member Dashboard */}
           {user ? (
@@ -124,7 +124,7 @@ export default function Header({
             </div>
           )}
           
-          <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
+          <div className="w-px h-4 bg-theme-text/30"></div>
 
           {/* Cart Icon (Icon on mobile, text on desktop) */}
           <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenCart} title="購物車">
@@ -137,7 +137,7 @@ export default function Header({
             )}
           </button>
           
-          <div className="w-px h-4 bg-theme-text/30 transition-colors duration-500"></div>
+          <div className="w-px h-4 bg-theme-text/30"></div>
 
           {/* Search Button */}
           <button className="font-display font-bold text-lg md:text-sm uppercase tracking-widest hover:text-brand-red transition-colors duration-300 flex items-center relative cursor-pointer" onClick={onOpenSearch} title="全站搜尋">
@@ -146,7 +146,7 @@ export default function Header({
           </button>
 
           {/* Mobile Hamburger Menu (全版閱讀 / 信仰好物) */}
-          <div className="w-px h-4 bg-theme-text/30 md:hidden transition-colors duration-500"></div>
+          <div className="w-px h-4 bg-theme-text/30 md:hidden"></div>
           <div ref={mobileMenuRef} className="relative md:hidden">
             <button
               onClick={() => setMobileMenuOpen((open) => !open)}
@@ -157,7 +157,7 @@ export default function Header({
             </button>
 
             {mobileMenuOpen && (
-              <div className="absolute top-full right-0 mt-3 w-48 bg-theme-bg border border-theme-text/10 shadow-xl rounded-sm overflow-hidden transition-colors duration-500 z-50">
+              <div className="absolute top-full right-0 mt-3 w-48 bg-theme-bg border border-theme-text/10 shadow-xl rounded-sm overflow-hidden z-50">
                 <button
                   onClick={() => { goToCategory('信仰好物'); setMobileMenuOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold tracking-widest text-left hover:bg-theme-text/5 hover:text-brand-red transition-colors"
@@ -179,7 +179,7 @@ export default function Header({
       {showCategoryBar && (
         <div
           ref={categoryBarRef}
-          className="relative w-full border-t border-theme-text/10 transition-colors duration-500"
+          className="relative w-full border-t border-theme-text/10"
           onMouseLeave={() => setOpenSubmenu((current) => (current ? null : current))}
         >
           <div className="max-w-[100vw] px-4 md:px-6 py-2.5 md:py-3 flex items-center gap-5 md:gap-8 overflow-x-auto hide-scrollbar font-sans font-bold text-xs md:text-sm tracking-widest text-theme-text/70 whitespace-nowrap">
@@ -232,7 +232,7 @@ export default function Header({
           </div>
 
           {openSubmenu && CATEGORY_SUBMENUS[openSubmenu] && (
-            <div className="absolute top-full left-0 w-full bg-theme-bg border-t border-b border-theme-text/10 shadow-xl transition-colors duration-500 z-50">
+            <div className="absolute top-full left-0 w-full bg-theme-bg border-t border-b border-theme-text/10 shadow-xl z-50">
               <div className="max-w-4xl mx-auto px-6 py-6 md:py-8 grid grid-cols-3 gap-x-6 gap-y-4 font-sans font-bold text-xs md:text-sm tracking-widest text-theme-text/70">
                 {CATEGORY_SUBMENUS[openSubmenu].map((item) => (
                   <button

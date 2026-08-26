@@ -26,12 +26,12 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
   if (error || !data) return <AsyncPageState error={error ?? new Error('聯盟資料載入失敗')} onRetry={reload} />;
 
   return (
-    <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text transition-colors duration-500 min-h-screen">
+    <div className="pt-[190px] md:pt-[190px] pb-40 bg-theme-bg text-theme-text min-h-screen">
       
       {/* 1. Page Header */}
       <div className="px-5 md:px-12 lg:px-20 mb-10 md:mb-12">
         <div className="max-w-[1400px] mx-auto">
-           <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tight text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 transition-colors flex flex-col md:flex-row md:items-baseline">
+           <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tight text-theme-text border-b border-theme-text/10 pb-6 md:pb-8 flex flex-col md:flex-row md:items-baseline">
              影響力聯盟 
              <span className="text-lg md:text-2xl font-display font-light text-theme-text/40 md:ml-4 tracking-widest uppercase mt-1 md:mt-0">Alliance Network</span>
            </h1>
@@ -56,7 +56,7 @@ export default function ImpactAlliancePage({ openArticle }: ImpactAlliancePagePr
       </div>
 
       {/* 3. Alliance Mission / Quote Area */}
-      <div className="w-full py-16 md:py-24 bg-theme-text/5 border-y border-theme-text/10 relative overflow-hidden transition-colors mb-16 md:mb-24">
+      <div className="w-full py-16 md:py-24 bg-theme-text/5 border-y border-theme-text/10 relative overflow-hidden mb-16 md:mb-24">
          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[150px] md:text-[250px] font-serif text-theme-text/5 leading-none pointer-events-none select-none">
             NETWORK
          </div>

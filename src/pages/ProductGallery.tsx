@@ -102,7 +102,7 @@ export default function ProductGallery({ onSelectProduct, onAddToCart }: Product
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
   return (
-    <div className="pt-[150px] md:pt-40 pb-24 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-24 min-h-screen bg-theme-bg text-theme-text">
       <div className="max-w-[1400px] mx-auto px-5 md:px-12 lg:px-20">
         <div className="mb-8 md:mb-12 flex flex-wrap items-baseline justify-between gap-3 border-b border-theme-text/15 pb-5 md:pb-6">
           <h1 className="text-4xl md:text-6xl font-serif font-black tracking-tight text-theme-text">

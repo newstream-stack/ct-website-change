@@ -104,15 +104,15 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
   };
 
   return (
-    <div className="pt-[150px] md:pt-40 pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500 flex items-center justify-center relative overflow-hidden">
+    <div className="pt-[150px] md:pt-40 pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text flex items-center justify-center relative overflow-hidden">
       
       <div className="w-full max-w-md relative z-10 animate-fade-in-up">
         {/* Main Card */}
-        <div className="bg-theme-bg border border-theme-text/15 p-8 md:p-10 relative overflow-hidden transition-colors">
+        <div className="bg-theme-bg border border-theme-text/15 p-8 md:p-10 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-brand-red"></div>
           
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-serif font-black tracking-tight text-theme-text transition-colors mb-2">
+            <h1 className="text-3xl md:text-4xl font-serif font-black tracking-tight text-theme-text mb-2">
               {isForgotPassword ? '重設密碼' : isRegister ? '註冊帳號' : '會員登入'}
             </h1>
             <p className="text-xs md:text-sm font-display tracking-widest text-brand-red/80 uppercase mt-2">
@@ -136,7 +136,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
             
             {isRegister && (
               <div className="flex flex-col gap-1.5 relative group text-left">
-                <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1 transition-colors">姓名 Name</label>
+                <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1">姓名 Name</label>
                 <div className="relative">
                   <i className="far fa-user absolute left-4 top-1/2  -translate-y-1/2 text-theme-text/40 group-focus-within:text-brand-red transition-colors"></i>
                   <input 
@@ -154,7 +154,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
             )}
 
             <div className="flex flex-col gap-1.5 relative group text-left">
-              <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1 transition-colors">帳號 Email</label>
+              <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1">帳號 Email</label>
               <div className="relative">
                 <i className="far fa-envelope absolute left-4 top-1/2  -translate-y-1/2 text-theme-text/40 group-focus-within:text-brand-red transition-colors"></i>
                 <input 
@@ -172,7 +172,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
             
             {!isForgotPassword && <div className="flex flex-col gap-1.5 relative group text-left">
                <div className="flex justify-between items-center ml-1">
-                 <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 transition-colors">密碼 Password</label>
+                 <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70">密碼 Password</label>
                  {!isRegister && (
                    <button type="button" onClick={() => { setIsForgotPassword(true); setError(''); setNotice(''); }} className="text-[10px] sm:text-xs text-theme-text/55 hover:text-brand-red transition-colors underline-offset-2 hover:underline">忘記密碼？</button>
                  )}
@@ -207,7 +207,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
             {isRegister && (
               <>
                 <div className="flex flex-col gap-1.5 relative group text-left">
-                  <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1 transition-colors">確認密碼 Confirm Password</label>
+                  <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1">確認密碼 Confirm Password</label>
                   <div className="relative">
                     <i className="fas fa-lock absolute left-4 top-1/2  -translate-y-1/2 text-theme-text/40 group-focus-within:text-brand-red transition-colors"></i>
                     <input 
@@ -242,9 +242,9 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
           {!isRegister && !isForgotPassword && (
             <>
               <div className="mt-6 flex items-center gap-4">
-                <div className="h-px flex-1 bg-theme-text/10 transition-colors"></div>
-                <span className="text-[10px] font-display tracking-widest text-theme-text/40 transition-colors">或使用以下方式登入</span>
-                <div className="h-px flex-1 bg-theme-text/10 transition-colors"></div>
+                <div className="h-px flex-1 bg-theme-text/10"></div>
+                <span className="text-[10px] font-display tracking-widest text-theme-text/40">或使用以下方式登入</span>
+                <div className="h-px flex-1 bg-theme-text/10"></div>
               </div>
 
               <div className="mt-4 flex flex-col gap-2.5">
@@ -260,7 +260,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false, res
             </>
           )}
 
-          <div className="mt-8 text-center text-xs tracking-widest text-theme-text/60 transition-colors">
+          <div className="mt-8 text-center text-xs tracking-widest text-theme-text/60">
             {isForgotPassword ? (
               <button
                 type="button"

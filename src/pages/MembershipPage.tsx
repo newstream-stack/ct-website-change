@@ -91,7 +91,7 @@ export default function MembershipPage({ goToCategory }: MembershipPageProps) {
     }`;
 
   return (
-    <div className="pt-[150px] md:pt-40 pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text">
       <div className="max-w-[1080px] mx-auto animate-fade-in-up">
 
         {subscribeMsg && (

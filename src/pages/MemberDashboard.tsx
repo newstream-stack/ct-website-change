@@ -431,7 +431,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
   const displayedSavedArticles = savedSortDirection === 'newest' ? savedArticles : [...savedArticles].reverse();
 
   return (
-    <div className="pt-[150px] md:pt-[180px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[150px] md:pt-[180px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text">
       <div className="max-w-[1200px] mx-auto animate-fade-in-up">
 
         {/* Header */}

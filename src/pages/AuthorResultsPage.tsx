@@ -19,7 +19,7 @@ export default function AuthorResultsPage({ author, openArticle }: AuthorResults
   if (error) return <AsyncPageState error={error} onRetry={reload} />;
 
   return (
-    <div className="pt-[190px] md:pt-48 pb-32 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[190px] md:pt-48 pb-32 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text">
       <div className="max-w-6xl mx-auto">
         <div className="mb-12 md:mb-12 border-b border-theme-text/15 pb-7 md:pb-9">
           <p className="font-display text-xs tracking-[0.3em] text-brand-red uppercase mb-4">作者</p>

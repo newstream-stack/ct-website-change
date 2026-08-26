@@ -17,7 +17,7 @@ export default function SummitBanner({ className = '' }: SummitBannerProps) {
       />
       <div className="absolute inset-0 bg-black/30" />
       <div className="relative z-10 text-center">
-        <h3 className="font-serif text-2xl font-black text-white transition-colors md:text-3xl">
+        <h3 className="font-serif text-2xl font-black text-white md:text-3xl">
           IMPACT 2026 SUMMIT
         </h3>
         <p className="mt-2 font-display text-sm font-bold uppercase tracking-widest text-white/90 transition-colors group-hover:text-white md:text-base">

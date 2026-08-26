@@ -28,7 +28,7 @@ const WHATSAPP_STICKERS = [
 
 export default function LineStickersPage() {
   return (
-    <div className="pt-[150px] md:pt-40 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-32 bg-theme-bg text-theme-text min-h-screen">
       <div className="max-w-6xl mx-auto px-5 md:px-10">
         <div className="mb-12 md:mb-12">
           <h1 className="font-serif text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">論壇LINE貼圖</h1>

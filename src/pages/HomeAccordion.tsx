@@ -319,7 +319,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                     {ad.description}
                   </p>
                   <a href={getSafeExternalUrl(ad.link)} target="_blank" rel="noopener noreferrer" className="group/cta inline-flex items-center gap-3 font-display font-bold uppercase tracking-[0.25em] text-[11px] md:text-xs text-white">
-                    <span className="border-b border-white/40 group-hover/cta:border-brand-red group-hover/cta:text-brand-red transition-colors pb-0.5">Learn More</span>
+                    <span className="border-b border-white/40 group-hover/cta:border-brand-red group-hover/cta:text-brand-red pb-0.5 transition-colors">Learn More</span>
                     <i className="fas fa-arrow-right text-[10px] group-hover/cta:translate-x-1.5 transition-transform" />
                   </a>
                 </div>
@@ -590,7 +590,7 @@ export default function HomeAccordion({ openArticle }: HomeAccordionProps) {
                 </div>
 
                 <button className="group/cta inline-flex items-center gap-3 font-display font-bold uppercase tracking-[0.25em] text-[11px] md:text-xs text-white">
-                  <span className="border-b border-white/40 group-hover/cta:border-brand-red group-hover/cta:text-brand-red transition-colors pb-0.5">Read Story</span>
+                  <span className="border-b border-white/40 group-hover/cta:border-brand-red group-hover/cta:text-brand-red pb-0.5 transition-colors">Read Story</span>
                   <i className="fas fa-arrow-right text-[10px] group-hover/cta:translate-x-1.5 transition-transform" />
                 </button>
               </div>

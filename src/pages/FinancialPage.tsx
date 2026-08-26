@@ -142,7 +142,7 @@ function ReportBlock({ report }: { report: ReportSection }) {
           onClick={() => setLightbox(null)}
         >
           <button
-            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white"
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white transition-colors"
             onClick={() => setLightbox(null)}
           >
             <i className="fas fa-times text-xl" />
@@ -162,7 +162,7 @@ function ReportBlock({ report }: { report: ReportSection }) {
 
 export default function FinancialPage() {
   return (
-    <div className="pt-[150px] md:pt-40 pb-32 bg-theme-bg text-theme-text min-h-screen transition-colors duration-500">
+    <div className="pt-[150px] md:pt-40 pb-32 bg-theme-bg text-theme-text min-h-screen">
       <div className="max-w-4xl mx-auto px-5 md:px-10">
 
         {/* Hero */}

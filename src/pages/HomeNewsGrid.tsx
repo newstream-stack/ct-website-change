@@ -96,7 +96,7 @@ function ColumnistRow({ columnists, openArticle }: { columnists: Columnist[]; op
             <div className="w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden border border-theme-text/10 mb-4 bg-theme-text/5">
               <img src={c.avatarUrl} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700" alt={c.name} />
             </div>
-            <h5 className="font-serif font-black text-base text-theme-text group-hover/card:text-brand-red transition-colors mb-2">{c.name}</h5>
+            <h5 className="font-serif font-black text-base text-theme-text group-hover/card:text-brand-red mb-2 transition-colors">{c.name}</h5>
             <span className="text-[9px] font-display uppercase tracking-widest text-brand-red/70 block mb-1.5">最新文章</span>
             <p className="text-xs text-theme-text/70 leading-relaxed line-clamp-2">{c.latestArticleTitle}</p>
           </button>
@@ -159,7 +159,7 @@ export default function HomeNewsGrid({ openArticle, goToCategory }: HomeNewsGrid
   const lastSection = sections.length > 0 ? sections[sections.length - 1] : null;
 
   return (
-    <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text transition-colors duration-500">
+    <div className="pt-[190px] md:pt-48 pb-24 px-5 md:px-12 lg:px-20 min-h-screen bg-theme-bg text-theme-text">
       <div className="max-w-[1400px] mx-auto">
         {/* Masthead */}
         <div className="mb-10 md:mb-14">
