@@ -7,11 +7,15 @@ import { broadcastLogout } from '../utils/authEvents';
 
 export type { AuthResponse, AuthUser, LoginRequest, RegisterRequest, SocialProvider } from '../types/auth';
 
-const DEV_ACCOUNT = {
-  email: 'test@ct.org.tw',
-  password: 'impact2024',
-  user: { id: 'dev-001', name: '測試帳號', email: 'test@ct.org.tw' },
-};
+// 展示用帳號：只有 mock 模式的 build 會帶上這段。接上真後端後（VITE_USE_MOCK_API 不是 true）
+// 這是死碼，不會被打包進 bundle，正式站也就不存在這組可登入的憑證。
+const DEV_ACCOUNT = import.meta.env.VITE_USE_MOCK_API === 'true'
+  ? {
+      email: 'test@ct.org.tw',
+      password: 'impact2024',
+      user: { id: 'dev-001', name: '測試帳號', email: 'test@ct.org.tw' },
+    }
+  : null;
 
 async function devDelay() {
   await new Promise((resolve) => setTimeout(resolve, 450));
@@ -20,7 +24,7 @@ async function devDelay() {
 export async function login(params: LoginRequest, options?: ApiRequestOptions): Promise<AuthResponse> {
   if (!USE_MOCK_API) return assertApiData(await apiPost<unknown>('/api/auth/login', params, options), isAuthResponse, '登入');
   await devDelay();
-  if (params.email === DEV_ACCOUNT.email && params.password === DEV_ACCOUNT.password) {
+  if (DEV_ACCOUNT && params.email === DEV_ACCOUNT.email && params.password === DEV_ACCOUNT.password) {
     return { token: 'dev-token-placeholder', user: DEV_ACCOUNT.user };
   }
   throw new Error('帳號或密碼錯誤');

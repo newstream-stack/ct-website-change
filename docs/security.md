@@ -4,12 +4,13 @@
 
 - Vite bundle contains no Gemini key or backend secret.
 - Production REST mode requires an HTTPS `VITE_API_BASE_URL`.
-- Production defaults to REST mode, so a missing environment setting cannot silently publish mock authentication or transactions.
-- Authentication tokens use per-tab `sessionStorage`; logout is broadcast without sharing tokens.
+- Mock mode must be opted into explicitly in a production build (`VITE_USE_MOCK_API=true`); a missing environment setting falls back to REST mode and fails loudly on a missing `VITE_API_BASE_URL` instead of silently serving mock authentication and transactions. The prototype site keeps mock mode on through the committed `.env.production`.
+- The demo login account only exists in mock builds. Any build without `VITE_USE_MOCK_API=true` tree-shakes the credentials out of the bundle (verified by grepping `dist/`). While the prototype runs on mock data the demo password is by definition readable in the shipped JavaScript, so it must never be reused for a real account.
+- Authentication tokens live in `sessionStorage` by default and move to `localStorage` only when the user ticks 記住我; the two are mutually exclusive and logout is broadcast without sharing tokens. A persisted token is readable by any script on the origin, so the CSP and the DOMPurify boundary are what keep it safe — treat both as load-bearing.
 - Article HTML is sanitized with DOMPurify.
 - Payment results are verified through the backend status endpoint; URL query values never determine success.
 - Payment and advertising redirects only allow HTTP(S) URLs.
-- CSP and strict referrer policy are defined in `index.html`.
+- CSP and strict referrer policy are defined in `index.html`. `connect-src` there is still wide open (`http: https: ws: wss:`) so the prototype can talk to any backend; narrow it to the production API origin at deploy time.
 - Critical authentication, member, news, product, order and payment responses receive runtime shape checks.
 - Server errors do not expose backend response details to the UI.
 - Authenticated and payment-status requests disable browser caching.
