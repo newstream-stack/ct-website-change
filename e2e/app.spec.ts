@@ -29,6 +29,16 @@ test('分類與文章網址可直接開啟', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /從呼召辨識到AI時代神學院裝備/ })).toBeVisible();
 });
 
+test('在特殊分類上開啟文章時只渲染文章頁', async ({ page }) => {
+  // 從信仰好物／奉獻等特殊分類用搜尋開文章時，route 會保留原分類 + article，
+  // 兩個頁面曾經同時渲染。文章頁優先權最高，分類頁必須讓位。
+  await page.goto('/?category=%E4%BF%A1%E4%BB%B0%E5%A5%BD%E7%89%A9&article=1');
+  await closeSplash(page);
+
+  await expect(page.getByRole('heading', { name: /從呼召辨識到AI時代神學院裝備/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^信仰好物/ })).toHaveCount(0);
+});
+
 test('未知路由顯示 404', async ({ page }) => {
   await page.goto('/?category=not-a-real-page');
   await closeSplash(page);
@@ -150,7 +160,6 @@ test('註冊時會阻擋不一致的密碼', async ({ page }) => {
   await page.getByPlaceholder('helloworld@example.com').fill('test@example.com');
   await page.locator('input[type="password"]').nth(0).fill('password123');
   await page.locator('input[type="password"]').nth(1).fill('password456');
-  await page.getByPlaceholder('台北市大安區...').fill('台北市測試路一號');
   await page.getByRole('button', { name: /註冊帳號/ }).click();
 
   await expect(page.getByText('設定密碼與確認密碼不一致')).toBeVisible();

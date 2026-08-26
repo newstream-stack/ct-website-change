@@ -11,7 +11,6 @@ export interface LoginRequest {
 
 export interface RegisterRequest extends LoginRequest {
   name: string;
-  address: string;
 }
 
 export interface ForgotPasswordRequest {

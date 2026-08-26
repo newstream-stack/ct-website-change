@@ -5,16 +5,17 @@ import { redirectToExternalUrl } from '../utils/navigation';
 interface LoginPageProps {
   onLoginSuccess: () => void;
   initialRegister?: boolean;
+  /** Changes on every header 登入／註冊 click, so the form switches mode even when the route stays put. */
+  resetKey?: number;
 }
 
-export default function LoginPage({ onLoginSuccess, initialRegister = false }: LoginPageProps) {
+export default function LoginPage({ onLoginSuccess, initialRegister = false, resetKey = 0 }: LoginPageProps) {
   const [isRegister, setIsRegister] = useState(initialRegister);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +23,10 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false }: L
 
   useEffect(() => {
     setIsRegister(initialRegister);
-  }, [initialRegister]);
+    setIsForgotPassword(false);
+    setError('');
+    setNotice('');
+  }, [initialRegister, resetKey]);
 
   const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -41,7 +45,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false }: L
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim() || !address.trim()) {
+    if (!name.trim() || !email.trim()) {
       setError('請完整填寫註冊資料');
       return;
     }
@@ -56,7 +60,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false }: L
     setError('');
     setIsLoading(true);
     try {
-      const res = await register({ name: name.trim(), email: email.trim(), password, address: address.trim() });
+      const res = await register({ name: name.trim(), email: email.trim(), password });
       saveSession(res, rememberMe);
       onLoginSuccess();
     } catch (err) {
@@ -100,7 +104,7 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false }: L
   };
 
   return (
-    <div className="pt-[190px] md:pt-[190px] pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500 flex items-center justify-center relative overflow-hidden">
+    <div className="pt-[150px] md:pt-40 pb-24 px-5 md:px-12 lg:px-20 min-h-[100dvh] bg-theme-bg text-theme-text transition-colors duration-500 flex items-center justify-center relative overflow-hidden">
       
       <div className="w-full max-w-md relative z-10 animate-fade-in-up">
         {/* Main Card */}
@@ -216,23 +220,6 @@ export default function LoginPage({ onLoginSuccess, initialRegister = false }: L
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="w-full bg-theme-text/5 border border-theme-text/10 rounded-sm pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text placeholder-theme-text/30"
                       placeholder="再次輸入密碼"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-1.5 relative group text-left">
-                  <label className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-theme-text/70 ml-1 transition-colors">聯絡地址 Address</label>
-                  <div className="relative">
-                    <i className="fas fa-map-marker-alt absolute left-4 top-1/2  -translate-y-1/2 text-theme-text/40 group-focus-within:text-brand-red transition-colors"></i>
-                    <input 
-                      type="text" 
-                      required
-                      maxLength={300}
-                      autoComplete="street-address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      className="w-full bg-theme-text/5 border border-theme-text/10 rounded-sm pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text placeholder-theme-text/30"
-                      placeholder="台北市大安區..."
                     />
                   </div>
                 </div>

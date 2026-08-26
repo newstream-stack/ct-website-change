@@ -75,7 +75,7 @@ function RouteFallback() {
 
 function NotFoundPage({ onGoHome }: { onGoHome: () => void }) {
   return (
-    <div className="min-h-[100dvh] pt-[190px] pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
+    <div className="min-h-[100dvh] pt-[150px] md:pt-40 pb-24 flex items-center justify-center bg-theme-bg text-theme-text px-6">
       <div className="text-center">
         <p className="font-display text-brand-red text-sm tracking-[0.3em] font-bold mb-3">404</p>
         <h1 className="font-serif text-3xl font-black mb-4">找不到這個頁面</h1>
@@ -171,6 +171,9 @@ export default function App() {
   }, []);
 
   const [loginPageDefaultRegister, setLoginPageDefaultRegister] = useState(false);
+  // Bumped on every navigation into 會員中心 so the header's 登入／註冊 buttons still switch the
+  // form even when we are already on that page (where the route itself doesn't change).
+  const [loginPageResetKey, setLoginPageResetKey] = useState(0);
   const [preLoginRoute, setPreLoginRoute] = useState<AppRoute | null>(null);
   const { user, refreshUser } = useAuth();
 
@@ -196,9 +199,10 @@ export default function App() {
       window.history.pushState({}, '', nextUrl);
     }
 
-    if (cat === '會員中心' && route.category !== '會員中心') {
-      setPreLoginRoute(route);
+    if (cat === '會員中心') {
+      if (route.category !== '會員中心') setPreLoginRoute(route);
       setLoginPageDefaultRegister(!!options?.register);
+      setLoginPageResetKey((key) => key + 1);
     }
 
     setRoute({ category: cat, articleId: null, tag: null, author: null, planId: null, productId: null, subCategory: options?.subCategory ?? null });
@@ -291,11 +295,11 @@ export default function App() {
           <ArticleDetail articleId={currentArticleId} openArticle={openArticle} goToCategory={goToCategory} goToTag={goToTag} goToAuthor={goToAuthor} />
         )}
 
-        {(currentCategory === '信仰好物' && !currentProductId) && (
+        {!currentArticleId && (currentCategory === '信仰好物' && !currentProductId) && (
           <ProductGallery onSelectProduct={(productId) => setRoute((current) => ({ ...current, productId }))} />
         )}
 
-        {(currentCategory === '信仰好物' && currentProductId) && (
+        {!currentArticleId && (currentCategory === '信仰好物' && currentProductId) && (
           <ProductDetail
             productId={currentProductId}
             onBack={() => { setRoute((current) => ({ ...current, productId: null })); window.scrollTo(0, 0); }}
@@ -304,73 +308,73 @@ export default function App() {
           />
         )}
 
-        {(currentCategory === '奉獻' && !currentPlanId) && (
+        {!currentArticleId && (currentCategory === '奉獻' && !currentPlanId) && (
           <DonationGallery openPlan={openPlan} />
         )}
 
-        {(currentCategory === '奉獻' && currentPlanId) && (
+        {!currentArticleId && (currentCategory === '奉獻' && currentPlanId) && (
           <DonationPlanDetail planId={currentPlanId} />
         )}
 
-        {currentCategory === '會員中心' && (
-          <LoginPage onLoginSuccess={returnAfterLogin} initialRegister={loginPageDefaultRegister} />
+        {!currentArticleId && currentCategory === '會員中心' && (
+          <LoginPage onLoginSuccess={returnAfterLogin} initialRegister={loginPageDefaultRegister} resetKey={loginPageResetKey} />
         )}
 
-        {currentCategory === '會員招募' && (
+        {!currentArticleId && currentCategory === '會員招募' && (
           <MembershipPage goToCategory={goToCategory} />
         )}
 
-        {currentCategory === '會員專區' && (
+        {!currentArticleId && currentCategory === '會員專區' && (
           user
             ? <MemberDashboard goToCategory={goToCategory} />
             : <LoginPage onLoginSuccess={returnAfterLogin} />
         )}
 
-        {currentCategory === '活動報名' && (
+        {!currentArticleId && currentCategory === '活動報名' && (
           <EventRegistrationPage goToCategory={goToCategory} />
         )}
 
-        {currentCategory === '全版閱讀' && (
+        {!currentArticleId && currentCategory === '全版閱讀' && (
           <EpaperPage goToCategory={goToCategory} />
         )}
 
-        {currentCategory === '關於我們' && (
+        {!currentArticleId && currentCategory === '關於我們' && (
           <AboutPage />
         )}
 
-        {currentCategory === '新聞連絡' && (
+        {!currentArticleId && currentCategory === '新聞連絡' && (
           <ContactPage />
         )}
 
-        {currentCategory === '我要投稿' && (
+        {!currentArticleId && currentCategory === '我要投稿' && (
           <SubmitPage />
         )}
 
-        {currentCategory === '版權隱私權聲明' && (
+        {!currentArticleId && currentCategory === '版權隱私權聲明' && (
           <PrivacyPage />
         )}
 
-        {currentCategory === '財務報表' && (
+        {!currentArticleId && currentCategory === '財務報表' && (
           <FinancialPage />
         )}
 
-        {currentCategory === '客戶服務' && (
+        {!currentArticleId && currentCategory === '客戶服務' && (
           <CustomerServicePage />
         )}
 
-        {currentCategory === '申請合作' && (
+        {!currentArticleId && currentCategory === '申請合作' && (
           <PartnershipPage />
         )}
 
-        {currentCategory === '論壇Line貼圖' && (
+        {!currentArticleId && currentCategory === '論壇Line貼圖' && (
           <LineStickersPage />
         )}
 
-        {currentCategory === '祝福卡申辦/捐款' && (
+        {!currentArticleId && currentCategory === '祝福卡申辦/捐款' && (
           <BlessingCardPage />
         )}
 
-        {currentCategory === '付款結果' && paymentType && (
+        {!currentArticleId && currentCategory === '付款結果' && paymentType && (
           <PaymentResultPage
             type={paymentType}
             reference={paymentReference ?? null}
@@ -385,7 +389,7 @@ export default function App() {
 
       <Footer goToCategory={goToCategory} />
 
-      {!BOTTOM_AD_EXCLUDED_CATEGORIES.includes(currentCategory) && (
+      {(!!currentArticleId || !BOTTOM_AD_EXCLUDED_CATEGORIES.includes(currentCategory)) && (
         <>
           <FloatingImageAd />
           <FloatingDonateButton goToCategory={goToCategory} />

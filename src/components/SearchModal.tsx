@@ -72,7 +72,7 @@ export default function SearchModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Real-time search filter with debounced feel
+  // Real-time search filter, debounced 250ms
   useEffect(() => {
     if (!query.trim()) {
       setArticleResults([]);
@@ -87,31 +87,38 @@ export default function SearchModal({
     setSearchError(null);
     setIsSearching(true);
 
-    const primaryResults = scope === 'news'
-      ? searchNews(query, 5, { signal: controller.signal })
-      : searchKnowledgeBase(query, selectedYear ?? undefined, 5, { signal: controller.signal });
+    // 真正的 debounce：沒有這段的話每按一個鍵就是一輪 API 請求，
+    // 接上後端後既浪費也容易踩到登入／搜尋端點的 rate limit。
+    const timer = setTimeout(() => {
+      const primaryResults = scope === 'news'
+        ? searchNews(query, 5, { signal: controller.signal })
+        : searchKnowledgeBase(query, selectedYear ?? undefined, 5, { signal: controller.signal });
 
-    Promise.all([
-      primaryResults,
-      searchProducts(query, 5, { signal: controller.signal }),
-    ]).then(([primary, products]) => {
-      if (scope === 'news') {
-        setArticleResults(primary as NewsItem[]);
-        setKnowledgeResults([]);
-      } else {
-        setKnowledgeResults(primary as KnowledgeArticle[]);
-        setArticleResults([]);
-      }
-      setProductResults(products);
-      setIsSearching(false);
-    }).catch((error: unknown) => {
-      if (!controller.signal.aborted) {
-        setSearchError(error instanceof Error ? error.message : '搜尋失敗');
+      Promise.all([
+        primaryResults,
+        searchProducts(query, 5, { signal: controller.signal }),
+      ]).then(([primary, products]) => {
+        if (scope === 'news') {
+          setArticleResults(primary as NewsItem[]);
+          setKnowledgeResults([]);
+        } else {
+          setKnowledgeResults(primary as KnowledgeArticle[]);
+          setArticleResults([]);
+        }
+        setProductResults(products);
         setIsSearching(false);
-      }
-    });
+      }).catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          setSearchError(error instanceof Error ? error.message : '搜尋失敗');
+          setIsSearching(false);
+        }
+      });
+    }, 250);
 
-    return () => controller.abort();
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [query, scope, selectedYear]);
 
   const handleKeywordClick = (keyword: string) => {
