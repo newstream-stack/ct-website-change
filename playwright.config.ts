@@ -33,7 +33,7 @@ export default defineConfig({
       // REST mode is only used by epaper-rest.spec.ts, which stubs every /api/* call via page.route —
       // it never reaches a real backend, but exercising USE_MOCK_API=false is required to prove that
       // requests actually happen over the network (mock-mode functions never call fetch at all).
-      command: 'VITE_USE_MOCK_API=false VITE_API_BASE_URL=http://127.0.0.1:3002 npx vite --port=3002 --host=0.0.0.0',
+      command: 'VITE_USE_MOCK_API=false VITE_API_BASE_URL=http://127.0.0.1:3002 npx vite --port=3002 --host=127.0.0.1',
       url: 'http://127.0.0.1:3002',
       reuseExistingServer: true,
       timeout: 120_000,
