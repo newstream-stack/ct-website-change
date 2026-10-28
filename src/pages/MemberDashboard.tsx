@@ -369,17 +369,18 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
     const formData = new FormData(event.currentTarget);
     const updatedName = String(formData.get('name') ?? '').trim();
     const updatedAddress = String(formData.get('address') ?? '').trim();
+    const currentPassword = String(formData.get('currentPassword') ?? '');
     const newPassword = String(formData.get('newPassword') ?? '');
     const confirmPassword = String(formData.get('confirmPassword') ?? '');
-    const wantsPasswordChange = Boolean(newPassword || confirmPassword);
+    const wantsPasswordChange = Boolean(currentPassword || newPassword || confirmPassword);
     const profileChanged = updatedName !== member?.name || updatedAddress !== member?.address;
 
     if (!updatedName || !updatedAddress) {
       setSettingsMsg({ type: 'error', text: '姓名與地址不可為空' });
       return;
     }
-    if (wantsPasswordChange && (!newPassword || !confirmPassword)) {
-      setSettingsMsg({ type: 'error', text: '變更密碼時請完整填寫兩個密碼欄位' });
+    if (wantsPasswordChange && (!currentPassword || !newPassword || !confirmPassword)) {
+      setSettingsMsg({ type: 'error', text: '變更密碼時請完整填寫目前密碼與新密碼欄位' });
       return;
     }
     if (wantsPasswordChange && newPassword.length < 8) {
@@ -388,6 +389,10 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
     }
     if (wantsPasswordChange && newPassword !== confirmPassword) {
       setSettingsMsg({ type: 'error', text: '新密碼與確認密碼不一致' });
+      return;
+    }
+    if (wantsPasswordChange && newPassword === currentPassword) {
+      setSettingsMsg({ type: 'error', text: '新密碼不可與目前密碼相同' });
       return;
     }
     if (wantsPasswordChange && profileChanged) {
@@ -402,7 +407,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
     try {
       setIsSavingSettings(true);
       if (wantsPasswordChange) {
-        await changePassword({ newPassword });
+        await changePassword({ currentPassword, newPassword });
       } else {
         const updatedMember = await updateMe({ name: updatedName, displayName: updatedName, address: updatedAddress });
         setMember(updatedMember);
@@ -738,6 +743,7 @@ export default function MemberDashboard({ goToCategory }: MemberDashboardProps) 
 
                     <div className="flex flex-col gap-3">
                       <label className="text-xs font-bold tracking-widest text-theme-text/70">變更密碼 Change Password</label>
+                      <input name="currentPassword" type="password" maxLength={128} autoComplete="current-password" placeholder="目前密碼" className="bg-theme-bg border border-theme-text/20 rounded-sm px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                       <input name="newPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="設定新密碼（至少 8 個字元）" className="bg-theme-bg border border-theme-text/20 rounded-sm px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                       <input name="confirmPassword" type="password" minLength={8} maxLength={128} autoComplete="new-password" placeholder="再次輸入新密碼" className="bg-theme-bg border border-theme-text/20 rounded-sm px-4 py-3.5 text-sm focus:outline-none focus:border-brand-red/50 focus:ring-1 focus:ring-brand-red/50 transition-all font-sans text-theme-text" />
                     </div>

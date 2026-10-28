@@ -65,6 +65,11 @@ export async function forgotPassword(params: ForgotPasswordRequest, options?: Ap
 export async function changePassword(params: ChangePasswordRequest, options?: ApiRequestOptions): Promise<void> {
   if (!USE_MOCK_API) return apiPost<void>('/api/me/password', params, options);
   await devDelay();
+  if (!params.currentPassword) throw new Error('請輸入目前密碼');
+  // mock 模式只有展示帳號知道真正的密碼；其他 mock 註冊帳號沒有存密碼，無從比對
+  if (DEV_ACCOUNT && getAuthUser()?.email === DEV_ACCOUNT.email && params.currentPassword !== DEV_ACCOUNT.password) {
+    throw new Error('目前密碼錯誤');
+  }
   if (params.newPassword.length < 8) throw new Error('新密碼至少需要 8 個字元');
 }
 

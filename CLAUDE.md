@@ -137,7 +137,7 @@ src/
 │   ├── FeaturedCarousel.tsx
 │   ├── AsyncPageState.tsx         # 統一的 loading / error 畫面（配 useAsyncData 用）
 │   ├── AppErrorBoundary.tsx       # 全域 React error boundary
-│   ├── SearchModal.tsx / CartDrawer.tsx / ReceiptModal.tsx
+│   ├── SearchModal.tsx / CartDrawer.tsx
 │   ├── ProductDetail.tsx / PlanCard.tsx / DonationPlanDetail.tsx
 │   └── ColumnPage.tsx
 └── pages/

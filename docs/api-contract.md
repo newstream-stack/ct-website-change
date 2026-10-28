@@ -64,7 +64,7 @@ Access token 目前只保存在該分頁的 `sessionStorage`。Refresh token 不
 Refresh token 的更新端點、Cookie CSRF 防護與輪替策略尚未定案。
 
 - `POST /api/auth/forgot-password`，body `{ "email": "user@example.com" }` → `{ "accepted": true }`
-- `POST /api/me/password`，body `{ "newPassword": "..." }` → `204 No Content`（不需舊密碼；使用者多半是忘記密碼才來變更）
+- `POST /api/me/password`，body `{ "currentPassword": "...", "newPassword": "..." }` → `204 No Content`；後端必須驗證 `currentPassword`，錯誤時回 `400`/`403` 且不登出。避免拿到已登入畫面或 token 的人直接改密碼奪走帳號；忘記密碼的使用者走 `forgot-password` 流程
 - `POST /api/me/payment-method/session`，body `{ "returnUrl": "https://..." }` → `{ "managementUrl": "https://payment.example.com/..." }`
 
 忘記密碼不論信箱是否存在都應回相同結果，避免洩漏會員名單。付款方式由金流商的託管頁處理，前端與本 API 都不接收完整卡號或安全碼。
